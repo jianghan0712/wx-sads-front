@@ -1,0 +1,17 @@
+
+
+<sale-block class="simpleTwoCol">
+  <common-number-simpleTwoCol/>
+</sale-block>
+<van-divider />
+
+<sale-block class="lineChart">  
+  <common-chart-simpleChart/> 
+</sale-block>
+<van-divider />
+
+
+
+
+
+

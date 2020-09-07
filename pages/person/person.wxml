@@ -1,0 +1,59 @@
+
+<form reportSubmit bindsubmit="submitFormId">
+  <view class="header">
+    <view class="user" hoverClass="none">
+      <view class="user_box">
+        <view catchtap="previewImage" class="logo">
+          <image src="{{SADSUserInfo.image}}"></image>
+          <view class="cu-tag badge {{male==1?'icon-male bg-blue':'icon-female bg-pink'}}"></view>
+        </view>
+        <block wx:if="{{vip}}">
+          <view class="user_info">
+            <view class="user_name">
+              <text>{{userInfo.nickName}}</text>
+              <image src="/images/main/vip.png"></image>
+            </view>
+          </view>
+        </block>
+        <block wx:else>
+          <view class="user_info">
+            <view class="user_name">
+              <text>{{SADSUserInfo.name}}</text>
+            </view>
+            <view class="vip_expires" bindtap='joinVip'>
+              {{SADSUserInfo.location}}
+            </view>
+            <view class="vip_expires" bindtap='joinVip'>
+              {{SADSUserInfo.lastLoginTime}}
+            </view>          
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+  <!-- 功能列表 -->
+  <view class="nav">
+    <view bindtap="openPage" class="item" data-url="/pages/my_course/my_course" formType="submit" hoverClass="none">
+      <view class='telphone'>
+        <text class='icon-news icon'></text>
+        <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+        <text>手机号码 </text>
+      </view>
+      <view class="icon">
+        <text class='icon-right'>{{SADSUserInfo.telphone}}</text>
+      </view>
+    </view>
+    <view bindtap="openPage" class="item" data-url="/pages/collect/collect" formType="submit" hoverClass="none">
+      <view class='email'>
+        <text class='icon-favor icon'></text>
+        <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+        <text>电子邮箱</text>
+      </view>
+      <view class="icon">
+        <text class='icon-right'>{{SADSUserInfo.email}}</text>
+      </view>
+    </view>
+
+    <button class="exit" type="primary">退出</button>
+  </view>
+</form>
