@@ -1,0 +1,58 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/sales/index",
+			"style": {
+				"navigationBarTitleText": "销售"
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText" : "个人中心"
+			}
+		},
+        {
+            "path" : "pages/sales/totalView/totalView",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/channel/index",
+            "style": {
+           	"navigationBarTitleText" : "渠道"
+            }
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#fff"
+	},
+	"tabBar" : {
+		"color" : "#8a8396",
+		"selectedColor" : "#2a4c7e",
+		"borderStyle" : "black",
+		"backgroundColor" : "#fff",
+		"list" : [
+			{
+				"pagePath" : "pages/sales/index",
+				"iconPath" : "static/home.png",
+				"selectedIconPath" : "static/home-active.png",
+				"text" : "销售"
+			},
+			{
+				"pagePath" : "pages/channel/index",
+				"iconPath" : "static/home.png",
+				"selectedIconPath" : "static/home-active.png",
+				"text" : "渠道"
+			},
+			{
+				"pagePath" : "pages/mine/index",
+				"iconPath" : "static/mine.png",
+				"selectedIconPath" : "static/mine-active.png",
+				"text" : "我的"
+			}
+		]
+	}
+}

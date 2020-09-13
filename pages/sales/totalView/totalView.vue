@@ -1,0 +1,182 @@
+<template>
+	<view>
+		<view class="row_box_2">
+			<view class="row-box">
+				<view class="column_box_2">
+					<view class="column-box">
+						<text class="big-text">销量（万元）</text>
+						<text class="big-text">110.00</text>
+					</view>
+					<view class="column-box">
+						<view class="row_box_2">
+							<view class="row-box">
+								<text class="small-text">同比</text>
+								<text class="small-text">+12.00%</text>
+							</view>
+							<view class="row-box">
+								<text class="small-text">环比</text>
+								<text class="small-text">+1.30%</text>
+							</view>
+						</view>
+					</view>
+				</view>			
+			</view>
+			<view class="row-box">
+				<view class="column_box_2">
+					<view class="column-box">
+						<text class="big-text">票数（万元）</text>
+						<text class="big-text">65.30</text>
+					</view>
+					<view class="column-box">
+						<view class="row_box_2">
+							<view class="row-box">
+								<text class="small-text">同比</text>
+								<text class="small-text">+12.00%</text>
+							</view>
+							<view class="row-box">
+								<text class="small-text">环比</text>
+								<text class="small-text">+1.30%</text>
+							</view>
+						</view>
+					</view>
+				</view>			
+			</view>
+		</view>
+		<!-- 折线Line纯数字-->
+		<view class="line">
+			<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" />
+			<view style="text-align: center;line-height: 40px;">折线LineChart Number</view>
+		</view>
+		<slot />
+	</view>
+</template>
+
+<script>
+	import LineChart from '@/components/basic-chart/LineChart.vue';
+
+	export default {
+		name: 'Index',
+		components: {
+			LineChart
+		},
+		data() {
+			return {
+				lineData2: {
+					//数字的图--折线图数据
+					categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
+					series: [
+						{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
+						{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] },
+						{ name: '成交量C', data: [100, 80, 95, 150, 112, 132] }
+					]
+				},
+			};
+		},
+		onLoad() {
+			_self = this;
+			this.cWidth=uni.upx2px(750);
+			this.cHeight=uni.upx2px(500);
+			this.getServerData();
+		},
+		methods: {
+			getServerData() {
+				//模拟ajax调用
+				// uni.request({
+				// 	url: 'https://www.easy-mock.com/mock/5cc586b64fc5576cba3d647b/uni-wx-charts/chartsdata2',
+				// 	data: {},
+				// 	success: function(res) {
+				// 		console.log(res.data.data);
+				// 		let serverData = res.data.data;
+				// 		this.$set(this.lineData, 'categories', serverData.Column.categories);
+				// 		this.$set(this.lineData, 'series', serverData.Column.series);
+				// 		this.$refs['lineData1'].showCharts();
+				// 	},
+				// 	fail: () => {
+				// 		console.log('网络错误');
+				// 	}
+				// });
+				setTimeout(() => {
+					//延迟模拟ajax嗲用后台数据
+					let categories = ['20111', '2013', '2014', '2015', '2016', '2017'];
+					let series = [{ name: '成交量A', data: [0.8511, 0.233, 0.125, 0.437, 0.48, 0.1234] }];
+					this.$set(this.lineData, 'categories', categories);
+					this.$set(this.lineData, 'series', series);
+					this.$refs['lineData1'].showCharts();
+				}, 1000);
+			}
+		},
+		created() {
+			this.$nextTick(() => {
+				//柱状图
+				// this.$refs['histogramData0'].showCharts();
+				// this.$refs['histogramData1'].showCharts();
+				// this.$refs['histogramData2'].showCharts();
+				// //圆环(注意循环可能会导致出现下面情况,请更具实际情况作出判断// console.log(this.$refs);)
+				// this.$refs['arcbar0'][0].showCharts();
+				// this.$refs['arcbar1'][0].showCharts();
+				// this.$refs['arcbar2'][0].showCharts();
+				// // 饼状图
+				// this.$refs['pieChart0'].showCharts();
+				// // 环状图
+				// this.$refs['ringChart0'].showCharts();
+				//折线图
+				this.$refs['lineData2'].showCharts();
+			});
+			//ajax调用
+			this.getServerData();
+		}
+	}
+</script>
+
+<style>	
+	.row_box_2{
+		display: flex;
+		flex-direction: row;		
+	}
+	
+	.column_box_2{	
+		display: flex;
+		flex-direction: column;
+	}
+
+	.row-box {
+		width: 50%;
+		margin: 0rpx 5rpx;
+		padding: 0 10rpx;
+		background-color: #ebebeb;
+	}
+
+	.column-box{
+		height: 50%;
+		margin: 0rpx 5rpx;
+		padding: 0 5rpx;
+		background-color: #ebebeb;
+	}
+	
+	.big-text{
+		text-align: left;
+		background-color: #ebebeb;
+		color: #777;
+		font-size: 40rpx;
+	}
+	
+	.small-text{
+		text-align: left;
+		background-color: #ebebeb;
+		color: #777;
+		font-size: 30rpx;
+	}
+	
+	/*样式的width和height一定要与定义的cWidth和cHeight相对应*/
+	.qiun-charts {
+		width: 750upx;
+		height: 500upx;
+		background-color: #FFFFFF;
+	}
+	
+	.charts {
+		width: 750upx;
+		height: 500upx;
+		background-color: #FFFFFF;
+	}
+</style>

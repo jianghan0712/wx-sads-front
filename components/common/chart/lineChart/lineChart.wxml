@@ -1,5 +1,0 @@
-<!--components/common/chart/simpleChart.wxml-->
-
-<sale-block >
-    <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
-</sale-block>
