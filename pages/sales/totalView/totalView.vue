@@ -63,6 +63,30 @@
 			</view>
 			<view style="text-align: center;line-height: 40px;">圆环arcbar</view>
 		</view>
+		<view class="shop-box">
+			<view class="shop-title">门店在售情况</view>
+			<view class="shop-item-title">
+				<view style="width: 400rpx;">在售门店数</view>				
+				<view style="width: 200rpx;">同比</view>
+				<view style="-webkit-flex: 1;flex: 1;">环比</view>
+			</view>
+			<view class="shop-item-content">
+				<view style="width: 400rpx;">365,041</view>				
+				<view style="width: 200rpx;">+12.9%</view>
+				<view style="-webkit-flex: 1;flex: 1;">+1.23%</view>
+			</view>
+			<view>  </view>
+			<view class="shop-item-title">
+				<view style="width: 400rpx;">门店在售率</view>				
+				<view style="width: 200rpx;">同比</view>
+				<view style="-webkit-flex: 1;flex: 1;">环比</view>
+			</view>
+			<view class="shop-item-content">
+				<view style="width: 400rpx;">90.54%</view>				
+				<view style="width: 200rpx;">+12.9%</view>
+				<view style="-webkit-flex: 1;flex: 1;">+1.23%</view>
+			</view>
+		</view>
 		<slot />
 	</view>
 </template>
@@ -207,4 +231,37 @@
 		height: 500upx;
 		background-color: #FFFFFF;
 	}
+	
+	.shop-box {
+		width: 100%;
+		height: 500upx;
+		margin: 0rpx 5rpx;
+		padding: 0 10rpx;
+		background-color: #FFFFFF;
+	}
+	
+	.shop-title{
+		width: 100%;
+		margin: 0rpx 5rpx;
+		padding: 0 10rpx;
+		background-color: #FFFFFF;
+	}
+	
+	.shop-item-title{
+		width: 100%;
+		display: flex;
+		margin: 0rpx 5rpx;
+		padding: 0 10rpx;
+		flex-direction: row;
+		background-color: #ebebeb;
+	}
+	.shop-item-content{
+		width: 100%;
+		display: flex;
+		margin: 0rpx 5rpx;
+		padding: 0 10rpx;
+		flex-direction: row;
+		background-color: #ebebeb;
+	}
+	
 </style>
