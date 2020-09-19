@@ -47,17 +47,35 @@
 			<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" />
 			<view style="text-align: center;line-height: 40px;">折线LineChart Number</view>
 		</view>
+		<!-- 圆环arcbar -->
+		<view>
+			<view class="arcbar">
+				<block v-for="(item, index) in arcbarList" :key="index">
+					<arcbar-chart
+						:canvasId="`index_arcbar_${index}`"
+						:ref="`arcbar${index}`"
+						:dataAs="item"
+						:basicAs="{
+							colors: ['#ff7600']
+						}"
+					/>
+				</block>
+			</view>
+			<view style="text-align: center;line-height: 40px;">圆环arcbar</view>
+		</view>
 		<slot />
 	</view>
 </template>
 
 <script>
 	import LineChart from '@/components/basic-chart/LineChart.vue';
-
+	import ArcbarChart from '@/components/basic-chart/ArcbarChart.vue';
+	
 	export default {
 		name: 'Index',
 		components: {
-			LineChart
+			LineChart,
+			ArcbarChart
 		},
 		data() {
 			return {
@@ -70,6 +88,16 @@
 						{ name: '成交量C', data: [100, 80, 95, 150, 112, 132] }
 					]
 				},
+				arcbarList: [
+					//圆环
+					{
+						series: [
+							{
+								name: '正确率',
+								data: 0.2912
+							}
+						]
+					}],
 			};
 		},
 		onLoad() {
@@ -112,7 +140,7 @@
 				// this.$refs['histogramData1'].showCharts();
 				// this.$refs['histogramData2'].showCharts();
 				// //圆环(注意循环可能会导致出现下面情况,请更具实际情况作出判断// console.log(this.$refs);)
-				// this.$refs['arcbar0'][0].showCharts();
+				this.$refs['arcbar0'][0].showCharts();
 				// this.$refs['arcbar1'][0].showCharts();
 				// this.$refs['arcbar2'][0].showCharts();
 				// // 饼状图
