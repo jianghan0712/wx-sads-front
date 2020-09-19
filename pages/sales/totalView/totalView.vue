@@ -87,6 +87,17 @@
 				<view style="-webkit-flex: 1;flex: 1;">+1.23%</view>
 			</view>
 		</view>
+		
+		<view class="rankTable">
+			<view class="rankTable-title">
+				<view>各地区销量排行</view>
+				<view class="rankTable-more">全部>></view>
+			</view>
+			<view class="example">
+				<v-table :columns="tableColumns" :list="tableData" :height="250" border-color="#FFFFFF"></v-table>
+			</view>
+		</view>
+		
 		<slot />
 	</view>
 </template>
@@ -94,12 +105,14 @@
 <script>
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import ArcbarChart from '@/components/basic-chart/ArcbarChart.vue';
+	import vTable from "@/components/table/table.vue"
 	
 	export default {
 		name: 'Index',
 		components: {
 			LineChart,
-			ArcbarChart
+			ArcbarChart,
+			vTable
 		},
 		data() {
 			return {
@@ -122,6 +135,68 @@
 							}
 						]
 					}],
+				tableData: [{
+							id: "1",
+							area: "北京市",
+							amount: "10233.5",
+							tongbi: "+12.6%",
+							huanbi: "+45.21%"
+						},
+						{
+							id: "2",
+							area: "上海市",
+							amount: "9965.5",
+							tongbi: "+12.6%",
+							huanbi: "+45.21%"
+						},
+						{
+							id: "3",
+							area: "广东省",
+							amount: "9754.5",
+							tongbi: "+12.6%",
+							huanbi: "+45.21%"
+						},
+						{
+							id: "4",
+							area: "重庆市",
+							amount: "6745.6",
+							tongbi: "+12.6%",
+							huanbi: "+45.21%"
+						},
+						{
+							id: "5",
+							area: "河北省",
+							amount: "6554",
+							tongbi: "+12.6%",
+							huanbi: "+45.21%"
+						}
+					],
+					tableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},
+						{
+							title: '销量',
+							key: 'amount',
+							$width:"80px"
+						},
+						{
+							title: '同比',
+							key: 'tongbi',
+							$width:"80px"
+						},
+						{
+							title: '环比',
+							key: 'huanbi',
+							$width:"80px"
+						}
+					],					
 			};
 		},
 		onLoad() {
@@ -262,6 +337,41 @@
 		padding: 0 10rpx;
 		flex-direction: row;
 		background-color: #ebebeb;
+	}
+	
+	.rankTable{
+		width: 100%;
+		height: 500upx;
+		margin: 0rpx 5rpx;
+		padding: 0 10rpx;
+		background-color: #FFFFFF;
+	}
+	
+	.rankTable-title{
+		width: 100%;
+		margin: 0rpx 5rpx;
+		padding: 0 10rpx; 
+		display: flex;
+		justify-content: space-between;
+	}
+	
+	.rankTable-more{
+		margin: 0rpx 5rpx;
+		padding: 0 10rpx;
+		text-align: right;
+	}
+		
+	
+	.example {
+		/* line-height: 40px; */
+		font-weight: bold;
+		border-color:#FFFFFF;
+	}
+	
+	.title {
+		/* line-height: 40px; */
+		font-weight: bold;
+		border-color:#FFFFFF;
 	}
 	
 </style>
