@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "销售",
-  "usingComponents": {
-    "media-item": "/pages/sales/news-item",
-    "mx-date-picker": "/components/mx-datepicker/mx-datepicker",
-    "total-view": "/pages/sales/totalView/totalView"
-  }
-}

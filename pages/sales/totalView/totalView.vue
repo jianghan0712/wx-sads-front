@@ -43,10 +43,25 @@
 			</view>
 		</view>
 		<!-- 折线Line纯数字-->
-		<view class="line">
-			<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" />
-			<view style="text-align: center;line-height: 40px;">折线LineChart Number</view>
-		</view>
+		<view class="lineChart-box">
+			<view class="clineChart-title">
+				<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
+				<view class="linechart-tab">
+				　　<view @tap="change(0)" :class="{btna:btnnum == 0}">销量</view>
+				  　<view @tap="change(1)" :class="{btna:btnnum == 1}">票数</view>
+				</view>
+			</view>		
+			<view class="end-cont" :class="{dis:btnnum == 0}">		
+			 　 <view class="line">
+					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" />
+			</view>
+			</view>
+			<view class="end-cont" :class="{dis:btnnum == 1}">		　
+			 　 <view class="line">
+					<line-chart ref="lineData1" canvasId="index_line_2" :dataAs="lineData1" />
+			</view>
+		</view>		
+
 		<!-- 圆环arcbar -->
 		<view>
 			<view class="arcbar">
@@ -63,6 +78,8 @@
 			</view>
 			<view style="text-align: center;line-height: 40px;">圆环arcbar</view>
 		</view>
+		
+		<!-- 门店在售情况-->
 		<view class="shop-box">
 			<view class="shop-title">门店在售情况</view>
 			<view class="shop-item-title">
@@ -88,6 +105,7 @@
 			</view>
 		</view>
 		
+		<!-- 各地区销量排行-->
 		<view class="rankTable">
 			<view class="rankTable-title">
 				<view>各地区销量排行</view>
@@ -116,6 +134,7 @@
 		},
 		data() {
 			return {
+				btnnum: 0,
 				lineData2: {
 					//数字的图--折线图数据
 					categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
@@ -123,6 +142,14 @@
 						{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
 						{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] },
 						{ name: '成交量C', data: [100, 80, 95, 150, 112, 132] }
+					]
+				},
+				lineData1: {
+					//数字的图--折线图数据
+					categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
+					series: [
+						{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
+						{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
 					]
 				},
 				arcbarList: [
@@ -230,7 +257,11 @@
 					this.$set(this.lineData, 'series', series);
 					this.$refs['lineData1'].showCharts();
 				}, 1000);
-			}
+			},
+			change(e) {
+			      this.btnnum = e
+			      console.log(this.btnnum)
+			  }
 		},
 		created() {
 			this.$nextTick(() => {
@@ -248,6 +279,7 @@
 				// this.$refs['ringChart0'].showCharts();
 				//折线图
 				this.$refs['lineData2'].showCharts();
+				this.$refs['lineData1'].showCharts();
 			});
 			//ajax调用
 			this.getServerData();
@@ -319,6 +351,8 @@
 		width: 100%;
 		margin: 0rpx 5rpx;
 		padding: 0 10rpx;
+		font-size: 30rpx;
+		font-weight: bold;
 		background-color: #FFFFFF;
 	}
 	
@@ -344,6 +378,8 @@
 		height: 500upx;
 		margin: 0rpx 5rpx;
 		padding: 0 10rpx;
+		font-size: 30rpx;
+		font-weight: bold;
 		background-color: #FFFFFF;
 	}
 	
@@ -374,4 +410,34 @@
 		border-color:#FFFFFF;
 	}
 	
+	.lineChart-box{
+		padding:10px 20px 10px 5px;
+	}
+	.clineChart-title{
+		display: flex;
+		justify-content:space-between;
+	}
+	/* 将三个内容view的display设置为none(隐藏) */
+	.linechart-tab{
+		padding:0px 20px 0px 5px;
+		flex-direction: row;
+		display: flex;
+		text-align: right;
+		justify-content:flex-end;
+		font-size: 30rpx;
+	}
+	
+	.end-cont{
+		/* text-align: left; */
+		display: none;
+		padding:10px 20px 0px 5px;
+		background: #FFFFFF;
+	}
+	.btna{
+		color: #FFFFFF;
+		background: #ebebeb;
+	}
+	.dis{
+		display: block;
+	}    
 </style>
