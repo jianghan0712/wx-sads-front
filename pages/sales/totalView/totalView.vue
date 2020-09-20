@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="row_box_2">
+		<view class="sale-row-2">
 			<view class="row-box">
 				<view class="column_box_2">
 					<view class="column-box">
@@ -47,8 +47,8 @@
 			<view class="clineChart-title">
 				<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
 				<view class="linechart-tab">
-				　　<view @tap="change(0)" :class="{btna:btnnum == 0}">销量</view>
-				  　<view @tap="change(1)" :class="{btna:btnnum == 1}">票数</view>
+				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
+				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
 				</view>
 			</view>		
 			<view class="end-cont" :class="{dis:btnnum == 0}">		
@@ -63,22 +63,51 @@
 		</view>		
 
 		<!-- 圆环arcbar -->
-		<view class="lineChart-box">
-				<view class="clineChart-title">
+		<view class="arcbarChart-box">
+				<view class="arcbarChart-title">
 					<view style="font-size: 30rpx;font-weight: bold;">竞彩足篮球销量及占比</view>
-					<view class="linechart-tab">
-					　　<view @tap="changeArcbar(0)" :class="{btna:arcbarNum == 0}">足球</view>
-					  　<view @tap="changeArcbar(1)" :class="{btna:arcbarNum == 1}">篮球</view>
+					<view class="arcbarChart-tab">
+					    <view @tap="changeArcbar(0)" :class="arcbarNum == 0?'btna':'hide'" >足球</view>
+					    <view @tap="changeArcbar(1)" :class="arcbarNum == 1?'btna':'hide'" >篮球</view>
 					</view>
 				</view>	
-				<view class="end-cont" :class="{dis:arcbarNum == 0}">
-				 　 <view class="arcbar">
-						<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
+				<view class="end-cont"  :class="{dis:arcbarNum == 0}" >
+					<view class="arcbarChart-content">
+						<view class="arcbar" style="width: 50%;">
+							<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
+						</view>
+						<view class="arcbar-text" style="width: 50%;">
+							<view class="arcbar-text-line">							
+								<view style="width: 50%;">销量</view>
+								<view style="width: 50%;">55万元</view>
+							</view>		
+							<view class="arcbar-text-line">
+								<view style="width: 20%;">同比</view>
+								<view style="width: 30%;">+10%</view>
+								<view style="width: 20%;">环比</view>
+								<view style="width: 30%;">+25.64%</view>
+							</view>	
+						</view>
 					</view>
 				</view>
-				<view class="end-cont" :class="{dis:arcbarNum == 1}">		　
-					<view class="arcbar">
-						 <arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
+				<view class="end-cont" :class="{dis:arcbarNum == 1}">		　						 
+				    <view class="arcbarChart-content">
+				    	<view class="arcbar" style="width: 50%;">
+				    		<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
+				    	</view>
+				    	<view class="arcbar-text" style="width: 50%;">
+				    		<view class="arcbar-text-line">							
+				    			<view style="width: 50%;">销量</view>
+				    			<view style="width: 50%;">14万元</view>
+				    		</view>		
+				    		<view class="arcbar-text-line">
+				    			<view style="width: 20%;">同比</view>
+				    			<view style="width: 30%;">-12.4%</view>
+				    			<view style="width: 20%;">环比</view>
+				    			<view style="width: 30%;">+25.64%</view>
+				    		</view>	
+				    	</view>
+				    </view>
 				</view>				
 			</view>
 		</view>	
@@ -96,7 +125,6 @@
 				<view style="width: 200rpx;">+12.9%</view>
 				<view style="-webkit-flex: 1;flex: 1;">+1.23%</view>
 			</view>
-			<view>  </view>
 			<view class="shop-item-title">
 				<view style="width: 400rpx;">门店在售率</view>				
 				<view style="width: 200rpx;">同比</view>
@@ -293,9 +321,15 @@
 </script>
 
 <style>	
+	.sale-row-2{
+		display: flex;
+		flex-direction: row;	
+		margin: 20rpx 10rpx 20rpx 10rpx;
+		padding: 20rpx 10rpx 20rpx 10rpx;	
+	}
 	.row_box_2{
 		display: flex;
-		flex-direction: row;		
+		flex-direction: row;	
 	}
 	
 	.column_box_2{	
@@ -331,24 +365,11 @@
 		font-size: 30rpx;
 	}
 	
-	/*样式的width和height一定要与定义的cWidth和cHeight相对应*/
-	.qiun-charts {
-		width: 750upx;
-		height: 500upx;
-		background-color: #FFFFFF;
-	}
-	
-	.charts {
-		width: 750upx;
-		height: 500upx;
-		background-color: #FFFFFF;
-	}
-	
 	.shop-box {
 		width: 100%;
 		height: 500upx;
-		margin: 0rpx 5rpx;
-		padding: 0 10rpx;
+		margin: 20rpx 10rpx 20rpx 10rpx;
+		padding: 20rpx 10rpx 20rpx 10rpx;
 		background-color: #FFFFFF;
 	}
 	
@@ -364,16 +385,16 @@
 	.shop-item-title{
 		width: 100%;
 		display: flex;
-		margin: 0rpx 5rpx;
-		padding: 0 10rpx;
+		margin: 0rpx 5rpx 0rpx 5rpx;
+		padding: 0 10rpx 0 10rpx;
 		flex-direction: row;
 		background-color: #ebebeb;
 	}
 	.shop-item-content{
 		width: 100%;
 		display: flex;
-		margin: 0rpx 5rpx;
-		padding: 0 10rpx;
+		margin: 0rpx 5rpx 0rpx 5rpx;
+		padding: 0 10rpx 20rpx 10rpx;
 		flex-direction: row;
 		background-color: #ebebeb;
 	}
@@ -416,7 +437,8 @@
 	}
 	
 	.lineChart-box{
-		padding:10px 20px 10px 5px;
+		margin: 20rpx 10rpx 20rpx 10rpx;
+		padding: 20rpx 10rpx 20rpx 10rpx;
 	}
 	.clineChart-title{
 		display: flex;
@@ -424,7 +446,7 @@
 	}
 	/* 将三个内容view的display设置为none(隐藏) */
 	.linechart-tab{
-		padding:0px 20px 0px 5px;
+		padding:0rpx 5rpx 0rpx 5rpx;
 		flex-direction: row;
 		display: flex;
 		text-align: right;
@@ -432,17 +454,59 @@
 		font-size: 30rpx;
 	}
 	
+	.arcbarChart-box{
+		margin: 20rpx 0rpx 20rpx 0rpx;
+		padding: 20rpx 0rpx 20rpx 0rpx;
+	}
+	
+	.arcbarChart-title{
+		display: flex;
+		justify-content:space-between;
+	}
+	/* 将三个内容view的display设置为none(隐藏) */
+	.arcbarChart-tab{
+		/* padding:0rpx 5rpx 0rpx 5rpx; */
+		flex-direction: row;
+		display: flex;
+		text-align: right;
+		justify-content:flex-end;
+		font-size: 30rpx;
+	}
+	.arcbarChart-content{
+		display: flex;
+		flex-direction: row;
+	}
+	.arcbar-text{
+		flex-direction: column;
+		display: flex;
+		/* justify-content:space-between; */
+	}
+	.arcbar-text-line{
+		width: 100%;
+		display: flex;
+/* 		margin: 0rpx 5rpx;
+		padding: 0 10rpx; */
+		flex-direction: row;
+		/* justify-content:space-between; */
+	}
 	.end-cont{
 		/* text-align: left; */
 		display: none;
-		padding:10px 20px 0px 5px;
+		/* padding:0rpx 15rpx 0rpx 15rpx; */
 		background: #FFFFFF;
 	}
 	.btna{
-		color: #FFFFFF;
+		color: #000000;
 		background: #ebebeb;
+		padding:0px 30rpx 0px 30rpx;
 	}
 	.dis{
 		display: block;
-	}    
+		/* padding:0px 30rpx 0px 30rpx; */
+	} 
+	.hide{
+		color: #000000;
+		background: #FFFFFF;
+		padding:0px 30rpx 0px 30rpx;
+	}
 </style>

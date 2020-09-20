@@ -10,7 +10,7 @@
 			<view class="datePick">		
 				<text @click="onShowDatePicker('date')">{{date}}</text>
 			</view>
-			<!-- <mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" /> -->
+			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
 		</view>	 
 		<block v-if="tabIndex==0">
 			<totalView></totalView>
