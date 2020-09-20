@@ -63,21 +63,25 @@
 		</view>		
 
 		<!-- 圆环arcbar -->
-		<view>
-			<view class="arcbar">
-				<block v-for="(item, index) in arcbarList" :key="index">
-					<arcbar-chart
-						:canvasId="`index_arcbar_${index}`"
-						:ref="`arcbar${index}`"
-						:dataAs="item"
-						:basicAs="{
-							colors: ['#ff7600']
-						}"
-					/>
-				</block>
+		<view class="lineChart-box">
+				<view class="clineChart-title">
+					<view style="font-size: 30rpx;font-weight: bold;">竞彩足篮球销量及占比</view>
+					<view class="linechart-tab">
+					　　<view @tap="changeArcbar(0)" :class="{btna:arcbarNum == 0}">足球</view>
+					  　<view @tap="changeArcbar(1)" :class="{btna:arcbarNum == 1}">篮球</view>
+					</view>
+				</view>	
+				<view class="end-cont" :class="{dis:arcbarNum == 0}">
+				 　 <view class="arcbar">
+						<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
+					</view>
+				</view>
+				<view class="end-cont" :class="{dis:arcbarNum == 1}">		　
+					<view class="arcbar">
+						 <arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
+				</view>				
 			</view>
-			<view style="text-align: center;line-height: 40px;">圆环arcbar</view>
-		</view>
+		</view>	
 		
 		<!-- 门店在售情况-->
 		<view class="shop-box">
@@ -135,6 +139,7 @@
 		data() {
 			return {
 				btnnum: 0,
+				arcbarNum: 0,
 				lineData2: {
 					//数字的图--折线图数据
 					categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
@@ -152,16 +157,12 @@
 						{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
 					]
 				},
-				arcbarList: [
-					//圆环
-					{
-						series: [
-							{
-								name: '正确率',
-								data: 0.2912
-							}
-						]
-					}],
+				arcbar0: {					
+						series: [{name: '足球',data: 0.6921}]
+				},
+				arcbar1: {
+						series: [{name: '篮球',data: 0.3079}]
+				},
 				tableData: [{
 							id: "1",
 							area: "北京市",
@@ -261,7 +262,11 @@
 			change(e) {
 			      this.btnnum = e
 			      console.log(this.btnnum)
-			  }
+			},
+			changeArcbar(e){
+				this.arcbarNum = e
+				console.log(this.arcbarNum)
+			}
 		},
 		created() {
 			this.$nextTick(() => {
@@ -270,8 +275,8 @@
 				// this.$refs['histogramData1'].showCharts();
 				// this.$refs['histogramData2'].showCharts();
 				// //圆环(注意循环可能会导致出现下面情况,请更具实际情况作出判断// console.log(this.$refs);)
-				this.$refs['arcbar0'][0].showCharts();
-				// this.$refs['arcbar1'][0].showCharts();
+				this.$refs['arcbar0'].showCharts();
+				this.$refs['arcbar1'].showCharts();
 				// this.$refs['arcbar2'][0].showCharts();
 				// // 饼状图
 				// this.$refs['pieChart0'].showCharts();
