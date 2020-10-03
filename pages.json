@@ -3,13 +3,13 @@
 		{
 			"path": "pages/sales/index",
 			"style": {
-				"navigationBarTitleText": "销售"
+			"navigationBarTitleText": "销售"
 			}
 		},
 		{
 			"path": "pages/mine/index",
 			"style": {
-				"navigationBarTitleText" : "个人中心"
+			"navigationBarTitleText" : "个人中心"
 			}
 		},
         {
@@ -22,6 +22,14 @@
            	"navigationBarTitleText" : "渠道"
             }
         }
+        ,{
+            "path" : "pages/sales/level/level",
+            "style" : {}
+        }
+		,{
+		    "path" : "pages/sales/level/levle_ring_detail",
+		    "style" : {}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

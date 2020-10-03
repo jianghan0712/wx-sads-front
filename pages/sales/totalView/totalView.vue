@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<view >{{testRequest}}</view>
 		<view class="sale-row-2">
 			<view class="row-box">
 				<view class="column_box_2">
@@ -155,7 +156,8 @@
 <script>
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import ArcbarChart from '@/components/basic-chart/ArcbarChart.vue';
-	import vTable from "@/components/table/table.vue"
+	import vTable from "@/components/table/table.vue";
+	import {globalRequest} from "@/common/request.js";
 	
 	export default {
 		name: 'Index',
@@ -166,6 +168,7 @@
 		},
 		data() {
 			return {
+				testRequest:"kjisd",
 				btnnum: 0,
 				arcbarNum: 0,
 				lineData2: {
@@ -249,8 +252,7 @@
 						},
 						{
 							title: '环比',
-							key: 'huanbi',
-							$width:"80px"
+							key: 'huanbi'
 						}
 					],					
 			};
@@ -278,6 +280,43 @@
 				// 		console.log('网络错误');
 				// 	}
 				// });
+				globalRequest(`/sads/sales/test`, 'POST', {'name':'jianghan name','password':'123456'}, 1).then( res => {
+				   // 获得数据 
+				   
+				   this.testRequest=res;
+				}).catch( res => {
+				　　// 失败进行的操作
+					// console.log("fail:" + res)
+				});
+				
+				// this.$api.register({mobile: this.mobile}).then(res => {
+				//    // 获得数据 
+				//    console.log(res) 
+				// }).catch(res => {
+				// 　　// 失败进行的操作
+				// 	console.log(res)
+				// });
+				// uni.request({
+				// 	url: 'http://127.0.0.1:8080/sads/sales/test',
+				// 	method:'POST',
+				// 	data: {'name':'jianghan name','password':'123456'},
+				// 	// success: function(res) {
+				// 	// 	console.log('请求后台数据：' + res.data);
+				// 	// 	let serverData = res.data;
+				// 	// 	// console.log('this.testRequest：' + this.testRequest);
+				// 	// 	// this.$set(this.lineData, 'categories', serverData.Column.categories);
+				// 	// 	// this.$set(this.lineData, 'series', serverData.Column.series);
+				// 	// 	// this.$refs['lineData1'].showCharts();
+				// 	// },
+				// 	// fail: () => {
+				// 	// 	console.log('网络错误');
+				// 	// }
+				// }).then(data => {//data为一个数组，数组第一项为错误信息，第二项为返回数据
+				// 	var [error, res]  = data;
+				// 	this.testRequest=res.data;
+				// 	console.log(res.data);
+				// });
+
 				setTimeout(() => {
 					//延迟模拟ajax嗲用后台数据
 					let categories = ['20111', '2013', '2014', '2015', '2016', '2017'];
@@ -402,7 +441,7 @@
 	.rankTable{
 		width: 100%;
 		height: 500upx;
-		margin: 0rpx 5rpx;
+		margin: 0rpx 5rpx 0rpx 5rpx;
 		padding: 0 10rpx;
 		font-size: 30rpx;
 		font-weight: bold;
@@ -484,15 +523,10 @@
 	.arcbar-text-line{
 		width: 100%;
 		display: flex;
-/* 		margin: 0rpx 5rpx;
-		padding: 0 10rpx; */
 		flex-direction: row;
-		/* justify-content:space-between; */
 	}
 	.end-cont{
-		/* text-align: left; */
 		display: none;
-		/* padding:0rpx 15rpx 0rpx 15rpx; */
 		background: #FFFFFF;
 	}
 	.btna{

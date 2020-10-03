@@ -19,7 +19,7 @@
 			<text>{{tabIndex}}</text>
 		</block>
 		<block v-if="tabIndex==2">
-			<text>{{tabIndex}}</text>
+			<level></level>
 		</block>
 		<block v-if="tabIndex==3">
 			<text>{{tabIndex}}</text>
@@ -33,6 +33,7 @@
     import mediaItem from './news-item.nvue';
 	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
 	import totalView from "./totalView/totalView.vue";
+	import level from "./level/level.vue";
 
     // 缓存每页最多
     const MAX_CACHE_DATA = 100;
@@ -43,7 +44,8 @@
         components: {
             mediaItem,
 			MxDatePicker,
-			totalView
+			totalView,
+			level
         },
         data() {
             return {
