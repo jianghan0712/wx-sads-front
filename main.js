@@ -6,11 +6,18 @@ import request from './common/request.js'
 import api from './api/index.js'
 import url from './common/config.js'
 
+import urlAPI from '@/common/vmeitime-http/'
+import numberFun from '@/common/tools/number.js'
+
+    // 全局挂载后使用
+Vue.prototype.$urlAPI = urlAPI
+Vue.prototype.$numberFun = numberFun
+
 
 Vue.config.productionTip = false
-Vue.prototype.$request = request
-Vue.prototype.$api = api
-Vue.prototype.$url = url
+// Vue.prototype.$request = request
+// Vue.prototype.$api = api
+// Vue.prototype.$url = url
 
 App.mpType = 'app'
 

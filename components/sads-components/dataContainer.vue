@@ -58,8 +58,10 @@
 			}
 		},
 		methods: {
-			showDataContainer() {
+			showDataContainer() {			
 				this.dataList = this.dataAs;
+				// var str = JSON.stringify(this.dataAs);
+				console.log("showDataContainer:", this.dataAs);
 			},
 		},
 	}

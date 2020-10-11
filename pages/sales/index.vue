@@ -13,7 +13,7 @@
 				<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" /> 
 			</view>	 
 			<block v-if="tabIndex==0">
-				<totalView :model="modelSet"></totalView>
+				<totalView ref="totalView" :model="modelSet"></totalView>
 			</block>
 			<block v-if="tabIndex==1">
 				<gameView :model="modelSet"></gameView>
@@ -91,6 +91,7 @@
             }
         },
         onLoad() {
+			this.$refs['totalView'].showView();
         },
         methods: {
             getList(index) {

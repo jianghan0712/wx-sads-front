@@ -14,14 +14,14 @@
 				</view>
 			</view>		
 			<view class="end-cont" :class="{dis:btnnum == 0}">		
-			 　 <view class="line">
-					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" />
-				</view>
+				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
+							:xAxisAs="{scrollShow:false}" 
+							:yAxisAs="{formatter: {type: 'number', name:'百万元',fixed: 0}}"/>
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
-			 　 <view class="line">
-					<line-chart ref="lineData1" canvasId="index_line_2" :dataAs="lineData1" />
-				</view>
+				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
+							:xAxisAs="{scrollShow:false}" 
+							:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
 			</view>		
 		</view>
 		
@@ -103,6 +103,8 @@
 	import {globalRequest} from "@/common/request.js";
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import dataContainerTwo from '@/components/sads-components/dataContainerTwo.vue';
+	import urlAPI from '@/common/vmeitime-http/';
+	import numberFun from '@/common/tools/number.js';
 	
 	export default {
 		name: 'Index',
@@ -123,38 +125,19 @@
 		data() {
 			return {
 				showModel:{},
-				totalData:{
-					big1:{name:'销量（百万元）',value:'3.20', left:{name:'周同比',value:'-71.98%'},right:{name:'环比',value:'-31.11%'}},
-					big2:{name:'票数（万张）',value:'4.37', left:{name:'周同比',value:'-70.56%'},right:{name:'环比',value:'-28.88%'}},
-				},	
+				totalData:{},	
 				footballData:{
-					big1:{name:'销量',value:'1.26亿元', left:{name:'周同比',value:-0.6209},right:{name:'环比',value:0.0145}},
-					big2:{name:'占比',value:0.63, left:{name:'周同比',value:-0.0132},right:{name:'环比',value:0.1069}},
+					// big1:{name:'销量',value:'1.26亿元', left:{name:'周同比',value:-0.6209},right:{name:'环比',value:0.0145}},
+					// big2:{name:'占比',value:0.63, left:{name:'周同比',value:-0.0132},right:{name:'环比',value:0.1069}},
 				},	
 				basketballData:{
 					big1:{name:'销量',value:'9.01百万元', left:{name:'周同比',value:-0.5275},right:{name:'环比',value:-0.61}},
 					big2:{name:'占比',value:0.27, left:{name:'周同比',value:0.2306},right:{name:'环比',value:0.5746}},
 				},	
-				testRequest:"kjisd",
 				btnnum: 0,
 				arcbarNum: 0,
-				lineData2: {
-					//数字的图--折线图数据
-					categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
-					series: [
-						{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
-						{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] },
-						{ name: '成交量C', data: [100, 80, 95, 150, 112, 132] }
-					]
-				},
-				lineData1: {
-					//数字的图--折线图数据
-					categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
-					series: [
-						{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
-						{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
-					]
-				},
+				lineData2: {},
+				lineData1: {},
 				arcbar0: {					
 						series: [{name: '足球',data: 0.6921}]
 				},
@@ -231,67 +214,134 @@
 			this.getServerData();
 		},
 		methods: {
-			getServerData() {
-				//模拟ajax调用
-				// uni.request({
-				// 	url: 'https://www.easy-mock.com/mock/5cc586b64fc5576cba3d647b/uni-wx-charts/chartsdata2',
-				// 	data: {},
-				// 	success: function(res) {
-				// 		console.log(res.data.data);
-				// 		let serverData = res.data.data;
-				// 		this.$set(this.lineData, 'categories', serverData.Column.categories);
-				// 		this.$set(this.lineData, 'series', serverData.Column.series);
-				// 		this.$refs['lineData1'].showCharts();
-				// 	},
-				// 	fail: () => {
-				// 		console.log('网络错误');
-				// 	}
-				// });
-				globalRequest(`/sads/sales/test`, 'POST', {'name':'jianghan name','password':'123456'}, 1).then( res => {
-				   // 获得数据 
-				   
-				   this.testRequest=res;
-				}).catch( res => {
-				　　// 失败进行的操作
-					// console.log("fail:" + res)
-				});
-				
-				// this.$api.register({mobile: this.mobile}).then(res => {
-				//    // 获得数据 
-				//    console.log(res) 
-				// }).catch(res => {
-				// 　　// 失败进行的操作
-				// 	console.log(res)
-				// });
-				// uni.request({
-				// 	url: 'http://127.0.0.1:8080/sads/sales/test',
-				// 	method:'POST',
-				// 	data: {'name':'jianghan name','password':'123456'},
-				// 	// success: function(res) {
-				// 	// 	console.log('请求后台数据：' + res.data);
-				// 	// 	let serverData = res.data;
-				// 	// 	// console.log('this.testRequest：' + this.testRequest);
-				// 	// 	// this.$set(this.lineData, 'categories', serverData.Column.categories);
-				// 	// 	// this.$set(this.lineData, 'series', serverData.Column.series);
-				// 	// 	// this.$refs['lineData1'].showCharts();
-				// 	// },
-				// 	// fail: () => {
-				// 	// 	console.log('网络错误');
-				// 	// }
-				// }).then(data => {//data为一个数组，数组第一项为错误信息，第二项为返回数据
-				// 	var [error, res]  = data;
-				// 	this.testRequest=res.data;
-				// 	console.log(res.data);
-				// });
-
-				setTimeout(() => {
-					//延迟模拟ajax嗲用后台数据
-					let categories = ['20111', '2013', '2014', '2015', '2016', '2017'];
-					let series = [{ name: '成交量A', data: [0.8511, 0.233, 0.125, 0.437, 0.48, 0.1234] }];
-					this.$set(this.lineData, 'categories', categories);
-					this.$set(this.lineData, 'series', series);
+			showView(){
+				this.$nextTick(() => {				
+					this.$refs['arcbar0'].showCharts();
+					this.$refs['arcbar1'].showCharts();
+					this.$refs['lineData2'].showCharts();
 					this.$refs['lineData1'].showCharts();
-				}, 1000);
+					this.$refs['dataContain'].showDataContainer();
+					this.$refs['dataContain2'].showDataContainer();
+					this.$refs['dataContain3'].showDataContainer();
+					console.log("init dataContain:" ,this.totalData);
+				});
+			},
+			// 获取最上层的两个tab
+			getDataSet(){
+				var url = 'mobile/sales/getSalesToday/1/2020-10-11';
+				
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.concreteBean;
+					var format0 = numberFun.formatCNumber(data[0]);
+					var format1 = numberFun.formatCNumber(data[1]);
+					
+					var left1 = {'name':'周同比','value':'-71.98%'};
+					var right1 = {'name':'环比','value':'-31.11%'};
+					var big1 = {'name':'销量（'+format0.name +'元）', 'value':data[0]/format0.value, 'left': left1,'right':right1};
+					var big2 = {'name':'票数（'+format1.name +'张）','value':data[1]/format1.value, 'left':{'name':'周同比','value':'-70.56%'},'right':{'name':'环比','value':'-28.88%'}};
+				
+					this.$set(this.totalData, 'big1', big1);
+					this.$set(this.totalData, 'big2', big2);
+					console.log('request totalData', this.totalData);
+					
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getLinesData(){
+				var url = 'mobile/sales/getSalesTodayByHour/1/2020-10-11';
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.concreteBean;					
+					var categories=[];
+					var series=[];
+					var amountData = [];
+					var volData = [];
+					var j=0,k = 0,tempAmount=0,tempVol=0;
+					
+					for(var i=0;i<data.length;i++){	
+						if(j==3){
+							categories[k] = data[i][0];
+							amountData[k] = data[i][1]/1000000;
+							volData[k] = data[i][2]/10000;
+							k++;
+							j=0;
+						}else{
+							tempAmount = tempAmount+data[i][1]/1000000;
+							tempVol = tempVol+data[i][2]/10000;
+							j=j+1;
+						}
+					}
+					console.log('categories:', categories);
+					console.log('amountData:', amountData);
+					console.log('volData:', volData);
+					
+					var json = {'name':'销量','data':amountData};
+					var series = [];
+					series[0] = json;				
+					this.$set(this.lineData2, 'categories', categories);
+					this.$set(this.lineData2, 'series', series);
+					
+					var json2 = {'name':'销量','data':volData};
+					var series2 = [];
+					series2[0] = json2;
+					this.$set(this.lineData1, 'categories', categories);
+					this.$set(this.lineData1, 'series', series2);
+					
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
+			getFootballGame(){
+				var url = '/exhibition/gameSales/queryGameSalesOfFb/2020-10-11/1/1';
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.concreteBean;
+					var format0 = numberFun.formatCNumber(data[0]);
+					var format1 = numberFun.formatCNumber(data[1]);
+					
+					var amount = data[0]/format0.value + format0.name +'元';
+					
+					var left1 = {'name':'周同比','value':(data[0]/data[1]-1).toFixed(4)};
+					var right1 = {'name':'环比','value':-0.3111};
+					var big1 = {'name':'销量', 'value':amount, 'left': left1,'right':right1};
+					var big2 = {'name':'占比','value':0.63, 'left':{'name':'周同比','value':-0.0132},'right':{'name':'环比','value':0.1069}};
+					this.$set(this.footballData, 'big1', big1);
+					this.$set(this.footballData, 'big2', big2);
+					console.log('request footballData', this.footballData);
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
+			getServerData() {
+				this.getDataSet();
+				this.getLinesData();
+				this.getFootballGame();
 			},
 			change(e) {
 			      this.btnnum = e
@@ -310,29 +360,32 @@
 		},
 		created() {
 			this.showModel = this.model;
-			this.$nextTick(() => {
-				//柱状图
-				// this.$refs['histogramData0'].showCharts();
-				// this.$refs['histogramData1'].showCharts();
-				// this.$refs['histogramData2'].showCharts();
-				// //圆环(注意循环可能会导致出现下面情况,请更具实际情况作出判断// console.log(this.$refs);)
-				this.$refs['arcbar0'].showCharts();
-				this.$refs['arcbar1'].showCharts();
-				// this.$refs['arcbar2'][0].showCharts();
-				// // 饼状图
-				// this.$refs['pieChart0'].showCharts();
-				// // 环状图
-				// this.$refs['ringChart0'].showCharts();
-				//折线图
-				this.$refs['lineData2'].showCharts();
-				this.$refs['lineData1'].showCharts();
-				this.$refs['dataContain'].showDataContainer();
-				this.$refs['dataContain2'].showDataContainer();
-				this.$refs['dataContain3'].showDataContainer();
-				
-			});
 			//ajax调用
 			this.getServerData();
+			
+			// this.$nextTick(() => {
+				
+			// 	//柱状图
+			// 	// this.$refs['histogramData0'].showCharts();
+			// 	// this.$refs['histogramData1'].showCharts();
+			// 	// this.$refs['histogramData2'].showCharts();
+			// 	// //圆环(注意循环可能会导致出现下面情况,请更具实际情况作出判断// console.log(this.$refs);)
+			// 	this.$refs['arcbar0'].showCharts();
+			// 	this.$refs['arcbar1'].showCharts();
+			// 	// this.$refs['arcbar2'][0].showCharts();
+			// 	// // 饼状图
+			// 	// this.$refs['pieChart0'].showCharts();
+			// 	// // 环状图
+			// 	// this.$refs['ringChart0'].showCharts();
+			// 	//折线图
+			// 	this.$refs['lineData2'].showCharts();
+			// 	this.$refs['lineData1'].showCharts();
+			// 	this.$refs['dataContain'].showDataContainer();
+			// 	this.$refs['dataContain2'].showDataContainer();
+			// 	this.$refs['dataContain3'].showDataContainer();
+			// 	console.log("init dataContain:" ,this.totalData);
+			// });
+			
 		}
 	}
 </script>
