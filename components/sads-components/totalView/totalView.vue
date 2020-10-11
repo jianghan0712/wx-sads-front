@@ -1,50 +1,11 @@
 <template>
 	<view>
-		<view >{{testRequest}}</view>
-		<view class="sale-row-2">
-			<view class="row-box">
-				<view class="column_box_2">
-					<view class="column-box">
-						<text class="big-text">销量（万元）</text>
-						<text class="big-text">110.00</text>
-					</view>
-					<view class="column-box">
-						<view class="row_box_2">
-							<view class="row-box">
-								<text class="small-text">同比</text>
-								<text class="small-text">+12.00%</text>
-							</view>
-							<view class="row-box">
-								<text class="small-text">环比</text>
-								<text class="small-text">+1.30%</text>
-							</view>
-						</view>
-					</view>
-				</view>			
-			</view>
-			<view class="row-box">
-				<view class="column_box_2">
-					<view class="column-box">
-						<text class="big-text">票数（万元）</text>
-						<text class="big-text">65.30</text>
-					</view>
-					<view class="column-box">
-						<view class="row_box_2">
-							<view class="row-box">
-								<text class="small-text">同比</text>
-								<text class="small-text">+12.00%</text>
-							</view>
-							<view class="row-box">
-								<text class="small-text">环比</text>
-								<text class="small-text">+1.30%</text>
-							</view>
-						</view>
-					</view>
-				</view>			
-			</view>
+		<view class="box-contaniner">
+			<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
 		</view>
-		<!-- 折线Line纯数字-->
-		<view class="lineChart-box">
+		
+		<!-- 折线图区域-->
+		<view class="box-contaniner">
 			<view class="clineChart-title">
 				<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
 				<view class="linechart-tab">
@@ -55,66 +16,48 @@
 			<view class="end-cont" :class="{dis:btnnum == 0}">		
 			 　 <view class="line">
 					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" />
-			</view>
+				</view>
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
 			 　 <view class="line">
 					<line-chart ref="lineData1" canvasId="index_line_2" :dataAs="lineData1" />
-			</view>
-		</view>		
-
-		<!-- 圆环arcbar -->
-		<view class="arcbarChart-box">
-				<view class="arcbarChart-title">
-					<view style="font-size: 30rpx;font-weight: bold;">竞彩足篮球销量及占比</view>
-					<view class="arcbarChart-tab">
-					    <view @tap="changeArcbar(0)" :class="arcbarNum == 0?'btna':'hide'" >足球</view>
-					    <view @tap="changeArcbar(1)" :class="arcbarNum == 1?'btna':'hide'" >篮球</view>
+				</view>
+			</view>		
+		</view>
+		
+		<!-- 圆环图区域 -->
+		<view class="box-contaniner">
+			<view class="clineChart-title">
+				<view style="font-size: 30rpx;font-weight: bold;">竞彩足篮球销量及占比</view>
+				<view class="arcbarChart-tab">
+					<view @tap="changeArcbar(0)" :class="arcbarNum == 0?'btna':'hide'" >足球</view>
+					<view @tap="changeArcbar(1)" :class="arcbarNum == 1?'btna':'hide'" >篮球</view>
+				</view>
+			</view>	
+			<view class="end-cont" :class="{dis:arcbarNum == 0}" >
+				<view class="arcbarChart-content">
+					<view class="arcbar" style="width: 50%;">
+						<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
 					</view>
-				</view>	
-				<view class="end-cont"  :class="{dis:arcbarNum == 0}" >
-					<view class="arcbarChart-content">
-						<view class="arcbar" style="width: 50%;">
-							<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
-						</view>
-						<view class="arcbar-text" style="width: 50%;">
-							<view class="arcbar-text-line">							
-								<view style="width: 50%;">销量</view>
-								<view style="width: 50%;">55万元</view>
-							</view>		
-							<view class="arcbar-text-line">
-								<view style="width: 20%;">同比</view>
-								<view style="width: 30%;">+10%</view>
-								<view style="width: 20%;">环比</view>
-								<view style="width: 30%;">+25.64%</view>
-							</view>	
-						</view>
+					<view class="arcbar-text" style="width: 50%;">
+						<dataContainerTwo  ref="dataContain2" :dataAs="footballData"></dataContainerTwo>
 					</view>
 				</view>
-				<view class="end-cont" :class="{dis:arcbarNum == 1}">		　						 
-				    <view class="arcbarChart-content">
-				    	<view class="arcbar" style="width: 50%;">
-				    		<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
-				    	</view>
-				    	<view class="arcbar-text" style="width: 50%;">
-				    		<view class="arcbar-text-line">							
-				    			<view style="width: 50%;">销量</view>
-				    			<view style="width: 50%;">14万元</view>
-				    		</view>		
-				    		<view class="arcbar-text-line">
-				    			<view style="width: 20%;">同比</view>
-				    			<view style="width: 30%;">-12.4%</view>
-				    			<view style="width: 20%;">环比</view>
-				    			<view style="width: 30%;">+25.64%</view>
-				    		</view>	
-				    	</view>
-				    </view>
-				</view>				
 			</view>
-		</view>	
+			<view class="end-cont" :class="{dis:arcbarNum == 1}">		　						 
+				<view class="arcbarChart-content">
+					<view class="arcbar" style="width: 50%;">
+						<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
+					</view>
+					<view class="arcbar-text" style="width: 50%;">
+						<dataContainerTwo  ref="dataContain3" :dataAs="basketballData"></dataContainerTwo>
+					</view>
+				</view>
+			</view>				
+		</view>		
 		
 		<!-- 门店在售情况-->
-		<view class="shop-box">
+		<view class="box-contaniner">
 			<view class="shop-title">门店在售情况</view>
 			<view class="shop-item-title">
 				<view style="width: 400rpx;">在售门店数</view>				
@@ -139,10 +82,10 @@
 		</view>
 		
 		<!-- 各地区销量排行-->
-		<view class="rankTable">
+		<view class="box-contaniner">
 			<view class="rankTable-title">
 				<view>各地区销量排行</view>
-				<view class="rankTable-more">全部>></view>
+				<view class="rankTable-more" @click="goSaleRank(showModel.area)">全部>></view>
 			</view>
 			<view class="example">
 				<v-table :columns="tableColumns" :list="tableData" :height="250" border-color="#FFFFFF"></v-table>
@@ -158,16 +101,40 @@
 	import ArcbarChart from '@/components/basic-chart/ArcbarChart.vue';
 	import vTable from "@/components/table/table.vue";
 	import {globalRequest} from "@/common/request.js";
+	import dataContainer from '@/components/sads-components/dataContainer.vue';
+	import dataContainerTwo from '@/components/sads-components/dataContainerTwo.vue';
 	
 	export default {
 		name: 'Index',
 		components: {
 			LineChart,
 			ArcbarChart,
-			vTable
+			vTable,
+			dataContainer,
+			dataContainerTwo
+		},
+		props: {
+			model:{
+				//数据
+				type: Object,
+				default: () => ({})
+			}
 		},
 		data() {
 			return {
+				showModel:{},
+				totalData:{
+					big1:{name:'销量（百万元）',value:'3.20', left:{name:'周同比',value:'-71.98%'},right:{name:'环比',value:'-31.11%'}},
+					big2:{name:'票数（万张）',value:'4.37', left:{name:'周同比',value:'-70.56%'},right:{name:'环比',value:'-28.88%'}},
+				},	
+				footballData:{
+					big1:{name:'销量',value:'1.26亿元', left:{name:'周同比',value:-0.6209},right:{name:'环比',value:0.0145}},
+					big2:{name:'占比',value:0.63, left:{name:'周同比',value:-0.0132},right:{name:'环比',value:0.1069}},
+				},	
+				basketballData:{
+					big1:{name:'销量',value:'9.01百万元', left:{name:'周同比',value:-0.5275},right:{name:'环比',value:-0.61}},
+					big2:{name:'占比',value:0.27, left:{name:'周同比',value:0.2306},right:{name:'环比',value:0.5746}},
+				},	
 				testRequest:"kjisd",
 				btnnum: 0,
 				arcbarNum: 0,
@@ -230,7 +197,7 @@
 							huanbi: "+45.21%"
 						}
 					],
-					tableColumns: [{
+				tableColumns: [{
 							title: "排名",
 							key: "id",
 							$width:"50px",
@@ -333,9 +300,16 @@
 			changeArcbar(e){
 				this.arcbarNum = e
 				console.log(this.arcbarNum)
+			},
+			goSaleRank(area){
+				console.log(area)
+				uni.navigateTo({
+					url:"/pages/common/tableDetail?area="+area
+				});
 			}
 		},
 		created() {
+			this.showModel = this.model;
 			this.$nextTick(() => {
 				//柱状图
 				// this.$refs['histogramData0'].showCharts();
@@ -352,6 +326,10 @@
 				//折线图
 				this.$refs['lineData2'].showCharts();
 				this.$refs['lineData1'].showCharts();
+				this.$refs['dataContain'].showDataContainer();
+				this.$refs['dataContain2'].showDataContainer();
+				this.$refs['dataContain3'].showDataContainer();
+				
 			});
 			//ajax调用
 			this.getServerData();
@@ -360,57 +338,6 @@
 </script>
 
 <style>	
-	.sale-row-2{
-		display: flex;
-		flex-direction: row;	
-		margin: 20rpx 10rpx 20rpx 10rpx;
-		padding: 20rpx 10rpx 20rpx 10rpx;	
-	}
-	.row_box_2{
-		display: flex;
-		flex-direction: row;	
-	}
-	
-	.column_box_2{	
-		display: flex;
-		flex-direction: column;
-	}
-
-	.row-box {
-		width: 50%;
-		margin: 0rpx 5rpx;
-		padding: 0 10rpx;
-		background-color: #ebebeb;
-	}
-
-	.column-box{
-		height: 50%;
-		margin: 0rpx 5rpx;
-		padding: 0 5rpx;
-		background-color: #ebebeb;
-	}
-	
-	.big-text{
-		text-align: left;
-		background-color: #ebebeb;
-		color: #777;
-		font-size: 40rpx;
-	}
-	
-	.small-text{
-		text-align: left;
-		background-color: #ebebeb;
-		color: #777;
-		font-size: 30rpx;
-	}
-	
-	.shop-box {
-		width: 100%;
-		height: 500upx;
-		margin: 20rpx 10rpx 20rpx 10rpx;
-		padding: 20rpx 10rpx 20rpx 10rpx;
-		background-color: #FFFFFF;
-	}
 	
 	.shop-title{
 		width: 100%;
@@ -425,7 +352,7 @@
 		width: 100%;
 		display: flex;
 		margin: 0rpx 5rpx 0rpx 5rpx;
-		padding: 0 10rpx 0 10rpx;
+		/* padding: 0 10rpx 0 10rpx; */
 		flex-direction: row;
 		background-color: #ebebeb;
 	}
@@ -433,7 +360,7 @@
 		width: 100%;
 		display: flex;
 		margin: 0rpx 5rpx 0rpx 5rpx;
-		padding: 0 10rpx 20rpx 10rpx;
+		/* padding: 0 10rpx 20rpx 10rpx; */
 		flex-direction: row;
 		background-color: #ebebeb;
 	}
@@ -454,11 +381,12 @@
 		padding: 0 10rpx; 
 		display: flex;
 		justify-content: space-between;
+		font-weight: bold;
 	}
 	
 	.rankTable-more{
 		margin: 0rpx 5rpx;
-		padding: 0 10rpx;
+		padding: 0 0rpx;
 		text-align: right;
 	}
 		
@@ -474,11 +402,11 @@
 		font-weight: bold;
 		border-color:#FFFFFF;
 	}
-	
-	.lineChart-box{
-		margin: 20rpx 10rpx 20rpx 10rpx;
-		padding: 20rpx 10rpx 20rpx 10rpx;
+	.box-contaniner{
+		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
+	
 	.clineChart-title{
 		display: flex;
 		justify-content:space-between;
@@ -494,8 +422,8 @@
 	}
 	
 	.arcbarChart-box{
-		margin: 20rpx 0rpx 20rpx 0rpx;
-		padding: 20rpx 0rpx 20rpx 0rpx;
+		margin: 20rpx 10rpx 20rpx 10rpx;
+		/* padding: 20rpx 0rpx 20rpx 0rpx; */
 	}
 	
 	.arcbarChart-title{
@@ -504,7 +432,8 @@
 	}
 	/* 将三个内容view的display设置为none(隐藏) */
 	.arcbarChart-tab{
-		/* padding:0rpx 5rpx 0rpx 5rpx; */
+		margin: 20rpx 10rpx 20rpx 10rpx;
+		padding:0rpx 5rpx 0rpx 5rpx;
 		flex-direction: row;
 		display: flex;
 		text-align: right;

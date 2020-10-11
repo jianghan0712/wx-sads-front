@@ -18,4 +18,8 @@ const app = new Vue({
     ...App
 	// store
 })
+
+const vue =Vue;
+const ballType ='足球';
+
 app.$mount()

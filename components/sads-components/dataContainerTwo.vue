@@ -1,0 +1,141 @@
+<template>
+	<view class="column-2">
+		<view class="column_box_2">
+			<view class="big-text">{{dataList.big1.name}} {{dataList.big1.value}}</view>
+			<view class="sale-row-2">
+				<view class="row-box">
+					<text class="small-text">{{dataList.big1.left.name}}</text>
+					<text :class="dataList.big1.left.value >= 0?'small-text-red':'small-text-green'">{{valueToPercent(dataList.big1.left.value)}}</text>
+				</view>
+				<view class="row-box">
+					<text class="small-text">{{dataList.big1.right.name}}</text>
+					<text :class="dataList.big1.right.value >= 0?'small-text-red':'small-text-green'">{{valueToPercent(dataList.big1.right.value)}}</text>
+				</view>
+			</view>
+		</view>
+		<view class="column_box_2">
+			<view class="big-text">{{dataList.big2.name}} {{valueToPercent(dataList.big2.value)}}</view>
+			<view class="sale-row-2">
+				<view class="row-box">
+					<view class="small-text">{{dataList.big2.left.name}}</view>
+					<view :class="dataList.big2.left.value >= 0?'small-text-red':'small-text-green'">{{valueToPercent(dataList.big2.left.value)}}</view>
+				</view>
+				<view class="row-box">
+					<view class="small-text">{{dataList.big2.right.name}}</view>
+					<view :class="dataList.big2.right.value >= 0?'small-text-red':'small-text-green'">{{valueToPercent(dataList.big2.right.value)}}</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props: {
+			dataAs: {
+				//数据
+				type: Object,
+				default: () => ({})
+			},
+		},
+		data() {
+			return {
+				dataList:{}
+			}
+		},
+		methods: {
+			showDataContainer() {
+				this.dataList = this.dataAs;
+			},
+			valueToPercent(value) {
+				let temp = value;
+				value = value + '';
+				const pointIndex = value.indexOf('.');
+				if (pointIndex === -1) return (value - 0) * 100;
+				const powIndex = value.length - pointIndex - 1;
+				let result = (value.replace('.', '') - 0) * Math.pow(10, 2 - powIndex);
+				if(value>=0){
+					result = "+" + result + "%";
+				}else{
+					result = result + "%";
+				}
+				return result;
+			}
+		},
+	}
+</script>
+
+<style>
+	.column-2{
+		display: flex;
+		flex-direction: column;	
+		margin: 0rpx 0rpx 0rpx 5rpx;
+		/* padding: 20rpx 10rpx 20rpx 10rpx; */
+	}	
+	
+	.sale-row-2{
+		width: 100%;
+		display: flex;
+		flex-direction: row;	
+		margin: 0rpx 0rpx 0rpx 0rpx;
+		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
+	}
+	.row_box_2{
+		display: flex;
+		flex-direction: row;	
+	}
+	
+	.column_box_2{	
+		display: flex;
+		flex-direction: column;
+		margin: 0rpx 0rpx 20rpx 0rpx;
+	}
+	
+	.row-box {
+		display: flex;
+		width: 50%;
+		margin: 0rpx 0rpx 0rpx 0rpx;
+		padding: 0 0rpx;
+		background-color: #FFFFFF;
+		flex-direction: column;
+	}
+	
+	.column-box{
+		display: flex;
+		height: 50%;
+		margin: 0rpx 0rpx 0rpx 0rpx;
+		padding: 0 0rpx;
+		background-color: #FFFFFF;
+		flex-direction: column;
+	}
+	
+	.big-text{
+		text-align: left;
+		display: flex;
+		background-color: #FFFFFF;
+		/* color: #777; */
+		font-size: 35rpx;
+	}
+	
+	.small-text{
+		text-align: left;
+		display: flex;
+		background-color: #FFFFFF;
+		/* color: #777; */
+		font-size: 30rpx;
+	}
+	
+	.small-text-green{
+		text-align: left;
+		background-color: #FFFFFF;
+		color: #00FF00;
+		font-size: 30rpx;
+	}
+	
+	.small-text-red{
+		text-align: left;
+		background-color: #FFFFFF;
+		color: #FF0000;
+		font-size: 30rpx;
+	}
+</style>

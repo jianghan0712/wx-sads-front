@@ -6,34 +6,39 @@
             </view>
         </scroll-view>
         <view class="line-h"></view> 
-		<view>
-			<view class="datePick">		
-				<text @click="onShowDatePicker('date')">{{date}}</text>
-			</view>
-			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
-		</view>	 
-		<block v-if="tabIndex==0">
-			<totalView></totalView>
-		</block>
-		<block v-if="tabIndex==1">
-			<text>{{tabIndex}}</text>
-		</block>
-		<block v-if="tabIndex==2">
-			<level></level>
-		</block>
-		<block v-if="tabIndex==3">
-			<text>{{tabIndex}}</text>
-		</block>
-		<block v-if="tabIndex==4">
-			<text>{{tabIndex}}</text>
-		</block>
+			<view>
+				<view class="datePick">		
+					<text @click="onShowDatePicker('date')">{{date}}</text>
+				</view>
+				<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" /> 
+			</view>	 
+			<block v-if="tabIndex==0">
+				<totalView :model="modelSet"></totalView>
+			</block>
+			<block v-if="tabIndex==1">
+				<gameView :model="modelSet"></gameView>
+			</block>
+			<block v-if="tabIndex==2">
+				<levelView :model="modelSet"></levelView>
+			</block>
+			<block v-if="tabIndex==3">
+				<ticketView :model="modelSet"></ticketView>
+			</block>
+			<block v-if="tabIndex==4">
+				<matchView :model="modelSet"></matchView>
+			</block>
     </view>
 </template>
 <script>
     import mediaItem from './news-item.nvue';
 	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
-	import totalView from "./totalView/totalView.vue";
-	import level from "./level/level.vue";
+	import totalView from "@/components/sads-components/totalView/totalView.vue";
+	import levelView from "@/components/sads-components/levelView/levelView.vue";
+	import ticketView from "@/components/sads-components/ticketView/ticketView.vue";
+	import gameView from "@/components/sads-components/gameView/gameView.vue";
+	import matchView from "@/components/sads-components/matchView/matchView.vue";
+	import dateSelector from "@/components/sads-components/dateSelector.vue";
+	
 
     // 缓存每页最多
     const MAX_CACHE_DATA = 100;
@@ -42,13 +47,15 @@
 
     export default {
         components: {
-            mediaItem,
-			MxDatePicker,
-			totalView,
-			level
+            mediaItem, MxDatePicker,
+			totalView, levelView,
+			ticketView, gameView,dateSelector,matchView
         },
         data() {
             return {
+				modelSet:{
+					area:'all', page:'totalView',gateNo:''
+				},
                 newsList: [],
                 cacheTab: [],
                 tabIndex: 0,
@@ -73,7 +80,7 @@
                 navigateFlag: false,
                 pulling: false,
                 refreshIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAB5QTFRFcHBw3Nzct7e39vb2ycnJioqK7e3tpqam29vb////D8oK7wAAAAp0Uk5T////////////ALLMLM8AAABxSURBVHja7JVBDoAgDASrjqj//7CJBi90iyYeOHTPMwmFZrHjYyyFYYUy1bwUZqtJIYVxhf1a6u0R7iUvWsCcrEtwJHp8MwMdvh2amHduiZD3rpWId9+BgPd7Cc2LIkPyqvlQvKxKBJ//Qwq/CacAAwDUv0a0YuKhzgAAAABJRU5ErkJggg==",
-				showPicker: false,
+				showPicker: true,
 				date: '2019/01/01',
 				time: '15:00:12',
 				datetime: '2019/01/01 15:00:12',
@@ -213,7 +220,11 @@
 					//原始的Date对象
 					console.log('date => ' + e.date);
 				}
-			}			
+			},
+			toggle(type) {
+				this.type = type
+				this.$refs.popup.open()
+			},
         }
     }
 </script>
@@ -371,6 +382,12 @@
  	.datePick{
 		text-align: center;
 		padding: 10px 0;
+	}
+	
+	.popup-content {
+		background-color: #fff;
+		padding: 15px;
+		height: 500px;
 	}
 
 	</style>

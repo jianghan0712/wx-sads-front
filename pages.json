@@ -1,35 +1,46 @@
 {
+	
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/sales/index",
 			"style": {
-			"navigationBarTitleText": "销售"
+				"navigationBarTitleText": "竞彩销售"
 			}
-		},
-		{
+		},{
 			"path": "pages/mine/index",
 			"style": {
-			"navigationBarTitleText" : "个人中心"
+				"navigationBarTitleText" : "个人中心"
 			}
-		},
-        {
-            "path" : "pages/sales/totalView/totalView",
-            "style" : {}
-        }
-        ,{
+		},{
             "path" : "pages/channel/index",
             "style": {
-           	"navigationBarTitleText" : "渠道"
+				"navigationBarTitleText" : "竞彩渠道"
             }
-        }
-        ,{
-            "path" : "pages/sales/level/level",
-            "style" : {}
-        }
-		,{
-		    "path" : "pages/sales/level/levle_ring_detail",
+        }, {
+            "path" : "pages/channel/index-inner",
+            "style": {}
+        },{
+			"path" : "pages/channel/gameView/gameViewCompare",
+			"style" : {
+			}
+		},{
+            "path" : "pages/report/index",
+            "style" : {
+				"navigationBarTitleText" : "竞彩销售日报"
+			}			
+        },
+		
+		{
+		    "path" : "pages/common/levelRingDetail",
+		    "style" : {}
+		},{
+		    "path" : "pages/common/tableDetail",
 		    "style" : {}
 		}
+        ,{
+            "path" : "pages/match/match",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -51,9 +62,15 @@
 			},
 			{
 				"pagePath" : "pages/channel/index",
-				"iconPath" : "static/home.png",
-				"selectedIconPath" : "static/home-active.png",
+				"iconPath" : "static/order.png",
+				"selectedIconPath" : "static/order-active.png",
 				"text" : "渠道"
+			},
+			{
+				"pagePath" : "pages/report/index",
+				"iconPath" : "static/menu.png",
+				"selectedIconPath" : "static/menu-active.png",
+				"text" : "日报"
 			},
 			{
 				"pagePath" : "pages/mine/index",

@@ -153,11 +153,12 @@ form {
 	text-indent:20rpx;
 }
 .uni-input {
+	/* background-color: #ebebeb; */
 	height: 50rpx;
 	padding: 15rpx 25rpx;
 	line-height:50rpx;
 	font-size:28rpx;
-	background:#FFF;
+	background-color:#ebebeb;
 	flex: 1;
 }
 radio-group, checkbox-group{

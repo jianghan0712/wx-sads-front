@@ -1,70 +1,55 @@
 <template>
 	<view>
-		<view class="tab-content">
-			<view class="end-title">
-			　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">足球</view>
-			  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">篮球</view>
-			</view>	
-			<view class="end-cont" :class="{dis:btnnum == 0}">	
-				<view style="font-size: 30rpx;font-weight: bold;">足球关次销量及占比</view>				
-				<view class="ring_chart">
-					<ring-chart :dataAs="pieData" ref="ringChart0" canvasId="index_ring_0"/>
+		<view class="box-contaniner">
+			<view class="tab-content">
+				<view class="end-title">
+				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">足球</view>
+				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">篮球</view>
+				</view>	
+				<view class="end-cont" :class="{dis:btnnum == 0}">	
+					<view style="font-size: 30rpx;font-weight: bold;">足球关次销量及占比</view>				
+					<view class="ring_chart">
+						<ring-chart :dataAs="pieData" ref="ringChart0" canvasId="index_ring_0"/>
+					</view>		
+					<progress ref="progress_0" :dataAs="pieData"></progress>
 				</view>
-				<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
-				<!-- 各地区销量排行-->
-				<view class="rankTable">
-					<view class="rankTable-title">
-						<view  style="font-weight: bold;">各地区足球关次销量及占比</view>
-						<view class="rankTable-more">
-							<picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
-								当前选择：{{array[index].name}}
-							</picker>
-						</view>
+				<view class="end-cont" :class="{dis:btnnum == 1}">	
+					<view style="font-size: 30rpx;font-weight: bold;">篮球关次销量及占比</view>　
+					<view class="ring_chart">
+						<ring-chart :dataAs="pieData1" ref="ringChart1" canvasId="index_ring_1"/>
 					</view>
-					<view class="example">
-						<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
-					</view>
-					<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
-				</view>
+					<progress ref="progress_1" :dataAs="pieData1"></progress>
+				</view>		
 			</view>
-			<view class="end-cont" :class="{dis:btnnum == 1}">	
-				<view style="font-size: 30rpx;font-weight: bold;">篮球关次销量及占比</view>　
-				<view class="ring_chart">
-					<ring-chart :dataAs="pieData1" ref="ringChart1" canvasId="index_ring_1"/>
-				</view>
-				<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
-				<!-- 各地区销量排行-->
-				<view class="rankTable">
-					<view class="rankTable-title">
-						<view style="font-weight: bold;">各地区篮球关次销量及占比</view>
-						<view class="rankTable-more">
-							<picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
-								当前选择：{{array[index].name}}
-							</picker>
-						</view>
-					</view>
-					<view class="example">
-						<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
-					</view>
-					<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
-				</view>
-			</view>		
 		</view>
-	<slot />
+		
+		<!-- <view class="box-contaniner"> -->
+			
+		<!-- </view> -->
+		<slot />
 	</view>
 </template>
 
 <script>
 	import RingChart from "@/components/basic-chart/RingChart.vue";
 	import vTable from "@/components/table/table.vue";
+	import progress from "@/components/sads-components/progress.vue";
 	
 	export default {
 		components: {
 			RingChart,
-			vTable
+			vTable, progress
+		},
+		props: {
+			model:{
+				//数据
+				type: Object,
+				default: () => ({})
+			}
 		},
 		data() {
 			return {
+				showModel:{},
 				 btnnum: 0,
 				 index: 0,
 				 pieData: {
@@ -148,15 +133,18 @@
 			},
 			gotoLunBo(btnnum){
 				uni.navigateTo({	
-					url:"/pages/sales/level/levle_ring_detail?btnnum="+btnnum
+					url:"/pages/common/levelRingDetail?btnnum="+btnnum
 				});
 			}
 		},
 		created() {
+			this.showModel = this.model;
 			this.$nextTick(() => {
 				// 环状图
 				this.$refs['ringChart0'].showCharts();
 				this.$refs['ringChart1'].showCharts();
+				this.$refs['progress_0'].showProgress();
+				this.$refs['progress_1'].showProgress();
 			});
 			//ajax调用
 			this.getServerData();
@@ -165,6 +153,11 @@
 </script>
 
 <style>
+	.box-contaniner{
+		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
+	}
+	
     /* 将三个内容view的display设置为none(隐藏) */
 	.tab-content{
 		margin: 20rpx 10rpx 20rpx 10rpx;

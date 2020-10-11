@@ -1,5 +1,8 @@
 <script>
 	export default {
+		globalData: {  
+			ballType: '足球'  
+		}, 
 		onLaunch: function() {
 			console.log('App Launch')
 		},
