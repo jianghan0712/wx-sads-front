@@ -47,9 +47,14 @@
 				default: () => ({})
 			}
 		},
+		onLoad() {
+			_self = this;
+			this.getServerData();
+			this.showView()
+		},
 		data() {
 			return {
-				showModel:{},
+				param:{},
 				 btnnum: 0,
 				 index: 0,
 				 pieData: {
@@ -121,6 +126,15 @@
 			};
 		},
 		methods: {
+			showView(){
+				console.log("channel level showView" ,this.pieData);
+				this.$nextTick(() => {	
+					this.$refs['ringChart0'].showCharts();
+					this.$refs['ringChart1'].showCharts();
+					this.$refs['progress_0'].showProgress(pieData);
+					this.$refs['progress_1'].showProgress(pieData1);
+				});
+			},
 			getServerData() {
 			},
 		    change(e) {
@@ -137,18 +151,17 @@
 				});
 			}
 		},
+		mounted(){
+			this.showView();
+		},
+		watch: {
+			'$route':'showView'
+		},
 		created() {
-			this.showModel = this.model;
-			this.$nextTick(() => {
-				// 环状图
-				this.$refs['ringChart0'].showCharts();
-				this.$refs['ringChart1'].showCharts();
-				this.$refs['progress_0'].showProgress();
-				this.$refs['progress_1'].showProgress();
-			});
-			//ajax调用
+			this.paramhis.model;
 			this.getServerData();
-		}
+			// this.showView();
+		},
 	}
 </script>
 

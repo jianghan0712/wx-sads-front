@@ -116,7 +116,7 @@ export default {
 					//	X轴配置
 					type: 'grid',
 					rotateLabel: true, //X轴刻度（数值）标签是否旋转（仅在文案超过单屏宽度时有效）
-					itemCount: 5, //X轴可见区域数据数量（即X轴数据密度），配合拖拽滚动使用（即仅在启用enableScroll时有效）
+					itemCount: 10, //X轴可见区域数据数量（即X轴数据密度），配合拖拽滚动使用（即仅在启用enableScroll时有效）
 					// labelCount:Number,//X轴可见区域标签数量（即X轴数刻度标签单屏幕限制显示的数量）
 					scrollShow: true, //是否显示滚动条，配合拖拽滚动使用（即仅在启用enableScroll时有效）
 					scrollAlign: 'left', //滚动条初始位置，left为数据整体左对齐，right为右对齐
@@ -137,8 +137,10 @@ export default {
 				},
 				yAxis: {
 					//如果是多坐标系则传数组型对象[{disabled:true},{disabled:false}]
+					itemCount: 3,
 					disabled: false, //不绘制Y轴
 					position: 'left', //Y轴位置，可选值左侧left右侧right(未起效果)
+					disableGrid: true, //不绘制X轴网格(即默认绘制网格)
 					format: val => {
 						let defaultSetting = { type: 'number', fixed: 0, name: '' };
 						let { type, fixed, name } = this.yAxisAs && this.yAxisAs.formatter ? Object.assign(defaultSetting, this.yAxisAs.formatter) : defaultSetting;

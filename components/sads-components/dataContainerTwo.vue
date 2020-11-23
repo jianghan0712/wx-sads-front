@@ -48,18 +48,18 @@
 				this.dataList = this.dataAs;
 			},
 			valueToPercent(value) {
-				let temp = value;
-				value = value + '';
-				const pointIndex = value.indexOf('.');
-				if (pointIndex === -1) return (value - 0) * 100;
-				const powIndex = value.length - pointIndex - 1;
-				let result = (value.replace('.', '') - 0) * Math.pow(10, 2 - powIndex);
+				// let temp = value;
+				// value = value + '';
+				// const pointIndex = value.indexOf('.');
+				// if (pointIndex === -1) return (value - 0) * 100;
+				// const powIndex = value.length - pointIndex - 1;
+				// let result = (value.replace('.', '') - 0) * Math.pow(10, 2 - powIndex);
 				if(value>=0){
-					result = "+" + result + "%";
+					value = "+" + value + "%";
 				}else{
-					result = result + "%";
+					value = value + "%";
 				}
-				return result;
+				return value;
 			}
 		},
 	}
@@ -70,7 +70,6 @@
 		display: flex;
 		flex-direction: column;	
 		margin: 0rpx 0rpx 0rpx 5rpx;
-		/* padding: 20rpx 10rpx 20rpx 10rpx; */
 	}	
 	
 	.sale-row-2{
@@ -78,7 +77,6 @@
 		display: flex;
 		flex-direction: row;	
 		margin: 0rpx 0rpx 0rpx 0rpx;
-		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
 	}
 	.row_box_2{
 		display: flex;
@@ -96,7 +94,6 @@
 		width: 50%;
 		margin: 0rpx 0rpx 0rpx 0rpx;
 		padding: 0 0rpx;
-		background-color: #FFFFFF;
 		flex-direction: column;
 	}
 	
@@ -105,36 +102,29 @@
 		height: 50%;
 		margin: 0rpx 0rpx 0rpx 0rpx;
 		padding: 0 0rpx;
-		background-color: #FFFFFF;
 		flex-direction: column;
 	}
 	
 	.big-text{
 		text-align: left;
 		display: flex;
-		background-color: #FFFFFF;
-		/* color: #777; */
 		font-size: 35rpx;
 	}
 	
 	.small-text{
 		text-align: left;
 		display: flex;
-		background-color: #FFFFFF;
-		/* color: #777; */
 		font-size: 30rpx;
 	}
 	
 	.small-text-green{
 		text-align: left;
-		background-color: #FFFFFF;
 		color: #00FF00;
 		font-size: 30rpx;
 	}
 	
 	.small-text-red{
 		text-align: left;
-		background-color: #FFFFFF;
 		color: #FF0000;
 		font-size: 30rpx;
 	}

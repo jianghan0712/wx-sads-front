@@ -9,7 +9,7 @@
 			    <view @tap="changeTop('篮球')" :class="arcbarNumTop =='篮球'?'btna':'hide'" style="width: 50%;" >篮球</view>
 			</view>
 			
-			<dataContainer ref="gameData" :dataAs="totalData"></dataContainer>
+			<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
 
 			<view >
 				<view class="clineChart-title">
@@ -35,7 +35,7 @@
 			<view v-if="model.area=='all'">
 				<view class="container-title">
 					<view>各地区{{arcbarNumTop}}销量及占比</view>
-					<view>全部>></view>
+					<view><button style="width: 200;height: 50upx;text-align: top;font-size: 10rpx;" @click="toAll()">全部>></button></view>
 				</view>
 				<view class="table">
 					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
@@ -54,6 +54,7 @@
 	import gamebottom from './gameViewBottom.vue';
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import vTable from "@/components/table/table.vue";
+	import urlAPI from '@/common/vmeitime-http/';
 	
 	export default {
 			components:{
@@ -65,20 +66,21 @@
 				gamebottom,dataContainer,vTable
 			},
 			props: {
-				model:{
-					//数据
-					type: Object,
-					default: () => ({})
-				}
+				// model:{
+				// 	//数据
+				// 	type: Object,
+				// 	default: () => ({})
+				// }
 			},
 			created() {
-				this.showModel = this.model;
+				// this.showModel = this.model;
+				this.showModel = JSON.parse(uni.getStorageSync("selfParam"))
 				if(this.arcbarNumTop=='足球'){
 					this.totalData = this.footballData;
 				}else{
 					this.totalData = this.basketballData;
 				}
-				uni.getLocation({
+				/* uni.getLocation({
 				    type: 'wgs84',
 					geocode: true,
 				    success: function (res) {
@@ -105,24 +107,35 @@
 					complete:function (res) {
 
 				    }
-				});
+				}); */
 				this.$nextTick(()=>{
 					this.loadData();
-				})
+				});
+				setTimeout(() => {
+					this.loadData();
+					this.changeTop("足球")
+				}, 1);
+				
+				 
 				
 			},
 			data() {
 				return {
 					showModel:{},
-					totalData:{},
+					totalData:{
+						big1:{},
+						big2:{}
+					},
+					dataCompare:{},
+					dataCount:{},
 					footballData:{
 						big1:{name:'足球销量（百万元）',value:37.82, left:{name:'周同比',value:-0.6209},right:{name:'环比',value:0.0145}},
 						big2:{name:'足球票数（万张）',value:45.64, left:{name:'周同比',value:-0.0132},right:{name:'环比',value:0.1069}},
 					},	
 					basketballData:{
 						big1:{name:'篮球销量（万元）',value:36.94, left:{name:'周同比',value:-0.5275},right:{name:'环比',value:-0.61}},
-						big2:{name:'篮球占比（张）',value:4818.00, left:{name:'周同比',value:0.2306},right:{name:'环比',value:-0.9523}},
-					},	
+						big2:{name:'篮球票数（张）',value:4818.00, left:{name:'周同比',value:0.2306},right:{name:'环比',value:-0.9523}},
+					},
 					arcbarNumTop: '足球',
 					arcbarNumMid: '销量',
 					btnnumTop:'足球',
@@ -181,7 +194,7 @@
 								}
 							}
 					},
-					tableData: [{
+					tableData: [/* {
 								id: "1",
 								area: "北京市",
 								jingcai: "10233.5",
@@ -215,7 +228,7 @@
 								jingcai: "6554",
 								football: "8785.00",
 								basketball: "19785.00"
-							}
+							} */
 						],
 					tableColumns: [{
 								title: "排名",
@@ -228,17 +241,17 @@
 								$width:"80px"
 							},
 							{
-								title: '竞彩（元）',
+								title: '占比条',
 								key: 'jingcai',
 								$width:"80px"
 							},
 							{
-								title: '足球（元）',
+								title: '足球销量（元）',
 								key: 'football',
 								$width:"85px"
 							},
 							{
-								title: '篮球（元）',
+								title: '篮球销量（元）',
 								key: 'basketball'
 							}
 						],	
@@ -248,9 +261,8 @@
 				changeTop(e){
 					this.arcbarNumTop = e;;
 					getApp().globalData.ballType=e; 
-					console.log(getApp().globalData.ballType);
 					// 根据e去请求对应的销量数据  默认值为销量
-					this.lineData1 ={
+					/* this.lineData1 ={
 						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
 						series: [
 							{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
@@ -262,29 +274,263 @@
 					}else{
 						this.totalData = this.footballData;
 					}
-					this.loadData()
+					this.loadData() */
+					this.loadData();
 					
 				},
 				changeMid(e){
 					this.arcbarNumMid = e;
 					// 根据e去请求对应数据
-					this.lineData1 ={
+					/* this.lineData1 ={
 						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
 						series: [
 							{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
 							{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
 						]
-					};
+					}; */
+					this.loadData();
+				},
+				loadTopData(ballType){
+					var url = 'mobile/sales/getSalesTodayByPoolGroup/1/2020-10-18';
+					var that=this;
+					urlAPI.getRequest(url, null).then((res)=>{
+						//this.loading = false;
+						/* uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						}); */
+						that.dataCount =res.data.concreteBean;
+						
+					}).catch((err)=>{
+						//this.loading = false;
+						console.log('request fail', err);
+					});
+					if(ballType=='足球'){
+						url='exhibition/gameSales/queryGameSalesOfFb/2020-10-18/1/2';
+					}else{
+						url='exhibition/gameSales/queryGameSalesOfBk/2020-10-18/1/2';
+					}
+					urlAPI.getRequest(url, null).then((res)=>{
+						//this.loading = false;
+						/* uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						}); */
+						that.dataCompare =res.data.concreteBean;	
+						
+					}).catch((err)=>{
+						//this.loading = false;
+						console.log('request fail', err);
+					});
+					
+					//销量 dataCount 环比dataCompare
+					/* footballData:{
+						big1:{name:'足球销量（百万元）',value:37.82, left:{name:'周同比',value:-0.6209},right:{name:'环比',value:0.0145}},
+						big2:{name:'足球票数（万张）',value:45.64, left:{name:'周同比',value:-0.0132},right:{name:'环比',value:0.1069}},
+					},	
+					basketballData:{
+						big1:{name:'篮球销量（万元）',value:36.94, left:{name:'周同比',value:-0.5275},right:{name:'环比',value:-0.61}},
+						big2:{name:'篮球票数（张）',value:4818.00, left:{name:'周同比',value:0.2306},right:{name:'环比',value:-0.9523}},
+					},	 */
+					setTimeout(() => {
+						if(ballType=='足球'){
+							let index0={
+								name:ballType+'销量（万元）',
+								value:this.dataCount[1][1],
+								left:{
+									name:'周同比',
+									value:this.dataCompare[1]
+								},
+								right:{
+									name:'环比',
+									value:this.dataCompare[1]
+								}}
+							this.$set(this.totalData,'big1',index0);
+							let index1={
+								name:ballType+'票数（万张）',
+								value:this.dataCount[1][2],
+								left:{
+									name:'周同比',
+									value:this.dataCompare[1]
+								},
+								right:{
+									name:'环比',
+									value:this.dataCompare[1]
+								}}
+							this.$set(this.totalData,'big2',index0);
+						}else{
+							let index0={
+								name:ballType+'销量（百万元）',
+								value:this.dataCount[0][1],
+								left:{
+									name:'周同比',
+									value:this.dataCompare[1]
+								},
+								right:{
+									name:'环比',
+									value:this.dataCompare[1]
+								}}
+							this.$set(this.totalData,'big1',index0);
+							let index1={
+								name:ballType+'票数（万张）',
+								value:this.dataCount[0][2],
+								left:{
+									name:'周同比',
+									value:this.dataCompare[1]
+								},
+								right:{
+									name:'环比',
+									value:this.dataCompare[1]
+								}}
+							this.$set(this.totalData,'big2',index1);
+						}
+						this.$refs['dataContain'].showDataContainer();
+											
+					}, 1);
+					
+				},
+				loadMidData(ballType){
+					var url = 'mobile/sales/getSportsSalesTodayByHour/1/2020-10-18';
+					var that2 =this;
+					urlAPI.getRequest(url, null).then((res)=>{
+						this.loading = false;
+						/* uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						}); */
+						//遍历赋值
+						var data = res.data.concreteBean;
+						/* lineData1: {
+							//数字的图--折线图数据
+							categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
+							series: [
+								{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
+								{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
+							]
+						}, */
+						var categories =[];
+						var xiaoliang=[];
+						var piaoshu = [];
+						for(var i=0;i<data.length;i++){
+							categories.push(data[i][0]);
+							xiaoliang.push(data[i][1]);
+							piaoshu.push(data[i][2]);
+						};
+						if(that2.arcbarNumMid=='销量'){
+							var series=[{
+								name: '销量（万元）', 
+								data: xiaoliang
+							}];
+							that2.$set(that2.lineData1,'series',series);
+							
+						}else {
+							 var series=[{name: '票数(万张)',
+							 data: piaoshu
+							 }];
+							 that2.$set(that2.lineData1,'series',series);
+						}
+						that2.$set(that2.lineData1,'categories',categories);
+						
+						that2.$refs['lineData1'].showCharts();
+						
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+					url = 'exhibition/gameSales/queryGamesSalesList/{currentDate}/{provinceCenterId}/{cityCenterId}';
+					urlAPI.getRequest(url, null).then((res)=>{
+						this.loading = false;
+						/* uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						}); */
+						var data =res.data.concreteBean;	
+						/* arcbar1: {
+								type: 'radar',
+								series:[
+										{name: '胜平负',data: 100},
+										 {name: '半全场胜平负',data: 30},
+										 {name: '让球胜平负',data: 50},
+								],
+								索引1	String		游戏种类
+								索引2	String		游戏名称
+								索引3	Integer		销量
+								索引4	Double		销量占比
+								extra: {
+									pie: {
+										lableWidth: 15,
+										ringWidth: 10, //圆环的宽度
+										offsetAngle: 0 //圆环的角度
+									}
+								}
+						}, */
+						var series =[];
+						for(var i=0;i<data.length;i++){
+							//需要 索引1 2 4
+							if(data[i][1].indexOf(ballType)!=-1&&data[i][2].indexOf('汇总')==-1){
+								var obj={name:data[i][2],data:data[i][4]};
+								series.push(obj);
+							}
+						}
+						that2.$set(that2.arcbar1,'series',series);
+						that2.$refs['arcbar1'].showCharts();
+						
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+					
+					
+					
+					
+					
 				},
 				loadData(){
-					/* //请求足球数据
-					let categories = ['20111', '2013', '2014', '2015', '2016', '2017'];
-					let series = [{ name: '成交量A', data: [0.8511, 0.233, 0.125, 0.437, 0.48, 0.1234] }];
-					this.$set(this.lineData1, 'categories', categories);
-					this.$set(this.lineData1, 'series', series); */
-					this.$refs['lineData1'].showCharts();
-					this.$refs['arcbar1'].showCharts();
-					this.$refs['gameData'].showDataContainer();
+					var ballType = getApp().globalData.ballType;
+					this.loadTopData(ballType);
+					this.loadMidData(ballType);
+					this.loadLastData();
+					
+				},
+				loadLastData(){
+					var url = 'exhibition/gameSales/querySportsSalesForRegion/{currentDate}/{provinceCenterId}';
+					var that =this;
+					urlAPI.getRequest(url, null).then((res)=>{
+						this.loading = false;
+						/* uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						}); */
+						var data =res.data.concreteBean;	
+						
+						for(var i=0;i<data.length;i++){
+							/* {"东城",192668,32434}, */
+							//需要 索引1 2 4
+							var obj={id:i+1,area:data[i][0],jingcai:'',football:data[i][0],basketball:data[i][1]};
+							that.tableData.push(obj);
+						}
+						
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+				},
+				toAll(){
+					var that =this;
+					uni.navigateTo({
+						url:'/pages/common/tableDetail?col='+JSON.stringify(encodeURIComponent(that.tableColumns))+'&da='+JSON.stringify(encodeURIComponent(that.tableData)),
+						success: function(res) {
+						    // 通过eventChannel向被打开页面传送数据
+						    res.eventChannel.emit('heheh', 
+													{ col: JSON.stringify(encodeURIComponent(that.tableColumns))},
+													);
+						}
+					});
 				}
 			}
 		}

@@ -2,20 +2,14 @@
 	<view class="sale-row-2">
 		<view class="row-box-left">
 			<view class="column_box_2">
-		<!-- 		<view class="column-box"> -->
-					<text class="big-text">{{dataList.big1.name}}</text>
-					<text class="big-text">{{dataList.big1.value}}</text>
-			<!-- 	</view> -->
+				<text class="big-text">{{dataList.big1.name}}</text>
+				<text class="big-text">{{dataList.big1.value}}</text>
 			</view>			
 		</view>
 		<view class="row-box-right">
 			<view class="column_box_2">
-					<!-- <view class="row-box"> -->
-						<text class="big-text">{{dataList.small1.name}} {{dataList.small1.value}}</text>
-					<!-- </view> -->
-					<!-- <view class="row-box"> -->
-						<text class="big-text">{{dataList.small2.name}} {{dataList.small2.value}}</text>
-					<!-- </view> -->
+				<text class="big-text">{{dataList.small1.name}} {{dataList.small1.value}}</text>
+				<text class="big-text">{{dataList.small2.name}} {{dataList.small2.value}}</text>
 			</view>			
 		</view>
 	</view>
@@ -49,7 +43,8 @@
 		display: flex;
 		flex-direction: row;	
 		margin: 20rpx 10rpx 20rpx 10rpx;
-		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
+		border-radius: 15px;
+		background:rgba(220, 241, 250 ,0.5);
 	}
 	.row_box_2{
 		display: flex;
@@ -67,7 +62,6 @@
 		width: 35%;
 		margin: 0rpx 0rpx 0rpx 10rpx;
 		padding: 0rpx 0rpx 30rpx 0rpx;
-		background-color: #ebebeb;
 		flex-direction: column;
 	}
 	
@@ -76,8 +70,7 @@
 		width: 65%;
 		margin: 0rpx 10rpx 0rpx 0rpx;
 		padding: 0rpx 0rpx 30rpx 0rpx;
-		background-color: #ebebeb;
-		flex-direction: column;
+		flex-direction: column;	
 	}
 	
 	.column-box{
@@ -85,20 +78,17 @@
 		height: 50%;
 		margin: 0rpx 5rpx;
 		padding: 0 5rpx;
-		background-color: #ebebeb;
 		flex-direction: column;
 	}
 	
 	.big-text{
 		text-align: left;
-		background-color: #ebebeb;
 		color: #777;
 		font-size: 40rpx;
 	}
 	
 	.small-text{
 		text-align: left;
-		background-color: #ebebeb;
 		color: #777;
 		font-size: 30rpx;
 	}

@@ -18,7 +18,7 @@
 			</view>	
 			
 			<view class="end-cont" :class="{dis:btnnum == 0}">	
-				<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" @confirm="onSelected" @cancel="onSelected" />
+				<!-- <mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" @confirm="onSelected" @cancel="onSelected" /> -->
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">
 
@@ -36,6 +36,7 @@
 
 <script>
 	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
+
 	export default {	
 		components: {
 		    MxDatePicker
@@ -50,28 +51,43 @@
 				range: ['2019/01/01','2019/01/06'],
 				rangetime: ['2019/01/08 14:00','2019/01/16 13:59'],
 				type: 'rangetime',
+				dateOption: {},
+				isShow: false,
 			}
 		},
+		onLoad() {
+			this.isShow = false;
+			this.dateOption = uni.getStorageSync('dateOption');
+			this.isShow = true;
+		},
+		
 		methods: {
-			change(e) {
-			    this.btnnum = e;
-			    console.log(this.btnnum);
-			},
-			onShowDatePicker(type){//显示
-				this.type = type;
-				this.showPicker = true;
-				this.value = this[type];
-			},
-			onSelected(e) {//选择
-				this.showPicker = false;
-				if(e) {
-					this[this.type] = e.value; 
-					//选择的值
-					console.log('value => '+ e.value);
-					//原始的Date对象
-					console.log('date => ' + e.date);
-				}
-			}			
+			changeDate(e) {
+				//选择日期回调，选择完日期返回上一页面
+				// 页面传值方式很多,vuex,storge等都可以实现
+				console.log(e);
+				uni.setStorageSync('dateObj', e); //在前一个页面onShow接受
+				uni.navigateBack();
+			}
+			// change(e) {
+			//     this.btnnum = e;
+			//     console.log(this.btnnum);
+			// },
+			// onShowDatePicker(type){//显示
+			// 	this.type = type;
+			// 	this.showPicker = true;
+			// 	this.value = this[type];
+			// },
+			// onSelected(e) {//选择
+			// 	this.showPicker = false;
+			// 	if(e) {
+			// 		this[this.type] = e.value; 
+			// 		//选择的值
+			// 		console.log('value => '+ e.value);
+			// 		//原始的Date对象
+			// 		console.log('date => ' + e.date);
+			// 	}
+			// }			
 		},
 	}
 

@@ -16,13 +16,27 @@
 			<view class="end-cont" :class="{dis:btnnum == 0}">		
 				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
 							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'百万元',fixed: 0}}"/>
+							:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
 				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
 							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
+							:yAxisAs="{formatter: {type: 'number', name:'张',fixed: 0}}"/>
 			</view>		
+		</view>
+		
+		<view class="box-contaniner">
+			<view class="shop-title">全国排名</view>
+			<view class="shop-item-title">
+				<view style="width: 300rpx;">排名</view>				
+				<view style="width: 200rpx;">周同比</view>
+				<view style="-webkit-flex: 1;flex: 1;">环比</view>
+			</view>
+			<view class="shop-item-content">
+				<view style="width: 300rpx;">{{rankData.sum}} 名</view>
+				<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;"> {{rankData.tongbi}}</view>
+				<view :class="rankData.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{rankData.huanbi}}</view>
+			</view>
 		</view>
 		
 		<!-- 圆环图区域 -->
@@ -60,24 +74,26 @@
 		<view class="box-contaniner">
 			<view class="shop-title">门店在售情况</view>
 			<view class="shop-item-title">
-				<view style="width: 400rpx;">在售门店数</view>				
+				<view style="width: 300rpx;">在售门店数</view>				
 				<view style="width: 200rpx;">同比</view>
 				<view style="-webkit-flex: 1;flex: 1;">环比</view>
 			</view>
 			<view class="shop-item-content">
-				<view style="width: 400rpx;">365,041</view>				
-				<view style="width: 200rpx;">+12.9%</view>
-				<view style="-webkit-flex: 1;flex: 1;">+1.23%</view>
+				<view style="width: 300rpx;">{{shopData.shop.sum}}</view>
+				<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(shopData.shop.tongbi)}}</view>
+				<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(shopData.shop.huanbi)}}</view>
 			</view>
+		</view>
+		<view class="box-contaniner">
 			<view class="shop-item-title">
-				<view style="width: 400rpx;">门店在售率</view>				
+				<view style="width: 300rpx;">门店在售率</view>				
 				<view style="width: 200rpx;">同比</view>
 				<view style="-webkit-flex: 1;flex: 1;">环比</view>
 			</view>
 			<view class="shop-item-content">
-				<view style="width: 400rpx;">90.54%</view>				
-				<view style="width: 200rpx;">+12.9%</view>
-				<view style="-webkit-flex: 1;flex: 1;">+1.23%</view>
+				<view style="width: 300rpx;">{{valueToPercent2(shopData.rate.sum)}}</view>				
+				<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(shopData.rate.tongbi)}}</view>
+				<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(shopData.rate.huanbi)}}</view>
 			</view>
 		</view>
 		
@@ -85,10 +101,36 @@
 		<view class="box-contaniner">
 			<view class="rankTable-title">
 				<view>各地区销量排行</view>
-				<view class="rankTable-more" @click="goSaleRank(showModel.area)">全部>></view>
+				<view class="rankTable-more" @click="goSaleRank(tableDataDetail,tableColumns)">全部>></view>
 			</view>
 			<view class="example">
-				<v-table :columns="tableColumns" :list="tableData" :height="250" border-color="#FFFFFF"></v-table>
+				<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
+			</view>
+		</view>
+		
+		<!-- 全国返奖情况-->
+		<view class="box-contaniner">
+			<view class="shop-title">全国返奖情况</view>
+			<view class="shop-item-title">
+				<view style="width: 400rpx;">返奖率</view>				
+				<view style="width: 200rpx;">同比</view>
+				<view style="-webkit-flex: 1;flex: 1;">环比</view>
+			</view>
+			<view class="shop-item-content">
+				<view style="width: 400rpx;">{{shopData.shop.sum}}</view>
+				<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(shopData.shop.tongbi)}}</view>
+				<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(shopData.shop.huanbi)}}</view>
+			</view>
+		</view>
+		
+		<!-- 各地区返奖情况-->
+		<view class="box-contaniner">
+			<view class="rankTable-title">
+				<view>各地区返奖情况</view>
+				<view class="rankTable-more" @click="goSaleRank(tableData2,tableColumns2)">全部>></view>
+			</view>
+			<view class="example">
+				<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
 			</view>
 		</view>
 		
@@ -100,11 +142,13 @@
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import ArcbarChart from '@/components/basic-chart/ArcbarChart.vue';
 	import vTable from "@/components/table/table.vue";
-	import {globalRequest} from "@/common/request.js";
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import dataContainerTwo from '@/components/sads-components/dataContainerTwo.vue';
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
+	import {globalRequest} from '@/common/request.js'
+	import commonFun from '@/common/tools/watcher.js';
+	
 	
 	export default {
 		name: 'Index',
@@ -116,66 +160,80 @@
 			dataContainerTwo
 		},
 		props: {
-			model:{
+			param:{
 				//数据
 				type: Object,
 				default: () => ({})
 			}
 		},
 		data() {
-			return {
-				showModel:{},
+			return {			
+				selfParam:{
+					token:'',
+					provinceCenterId:'',
+					businessDate:{
+						view:'',
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},					
+					startDate:'',
+					endDate:'',
+					cityCenterId:'',
+					userId:'',
+					countyCenterId:'',
+					dateType:'date',
+					compareType:'date',
+					compareOne:'',
+					compareTwo:''
+				},
 				totalData:{},	
-				footballData:{
-					// big1:{name:'销量',value:'1.26亿元', left:{name:'周同比',value:-0.6209},right:{name:'环比',value:0.0145}},
-					// big2:{name:'占比',value:0.63, left:{name:'周同比',value:-0.0132},right:{name:'环比',value:0.1069}},
-				},	
-				basketballData:{
-					big1:{name:'销量',value:'9.01百万元', left:{name:'周同比',value:-0.5275},right:{name:'环比',value:-0.61}},
-					big2:{name:'占比',value:0.27, left:{name:'周同比',value:0.2306},right:{name:'环比',value:0.5746}},
-				},	
+				footballData:{},	
+				basketballData:{},	
 				btnnum: 0,
 				arcbarNum: 0,
 				lineData2: {},
 				lineData1: {},
-				arcbar0: {					
-						series: [{name: '足球',data: 0.6921}]
-				},
-				arcbar1: {
-						series: [{name: '篮球',data: 0.3079}]
-				},
-				tableData: [{
+				arcbar0: {},
+				arcbar1: {},
+				shopData: {shop:{sum:0,tongbi:0,huanbi:0},
+						   rate:{sum:0,tongbi:0,huanbi:0}},
+				rankData:{sum:0,tongbi:0,huanbi:0},
+				tableData: [],
+				tableDataDetail:[],
+				tableData2: [{
 							id: "1",
 							area: "北京市",
-							amount: "10233.5",
+							return: "10233.5",
 							tongbi: "+12.6%",
 							huanbi: "+45.21%"
 						},
 						{
 							id: "2",
 							area: "上海市",
-							amount: "9965.5",
+							return: "9965.5",
 							tongbi: "+12.6%",
 							huanbi: "+45.21%"
 						},
 						{
 							id: "3",
 							area: "广东省",
-							amount: "9754.5",
+							return: "9754.5",
 							tongbi: "+12.6%",
 							huanbi: "+45.21%"
 						},
 						{
 							id: "4",
 							area: "重庆市",
-							amount: "6745.6",
+							return: "6745.6",
 							tongbi: "+12.6%",
 							huanbi: "+45.21%"
 						},
 						{
 							id: "5",
 							area: "河北省",
-							amount: "6554",
+							return: "6554",
 							tongbi: "+12.6%",
 							huanbi: "+45.21%"
 						}
@@ -204,17 +262,86 @@
 							title: '环比',
 							key: 'huanbi'
 						}
-					],					
+					],
+				tableColumns2: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},
+						{
+							title: '返奖率',
+							key: 'return',
+							$width:"80px"
+						},
+						{
+							title: '同比',
+							key: 'tongbi',
+							$width:"80px"
+						},
+						{
+							title: '环比',
+							key: 'huanbi'
+						}
+					],	
 			};
 		},
 		onLoad() {
-			_self = this;
+			_self = this;			
+			console.log("totalView onLoad:",this.selfParam)
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
+		},
+		created() {
+			this.selfParam = this.param
+			console.log("totalView created:",this.selfParam)
 			this.getServerData();
+			this.showView();
 		},
 		methods: {
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.date.dateTimeEnd,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.week.dateTimeEnd,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.month.dateTimeEnd,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.year.dateTimeEnd,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
+			},
+			refresh(selfParam){
+				this.selfParam = JSON.parse(selfParam)
+				this.getServerData();
+				this.showView();
+			},
 			showView(){
+				commonFun.sleep(2000)
 				this.$nextTick(() => {				
 					this.$refs['arcbar0'].showCharts();
 					this.$refs['arcbar1'].showCharts();
@@ -223,43 +350,58 @@
 					this.$refs['dataContain'].showDataContainer();
 					this.$refs['dataContain2'].showDataContainer();
 					this.$refs['dataContain3'].showDataContainer();
-					console.log("init dataContain:" ,this.totalData);
 				});
 			},
 			// 获取最上层的两个tab
-			getDataSet(){
-				var url = 'mobile/sales/getSalesToday/1/2020-10-11';
+			getDataSet(provinceCenterId, businessDate){
+				console.log("getDataSet provinceCenterId=",provinceCenterId," businessDate=",businessDate)
+				var url = '/pentaho/sales/getSalesOverview';
+				var param = this.createParam()
 				
-				urlAPI.getRequest(url, null).then((res)=>{
-					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
-					var data = res.data.concreteBean;
-					var format0 = numberFun.formatCNumber(data[0]);
-					var format1 = numberFun.formatCNumber(data[1]);
-					
-					var left1 = {'name':'周同比','value':'-71.98%'};
-					var right1 = {'name':'环比','value':'-31.11%'};
-					var big1 = {'name':'销量（'+format0.name +'元）', 'value':data[0]/format0.value, 'left': left1,'right':right1};
-					var big2 = {'name':'票数（'+format1.name +'张）','value':data[1]/format1.value, 'left':{'name':'周同比','value':'-70.56%'},'right':{'name':'环比','value':'-28.88%'}};
-				
-					this.$set(this.totalData, 'big1', big1);
-					this.$set(this.totalData, 'big2', big2);
-					console.log('request totalData', this.totalData);
-					
-					this.res = '请求结果 : ' + JSON.stringify(res);
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				})
+				urlAPI.getRequest(url, param).then((res)=>{
+					setTimeout(() => {
+						this.loading = false;
+							console.log('request success', res)
+							uni.showToast({
+								title: '请求成功',
+								icon: 'success',
+								mask: true
+							});
+							var data = res.data.data;
+							var amount = data[0]
+							var saleNumber = data[1]
+							
+							console.log("amount=",amount,"saleNumber=",saleNumber)
+							var format0 = numberFun.formatCNumber(amount[0]);
+							var format1 = numberFun.formatCNumber(saleNumber[0]);
+							console.log("format0=",format0,"format1=",format1)
+							var left1 = {'name':'周同比','value':amount[1] + '%'};
+							var right1 = {'name':'环比','value':amount[2] + '%'};
+							var big1 = {'name':'销量（'+format0.name +'元）', 'value':amount[0]/format0.value, 'left': left1,'right':right1};
+							
+							var left2 = {'name':'周同比','value':saleNumber[1] + '%'};
+							var right2 = {'name':'环比','value':saleNumber[2] + '%'};
+							var big2 = {'name':'票数（'+format1.name +'张）','value':saleNumber[0]/format1.value, 'left':left2,'right':right2};
+						
+							this.$set(this.totalData, 'big1', big1);
+							this.$set(this.totalData, 'big2', big2);
+							console.log('request totalData', this.totalData);
+						
+							this.res = '请求结果 : ' + JSON.stringify(res);
+						}).catch((err)=>{
+							this.loading = false;
+							uni.showToast({
+								title: err.errMsg,
+								duration: 5000
+							});
+							console.log('request fail', err);
+						})						
+					}, 10000);
 			},
-			getLinesData(){
-				var url = 'mobile/sales/getSalesTodayByHour/1/2020-10-11';
-				urlAPI.getRequest(url, null).then((res)=>{
+			getLinesData(provinceCenterId, businessDate){
+				var url = '/pentaho/sales/getOverviewTrendChart';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -267,23 +409,27 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;					
+					var data = res.data.data;	
+					var sales = data.sales
+					var dates = data.dates
+					var votes = data.votes
+					
 					var categories=[];
 					var series=[];
 					var amountData = [];
 					var volData = [];
 					var j=0,k = 0,tempAmount=0,tempVol=0;
 					
-					for(var i=0;i<data.length;i++){	
+					for(var i=0;i<dates.length;i++){	
 						if(j==3){
-							categories[k] = data[i][0];
-							amountData[k] = data[i][1]/1000000;
-							volData[k] = data[i][2]/10000;
+							categories[k] = dates[i];
+							amountData[k] = sales[i];
+							volData[k] = votes[i];
 							k++;
 							j=0;
 						}else{
-							tempAmount = tempAmount+data[i][1]/1000000;
-							tempVol = tempVol+data[i][2]/10000;
+							tempAmount = tempAmount+sales[i];
+							tempVol = tempVol+votes[i];
 							j=j+1;
 						}
 					}
@@ -309,9 +455,18 @@
 					console.log('request fail', err);
 				});
 			},
-			getFootballGame(){
-				var url = '/exhibition/gameSales/queryGameSalesOfFb/2020-10-11/1/1';
-				urlAPI.getRequest(url, null).then((res)=>{
+			getDataContainerTwo(type, provinceCenterId, businessDate, cityCenterId){
+				var url='/pentaho/sales/getGameSales'
+				var param = this.createParam()
+				
+				var big1 = {'name':'销量'};
+				var left1 = {'name':'周同比'};
+				var right1 = {'name':'环比'};				
+				
+				var big2 = {'name':'占比'};
+				var left2 = {'name':'周同比'};
+				var right2 = {'name':'环比'};
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -319,29 +474,154 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;
-					var format0 = numberFun.formatCNumber(data[0]);
-					var format1 = numberFun.formatCNumber(data[1]);
+					var data = res.data.data;	
+					var tempObj;
+					if(type=='足球'){
+						tempObj = data.football
+					}else{
+						tempObj = data.basketball
+					}
 					
-					var amount = data[0]/format0.value + format0.name +'元';
+					var format0 = numberFun.formatCNumber(tempObj[0]);
+					var amount0 = tempObj[0]/format0.value.toFixed(2) + format0.name +'元';
+					left1.value = tempObj[1];
+					right1.value = tempObj[2];
+					big1.value = amount0;
+					big1.left = left1;
+					big1.right = right1;
 					
-					var left1 = {'name':'周同比','value':(data[0]/data[1]-1).toFixed(4)};
-					var right1 = {'name':'环比','value':-0.3111};
-					var big1 = {'name':'销量', 'value':amount, 'left': left1,'right':right1};
-					var big2 = {'name':'占比','value':0.63, 'left':{'name':'周同比','value':-0.0132},'right':{'name':'环比','value':0.1069}};
-					this.$set(this.footballData, 'big1', big1);
-					this.$set(this.footballData, 'big2', big2);
-					console.log('request footballData', this.footballData);
+					var amount1 = tempObj[3];					
+					left2.value = tempObj[4];
+					right2.value = tempObj[5];
+					big2.value = amount1;
+					big2.left = left2;
+					big2.right = right2;							
+					
+					if(type=='足球'){					
+						this.$set(this.footballData, 'big1', big1);
+						this.$set(this.footballData, 'big2', big2);
+						var json = [{name: '足球',data: (tempObj[3]/100).toFixed(2)}]
+						this.$set(this.arcbar0, 'series', json);
+						console.log('request basketballData', this.footballData);
+					}else{
+						this.$set(this.basketballData, 'big1', big1);
+						this.$set(this.basketballData, 'big2', big2);
+						var json = [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
+						this.$set(this.arcbar1, 'series', json);
+						console.log('request basketballData', this.basketballData);
+					}
+			
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 				});
 			},
-			getServerData() {
-				this.getDataSet();
-				this.getLinesData();
-				this.getFootballGame();
+			getShopData(provinceCenterId, cityCenterId, businessDate){
+				var url = '/pentaho/sales/getStoreSituation';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+									
+					this.shopData.shop.sum=data[0].toFixed(0);
+					this.shopData.shop.tongbi=(data[1]/100).toFixed(4);
+					this.shopData.shop.huanbi=(data[2]/100).toFixed(4)
+
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+				
+				var url = '/pentaho/sales/getStoreSalesrate';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+
+					this.shopData.rate.sum=(data[0]/100).toFixed(4);
+					this.shopData.rate.tongbi=(data[1]/100).toFixed(4);
+					this.shopData.rate.huanbi=(data[2]/100).toFixed(4);
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
+			getSalesRankingList(provinceCenterId, cityCenterId, businessDate){
+				var url = '/pentaho/sales/salesRankingList';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+					for(var i=0;i<data.length;i++){
+						var json = {id:i+1, 
+									area:data[i][0], 
+									amount:data[i][1], 
+									tongbi:this.valueToPercent((data[i][2]/100).toFixed(4)),
+									huanbi:this.valueToPercent((data[i][3]/100).toFixed(4))}						
+						if(i<=4){
+							this.tableData[i] = json
+						}
+						this.tableDataDetail[i] = json
+					}
+			
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
+			getProSalesRanking(provinceCenterId, cityCenterId, businessDate){
+				var url = '/pentaho/sales/getProSalesRanking';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+					this.rankData.sum = data[0]
+					this.rankData.tongbi = data[1]
+					this.rankData.huanbi = data[2]
+							
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
+			getServerData() {				
+				console.log("getServerData data=",this.param.provinceCenterId)
+				this.getDataSet(this.param.provinceCenterId, this.param.businessDate);
+				this.getLinesData(this.param.provinceCenterId, this.param.businessDate);
+				this.getDataContainerTwo('足球',this.param.provinceCenterId, this.param.businessDate, this.param.cityCenterId);
+				this.getDataContainerTwo('篮球',this.param.provinceCenterId, this.param.businessDate, this.param.cityCenterId);
+				this.getShopData(this.param.provinceCenterId, this.param.businessDate, this.param.cityCenterId);
+				this.getSalesRankingList(this.param.provinceCenterId, this.param.cityCenterId, this.param.businessDate);
+				this.getProSalesRanking(this.param.provinceCenterId, this.param.cityCenterId, this.param.businessDate);
 			},
 			change(e) {
 			      this.btnnum = e
@@ -351,42 +631,44 @@
 				this.arcbarNum = e
 				console.log(this.arcbarNum)
 			},
-			goSaleRank(area){
-				console.log(area)
+			goSaleRank(tableData, tableColumns){
 				uni.navigateTo({
-					url:"/pages/common/tableDetail?area="+area
+					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(tableData) + '&tableColumns=' + JSON.stringify(tableColumns)
 				});
-			}
+			},
+			valueToPercent(value) {
+				let temp = value;
+				value = value + '';
+				const pointIndex = value.indexOf('.');
+				if (pointIndex === -1) return (value - 0) * 100;
+				const powIndex = value.length - pointIndex - 1;
+				let result = (value.replace('.', '') - 0) * Math.pow(10, 2 - powIndex);
+				if(value>=0){
+					result = "+" + result + "%";
+				}else{
+					result = result + "%";
+				}
+				return result;
+			},
+			valueToPercent2(value) {
+				let temp = value;
+				value = value + '';
+				const pointIndex = value.indexOf('.');
+				if (pointIndex === -1) return (value - 0) * 100;
+				const powIndex = value.length - pointIndex - 1;
+				let result = (value.replace('.', '') - 0) * Math.pow(10, 2 - powIndex);
+
+				return result + "%";
+			},
+
 		},
-		created() {
-			this.showModel = this.model;
-			//ajax调用
-			this.getServerData();
-			
-			// this.$nextTick(() => {
-				
-			// 	//柱状图
-			// 	// this.$refs['histogramData0'].showCharts();
-			// 	// this.$refs['histogramData1'].showCharts();
-			// 	// this.$refs['histogramData2'].showCharts();
-			// 	// //圆环(注意循环可能会导致出现下面情况,请更具实际情况作出判断// console.log(this.$refs);)
-			// 	this.$refs['arcbar0'].showCharts();
-			// 	this.$refs['arcbar1'].showCharts();
-			// 	// this.$refs['arcbar2'][0].showCharts();
-			// 	// // 饼状图
-			// 	// this.$refs['pieChart0'].showCharts();
-			// 	// // 环状图
-			// 	// this.$refs['ringChart0'].showCharts();
-			// 	//折线图
-			// 	this.$refs['lineData2'].showCharts();
-			// 	this.$refs['lineData1'].showCharts();
-			// 	this.$refs['dataContain'].showDataContainer();
-			// 	this.$refs['dataContain2'].showDataContainer();
-			// 	this.$refs['dataContain3'].showDataContainer();
-			// 	console.log("init dataContain:" ,this.totalData);
-			// });
-			
-		}
+		mounted(){
+			// this.selfParam=this.model
+			this.showView();
+		},
+		watch: {
+			'$route':'showView'
+		},
 	}
 </script>
 
@@ -398,24 +680,27 @@
 		padding: 0 10rpx;
 		font-size: 30rpx;
 		font-weight: bold;
-		background-color: #FFFFFF;
 	}
 	
 	.shop-item-title{
 		width: 100%;
 		display: flex;
-		margin: 0rpx 5rpx 0rpx 5rpx;
-		/* padding: 0 10rpx 0 10rpx; */
+		margin: 0rpx 10rpx 0rpx 10rpx;
+		padding: 0 10rpx 0 10rpx;
 		flex-direction: row;
-		background-color: #ebebeb;
+		font-size: 30rpx;
+		
+		background:rgba(220, 241, 250 ,0.5);
 	}
 	.shop-item-content{
 		width: 100%;
 		display: flex;
-		margin: 0rpx 5rpx 0rpx 5rpx;
-		/* padding: 0 10rpx 20rpx 10rpx; */
+		margin: 0rpx 10rpx 0rpx 10rpx;
+		padding: 0 10rpx 0rpx 10rpx;
 		flex-direction: row;
-		background-color: #ebebeb;
+		font-size: 40rpx;
+		
+		background:rgba(220, 241, 250 ,0.5);
 	}
 	
 	.rankTable{
@@ -524,5 +809,14 @@
 		color: #000000;
 		background: #FFFFFF;
 		padding:0px 30rpx 0px 30rpx;
+	}
+	.small-text-green{
+		color: #00FF00;
+		/* font-size: 30rpx; */
+	}
+	
+	.small-text-red{
+		color: #FF0000;
+		/* font-size: 30rpx; */
 	}
 </style>

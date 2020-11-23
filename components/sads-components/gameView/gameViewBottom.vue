@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view style="text-align: center;">
-			<text @click="toAll" style="font-family: 'Courier New', Courier, monospace;font-size: medium;">查看全部</text>
+			<button type="default" plain="true" style="width: 200;" @click="toAll()">查看全部</button>
 		</view>
 	</view>
 </template>
@@ -9,20 +9,30 @@
 <script>
 	export default {
 		components: {},
-
+		props: {
+			model:{
+				//数据
+				type: Object,
+				default: () => ({})
+			}
+		},
 		data() {
 			return {
 			}
 		},
 		methods: {
 			toAll() {
+				var title = getApp().globalData.ballType+"游戏销量及占比";
 				uni.navigateTo({
-					url: './gameView/gameViewCompare?title='+JSON.stringify(encodeURIComponent("全部")),
+					url: './gameView/gameViewCompare?title='+JSON.stringify(encodeURIComponent(title)),
 					success: function(res) {
 					    // 通过eventChannel向被打开页面传送数据
-					    res.eventChannel.emit('hahahah', 
-												{ type: 'all' },
-												);
+					    res.eventChannel.emit('all', 
+												{ type: 'all' }
+												); 
+					},
+					fail: function(res) {
+						console.log(res)
 					}
 				});
 			}

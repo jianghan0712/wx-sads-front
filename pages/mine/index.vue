@@ -9,13 +9,13 @@
 		        </view>
 		          <view class="user_info">
 		            <view class="user_name">
-		              <text>姜瀚</text>
+		              <view>{{userInfo.nickName}}</view>
 		            </view>
 		            <view class="vip_expires" bindtap='joinVip'>
-		             深圳市 罗湖区
+		             北京市 海淀区
 		            </view>
 		            <view class="vip_expires" bindtap='joinVip'>
-		              2020-09-12 16：45：12
+		              {{userInfo.lastLoginTime}}
 		            </view>          
 		          </view>
 		        <!-- </block> -->
@@ -26,10 +26,10 @@
 		      <view bindtap="openPage" class="item"  formType="submit" hoverClass="none">
 		        <view class='telphone'>
 		          <text class='icon-news icon'></text>
-		          <text>手机号码 </text>
+		          <text>手机号</text>
 		        </view>
 		        <view class="icon">
-		          <text class='icon-right'>18576783220</text>
+		          <view class='icon-right'>{{userInfo.phone}}</view>
 		        </view>
 		      </view>
 		      <view bindtap="openPage" class="item"  formType="submit" hoverClass="none">
@@ -39,7 +39,7 @@
 		          <text>电子邮箱</text>
 		        </view>
 		        <view class="icon">
-		          <text class='icon-right'>jianghan0712@126.com</text>
+		          <view class='icon-right'>{{userInfo.userEmail}}</view>
 		        </view>
 		      </view>
 		   </view>
@@ -55,11 +55,26 @@
 	export default {
 		data() {
 			return {
-				
+				userInfo:{
+					userId:'',
+					nickName:'',
+					userName:'',
+					userEmail:'',
+					phone:'',
+					lastLoginTime:''
+				}
 			}
 		},
+		created() {
+			this.userInfo = JSON.parse(uni.getStorageSync("userInfo"))
+			console.log("mine:",this.userInfo)
+		},
 		methods: {
-			
+			bindLogout(){
+				uni.navigateTo({
+					url:"/pages/login/login"
+				});
+			}
 		}
 	}
 </script>

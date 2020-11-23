@@ -1,16 +1,18 @@
 <template>
 	<view class="progress-box">
-		<!-- <view class="uni-padding-wrap uni-common-mt"> -->
-		    <!-- <view class="progress-box"> -->
-			<view  v-for="i in pgList" >
-			    <view class="progress-detail">
-					<view class="title">
-						<view style="text-align: left;">{{i.name}}  {{i.percent}}%</view>
-						<view style="text-align: right;">{{i.data}}</view>
-					</view>			        
-			        <progress :percent="i.percent" active activeColor="#10AEFF" stroke-width="3" />
-			    </view>
+		<view  v-for="(i, index) in pgList" >
+			<view class="progress-detail">
+				<view class="title">
+		<!-- 			<view style="text-align: left;">{{i.name}}  {{i.percent}}%</view>
+					<view style="text-align: right;">{{i.data}}</view> -->
+					<view >{{i.name}}  </view>
+					<view >{{i.percent}}%</view>
+					<view >{{i.data}}</view>
+				</view>			        
+				<progress :percent="i.percent" active :activeColor="i.color" stroke-width="4" />
+				<!-- <progress :percent="i.percent" active activeColor="#F89A25" stroke-width="4" /> -->
 			</view>
+		</view>
 	</view>
 </template>
 
@@ -29,14 +31,19 @@
 		},
 		data() {
 			return {
+				title:'',
 				dataList:{},
 				pgList:[],
+				colors:["#F89A25","#91F825","#25B4F8","#BF25F8","#F82585","#EDF825","#F83725","#F1CF9B"],
 			}
 		},
 		methods: {
-			showProgress() {
-				this.dataList = this.dataAs;
+			showProgress( pieData) {
+				// this.dataList = this.dataAs;
+				this.dataList=pieData
 				let series = this.dataList.series;
+				console.log("progress: dataList=",this.dataList);
+				console.log("progress: series=",series);
 				let total = 0;
 				let i = 0;
 				let len = 0;
@@ -49,8 +56,8 @@
 				for(i= 0; i < len; i++) {
 					var jsonObj = {"name": series[i].name,
 					               "data" : series[i].data,
-								   "percent":(series[i].data/total*100).toFixed(2)
-									};			
+								   "percent":(series[i].data/total*100).toFixed(2),
+									"color":this.colors[i]};			
 					this.pgList[i]=jsonObj;
 				}
 				console.log("pgList=" + this.pgList);
@@ -73,6 +80,7 @@
 		margin: 0rpx 5rpx;
 		padding: 0 10rpx; 
 		justify-content: space-between;
+		font-size: 30rpx;
 	}
 	.progress-detail{
 		flex-direction: row;

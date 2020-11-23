@@ -1,10 +1,8 @@
 <template>
 	<view>
 		<view class="box-contaniner">
-			<view class="datePick">		
-				<text @click="onShowDatePicker('date')">{{date}}</text>
-			</view>
-			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" /> 
+			<text @click="onShowDatePicker('dateTime')" class="datetext" >{{date}}</text>
+			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'起始日期'" :end-text="'终止日期'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
 		</view>	 
 		<view class="input">
 			<input class="uni-input" type="number"  placeholder="请输入门店或终端编号" />
@@ -72,7 +70,7 @@
 					navigateFlag: false,
 					pulling: false,
 					refreshIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAB5QTFRFcHBw3Nzct7e39vb2ycnJioqK7e3tpqam29vb////D8oK7wAAAAp0Uk5T////////////ALLMLM8AAABxSURBVHja7JVBDoAgDASrjqj//7CJBi90iyYeOHTPMwmFZrHjYyyFYYUy1bwUZqtJIYVxhf1a6u0R7iUvWsCcrEtwJHp8MwMdvh2amHduiZD3rpWId9+BgPd7Cc2LIkPyqvlQvKxKBJ//Qwq/CacAAwDUv0a0YuKhzgAAAABJRU5ErkJggg==",
-					showPicker: true,
+					showPicker: false,
 					date: '2019/01/01',
 					time: '15:00:12',
 					datetime: '2019/01/01 15:00:12',
@@ -222,6 +220,16 @@
 	.box-contaniner{
 		width: 100%;
 		margin: 20rpx 10rpx 40rpx 10rpx;
+		text-align: center;
+	}
+	.datePick{
+		text-align: center;
+		padding: 0upx 5upx;
+	}
+	.datetext{
+		font-size: 35rpx;
+		background-color:  #ebebeb;
+		text-align: center;
 	}
 	.input{
 		/*  */

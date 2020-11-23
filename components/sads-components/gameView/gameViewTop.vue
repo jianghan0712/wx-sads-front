@@ -8,7 +8,7 @@
 		<view style="text-align: center; font-size: 14rpx;">
 			<text>1234567890</text>
 			<br>
-			<text>{{province}} {{city}}市</text>
+			<text>河北省石家庄市</text>
 			<br>
 		</view>
 	</view>
@@ -51,7 +51,7 @@
 			},
 			toCompare(){
 				uni.navigateTo({
-				    url: './gameView/gameViewCompare?title='+JSON.stringify(encodeURIComponent("对比")),
+				    url: './gameView/gameViewCompare?title='+JSON.stringify(encodeURIComponent('对比')),
 					success: function(res) {
 					    // 通过eventChannel向被打开页面传送数据
 					    res.eventChannel.emit('hahahah', 

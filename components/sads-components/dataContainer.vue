@@ -71,7 +71,7 @@
 	.sale-row-2{
 		display: flex;
 		flex-direction: row;	
-		margin: 20rpx 10rpx 20rpx 10rpx;
+		/* margin: 20rpx 10rpx 20rpx 10rpx; */
 		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
 	}
 	.row_box_2{
@@ -80,38 +80,37 @@
 	}
 	
 	.column_box_2{	
+		margin: 10rpx 10rpx;
 		display: flex;
 		flex-direction: column;
+		background:rgba(220, 241, 250 ,0.5);
+		border-radius: 15px;
 	}
 	
 	.row-box {
 		display: flex;
 		width: 50%;
-		margin: 0rpx 5rpx;
-		padding: 0 10rpx;
-		background-color: #ebebeb;
+		margin: 10rpx 10rpx;
+		/* padding: 0 10rpx; */
 		flex-direction: column;
 	}
 	
 	.column-box{
 		display: flex;
 		height: 50%;
-		margin: 0rpx 5rpx;
-		padding: 0 5rpx;
-		background-color: #ebebeb;
+		margin: 10rpx 10rpx;
+		/* padding: 0 5rpx; */
 		flex-direction: column;
 	}
 	
 	.big-text{
 		text-align: left;
-		background-color: #ebebeb;
 		color: #777;
 		font-size: 36rpx;
 	}
 	
 	.small-text{
 		text-align: left;
-		background-color: #ebebeb;
 		color: #777;
 		font-size: 30rpx;
 	}

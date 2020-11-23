@@ -1,32 +1,32 @@
 <template>
+
     <view class="tabs">
        <scroll-view id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
             <view v-for="(tab,index) in tabBars" :key="tab.id" class="uni-tab-item" :id="tab.id" :data-current="index" @click="ontabtap">
                 <text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
             </view>
         </scroll-view>
-        <view class="line-h"></view> 
-			<view>
-				<view class="datePick">		
-					<text @click="onShowDatePicker('date')">{{date}}</text>
-				</view>
-				<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" /> 
-			</view>	 
-			<block v-if="tabIndex==0">
-				<totalView ref="totalView" :model="modelSet"></totalView>
-			</block>
-			<block v-if="tabIndex==1">
-				<gameView :model="modelSet"></gameView>
-			</block>
-			<block v-if="tabIndex==2">
-				<levelView :model="modelSet"></levelView>
-			</block>
-			<block v-if="tabIndex==3">
-				<ticketView :model="modelSet"></ticketView>
-			</block>
-			<block v-if="tabIndex==4">
-				<matchView :model="modelSet"></matchView>
-			</block>
+	
+		<view class="content">
+			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+			<uni-section  type="line"></uni-section>
+			<view @click="goCompare">对比</view>
+		</view>	 
+		<block v-if="tabIndex==0">
+			<totalView ref="totalView" :param="selfParam"></totalView>
+		</block>
+		<block v-if="tabIndex==1">
+			<gameView ref="gameView" :model="selfParam"></gameView>
+		</block>
+		<block v-if="tabIndex==2">
+			<levelView ref="levelView" :model="selfParam"></levelView>
+		</block>
+		<block v-if="tabIndex==3">
+			<ticketView ref="ticketView" :model="selfParam"></ticketView>
+		</block>
+		<block v-if="tabIndex==4">
+			<matchView ref="matchView" :model="selfParam"></matchView>
+		</block>
     </view>
 </template>
 <script>
@@ -38,7 +38,9 @@
 	import gameView from "@/components/sads-components/gameView/gameView.vue";
 	import matchView from "@/components/sads-components/matchView/matchView.vue";
 	import dateSelector from "@/components/sads-components/dateSelector.vue";
-	
+	import dateUtils from '@/common/tools/dateUtils.js';
+	import multiSeTime from '@/components/sads-components/time.vue'	
+	import uniSection from "@/components/uni/uni-section/uni-section.vue"
 
     // 缓存每页最多
     const MAX_CACHE_DATA = 100;
@@ -49,51 +51,92 @@
         components: {
             mediaItem, MxDatePicker,
 			totalView, levelView,
-			ticketView, gameView,dateSelector,matchView
+			ticketView, gameView,dateSelector,matchView,multiSeTime,uniSection
         },
         data() {
             return {
-				modelSet:{
-					area:'all', page:'totalView',gateNo:''
+				selfParam:{
+					token:'',
+					provinceCenterId:'',
+					businessDate:{
+						view:'',
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},					
+					startDate:'',
+					endDate:'',
+					cityCenterId:'',
+					userId:'',
+					countyCenterId:'',
+					dateType:'date',
+					compareType:'date',
+					compareOne:'',
+					compareTwo:''
 				},
+				isFirstLoad:true,
                 newsList: [],
                 cacheTab: [],
                 tabIndex: 0,
-                tabBars: [{
-                    name: '总览',
-                    id: 'totalView'
-                }, {
-                    name: '游戏',
-                    id: 'game'
-                }, {
-                    name: '关次',
-                    id: 'gameLevel'
-                }, {
-                    name: '票面',
-                    id: 'ticket'
-                }, {
-                    name: '赛事',
-                    id: 'match'
-                }],
+                tabBars: [{name: '总览',id: 'totalView'
+                }, {name: '游戏',id: 'game'
+                }, {name: '关次',id: 'gameLevel'
+                }, {name: '票面',id: 'ticket'
+                }, {name: '赛事',id: 'match'}],
                 scrollInto: "",
                 showTips: false,
                 navigateFlag: false,
                 pulling: false,
                 refreshIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAB5QTFRFcHBw3Nzct7e39vb2ycnJioqK7e3tpqam29vb////D8oK7wAAAAp0Uk5T////////////ALLMLM8AAABxSURBVHja7JVBDoAgDASrjqj//7CJBi90iyYeOHTPMwmFZrHjYyyFYYUy1bwUZqtJIYVxhf1a6u0R7iUvWsCcrEtwJHp8MwMdvh2amHduiZD3rpWId9+BgPd7Cc2LIkPyqvlQvKxKBJ//Qwq/CacAAwDUv0a0YuKhzgAAAABJRU5ErkJggg==",
-				showPicker: true,
-				date: '2019/01/01',
-				time: '15:00:12',
-				datetime: '2019/01/01 15:00:12',
-				range: ['2019/01/01','2019/01/06'],
-				rangetime: ['2019/01/08 14:00','2019/01/16 13:59'],
-				type: 'rangetime',
-				value: ''
+				value: ''			
             }
         },
         onLoad() {
-			this.$refs['totalView'].showView();
+			this.returnFromDatePicker()	
+			console.log("sales-self-onLoad:",this.selfParam)
         },
+		created(){
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			console.log("sales-self-created:",this.selfParam)
+		},
+		onShow() {//此处接受来自日期选择页面的参数
+			this.returnFromDatePicker()
+			console.log("sales-self-onShow:",this.selfParam)
+			if(!this.isFirstLoad){
+				console.log("重新加载")
+				this.$refs['totalView'].refresh(JSON.stringify(this.selfParam));
+			}
+			this.isFirstLoad=false
+		},
+		onUnload() {
+			//页面销毁删除缓存日期数据
+			// uni.removeStorageSync("dateObj");
+		},
         methods: {
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				if(!dateType){
+					return
+				}
+				
+				this.selfParam.dateType = dateType;
+				if(dateType=='date'){
+					this.selfParam.businessDate=uni.getStorageSync("date")
+				}else if(dateType=='week'){
+					// this.selfParam.businessDate=uni.getStorageSync("week")
+				}else if(dateType=='month'){
+					var value = JSON.parse(uni.getStorageSync("month"))
+					this.selfParam.businessDate=value.year + "-" + value.month
+				}else if(dateType=='year'){
+					this.selfParam.businessDate=uni.getStorageSync("year")
+				}
+			},
+			goCompare(){
+				uni.navigateTo({
+					url:"/pages/sales/indexCompare?tabIndex="+this.tabIndex
+				});
+			},
             getList(index) {
                 let activeTab = this.newsList[index];
                 let list = [];
@@ -103,33 +146,6 @@
                     list.push(item);
                 }
                 activeTab.data = activeTab.data.concat(list);
-            },
-            goDetail(e) {
-                if (this.navigateFlag) {
-                    return;
-                }
-                this.navigateFlag = true;
-                uni.navigateTo({
-                    url: './detail/detail?title=' + e.title
-                });
-                setTimeout(() => {
-                    this.navigateFlag = false;
-                }, 200)
-            },
-            close(index1, index2) {
-                uni.showModal({
-                    content: '是否删除本条信息？',
-                    success: (res) => {
-                        if (res.confirm) {
-                            this.newsList[index1].data.splice(index2, 1);
-                        }
-                    }
-                })
-            },
-            loadMore(e) {
-                setTimeout(() => {
-                    this.getList(this.tabIndex);
-                }, 500)
             },
             ontabtap(e) {
                 let index = e.target.dataset.current || e.currentTarget.dataset.current;
@@ -143,16 +159,6 @@
                 if (this.tabIndex === index) {
                     return;
                 }
-
-                // 缓存 tabId
-                // if (this.newsList[this.tabIndex].data.length > MAX_CACHE_DATA) {
-                //     let isExist = this.cacheTab.indexOf(this.tabIndex);
-                //     if (isExist < 0) {
-                //         this.cacheTab.push(this.tabIndex);
-                //         //console.log("cache index:: " + this.tabIndex);
-                //     }
-                // }
-
                 this.tabIndex = index;
                 this.scrollInto = this.tabBars[index].id;
 
@@ -207,24 +213,10 @@
                 }
                 return (s4() + s4() + "-" + s4() + "-4" + s4().substr(0, 3) + "-" + s4() + "-" + s4() + s4() + s4()).toUpperCase();
             },
-			onShowDatePicker(type){//显示
-				this.type = type;
-				this.showPicker = true;
-				this.value = this[type];
-			},
-			onSelected(e) {//选择
-				this.showPicker = false;
-				if(e) {
-					this[this.type] = e.value; 
-					//选择的值
-					console.log('value => '+ e.value);
-					//原始的Date对象
-					console.log('date => ' + e.date);
-				}
-			},
-			toggle(type) {
-				this.type = type
-				this.$refs.popup.open()
+			goDatePicker() {
+				uni.navigateTo({
+					url:"/pages/common/dateSelector"
+				});
 			},
         }
     }
@@ -247,13 +239,13 @@
         overflow: hidden;
         background-color: #ffffff;
         /* #ifdef MP-ALIPAY || MP-BAIDU */
-        height: 100vh;
+        height: 80vh;
         /* #endif */
     }
 
     .scroll-h {
         width: 100%;
-        height: 100rpx;
+        height: 60rpx;
         flex-direction: row;
         /* #ifndef APP-PLUS */
         white-space: nowrap;
@@ -390,5 +382,12 @@
 		padding: 15px;
 		height: 500px;
 	}
-
+	.content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 32rpx;
+		color: #333;
+		padding-top: 40rpx;
+	}
 	</style>

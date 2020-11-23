@@ -17,21 +17,28 @@
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData" ref="ringChart0" canvasId="index_ring_0"/>
 					</view>
-					<progress ref="progress_0" :dataAs="pieData"></progress>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData1" ref="ringChart1" canvasId="index_ring_1"/>
 					</view>
-					<progress ref="progress_1" :dataAs="pieData1"></progress>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 2}">
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData2" ref="ringChart2" canvasId="index_ring_2"/>
-					</view>		
-					<progress ref="progress_2" :dataAs="pieData2"></progress>
+					</view>					
 				</view>
-				
+				<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+			</view>
+		</view>
+		
+		<view class="box-contaniner">
+			<view class="container-title">				
+				<view>各地区单票金额</view>
+				<view @click="gotoRankAll()">全部>></view>
+			</view>
+			<view class="table">
+				<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 			</view>
 		</view>
 		<slot />
@@ -42,11 +49,12 @@
 	import ticketData from '@/components/sads-components/ticketData.vue';
 	import RingChart from "@/components/basic-chart/RingChart.vue";
 	import vTable from "@/components/table/table.vue";
-	import progress from "@/components/sads-components/progress.vue";
+	import urlAPI from '@/common/vmeitime-http/';
+	import numberFun from '@/common/tools/number.js';
 	
 	export default {
 		components: {
-			ticketData,RingChart,vTable,progress
+			ticketData,RingChart,vTable
 		},
 		props: {
 			model:{
@@ -57,62 +65,210 @@
 		},
 		data() {
 			return {
-				model:{
-					//数据
-					type: Object,
-					default: () => ({})
-				},
-				showModel:{},
+				param:{},
 				btnnum: 0,
-				ticketData:{
-					big1:{name:'竞彩（元）',value:'131.8'},
-					small1:{name:'足彩（元）',value:'131.80'},
-					small2:{name:'篮彩（元）',value:'0.00'},
-				},
+				ticketData:{},
 				pieData: {
 					//饼状图数据
 					series: [{name: '100',data: 222100},{name: '4-20',data: 70300},{name: '22-48',data: 32100},{name: '100以上',data: 25400},
 						{name: '52-98',data: 19700},{name: '2',data: 16000},{name: '50',data: 10500},
 					]
 				},
-				pieData1: {
-					//饼状图数据
-					series: [{name: '100',data: 422100},{name: '4-20',data: 170300},{name: '22-48',data: 32100},{name: '100以上',data: 25400},
-						{name: '52-98',data: 19700},{name: '2',data: 16000},{name: '50',data: 10500},
-					]
-				},
-				pieData2: {
-					//饼状图数据
-					series: [{name: '100',data: 122100},{name: '4-20',data: 170300},{name: '22-48',data: 32100},{name: '100以上',data: 25400},
-						{name: '52-98',data: 19700},{name: '2',data: 16000},{name: '50',data: 10500},
-					]
-				}
+				pieData1: {series: []},
+				pieData2: {series: []},
+				tableData: [],
+				tableDataAll: [],
+				tableColumns: [],	
 			}
 		},
+		onLoad() {
+			_self = this;
+			this.getServerData();
+			this.showView()
+		},
 		methods: {
+			showView(){
+				console.log("ticket showView" ,this.pieData);
+				this.$nextTick(() => {
+					this.$refs['ticketData'].showDataContainer();		
+					this.$refs['ringChart0'].showCharts();
+					this.$refs['ringChart1'].showCharts();
+					this.$refs['ringChart2'].showCharts();
+				});
+			},
 			getServerData() {
-				
+				this.getDataSet(this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
+				this.getPieData(this.param.provinceCenterId,this.param.businessDate);
+				this.getRankTable(this.param.provinceCenterId,this.param.businessDate);
 			},
 			change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
 			},
+			getTicketData(url, mode){				
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.concreteBean;
+					var format0 = numberFun.formatCNumber(data[0][0]);
+					if(mode==1){
+						var big1 = {'name':'竞彩（'+format0.name +'元）', 'value':data[0][0].toFixed(2)/format0.value}									
+						this.$set(this.ticketData, 'big1', big1);
+					}else if(mode==2){
+						var small1 = {'name':'足彩（'+format0.name +'元）', 'value':data[0][0].toFixed(2)/format0.value}
+						this.$set(this.ticketData, 'small1', small1);
+					}else if(mode==3){
+						var small2 = {'name':'篮彩（'+format0.name +'元）', 'value':data[0][0].toFixed(2)/format0.value}
+						this.$set(this.ticketData, 'small2', small2);
+					}
+
+					console.log('request ticketData', this.ticketData);				
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			// 获取最上层的两个tab
+			getDataSet(provinceCenterId, currentDate){
+				var url1 = '/exhibition/ticketAmount/queryAvgTicket/' + provinceCenterId + '/' + currentDate;
+				var url2 = '/exhibition/ticketAmount/queryAvgTicketOfFb/' + provinceCenterId + '/' + currentDate;
+				var url3 = '/exhibition/ticketAmount/queryAvgTicketOfBk/' + provinceCenterId + '/' + currentDate;
+				this.getTicketData(url1,1);
+				this.getTicketData(url2,2);
+				this.getTicketData(url3,3);
+			},
+			getPieData(provinceCenterId, currentDate){
+				var url = '/exhibition/ticketAmount/querySalesTickets/' + provinceCenterId + '/' + currentDate;
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					
+					var data = res.data.concreteBean;
+					var ftList=[];
+					var bkList=[];
+					for(var i=0; i<data.length; i++){
+						var ftObject = {name:data[i][0],data:data[i][1]};
+						var bkObject = {name:data[i][0],data:data[i][2]};
+						ftList[i]=ftObject;
+						bkList[i]=bkObject;
+					}
+					
+					this.$set(this.pieData1, 'series', ftList);
+					this.$set(this.pieData2, 'series', bkList);
+					
+					console.log('request pieData1', this.pieData1);	
+					console.log('request pieData2', this.pieData2);
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getRankTable(provinceCenterId, currentDate){
+				var url = '/exhibition/ticketAmount/queryAvgTicketRegion/' + provinceCenterId+'/'+currentDate;				
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.concreteBean;
+					var format0 = null;
+					if(data.length>0){
+						format0 = numberFun.formatCNumber(data[0][1]);							
+					}else{
+						return;
+					}	
+					
+					this.tableColumns= [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '省份',
+							key: 'area',
+							$width:"80px"
+						},{
+							title: '竞彩（元）',
+							key: 'jingcai',
+							$width:"80px"
+						},{
+							title: '足球（元）',
+							key: 'football',
+							$width:"85px"
+						},{
+							title: '篮球（元）',
+							key: 'basketball'
+						}
+					
+					]
+					
+					for(var i=0;i<data.length;i++){
+						var jsonData = {id:i+1, 
+									    area:data[i][0], 
+										jingcai:data[i][1].toFixed(2)/format0.value, 
+										football:data[i][2].toFixed(2)/format0.value,
+										basketball:data[i][3].toFixed(2)/format0.value,
+									   }
+						this.tableDataAll[i]=jsonData;						
+						if(i>4){
+							continue;
+						}
+						this.tableData[i]=jsonData;
+					}
+			
+					console.log('request tableData', this.tableData);				
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			gotoLunBo(btnnum){
+				if(btnnum==0){
+					uni.navigateTo({
+						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
+					});
+				}else if(btnnum==1){
+					uni.navigateTo({
+						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+					});
+				}else if(btnnum==2){
+					uni.navigateTo({
+						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+					});
+				}
+			},
+			gotoRankAll(){				
+				uni.navigateTo({
+					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataAll) + '&tableColumns=' + JSON.stringify(this.tableColumns)
+				});
+			}
+		},
+		mounted(){
+			this.showView();
+		},
+		watch: {
+			'$route':'showView'
 		},
 		created() {
-			this.showModel = this.model;
-			this.$nextTick(() => {
-				this.$refs['ticketData'].showDataContainer();		
-				this.$refs['ringChart0'].showCharts();
-				this.$refs['ringChart1'].showCharts();
-				this.$refs['ringChart2'].showCharts();
-				
-				this.$refs['progress_0'].showProgress();
-				this.$refs['progress_1'].showProgress();
-				this.$refs['progress_2'].showProgress();
-			});
-			//ajax调用
+			this.param = this.model;
 			this.getServerData();
-		}
+			// this.showView();
+		},
 	}
 </script>
 

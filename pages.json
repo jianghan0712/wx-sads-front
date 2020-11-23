@@ -2,9 +2,19 @@
 	
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path" : "pages/login/login",
+			"style" : {}
+		},
+		{
 			"path": "pages/sales/index",
 			"style": {
 				"navigationBarTitleText": "竞彩销售"
+			}
+		},
+		{
+			"path": "pages/sales/indexCompare",
+			"style": {
+				"navigationBarTitleText": "竞彩销售对比"
 			}
 		},{
 			"path": "pages/mine/index",
@@ -36,11 +46,24 @@
 		},{
 		    "path" : "pages/common/tableDetail",
 		    "style" : {}
+		},{
+		    "path" : "pages/common/tableShopDetail",
+		    "style" : {}
+		},{
+		    "path" : "pages/common/tableLimitShopDetail",
+		    "style" : {}
+		},{
+		    "path" : "pages/common/dateSelector",
+		    "style" : {}
 		}
         ,{
             "path" : "pages/match/match",
             "style" : {}
+        },{
+            "path" : "pages/sales/gameView/gameViewCompare",
+            "style" : {}
         }
+
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

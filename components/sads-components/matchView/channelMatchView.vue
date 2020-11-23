@@ -47,7 +47,7 @@
 		},
 		data() {
 			return {
-				showModel:{},
+				param:{},
 				btnnum: 0,
 				index: 0,
 				matchTypeTableData: [{
@@ -129,7 +129,7 @@
 			}
 		},
 		created() {
-			this.showModel = this.model;
+			this.param = this.model;
 			this.$nextTick(() => {
 				// 环状图
 				this.$refs['ringChart0'].showCharts();

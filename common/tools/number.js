@@ -15,6 +15,8 @@ export const formatCNumber = (number) => {
 	if(temp>1){
 		return {"name":"万","value":10000};
 	}
+	
+	return {"name":"","value":1};
 }
 
 export default {

@@ -44,6 +44,8 @@
 <script>
 	import RingChart from "@/components/basic-chart/RingChart.vue";
 	import vTable from "@/components/table/table.vue";
+	import urlAPI from '@/common/vmeitime-http/';
+	import numberFun from '@/common/tools/number.js';
 	
 	export default {
 		components: {
@@ -51,33 +53,18 @@
 			vTable
 		},
 		props: {
-			model:{
-				//数据
-				type: Object,
-				default: () => ({})
-			}
+			// model:{
+			// 	//数据
+			// 	type: Object,
+			// 	default: () => ({})
+			// }
 		},
 		data() {
 			return {
-				showModel:{},
+				param:{},
 				btnnum: 0,
 				index: 0,
-				matchTypeTableData: [{
-								id: "1",
-								matchType: "欧洲国家联赛",
-								amount: "10233.5",
-							},
-							{
-								id: "2",
-								matchType: "美国职业大联盟",
-								amount: "9965.5"
-							},
-							{
-								id: "3",
-								matchType: "巴西甲级联赛",
-								amount: "9754.5"
-							}
-						],
+				matchTypeTableData: [],
 				matchTypeTableColumns: [{
 						title: "排名",
 						key: "id",
@@ -91,40 +78,24 @@
 						key: 'amount'
 					}
 				],	
-				matchEventTableData: [{
-								id: "1",
-								matchName: "德国vs西班牙",
-								amount: "10233.5",
-							},
-							{
-								id: "2",
-								matchName: "俄罗斯vs塞尔维亚",
-								amount: "9965.5"
-							},
-							{
-								id: "3",
-								matchName: "乌克兰vs瑞士",
-								amount: "9754.5"
-							}
-						],
-				matchEventTableColumns: [{
-						title: "排名",
-						key: "id",
-						$width:"50px",
-					},{
-						title: '赛事',
-						key: 'matchName',
-						$width:"200px"
-					},{
-						title: '销量（百万元）',
-						key: 'amount'
-					}
-				],	
+				matchEventTableData: [],
+				matchEventTableColumns: [],	
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
 			};
 		},
+		onLoad() {
+			_self = this;
+			this.param = JSON.parse(uni.getStorageSync("selfParam"))
+			this.getServerData();
+		},
 		methods: {
+			showView(){
+				this.$nextTick(() => {				
+				});
+			},
 			getServerData() {
+				this.getMatchTable();
+				this.getMatchEventTable();
 			},
 		    change(e) {
 			    this.btnnum = e;
@@ -138,18 +109,117 @@
 				uni.navigateTo({	
 					url:"/pages/common/levelRingDetail?btnnum="+btnnum
 				});
-			}
+			},
+			// 获取最上层的两个tab {startDate}/{endDate}/{startDatePre}/{endDatePre}/{sportsType}/{provinceCenterId}/{cityCenterId}
+			getMatchTable(startDate,endDate,startDatePre,endDatePre,sportsType,provinceCenterId,cityCenterId){
+				var url = 'exhibition/matchOverview/queryTop10LeagueSales/startDate/endDate/startDatePre/endDatePre/sportsType/provinceCenterId/cityCenterId';
+				
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.concreteBean;
+					var format0 = null;
+					if(data.length>0){
+						format0 = numberFun.formatCNumber(data[0][1]);							
+					}else{
+						return;
+					}	
+					
+					this.matchTypeTableColumns= [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '赛制',
+							key: 'matchType',
+							$width:"200px"
+						},{
+							title: '销量（'+format0.name + '元）',
+							key: 'amount'
+						}
+					]
+					
+					for(var i=0;i<data.length;i++){
+						var jsonData = {id:i+1, matchType:data[i][0], amount:data[i][1]/format0.value}
+						this.matchTypeTableData[i]=jsonData;
+						if(i==4){
+							break;
+						}
+					}
+
+					console.log('request matchTypeTableData', this.matchTypeTableData);				
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getMatchEventTable(){
+				var url = 'exhibition/matchOverview/queryTop10MatchSales/2020-10-15/2020-10-15/FB/11/11/null';
+
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.concreteBean;
+					var format0 = null;
+					if(data.length>0){
+						format0 = numberFun.formatCNumber(data[0][1]);							
+					}else{
+						return;
+					}					
+
+					for(var i=0;i<data.length;i++){
+						var jsonData = {id:i+1, matchName:data[i][0], amount:data[i][1]/format0.value}
+						this.matchEventTableData[i]=jsonData;
+						if(i==4){
+							break;
+						}
+					}
+					console.log('request matchEventTableData', this.matchEventTableData);	
+					
+					this.matchEventTableColumns = [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '赛事',
+							key: 'matchName',
+							$width:"200px"
+						},{
+							title: '销量（' + format0.name + '元）',
+							key: 'amount'
+						}
+					];
+					
+								
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
 		},
 		created() {
-			this.showModel = this.model;
-			this.$nextTick(() => {
-				// 环状图
-				this.$refs['ringChart0'].showCharts();
-				this.$refs['ringChart1'].showCharts();
-			});
+			this.param = this.model;
 			//ajax调用
 			this.getServerData();
-		}
+		},
+		mounted(){
+			this.showView();
+		},
+		watch: {
+			'$route':'showView'
+		},
 	}
 </script>
 

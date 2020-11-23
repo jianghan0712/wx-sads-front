@@ -31,13 +31,14 @@ http.delete('user/1').then((res)=>{
 */
 export default {
 	config: {
-		baseUrl: "http://192.168.1.104:8901/",
+		// baseUrl: "http://192.168.1.105:8901/",
+		baseUrl: "https://122.51.159.32:8901/",
 		header: {
 			'Content-Type':'application/json;charset=UTF-8',
 			'Content-Type':'application/x-www-form-urlencoded'
 		},  
 		data: {},
-		method: "GET",
+		method: "POST",
 		dataType: "json",  /* 如设为json，会对返回的数据做一次 JSON.parse */
 		responseType: "text",
 		success() {},

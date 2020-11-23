@@ -1,32 +1,25 @@
 <template>
 	<view class="content">
-	         <view class="uni-list">
-	             <view class="uni-list-cell" v-for="(item,index) in series" :key="index">
-	                  <view class="uni-navigate-right" style="font-size: 40rpx;">
-	                       {{item.name}}
-	                  </view>
-					  <view class="uni-navigate-right" style="font-size: 40rpx;">
-					       {{item.zhanbi}}
-					  </view>
-					  <view class="uni-navigate-right" style="font-size: 40rpx;">
-					       {{item.data}}元
-					  </view>
-	             </view>
-	         </view>
-	    </view>
+		 <progress ref="progress_1" :dataAs="pieData"></progress>
+	</view>
 </template>
 
 <script>
 	import "@/common/uni.css";
+	import progress from "@/components/sads-components/progress.vue";
 	
 	export default {
+		components: {
+			progress
+		},
 		data(){
 			return{
 				btnum : 0,
 				series: [{name: '单关', zhanbi:'34%',data: 400},
 					{name: '2X1', zhanbi:'24%', data: 350},
 					{name: '3X1', zhanbi:'29%', data: 330}
-				]
+				],
+				pieData:{}
 			}
 		},
 		methods: {
@@ -34,8 +27,11 @@
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.btnum = option.btnnum
-		},
-
+			this.pieData = JSON.parse(option.data); // 字符串转对象
+			console.log("btnum=",this.btnum)
+			console.log("data=",this.pieData)
+			this.$refs['progress_1'].showProgress(this.pieData);
+		}
 	}
 
 </script>

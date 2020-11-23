@@ -9,7 +9,7 @@
 				<view class="end-cont" :class="{dis:btnnum == 0}">	
 					<view style="font-size: 30rpx;font-weight: bold;">足球关次销量及占比</view>				
 					<view class="ring_chart">
-						<ring-chart :dataAs="pieData" ref="ringChart0" canvasId="index_ring_0"/>
+						<ring-chart :dataAs="pieData" ref="levelRingChart0" canvasId="index_ring_0"/>
 					</view>
 					<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
 					<!-- 各地区销量排行-->
@@ -31,7 +31,7 @@
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
 					<view style="font-size: 30rpx;font-weight: bold;">篮球关次销量及占比</view>　
 					<view class="ring_chart">
-						<ring-chart :dataAs="pieData1" ref="ringChart1" canvasId="index_ring_1"/>
+						<ring-chart :dataAs="pieData1" ref="levelRingChart1" canvasId="index_ring_1"/>
 					</view>
 					<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
 					<!-- 各地区销量排行-->
@@ -59,6 +59,9 @@
 <script>
 	import RingChart from "@/components/basic-chart/RingChart.vue";
 	import vTable from "@/components/table/table.vue";
+	import urlAPI from '@/common/vmeitime-http/';
+	import numberFun from '@/common/tools/number.js';
+
 	
 	export default {
 		components: {
@@ -74,23 +77,14 @@
 		},
 		data() {
 			return {
-				showModel:{},
-				 btnnum: 0,
-				 index: 0,
-				 pieData: {
-				 	//饼状图数据
-				 	series: [{name: '单关',data: 400},
-				 		{name: '2X1',data: 350},
-				 		{name: '3X1',data: 330}
-				 	]
-				 },
-				 pieData1: {
-				 	//饼状图数据
-				 	series: [{name: '单关',data: 300},
-				 		{name: '2X1',data: 200},
-				 		{name: '3X1',data: 700}
-				 	]
-				 },
+				selfParam:{},
+				btnnum: 0,
+				index: 0,
+				levelList:['单关','2x1','3x1','4x1-8x1','MXN','自有过关'],
+				pieData: {					//饼状图数据
+					series: [],
+					},
+				pieData1: {},
 				tableData: [{
 								id: "1",
 								area: "北京市",
@@ -145,8 +139,25 @@
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
 			};
 		},
+		onLoad() {
+			_self = this;
+		},
+		created() {
+			this.selfParam=this.model
+			this.getServerData();
+			this.showView();
+		},
 		methods: {
+			showView(){
+				console.log("level showView" ,this.pieData);
+				this.$nextTick(() => {	
+					this.$refs['levelRingChart0'].showCharts();
+					this.$refs['levelRingChart1'].showCharts();
+					console.log("init ringChart0:" ,this.pieData);
+				});
+			},
 			getServerData() {
+				this.getPieDate(this.selfParam.businessDate,this.selfParam.provinceCenterId,this.selfParam.cityCenterId)
 			},
 		    change(e) {
 			    this.btnnum = e;
@@ -157,21 +168,65 @@
 				this.index = e.detail.value
 			},
 			gotoLunBo(btnnum){
-				uni.navigateTo({	
-					url:"/pages/common/levelRingDetail?btnnum="+btnnum
-				});
-			}
+				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
+				if(btnnum==0){
+					uni.navigateTo({
+						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
+					});
+				}else{
+					uni.navigateTo({
+						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+					});
+				}
+			},
+			getPieDate(currentDate, provinceCenterId,cityCenterId){
+				var url = 'exhibition/aupSales/getTodSalesAmount/'+currentDate+'/'+provinceCenterId+'/'+cityCenterId;
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.concreteBean;
+				
+					for(var i=0;i<data.length;i++){						
+						if(data[i][0]=='BK'){
+							var series = []							
+							for(var j=0;j<this.levelList.length;j++){	
+								var jsonData = {}
+								jsonData.name=this.levelList[j];
+								jsonData.data=data[i][j+1];
+								series[j]=jsonData
+							}
+							this.pieData1.series=series
+						}else if(data[i][0]=='FB'){
+							var series = []
+							for(var j=0;j<this.levelList.length;j++){	
+								var jsonData = {}
+								jsonData.name=this.levelList[j];
+								jsonData.data=data[i][j+1];
+								series[j]=jsonData
+							}
+							this.pieData.series=series
+						}						
+					}
+					console.log('request getTodSalesAmount', this.pieData);				
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
 		},
-		created() {
-			this.showModel = this.model;
-			this.$nextTick(() => {
-				// 环状图
-				this.$refs['ringChart0'].showCharts();
-				this.$refs['ringChart1'].showCharts();
-			});
-			//ajax调用
-			this.getServerData();
-		}
+		mounted(){
+			this.selfParam=this.model
+			this.showView();
+		},
+		watch: {
+			'$route':'showView'
+		},
 	}
 </script>
 
