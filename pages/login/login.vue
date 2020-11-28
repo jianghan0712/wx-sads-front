@@ -30,6 +30,7 @@
 				selfParam:{
 					token:'',
 					provinceCenterId:'',
+					provinceCenterName:'',
 					businessDate:{
 						view:dateUtils.getToday(),
 						date:{startDate:dateUtils.getToday(), endDate:dateUtils.getToday()},
@@ -45,7 +46,8 @@
 					dateType:'date',
 					compareType:'date',
 					compareOne:dateUtils.getToday(),
-					compareTwo:''
+					compareTwo:'',
+					selfProvinceCenterId:''
 				},
 				userinfo:{
 					userId:'',
@@ -54,7 +56,8 @@
 					userEmail:'',
 					phone:'',
 					lastLoginTime:''
-				}
+				},
+				areaMap:[]
             }
         },
         onLoad() {
@@ -105,21 +108,61 @@
 						
 						var data = res.data.data;
 						this.selfParam.provinceCenterId = data.provincialId
+						this.selfParam.selfProvinceCenterId = data.provincialId
 						this.selfParam.userId = data.userId
 					
 						this.res = '请求结果 : ' + JSON.stringify(res);
 						console.log('getUserRight=', this.selfParam)
 						
-						this.gotoMainPage(JSON.stringify(this.selfParam))
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					})
+					this.getAreaMap()
+			},
+			getAreaMap(){
+				var url = '/pentaho/shows/getProvincialList';
+				var param = {token:this.selfParam.token}
+				var result = [] 
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+						console.log('request success', res)
+						uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						});
+						
+						var data = res.data.data;
+						for(var i=0;i<data.length;i++){
+							var json = {id:data[i][0],name:data[i][1]}
+							result[i]=json
+							if(data[i][0]==this.selfParam.provinceCenterId){
+								 this.selfParam.provinceCenterName = data[i][1]
+							}
+						}	
+						this.areaMap=result;
+						
+						console.log('login this.areaMap', this.areaMap);
+						this.res = '请求结果 : ' + JSON.stringify(res);	
+						// this.gotoMainPage(JSON.stringify(this.selfParam))
+						this.gotoMainPage(this.selfParam)
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					})
+				
+			
 			},
 			gotoMainPage(selfParam){
-				console.log("gotoMainPage=",selfParam)
+				console.log("gotoMainPage =",selfParam)
 				uni.setStorageSync("dateType",selfParam.dateType)
-				uni.setStorageSync("selfParam",selfParam)
+				uni.setStorageSync("selfParam",JSON.stringify(selfParam))
+				uni.setStorageSync("areaMap", JSON.stringify(this.areaMap))
+				uni.setStorageSync("area",selfParam.provinceCenterId)
+				uni.setStorageSync("areaName",selfParam.provinceCenterName)
+				uni.setStorageSync("businessDate", JSON.stringify(selfParam.businessDate));
 				// uni.navigateBack()
 				uni.switchTab({
 					url: "/pages/sales/index"

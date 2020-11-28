@@ -53,15 +53,34 @@
 			vTable
 		},
 		props: {
-			// model:{
-			// 	//数据
-			// 	type: Object,
-			// 	default: () => ({})
-			// }
+			param:{
+				//数据
+				type: Object,
+				default: () => ({})
+			}
 		},
 		data() {
 			return {
-				param:{},
+				selfParam:{
+					token:'',
+					provinceCenterId:'',
+					businessDate:{
+						view:'',
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},					
+					startDate:'',
+					endDate:'',
+					cityCenterId:'',
+					userId:'',
+					countyCenterId:'',
+					dateType:'date',
+					compareType:'date',
+					compareOne:'',
+					compareTwo:''
+				},
 				btnnum: 0,
 				index: 0,
 				matchTypeTableData: [],
@@ -85,21 +104,22 @@
 		},
 		onLoad() {
 			_self = this;
-			this.param = JSON.parse(uni.getStorageSync("selfParam"))
-			this.getServerData();
+			this.selfParam = this.param
+			this.getServerData(getServerData);
 		},
 		methods: {
 			showView(){
 				this.$nextTick(() => {				
 				});
 			},
-			getServerData() {
-				this.getMatchTable();
-				this.getMatchEventTable();
+			getServerData(btnnum) {
+				this.getMatchTable(btnnum);
+				this.getMatchEventTable(btnnum);
 			},
 		    change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
+				this.getServerData(this.btnnum);
 		    },
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为：' + e.detail.value)
@@ -110,11 +130,49 @@
 					url:"/pages/common/levelRingDetail?btnnum="+btnnum
 				});
 			},
+			createParam(btnnum){
+				console.log("createParam begin")
+				var dateType = this.selfParam.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.date.dateTimeEnd,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token,
+							 gameFlag:btnnum+1 }
+				}else if(dateType=='week'){
+					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.week.dateTimeEnd,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token,
+							 gameFlag:btnnum+1}
+				}else if(dateType=='month'){
+					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.month.dateTimeEnd,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token,
+							 gameFlag:btnnum+1 }
+				}else if(dateType=='year'){
+					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.year.dateTimeEnd,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token,
+							 gameFlag:btnnum+1 }
+				}	
+
+				console.log("createParam end:",param)
+				return param
+			},
 			// 获取最上层的两个tab {startDate}/{endDate}/{startDatePre}/{endDatePre}/{sportsType}/{provinceCenterId}/{cityCenterId}
-			getMatchTable(startDate,endDate,startDatePre,endDatePre,sportsType,provinceCenterId,cityCenterId){
-				var url = 'exhibition/matchOverview/queryTop10LeagueSales/startDate/endDate/startDatePre/endDatePre/sportsType/provinceCenterId/cityCenterId';
+			getMatchTable(btnnum){
+				var url = '/pentaho/match/getTop5FormatSales';
+				var param = this.createParam(btnnum)
 				
-				urlAPI.getRequest(url, null).then((res)=>{
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -122,14 +180,14 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;
+					var data = res.data.data;
 					var format0 = null;
 					if(data.length>0){
 						format0 = numberFun.formatCNumber(data[0][1]);							
 					}else{
 						return;
 					}	
-					
+
 					this.matchTypeTableColumns= [{
 							title: "排名",
 							key: "id",
@@ -159,10 +217,11 @@
 					console.log('request fail', err);
 				})
 			},
-			getMatchEventTable(){
-				var url = 'exhibition/matchOverview/queryTop10MatchSales/2020-10-15/2020-10-15/FB/11/11/null';
+			getMatchEventTable(btnnum){
+				var param = this.createParam(btnnum)
+				var url = '/pentaho/match/getTop5MatchSales';
 
-				urlAPI.getRequest(url, null).then((res)=>{
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -170,7 +229,7 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;
+					var data = res.data.data;
 					var format0 = null;
 					if(data.length>0){
 						format0 = numberFun.formatCNumber(data[0][1]);							
@@ -210,9 +269,9 @@
 			},
 		},
 		created() {
-			this.param = this.model;
+			this.selfParam = this.param
 			//ajax调用
-			this.getServerData();
+			this.getServerData(this.btnnum);
 		},
 		mounted(){
 			this.showView();

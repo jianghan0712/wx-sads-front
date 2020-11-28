@@ -6,26 +6,27 @@
                 <text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
             </view>
         </scroll-view>
-	
 		<view class="content">
+			<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+			<uni-section class="section" type="line"></uni-section>
 			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
-			<uni-section  type="line"></uni-section>
+			<uni-section class="section" type="line"></uni-section>
 			<view @click="goCompare">对比</view>
 		</view>	 
 		<block v-if="tabIndex==0">
 			<totalView ref="totalView" :param="selfParam"></totalView>
 		</block>
 		<block v-if="tabIndex==1">
-			<gameView ref="gameView" :model="selfParam"></gameView>
+			<gameView ref="gameView" :param="selfParam"></gameView>
 		</block>
 		<block v-if="tabIndex==2">
-			<levelView ref="levelView" :model="selfParam"></levelView>
+			<levelView ref="levelView" :param="selfParam"></levelView>
 		</block>
 		<block v-if="tabIndex==3">
-			<ticketView ref="ticketView" :model="selfParam"></ticketView>
+			<ticketView ref="ticketView" :param="selfParam"></ticketView>
 		</block>
 		<block v-if="tabIndex==4">
-			<matchView ref="matchView" :model="selfParam"></matchView>
+			<matchView ref="matchView" :param="selfParam"></matchView>
 		</block>
     </view>
 </template>
@@ -58,6 +59,7 @@
 				selfParam:{
 					token:'',
 					provinceCenterId:'',
+					provinceCenterName:'',
 					businessDate:{
 						view:'',
 						date:{startDate:'', endDate:''},
@@ -73,8 +75,10 @@
 					dateType:'date',
 					compareType:'date',
 					compareOne:'',
-					compareTwo:''
+					compareTwo:'',
+					selfProvinceCenterId:''
 				},
+				areaMap:{},
 				isFirstLoad:true,
                 newsList: [],
                 cacheTab: [],
@@ -98,7 +102,9 @@
         },
 		created(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			console.log("sales-self-created:",this.selfParam)
+			this.areaMap = JSON.parse(uni.getStorageSync("areaMap"))
+			console.log('index-create this.areaMap:', this.areaMap)
+			console.log("sales-self-created:", this.selfParam)
 		},
 		onShow() {//此处接受来自日期选择页面的参数
 			this.returnFromDatePicker()
@@ -115,26 +121,28 @@
 		},
         methods: {
 			returnFromDatePicker(){
-				const dateType = uni.getStorageSync("dateType")
-				if(!dateType){
-					return
-				}
 				
-				this.selfParam.dateType = dateType;
-				if(dateType=='date'){
-					this.selfParam.businessDate=uni.getStorageSync("date")
-				}else if(dateType=='week'){
-					// this.selfParam.businessDate=uni.getStorageSync("week")
-				}else if(dateType=='month'){
-					var value = JSON.parse(uni.getStorageSync("month"))
-					this.selfParam.businessDate=value.year + "-" + value.month
-				}else if(dateType=='year'){
-					this.selfParam.businessDate=uni.getStorageSync("year")
-				}
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+			
+				
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
+				
 			},
 			goCompare(){
 				uni.navigateTo({
 					url:"/pages/sales/indexCompare?tabIndex="+this.tabIndex
+				});
+			},
+			goArea(){
+				uni.navigateTo({
+					url:"/pages/common/areaSelector?area="+this.selfParam.provinceCenterId
 				});
 			},
             getList(index) {
@@ -389,5 +397,8 @@
 		font-size: 32rpx;
 		color: #333;
 		padding-top: 40rpx;
+	}
+	.section{
+		background-color: #FFFFFF;
 	}
 	</style>

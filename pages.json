@@ -55,8 +55,10 @@
 		},{
 		    "path" : "pages/common/dateSelector",
 		    "style" : {}
-		}
-        ,{
+		},{
+		    "path" : "pages/common/areaSelector",
+		    "style" : {}
+		},{
             "path" : "pages/match/match",
             "style" : {}
         },{

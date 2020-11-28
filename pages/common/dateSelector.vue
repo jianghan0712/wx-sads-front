@@ -76,6 +76,12 @@
 		}
 	}
 	
+	function getDaysInOneMonth(year, month){
+	    month = parseInt(month, 10);
+	    var day= new Date(year, month, 0);  
+	    return day.getDate();  
+	}
+	
 	
 	
 	export default {	
@@ -88,6 +94,13 @@
 				month:{year:'',month:''},
 				week:{start:'',end:''},
 				year:'',
+				businessDate:{
+					view:'',
+					date:{startDate:'', endDate:''},
+					week:{startDate:'', endDate:''},
+					month:{startDate:'', endDate:''},
+					year:{startDate:'', endDate:''},
+				},
 				btnnum:0,
 				dateOption: {},
 				isShow: false,
@@ -154,10 +167,12 @@
 						}else{
 							this.$set(this.years[i], 'inverted', this.selectFalse);
 							this.year=this.years[i].year
-						}
-						
+						}					
 					}				
 				}
+				this.businessDate.view = this.year
+				this.businessDate.year.startDate = this.year + '-01-01'
+				this.businessDate.year.endDate = this.year + '-12-31'
 			},
 			setMonth(yearIndex, monthIndex){
 				console.log("yearIndex=",yearIndex, " monthIndex=",monthIndex)
@@ -190,8 +205,11 @@
 					}
 				}
 				
-				console.log("this.months=",this.months)
-				console.log("this.month=",this.month)
+				this.businessDate.view = this.month.year + '-' +  this.month.month 
+				this.businessDate.month.startDate = this.month.year + '-' +  this.month.month + '-01'
+				this.businessDate.month.endDate = this.month.year + '-' +  this.month.month + getDaysInOneMonth(this.month.year,this.month.month)
+				
+				console.log("this.month=",this.businessDate.view)
 			},
 			change2(e) {
 			    this.btnnum = e;
@@ -247,18 +265,15 @@
 			confirmDate(){			
 				if(this.btnnum==0){
 					uni.setStorageSync("dateType", "date");
-					uni.setStorageSync("date", this.date);
 				}else if(this.btnnum==1){
 					uni.setStorageSync("dateType", "week");
-					uni.setStorageSync("week", JSON.stringify(this.week));
 				}else if(this.btnnum==2){
 					uni.setStorageSync("dateType", "month");
-					uni.setStorageSync("month", JSON.stringify(this.month));
 				}else if(this.btnnum==3){
 					uni.setStorageSync("dateType", "year");
-					uni.setStorageSync("year", this.year);
 				}
 				
+				uni.setStorageSync("businessDate", JSON.stringify(this.businessDate));
 				uni.navigateBack();
 			}
 		}

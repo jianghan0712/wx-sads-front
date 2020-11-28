@@ -25,7 +25,7 @@
 						<view class="example">
 							<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 						</view>
-						<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+						<button type="default" plain="true" @click="gotoTableDetail(btnnum)">查看全部</button>
 					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
@@ -47,7 +47,7 @@
 						<view class="example">
 							<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 						</view>
-						<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+						<button type="default" plain="true" @click="gotoTableDetail(btnnum)">查看全部</button>
 					</view>
 				</view>		
 			</view>
@@ -69,7 +69,7 @@
 			vTable
 		},
 		props: {
-			model:{
+			param:{
 				//数据
 				type: Object,
 				default: () => ({})
@@ -77,7 +77,26 @@
 		},
 		data() {
 			return {
-				selfParam:{},
+				selfParam:{
+					token:'',
+					provinceCenterId:'',
+					businessDate:{
+						view:'',
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},					
+					startDate:'',
+					endDate:'',
+					cityCenterId:'',
+					userId:'',
+					countyCenterId:'',
+					dateType:'',
+					compareType:'',
+					compareOne:'',
+					compareTwo:''
+				},
 				btnnum: 0,
 				index: 0,
 				levelList:['单关','2x1','3x1','4x1-8x1','MXN','自有过关'],
@@ -85,37 +104,7 @@
 					series: [],
 					},
 				pieData1: {},
-				tableData: [{
-								id: "1",
-								area: "北京市",
-								amount: "10233.5",
-								zhanbi: "+12.6%"
-							},
-							{
-								id: "2",
-								area: "上海市",
-								amount: "9965.5",
-								zhanbi: "+12.6%"
-							},
-							{
-								id: "3",
-								area: "广东省",
-								amount: "9754.5",
-								zhanbi: "+12.6%"
-							},
-							{
-								id: "4",
-								area: "重庆市",
-								amount: "6745.6",
-								zhanbi: "+12.6%"
-							},
-							{
-								id: "5",
-								area: "河北省",
-								amount: "6554",
-								zhanbi: "+12.6%"
-							}
-						],
+				tableData: [],
 				tableColumns: [{
 						title: "排名",
 						key: "id",
@@ -143,13 +132,12 @@
 			_self = this;
 		},
 		created() {
-			this.selfParam=this.model
+			this.selfParam=this.param
 			this.getServerData();
 			this.showView();
 		},
 		methods: {
-			showView(){
-				console.log("level showView" ,this.pieData);
+			showView(){				
 				this.$nextTick(() => {	
 					this.$refs['levelRingChart0'].showCharts();
 					this.$refs['levelRingChart1'].showCharts();
@@ -157,15 +145,19 @@
 				});
 			},
 			getServerData() {
-				this.getPieDate(this.selfParam.businessDate,this.selfParam.provinceCenterId,this.selfParam.cityCenterId)
+				this.getPieDate('足球')
+				this.getPieDate('篮球')
+				this.getTableDate(this.btnnum, '单关')
 			},
 		    change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
 		    },
-			bindPickerChange: function(e) {
-				console.log('picker发送选择改变，携带值为：' + e.detail.value)
+			bindPickerChange(e) {
+				console.log('picker发送选择改变，携带值为：' + this.array[e.detail.value].name)
+				console.log(this.selfParam)
 				this.index = e.detail.value
+				this.getTableDate(this.btnnum, this.array[e.detail.value].name)
 			},
 			gotoLunBo(btnnum){
 				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
@@ -179,9 +171,49 @@
 					});
 				}
 			},
-			getPieDate(currentDate, provinceCenterId,cityCenterId){
-				var url = 'exhibition/aupSales/getTodSalesAmount/'+currentDate+'/'+provinceCenterId+'/'+cityCenterId;
-				urlAPI.getRequest(url, null).then((res)=>{
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.date.dateTimeEnd,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.week.dateTimeEnd,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.month.dateTimeEnd,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.year.dateTimeEnd,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}
+				
+				if(this.btnnum==0){
+					param.gameFlag = 1
+				}else if(this.btnnum==1){
+					param.gameFlag = 2
+				}
+				
+				console.log("createParam end:",param)
+				return param
+			},
+			getPieDate(type){
+				var url = '/pentaho/sales/getCheckpointSalesProp';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -189,29 +221,23 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;
-				
-					for(var i=0;i<data.length;i++){						
-						if(data[i][0]=='BK'){
-							var series = []							
-							for(var j=0;j<this.levelList.length;j++){	
-								var jsonData = {}
-								jsonData.name=this.levelList[j];
-								jsonData.data=data[i][j+1];
-								series[j]=jsonData
-							}
-							this.pieData1.series=series
-						}else if(data[i][0]=='FB'){
-							var series = []
-							for(var j=0;j<this.levelList.length;j++){	
-								var jsonData = {}
-								jsonData.name=this.levelList[j];
-								jsonData.data=data[i][j+1];
-								series[j]=jsonData
-							}
-							this.pieData.series=series
-						}						
+					var data = res.data.data;
+				   
+					var series = []
+					for(var i=0;i<data.length;i++){	
+						var jsonData = {}
+						this.levelList = data[i].customsName						
+						jsonData.name=data[i].customsName;
+						jsonData.data=data[i].values[0];
+						series[i]=jsonData					
 					}
+					
+					if(type=='足球'){
+						this.pieData.series=series
+					}else if(type=='篮球'){
+						this.pieData1.series=series
+					}
+					
 					console.log('request getTodSalesAmount', this.pieData);				
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -219,9 +245,47 @@
 					console.log('request fail', err);
 				})
 			},
+			getTableDate(btnnum, passName){
+				var url = '/pentaho/sales/checkpointSalesRanking';
+				var param = this.createParam()
+
+				param.passName=passName;
+				urlAPI.getRequest(url, param).then((res)=>{	
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;
+
+					var series = []
+					for(var i=0;i<data.length;i++){	
+						var jsonData = {}
+						jsonData.id=i+1
+						jsonData.area=data[i][0];
+						jsonData.zhanbi=data[i][1]+'%';
+						jsonData.amount=data[i][2];
+						series[i]=jsonData					
+					}
+					this.tableData = series
+					
+					console.log('request checkpointSalesRanking', this.tableData);				
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			gotoTableDetail(btnnum){
+				uni.navigateTo({
+					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableData) + '&tableColumns=' + JSON.stringify(this.tableColumns)
+				});
+			}
 		},
 		mounted(){
-			this.selfParam=this.model
+			this.selfParam=this.param
 			this.showView();
 		},
 		watch: {
