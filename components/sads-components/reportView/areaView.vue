@@ -186,52 +186,106 @@
 			},
 			loadData(){
 				var that=this;
-				
-				//加载地区门店情况
-				var url = 'pentaho/plugin/cda/api/doQuery17/1/1/1/1/1';
-				urlAPI.getRequest(url, null).then((res)=>{
+				var token=getApp().globalData.token;
+				//地区日销量及周同比
+				var url = '/pentaho/dailyPaper/getSalesAndComRanking';
+				var param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.concreteBean;	
-					/* {"北京",15,46,0,5},
-						{"河北",1,59,8,3},
-						{"山西",12,25,3,3},
-						{"山东",35,98,7,0},
-						{"福建",16,59,9,1},
-						{"江苏",58,68,1,3},
-						{"新疆",99,75,0,1} 
-					省份 有销量 有销量对比 0销量 0销量对比	
-						*/
+					var data =res.data.data;	
+					
 					for(var i=0;i<data[i].length;i++){
 						var arr={
 								id: i+1,
 								area: data[i][0],
+								xiaoliang: data[i][1],
+								rateChange: data[i][2]
+							};
+						that.tableDataAll.push(arr);
+						if(i<5){
+							that.tableData.push(arr);
+						}
+					}
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+				//地区日票数及周同比
+				url = '/pentaho/dailyPaper/getVotesAndComRanking';
+				param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					var data =res.data.data;	
+					
+					for(var i=0;i<data.length;i++){
+						var arr={
+								id: i+1,
+								area: data[i][0],
+								piaoshu: data[i][1],
+								rateChage: data[i][2]
+							};
+						that.tableDataAll1.push(arr);
+						if(i<5){
+							that.tableData1.push(arr);
+						}
+					}
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+				
+				//地区门店情况
+				url = '/pentaho/dailyPaper/getShowCountRanking';
+				param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					var data =res.data.data;	
+					
+					for(var i=0;i<data[i].length;i++){
+						var arr={ 
+								id: i+1,
+								area: data[i][0],
 								notnonecount: data[i][1],
-								nonecount: data[i][3]
+								nonecount: data[i][2]
 							};
 						that.tableDataAll2.push(arr);
 						if(i<5){
 							that.tableData2.push(arr);
 						}
 					}
-					var arr1={id:1,
-							area:'北京',
-							jingcai:"竞彩",
-							football:111,
-							basketball:222
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+				
+				//地区返奖
+				url = '/pentaho/dailyPaper/getReturnRateRanking';
+				param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					var data =res.data.data;	
+					
+					for(var i=0;i<data.length;i++){
+						var arr={
+								id: i+1,
+								area: data[i][0],
+								jingcai: data[i][1],
+								football: data[i][2],
+								basketball: data[i][3]
 							};
-					that.tableData3.push(arr1);
-					var arr2={id:1,
-							area:'北京',
-							xiaoliang:599,
-							rateChange:111,
-							};
-					that.tableData.push(arr2);
-					var arr3={id:1,
-							area:'北京',
-							piaoshu:599,
-							rateChange:111,
-							};
-					that.tableData1.push(arr3);
+						that.tableDataAll3.push(arr);
+						if(i<5){
+							that.tableData3.push(arr);
+						}
+					}
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
@@ -242,26 +296,14 @@
 				var that =this;
 				console.log(this.tableDataAll)
 				uni.navigateTo({
-					url:'/pages/common/tableDetail?col='+JSON.stringify(encodeURIComponent(that.tableColumns))+'&da='+JSON.stringify(encodeURIComponent(that.tableDataAll)),
-					success: function(res) {
-					    // 通过eventChannel向被打开页面传送数据
-					    res.eventChannel.emit('heheh', 
-												{ col: JSON.stringify(encodeURIComponent(that.tableColumns))},
-												);
-					}
+					url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableDataAll),
 				});
 			},
 			toAll1(){
 				var that =this;
 				console.log(this.tableDataAll1)
 				uni.navigateTo({
-					url:'/pages/common/tableDetail?col='+JSON.stringify(encodeURIComponent(that.tableColumns1))+'&da='+JSON.stringify(encodeURIComponent(that.tableDataAll1)),
-					success: function(res) {
-					    // 通过eventChannel向被打开页面传送数据
-					    res.eventChannel.emit('heheh', 
-												{ col: JSON.stringify(encodeURIComponent(that.tableColumns1))},
-												);
-					}
+					url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns1)+'&tableData='+JSON.stringify(that.tableDataAll1),
 				});
 				
 			},
@@ -269,13 +311,7 @@
 				var that =this;
 				console.log(this.tableDataAll2)
 				uni.navigateTo({
-					url:'/pages/common/tableDetail?col='+JSON.stringify(encodeURIComponent(that.tableColumns2))+'&da='+JSON.stringify(encodeURIComponent(that.tableDataAll2)),
-					success: function(res) {
-					    // 通过eventChannel向被打开页面传送数据
-					    res.eventChannel.emit('heheh', 
-												{ col: JSON.stringify(encodeURIComponent(that.tableColumns2))},
-												);
-					}
+					url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns2)+'&tableData='+JSON.stringify(that.tableDataAll2),
 				});
 				
 			},
@@ -284,13 +320,7 @@
 				var that =this;
 				console.log(this.tableDataAll3)
 				uni.navigateTo({
-					url:'/pages/common/tableDetail?col='+JSON.stringify(encodeURIComponent(that.tableColumns3))+'&da='+JSON.stringify(encodeURIComponent(that.tableDataAll3)),
-					success: function(res) {
-					    // 通过eventChannel向被打开页面传送数据
-					    res.eventChannel.emit('heheh', 
-												{ col: JSON.stringify(encodeURIComponent(that.tableColumns3))},
-												);
-					}
+					url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns3)+'&tableData='+JSON.stringify(that.tableDataAll3),
 				});
 			}
 		},

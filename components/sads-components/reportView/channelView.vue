@@ -73,51 +73,101 @@
 		methods: {
 			loadData(){
 				var that=this;
-				var url = 'pentaho/plugin/cda/api/doQuery17/1/1/1/1/1';
-				urlAPI.getRequest(url, null).then((res)=>{
+				var token =getApp().globalData.token;
+				var url = '/pentaho/dailyPaper/getStoreSituSevenTread';
+				var param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.concreteBean;	
+					var data =res.data.data;	
+					/* 
+					 前7个是上一周 后七个是这一周
+					 销量 票数
+					 */
+					var storeCount=data.storeCount;
 					
-					console.log(data)				
-					//上周等于这周
-					var shangzhou1=[];
-					var benzhou1=[];
-					var shangzhou2=[];
-					var benzhou2=[];
-					var shangzhou3=[];
-					var benzhou3=[];
-					var shangzhou4=[];
-					var benzhou4=[];
-					//先按7条记录
-					for(var i=0;i<data.length;i++){
-						shangzhou1.push(data[i][1]);
-						shangzhou2.push(data[i][2]);
-						shangzhou3.push(data[i][3]);
-						benzhou1.push(data[i][1]);
-						benzhou2.push(data[i][2]);
-						benzhou3.push(data[i][3]);
+					var series =[];
+					var shangzhou=[];
+					var benzhou=[];
+					for(var i=0;i<data.length/2;i++){
+						shangzhou.push(storeCount[i]);
+						benzhou.push(storeCount[i+7]);
 					};
 					
-					var series1 =[
-							{ name: '上周', data: shangzhou1 },
-							{ name: '本周', data: benzhou1 }
+					var series =[
+							{ name: '上周', data: shangzhou },
+							{ name: '本周', data: benzhou }
 						];
-					var series2 =
-						[
-							{ name: '上周', data: shangzhou2},
-							{ name: '本周', data: benzhou2 }
-						];
-					var series3 =
-						[
-							{ name: '上周', data: shangzhou3},
-							{ name: '本周', data: benzhou3 }
-						];
-					that.$set(that.histogramChart1,'series',series1);
-					that.$set(that.histogramChart2,'series',series2);
-					that.$set(that.histogramChart3,'series',series3);
+					
+					that.$set(that.histogramChart1,'series',series);
 					this.$refs['histogramChart1'].showCharts();
+					
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+				url = '/pentaho/dailyPaper/get0SalesStoreSevenTread';
+				param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					var data =res.data.data;	
+					/* 
+					 前7个是上一周 后七个是这一周
+					 销量 票数
+					 */
+					var storeCount=data.storeCount;
+					
+					var series =[];
+					var shangzhou=[];
+					var benzhou=[];
+					for(var i=0;i<data.length/2;i++){
+						shangzhou.push(storeCount[i]);
+						benzhou.push(storeCount[i+7]);
+					};
+					
+					var series =[
+							{ name: '上周', data: shangzhou },
+							{ name: '本周', data: benzhou }
+						];
+					
+					that.$set(that.histogramChart2,'series',series);
 					this.$refs['histogramChart2'].showCharts();
-					this.$refs['histogramChart3'].showCharts();
+					
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+				url = '/pentaho/dailyPaper/getfiniteStoreSevenTread';
+				param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					var data =res.data.data;	
+					/* 
+					 前7个是上一周 后七个是这一周
+					 销量 票数
+					 */
+					var storeCount=data.storeCount;
+					
+					var series =[];
+					var shangzhou=[];
+					var benzhou=[];
+					for(var i=0;i<data.length/2;i++){
+						shangzhou.push(storeCount[i]);
+						benzhou.push(storeCount[i+7]);
+					};
+					
+					var series =[
+							{ name: '上周', data: shangzhou },
+							{ name: '本周', data: benzhou }
+						];
+					
+					that.$set(that.histogramChart2,'series',series);
+					this.$refs['histogramChart2'].showCharts();
 					
 				}).catch((err)=>{
 					this.loading = false;

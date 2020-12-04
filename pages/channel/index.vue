@@ -1,8 +1,9 @@
 <template>
 	<view>
-		<view class="box-contaniner">
-			<text @click="onShowDatePicker('dateTime')" class="datetext" >{{date}}</text>
-			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'起始日期'" :end-text="'终止日期'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
+		<view class="content">
+			<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+			<uni-section class="section" type="line"></uni-section>
+			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
 		</view>	 
 		<view class="input">
 			<input class="uni-input" type="number"  placeholder="请输入门店或终端编号" />
@@ -16,10 +17,10 @@
 		<view class="box-contaniner">
 			<view class="container-title">				
 				<view>销售top100门店</view>
-				<view>全部>></view>
+				<view class="rankTable-more" @click="goShopDetail(amountTableDataDetail,amountTableColumns)">全部>></view>
 			</view>
 			<view class="table">
-				<v-table :columns="amountTableColumns" :list="amountTableData"  selection="single"  :slot-cols="['number']" on-selection-change="onSelectionChange" border-color="#FFFFFF">
+				<v-table :columns="amountTableColumns" :list="amountTableData"  selection="single"  :slot-cols="['number']" border-color="#FFFFFF">
 					<template v-slot="{ row }">
 						<view style="font-weight: blod;color:blue;" @click="goDetail(row.number)">{{ row.number }}</view>
 					</template>
@@ -30,12 +31,12 @@
 		<view class="box-contaniner">
 			<view class="container-title">				
 				<view>各地区超限门店</view>
-				<view>全部>></view>
+				<view class="rankTable-more" @click="goLimitShopDetail(beyondLimitTableDataDetail,beyondLimitTableColumns)">全部>></view>
 			</view>
 			<view class="table">
 				<v-table :columns="beyondLimitTableColumns" :list="beyondLimitTableData"   :slot-cols="['area']"  border-color="#FFFFFF">
 					<template v-slot="{ row }">
-						<view style="font-weight: blod;color:blue;" @click="goDetail(row.area)">{{ row.area }}</view>
+						<view style="font-weight: blod;color:blue;" @click="goLimitDetail(row.area)">{{ row.area }}</view>
 					</template>
 				</v-table>
 			</view>
@@ -44,70 +45,47 @@
 </template>
 
 <script>
-	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import vTable from "@/components/table/table.vue";
+	import uniSection from "@/components/uni/uni-section/uni-section.vue"	
+	import dateSelector from "@/components/sads-components/dateSelector.vue";
+	import urlAPI from '@/common/vmeitime-http/';
+	import commonFun from '@/common/tools/watcher.js';
 	
 	export default {
 			components:{
-				MxDatePicker, dataContainer, vTable
-			},
-			props: {
-				model:{
-					//数据
-					type: Object,
-					default: () => ({})
-				}
+				dateSelector,dataContainer, vTable
 			},
 			data() {
 				return {
-					totalData:{
-						big1:{name:'在售门店数',value:'1494', left:{name:'周同比',value:'-1.39%'},right:{name:'环比',value:'+3.61%'}},
-						big2:{name:'在售率',value:'80.50%', left:{name:'周同比',value:'-1.59%'},right:{name:'环比',value:'+3.79%'}},
-					},	
-					scrollInto: "",
-					showTips: false,
-					navigateFlag: false,
-					pulling: false,
-					refreshIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAB5QTFRFcHBw3Nzct7e39vb2ycnJioqK7e3tpqam29vb////D8oK7wAAAAp0Uk5T////////////ALLMLM8AAABxSURBVHja7JVBDoAgDASrjqj//7CJBi90iyYeOHTPMwmFZrHjYyyFYYUy1bwUZqtJIYVxhf1a6u0R7iUvWsCcrEtwJHp8MwMdvh2amHduiZD3rpWId9+BgPd7Cc2LIkPyqvlQvKxKBJ//Qwq/CacAAwDUv0a0YuKhzgAAAABJRU5ErkJggg==",
-					showPicker: false,
-					date: '2019/01/01',
-					time: '15:00:12',
-					datetime: '2019/01/01 15:00:12',
-					range: ['2019/01/01','2019/01/06'],
-					rangetime: ['2019/01/08 14:00','2019/01/16 13:59'],
-					type: 'rangetime',
-					amountTableData: [{
-								id: "1",
-								area: "北京市",
-								number: "1224568045",
-								amount:"10233.5"
-							},
-							{
-								id: "2",
-								area: "上海市",
-								number: "1224568123",
-								amount:"9965.5"
-							},
-							{
-								id: "3",
-								area: "广东省",
-								number: "9754.5",
-								amount: "9785.00"
-							},
-							{
-								id: "4",
-								area: "重庆市",
-								number: "1224568045",
-								amount: "9685.00"
-							},
-							{
-								id: "5",
-								area: "河北省",
-								number: "1224568045",
-								amount: "8785.00"
-							}
-						],
+					selfParam:{
+						token:'',
+						provinceCenterId:'',
+						provinceCenterName:'',
+						businessDate:{
+							view:'',
+							date:{startDate:'', endDate:''},
+							week:{startDate:'', endDate:''},
+							month:{startDate:'', endDate:''},
+							year:{startDate:'', endDate:''},
+						},					
+						startDate:'',
+						endDate:'',
+						cityCenterId:'',
+						userId:'',
+						countyCenterId:'',
+						dateType:'date',
+						compareType:'date',
+						compareOne:'',
+						compareTwo:'',
+						selfProvinceCenterId:''
+					},
+					areaMap:{},
+					isFirstLoad:true,
+					totalData:{},	
+					areaIdList:{},
+					amountTableData: [],
+					amountTableDataDetail:[],
 					amountTableColumns: [{
 								title: "排名",
 								key: "id",
@@ -128,37 +106,8 @@
 								key: 'amount'
 							}
 						],	
-					beyondLimitTableData: [{
-								id: "1",
-								area: "北京市",
-								count: "107",
-								change:44
-							},
-							{
-								id: "2",
-								area: "上海市",
-								count: "90",
-								change:25
-							},
-							{
-								id: "3",
-								area: "广东省",
-								count: "76",
-								change: 21
-							},
-							{
-								id: "4",
-								area: "重庆市",
-								count: "70",
-								change: 15
-							},
-							{
-								id: "5",
-								area: "河北省",
-								count: "59",
-								change: 12
-							}
-						],
+					beyondLimitTableData: [],
+					beyondLimitTableDataDetail:[],
 					beyondLimitTableColumns: [{
 								title: "排名",
 								key: "id",
@@ -181,38 +130,228 @@
 						],
 				}				
 			},
+			onLoad() {
+				this.returnFromDatePicker()	
+				console.log("sales-self-onLoad:totalData=",this.totalData)
+			},
+			created(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.areaMap = JSON.parse(uni.getStorageSync("areaMap"))
+				this.getServerData();
+				this.showView()
+				console.log('index-create this.areaMap:', this.areaMap)
+				console.log("sales-self-created:", this.selfParam)
+			},
+			onShow() {//此处接受来自日期选择页面的参数
+				this.returnFromDatePicker()
+				console.log("sales-self-onShow:",this.selfParam)
+			},
 			methods:{
-				onShowDatePicker(type){//显示
-					this.type = type;
-					this.showPicker = true;
-					this.value = this[type];
+				getServerData() {
+					this.getStoreSituation();	
+					this.getTopHundredShows();
+					this.getTransfiniteShows();
 				},
-				onSelected(e) {//选择
-					this.showPicker = false;
-					if(e) {
-						this[this.type] = e.value; 
-						//选择的值
-						console.log('value => '+ e.value);
-						//原始的Date对象
-						console.log('date => ' + e.date);
-					}
+				getStoreSituation(){	
+					var url = '/pentaho/sales/getStoreSituation';
+					var param = this.createParam()
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						});
+						var data = res.data.data;	
+						var left1 = {'name':'周同比','value':data[1] + '%'};
+						var right1 = {'name':'环比','value':data[2] + '%'};
+						var big1 = {name:'在售门店数',value:data[0], left:left1, right:right1}
+						this.$set(this.totalData, 'big1', big1);
+						this.res = '请求结果 : ' + JSON.stringify(res);
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+					
+					var url = '/pentaho/sales/getStoreSalesrate';
+					var param = this.createParam()
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						});
+						var data = res.data.data;	
+						var left2 = {'name':'周同比','value':data[1] + '%'};
+						var right2 = {'name':'环比','value':data[2] + '%'};
+						var big2 = {name:'在售率',value:data[0], left:left2, right:right2}
+						
+						this.$set(this.totalData, 'big2', big2);
+						
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+					this.res = 'channel请求结果 : ' + JSON.stringify(this.totalData);
 				},
-				onSelectionChange(obj){
-					console.log("对比前后，选中的变化")
-					console.log(obj)
+				getTopHundredShows(){
+					var url = '/pentaho/channel/getTopHundredShows';
+					var param = this.createParam()
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						});
+						var data = res.data.data;	
+						for(var i=0;i<data.length;i++){
+							var json = {id:i+1, 
+										area:data[i][1], 
+										number:data[i][2], 
+										amount:data[i][3]}						
+							if(i<=4){
+								this.amountTableData[i] = json
+							}
+							this.amountTableDataDetail[i] = json
+						}
+								
+						this.res = '请求结果 : ' + JSON.stringify(res);
+						console.log(this.amountTableData)
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+				},
+				getTransfiniteShows(){
+					var url = '/pentaho/channel/getTransfiniteShows';
+					var param = this.createParam()
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						});
+						var data = res.data.data;	
+						for(var i=0;i<data.length;i++){
+							var json = {id:i+1, 
+										area:data[i][1], 
+										count:data[i][2], 
+										change:data[i][3]}	
+							var areaId={id:data[i][0],name:data[i][1]}
+							if(i<=4){
+								this.beyondLimitTableData[i] = json
+							}
+							this.beyondLimitTableDataDetail[i] = json
+							this.areaIdList[i]=areaId
+						}
+								
+						this.res = '请求结果 : ' + JSON.stringify(res);
+						console.log(this.beyondLimitTableData)
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+				},
+				returnFromDatePicker(){
+					const dateType = uni.getStorageSync("dateType")
+					const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+					this.selfParam.businessDate = bussinessDate;
+					console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+							
+					const area = uni.getStorageSync("area")
+					const areaName = uni.getStorageSync("areaName")
+					console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+					this.selfParam.provinceCenterId=area
+					this.selfParam.provinceCenterName=areaName			
+				},
+				goArea(){
+					uni.navigateTo({
+						url:"/pages/common/areaSelector?area="+this.selfParam.provinceCenterId
+					});
 				},
 				goDetail(number){
 					console.log(number)
 					uni.navigateTo({
 						url:"/pages/channel/index-inner?number="+number
 					});
+				},
+				goDatePicker() {
+					uni.navigateTo({
+						url:"/pages/common/dateSelector"
+					});
+				},
+				createParam(){
+					console.log("createParam begin")
+					var dateType = this.selfParam.dateType
+					var param = {}
+					if(dateType=='date'){
+						param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+								 dateTimeEnd: this.selfParam.businessDate.date.dateTimeEnd,
+								 dateFlag:"1",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}else if(dateType=='week'){
+						param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+								 dateTimeEnd: this.selfParam.businessDate.week.dateTimeEnd,
+								 dateFlag:"2",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}else if(dateType=='month'){
+						param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+								 dateTimeEnd: this.selfParam.businessDate.month.dateTimeEnd,
+								 dateFlag:"3",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}else if(dateType=='year'){
+						param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+								 dateTimeEnd: this.selfParam.businessDate.year.dateTimeEnd,
+								 dateFlag:"4",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}	
+					console.log("createParam end:",param)
+					return param
+				},
+				showView(){
+					// commonFun.sleep(2000)
+					this.$nextTick(() => {				
+						this.$refs['dataContain'].showDataContainer();
+					});
+				},
+				goLimitShopDetail(tableData, tableColumns){
+					uni.navigateTo({
+						url:"/pages/common/tableLimitShopDetail?tableData= " + JSON.stringify(tableData) + '&tableColumns=' + JSON.stringify(tableColumns)
+					});
+				},
+				goShopDetail(tableData, tableColumns){
+					uni.navigateTo({
+						url:"/pages/common/tableShopDetail?tableData= " + JSON.stringify(tableData) + '&tableColumns=' + JSON.stringify(tableColumns)
+					});
+				},
+				onSelectionChange(obj){
+					console.log("对比前后，选中的变化")
+					console.log(obj)
+				},
+				goLimitDetail(){
+					var areaId = 
+					this.areaMap  
 				}
 			},
-			created() {
-				this.$nextTick(() => {
-					this.$refs['dataContain'].showDataContainer();				
-				});
-			}
+			mounted(){
+				// this.selfParam=this.model
+				this.showView();
+			},
+			watch: {
+				'$route':'showView'
+			},
+
 		}
 </script>
 
@@ -253,5 +392,16 @@
 		/* line-height: 40px; */
 		font-weight: bold;
 		border-color:#FFFFFF;
+	}
+	.content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 32rpx;
+		color: #333;
+		padding-top: 40rpx;
+	}
+	.section{
+		background-color: #FFFFFF;
 	}
 </style>

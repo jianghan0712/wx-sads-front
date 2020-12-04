@@ -241,18 +241,14 @@
 								$width:"80px"
 							},
 							{
-								title: '占比条',
-								key: 'jingcai',
+								title: '占比',
+								key: 'zhanbi',
 								$width:"80px"
 							},
 							{
-								title: '足球销量（元）',
-								key: 'football',
+								title: '销量（元）',
+								key: 'count',
 								$width:"85px"
-							},
-							{
-								title: '篮球销量（元）',
-								key: 'basketball'
 							}
 						],	
 				};
@@ -261,178 +257,124 @@
 				changeTop(e){
 					this.arcbarNumTop = e;;
 					getApp().globalData.ballType=e; 
-					// 根据e去请求对应的销量数据  默认值为销量
-					/* this.lineData1 ={
-						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
-						series: [
-							{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
-							{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
-						]
-					};
-					if(this.arcbarNumTop=='足球'){
-						this.totalData = this.basketballData;	
-					}else{
-						this.totalData = this.footballData;
-					}
-					this.loadData() */
+					
 					this.loadData();
 					
 				},
 				changeMid(e){
 					this.arcbarNumMid = e;
-					// 根据e去请求对应数据
-					/* this.lineData1 ={
-						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
-						series: [
-							{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
-							{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
-						]
-					}; */
 					this.loadData();
 				},
 				loadTopData(ballType){
-					var url = 'mobile/sales/getSalesTodayByPoolGroup/1/2020-10-18';
+					var url = '/pentaho/sales/getGameSalesAndVotes';
 					var that=this;
-					urlAPI.getRequest(url, null).then((res)=>{
-						//this.loading = false;
-						/* uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						}); */
-						that.dataCount =res.data.concreteBean;
-						
-					}).catch((err)=>{
-						//this.loading = false;
-						console.log('request fail', err);
-					});
-					if(ballType=='足球'){
-						url='exhibition/gameSales/queryGameSalesOfFb/2020-10-18/1/2';
-					}else{
-						url='exhibition/gameSales/queryGameSalesOfBk/2020-10-18/1/2';
-					}
-					urlAPI.getRequest(url, null).then((res)=>{
-						//this.loading = false;
-						/* uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						}); */
-						that.dataCompare =res.data.concreteBean;	
-						
-					}).catch((err)=>{
-						//this.loading = false;
-						console.log('request fail', err);
-					});
-					
-					//销量 dataCount 环比dataCompare
-					/* footballData:{
-						big1:{name:'足球销量（百万元）',value:37.82, left:{name:'周同比',value:-0.6209},right:{name:'环比',value:0.0145}},
-						big2:{name:'足球票数（万张）',value:45.64, left:{name:'周同比',value:-0.0132},right:{name:'环比',value:0.1069}},
-					},	
-					basketballData:{
-						big1:{name:'篮球销量（万元）',value:36.94, left:{name:'周同比',value:-0.5275},right:{name:'环比',value:-0.61}},
-						big2:{name:'篮球票数（张）',value:4818.00, left:{name:'周同比',value:0.2306},right:{name:'环比',value:-0.9523}},
-					},	 */
-					setTimeout(() => {
+					var param ={dateTimeStart:'2020-11-03',
+								dataTimeEnd:'2020-11-10',
+								dateFlag:1,
+								gameFlag:'1',
+								regionId:'',
+								token:getApp().globalData.token};
+					urlAPI.getRequest(url, param).then((res)=>{
+						var alldata=res.data;
+						var bk=alldata.bk;
+						var fb= alldata.fb;
 						if(ballType=='足球'){
 							let index0={
 								name:ballType+'销量（万元）',
-								value:this.dataCount[1][1],
+								value:fb[0],
 								left:{
 									name:'周同比',
-									value:this.dataCompare[1]
+									value:fb[1]
 								},
 								right:{
 									name:'环比',
-									value:this.dataCompare[1]
+									value:fb[2]
 								}}
 							this.$set(this.totalData,'big1',index0);
 							let index1={
 								name:ballType+'票数（万张）',
-								value:this.dataCount[1][2],
+								value:fb[3],
 								left:{
 									name:'周同比',
-									value:this.dataCompare[1]
+									value:fb[4]
 								},
 								right:{
 									name:'环比',
-									value:this.dataCompare[1]
+									value:fb[5]
 								}}
 							this.$set(this.totalData,'big2',index0);
 						}else{
 							let index0={
 								name:ballType+'销量（百万元）',
-								value:this.dataCount[0][1],
+								value:bk[0],
 								left:{
 									name:'周同比',
-									value:this.dataCompare[1]
+									value:bk[1]
 								},
 								right:{
 									name:'环比',
-									value:this.dataCompare[1]
+									value:bk[2]
 								}}
 							this.$set(this.totalData,'big1',index0);
 							let index1={
 								name:ballType+'票数（万张）',
-								value:this.dataCount[0][2],
+								value:bk[3],
 								left:{
 									name:'周同比',
-									value:this.dataCompare[1]
+									value:bk[4]
 								},
 								right:{
 									name:'环比',
-									value:this.dataCompare[1]
+									value:bk[5]
 								}}
 							this.$set(this.totalData,'big2',index1);
 						}
 						this.$refs['dataContain'].showDataContainer();
-											
-					}, 1);
+						
+					}).catch((err)=>{
+						//this.loading = false;
+						console.log('request fail', err);
+					});
 					
 				},
 				loadMidData(ballType){
-					var url = 'mobile/sales/getSportsSalesTodayByHour/1/2020-10-18';
+					var url = '/pentaho/sales/getGameTrendChart';
+					var param ={dateTimeStart:'2020-11-03',
+								dataTimeEnd:'2020-11-10',
+								dateFlag:1,
+								gameFlag:'1',
+								token:getApp().globalData.token};
 					var that2 =this;
-					urlAPI.getRequest(url, null).then((res)=>{
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						/* uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						}); */
-						//遍历赋值
-						var data = res.data.concreteBean;
-						/* lineData1: {
-							//数字的图--折线图数据
-							categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
-							series: [
-								{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
-								{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
-							]
-						}, */
-						var categories =[];
-						var xiaoliang=[];
-						var piaoshu = [];
-						for(var i=0;i<data.length;i++){
-							categories.push(data[i][0]);
-							xiaoliang.push(data[i][1]);
-							piaoshu.push(data[i][2]);
-						};
+						
+						var dates;
+						var sales;
+						var votes;
+						if(ballType=='足球'){
+							dates=res.data.fb.dates;
+							sales =res.data.fb.sales;
+							votes = res.data.fb.votes;
+						}else {
+							dates=res.data.bk.dates;
+							sales =res.data.bk.sales;
+							votes = res.data.bk.votes;
+						}
+						
 						if(that2.arcbarNumMid=='销量'){
 							var series=[{
 								name: '销量（万元）', 
-								data: xiaoliang
+								data: sales
 							}];
 							that2.$set(that2.lineData1,'series',series);
 							
 						}else {
 							 var series=[{name: '票数(万张)',
-							 data: piaoshu
+							 data: votes
 							 }];
 							 that2.$set(that2.lineData1,'series',series);
 						}
-						that2.$set(that2.lineData1,'categories',categories);
+						that2.$set(that2.lineData1,'categories',dates);
 						
 						that2.$refs['lineData1'].showCharts();
 						
@@ -440,15 +382,23 @@
 						this.loading = false;
 						console.log('request fail', err);
 					});
-					url = 'exhibition/gameSales/queryGamesSalesList/{currentDate}/{provinceCenterId}/{cityCenterId}';
-					urlAPI.getRequest(url, null).then((res)=>{
+					
+					url = '/pentaho/sales/getGameSalesProp';
+					var gameFlag;
+					if(ballType=='足球'){
+						gameFlag='1';
+					}else {
+						gameFlag='2';
+					}
+					var param ={dateTimeStart:'2020-11-03',
+								dataTimeEnd:'2020-11-10',
+								dateFlag:'1',
+								regionId:'',
+								gameFlag:gameFlag,
+								token:getApp().globalData.token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						/* uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						}); */
-						var data =res.data.concreteBean;	
+						var data =res.data;
 						/* arcbar1: {
 								type: 'radar',
 								series:[
@@ -470,11 +420,9 @@
 						}, */
 						var series =[];
 						for(var i=0;i<data.length;i++){
-							//需要 索引1 2 4
-							if(data[i][1].indexOf(ballType)!=-1&&data[i][2].indexOf('汇总')==-1){
-								var obj={name:data[i][2],data:data[i][4]};
-								series.push(obj);
-							}
+							var obj={name:data[i].gameName,data:data[i].values[1]};
+							series.push(obj);
+							
 						}
 						that2.$set(that2.arcbar1,'series',series);
 						that2.$refs['arcbar1'].showCharts();
@@ -483,10 +431,6 @@
 						this.loading = false;
 						console.log('request fail', err);
 					});
-					
-					
-					
-					
 					
 				},
 				loadData(){
@@ -497,39 +441,39 @@
 					
 				},
 				loadLastData(){
-					var url = 'exhibition/gameSales/querySportsSalesForRegion/{currentDate}/{provinceCenterId}';
+					var url = '/pentaho/sales/getGameSalesRankingList';
 					var that =this;
-					urlAPI.getRequest(url, null).then((res)=>{
+					var ballType =getApp().globalData.ballType;
+					if(ballType=='足球'){
+						gameFlag='1';
+					}else {
+						gameFlag='2';
+					}
+					var param ={dateTimeStart:'2020-11-03',
+								dataTimeEnd:'2020-11-10',
+								dateFlag:1,
+								gameFlag:'1',
+								regionId:'',
+								token:getApp().globalData.token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						/* uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						}); */
-						var data =res.data.concreteBean;	
+						var data =res.data.data;	
 						
 						for(var i=0;i<data.length;i++){
-							/* {"东城",192668,32434}, */
-							//需要 索引1 2 4
-							var obj={id:i+1,area:data[i][0],jingcai:'',football:data[i][0],basketball:data[i][1]};
+							var obj={id:i+1,area:data[i][0],zhanbi:data[i][1],count:data[i][2]};
 							that.tableData.push(obj);
 						}
 						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
-					});
+					}); 
 				},
 				toAll(){
 					var that =this;
 					uni.navigateTo({
-						url:'/pages/common/tableDetail?col='+JSON.stringify(encodeURIComponent(that.tableColumns))+'&da='+JSON.stringify(encodeURIComponent(that.tableData)),
-						success: function(res) {
-						    // 通过eventChannel向被打开页面传送数据
-						    res.eventChannel.emit('heheh', 
-													{ col: JSON.stringify(encodeURIComponent(that.tableColumns))},
-													);
-						}
+						url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData),
+						
 					});
 				}
 			}

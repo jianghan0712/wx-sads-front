@@ -34,6 +34,11 @@
 		<view class="padding">
 			<view style="font-size: 30rpx;padding-left: 20rpx;" >返奖率七天走势</view>
 			<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(%)</view>
+			<view style="text-align: right;">
+			    <view @tap="changeTop('1')"  :class="fjltype =='1'?'btna':'hide'" >竞猜</view>
+			    <view @tap="changeTop('2')" :class="fjltype =='2'?'btna':'hide'" >足球</view>
+				<view @tap="changeTop('3')" :class="fjltype =='3'?'btna':'hide'" >篮球</view>
+			</view>
 			<view >
 				<histogram-chart ref="histogramChart5" canvasId="histogramChart5" :dataAs="histogramChart5" />
 			</view >	
@@ -65,6 +70,8 @@
 										src: '../../static/top.png',
 										scrollTop: 0
 				},
+				//返奖率类型 1竞猜 2足球 3篮球
+				fjltype:'1',
 				scrollTop: 0,
 				 histogramChart1: {
 						categories: ['周一', '周二','周三', '周四', '周五', '周六','周日'],
@@ -106,37 +113,31 @@
 		methods: {
 			loadData(){
 				var that=this;
-				var url = 'pentaho/plugin/cda/api/doQuery15/1/1/2';
-				urlAPI.getRequest(url, null).then((res)=>{
+				var token =getApp().globalData.token;
+				var url = '/pentaho/dailyPaper/salesAndVotesSevenTread';
+				var param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.concreteBean;	
-					/* {"2020-11-12", 1122, 1255},
-					                {"2020-11-13", 1322, 1355},
-					                {"2020-11-14", 1622, 1455},
-					                {"2020-11-15", 1922, 1755},
-					                {"2020-11-16", 1522, 1855},
-					                {"2020-11-17", 1822, 1755},
-					                {"2020-11-18", 1722, 1455},
-					                {"2020-11-19", 1102, 1235},
-					                {"2020-11-20", 1312, 1315},
-					                {"2020-11-21", 1632, 1485},
-					                {"2020-11-22", 1942, 1795},
-					                {"2020-11-23", 1512, 1815},
-					                {"2020-11-24", 1882, 1725},
-					                {"2020-11-25", 1702, 1435}
-									 前7个是上一周 后七个是这一周
-									 销量 票数
-									 */
+					var data =res.data.data;	
+					/* 
+					 前7个是上一周 后七个是这一周
+					 销量 票数
+					 */
+					var xiaoliangAll=data.sales;
+					var piaoshuAll=data.votes;
+					
 					var series =[];
 					var shangzhouXL=[];
 					var benzhouXL=[];
 					var shangzhouPS=[];
 					var benzhouPS=[];
 					for(var i=0;i<data.length/2;i++){
-						shangzhouXL.push(data[i][1]);
-						benzhouXL.push(data[i+7][1]);
-						shangzhouPS.push(data[i][2]);
-						benzhouPS.push(data[i+7][2]);
+						shangzhouXL.push(xiaoliangAll[i]);
+						benzhouXL.push(xiaoliangAll[i+7]);
+						shangzhouPS.push(piaoshuAll[i]);
+						benzhouPS.push(piaoshuAll[i+7]);
 					};
 					
 					var series1 =[
@@ -157,11 +158,121 @@
 					this.loading = false;
 					console.log('request fail', err);
 				});
+				//1-2关
+				url = '/pentaho/dailyPaper/getTwoPassSevenTread';
+				param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					var data =res.data.data;	
+					/* 
+					 前7个是上一周 后七个是这一周
+					 */
+					var votes=data.votes;
+					
+					var series =[];
+					var shangzhouvotes=[];
+					var benzhouvotes=[];
+					for(var i=0;i<data.length/2;i++){
+						shangzhouvotes.push(votes[i]);
+						benzhouvotes.push(votes[i+7]);
+					};
+					
+					var series1 =[
+							{ name: '上周', data: shangzhouvotes },
+							{ name: '本周', data: benzhouvotes }
+						];
+					that.$set(that.histogramChart3,'series',series1);
+					this.$refs['histogramChart3'].showCharts();
+					
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+				//1-2关
+				url = '/pentaho/dailyPaper/getMoneySevenTread';
+				param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					var data =res.data.data;	
+					/* 
+					 前7个是上一周 后七个是这一周
+					 */
+					var votes=data.votes;
+					
+					var series =[];
+					var shangzhouvotes=[];
+					var benzhouvotes=[];
+					for(var i=0;i<data.length/2;i++){
+						shangzhouvotes.push(votes[i]);
+						benzhouvotes.push(votes[i+7]);
+					};
+					
+					var series1 =[
+							{ name: '上周', data: shangzhouvotes },
+							{ name: '本周', data: benzhouvotes }
+						];
+					that.$set(that.histogramChart4,'series',series1);
+					this.$refs['histogramChart4'].showCharts();
+					
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+				this.loadFJL('1');
 				
+			},
+			changeTop(e){
+				this.fjltype = e;
+				this.loadFJL(e);
 				
-				this.$refs['histogramChart3'].showCharts();
-				this.$refs['histogramChart4'].showCharts();
-				this.$refs['histogramChart5'].showCharts();
+			},
+			loadFJL(e){
+				var that =this;
+				var token =getApp().globalData.token;
+				//返奖率
+				var url = '/pentaho/dailyPaper/getReturnRateSevenTread';
+				var param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					var data =res.data.data;	
+					/* 
+					 前7个是上一周 后七个是这一周
+					 */
+					var votes;
+					if(e=='1'){
+						votes=data.ALL;
+					}else if(e=='2'){
+						votes=data.FB;
+					}else if(e=='3'){
+						votes=data.BK;
+					}
+					var votes=data.votes;
+					
+					var series =[];
+					var shangzhouvotes=[];
+					var benzhouvotes=[];
+					for(var i=0;i<data.length/2;i++){
+						shangzhouvotes.push(votes[i]);
+						benzhouvotes.push(votes[i+7]);
+					};
+					
+					var series1 =[
+							{ name: '上周', data: shangzhouvotes },
+							{ name: '本周', data: benzhouvotes }
+						];
+					that.$set(that.histogramChart5,'series',series1);
+					this.$refs['histogramChart5'].showCharts();
+					
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
 			}
 		},
 		mounted() {
@@ -178,5 +289,25 @@
 	.padding{
 		padding-top: 20rpx;
 		padding-bottom: 30rpx;
+	}
+	.btna{
+		color: #000000;
+		background: #ebebeb;
+		padding:0px 30rpx 0px 30rpx;
+		text-align: center;
+		line-height: 60rpx;
+		font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+		width: 100rpx;
+		display: inline;
+	}
+	.hide{
+		color: #000000;
+		background: #FFFFFF;
+		padding:0px 30rpx 0px 30rpx;
+		text-align: center;
+		line-height: 60rpx;
+		font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+		width: 100rpx;
+		display: inline;
 	}
 </style>

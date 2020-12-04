@@ -85,19 +85,21 @@
 		methods: {
 			loadData(){
 				var that=this;
-				var url = 'pentaho/plugin/cda/api/doQuery16/1';
-				urlAPI.getRequest(url, null).then((res)=>{
+				var token=getApp().globalData.token;
+				//地区日销量及周同比
+				var param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				var url = '/pentaho/dailyPaper/getAwardAndSystem';
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.concreteBean;	
+					var data =res.data.data;	
 					
-					/* {"11-12", 514.665, 204.66, 304.665, 904.66,107691},
-					                {"11-13", 544.665, 504.66, 504.665, 804.66,207691},
-					                {"11-14", 104.665, 904.66, 204.665, 904.66,407691},
-					                {"11-15", 304.665, 544.66, 504.665, 104.66,907691},
-					                {"11-16", 404.665, 104.66, 904.665, 204.66,807691},
-					                {"11-17", 554.665, 534.66, 104.665, 504.66,907691},
-					                {"11-18", 104.665, 724.66, 904.665, 204.66,207691} */
-					console.log(data)				
+					var fbCum = data.fbCum;
+					var fbAdjust = data.fbAdjust;
+					var bkCum = data.bkCum;
+					var bkAdjust = data.bkAdjust;
+					
 					//上周等于这周
 					var shangzhou1=[];
 					var benzhou1=[];
@@ -108,15 +110,15 @@
 					var shangzhou4=[];
 					var benzhou4=[];
 					//先按7条记录
-					for(var i=0;i<data.length;i++){
-						shangzhou1.push(data[i][1]);
-						shangzhou2.push(data[i][2]);
-						shangzhou3.push(data[i][3]);
-						shangzhou4.push(data[i][4]);
-						benzhou1.push(data[i][1]);
-						benzhou2.push(data[i][2]);
-						benzhou3.push(data[i][3]);
-						benzhou4.push(data[i][4]);
+					for(var i=0;i<data.length/2;i++){
+						shangzhou1.push(fbCum[i]);
+						shangzhou2.push(fbAdjust[i]);
+						shangzhou3.push(bkCum[i]);
+						shangzhou4.push(bkAdjust[i]);
+						benzhou1.push(fbCum[i+7]);
+						benzhou2.push(fbAdjust[i+7]);
+						benzhou3.push(bkCum[i+7]);
+						benzhou4.push(bkAdjust[i+7]);
 					};
 					
 					var series1 =[

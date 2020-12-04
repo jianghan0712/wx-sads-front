@@ -6,21 +6,21 @@
 		<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
 			<view style="width: 350rpx;">
 				<view class="black-text">足球赛事</view>
-				<view class="gray-text">当日完赛场 {{pagedata[0]}}场</view>
+				<view class="gray-text">当日完赛场 {{pagedata[1]}}场</view>
 			</view>
 			<view style="width: 350rpx;">
 				<view class="black-text" style="text-align: right;" @click="toFoot()">详情></view>
-				<view class="gray-text">当日在售赛场 {{pagedata[1]}}场</view>
+				<view class="gray-text">当日在售赛场 {{pagedata[0]}}场</view>
 			</view>
 		</view>
 		<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
 			<view style="width: 350rpx;">
 				<view class="black-text">篮球赛事</view>
-				<view class="gray-text">当日完赛场 {{pagedata[2]}}场</view>
+				<view class="gray-text">当日完赛场 {{pagedata[3]}}场</view>
 			</view>
 			<view style="width: 350rpx;">
 				<view class="black-text" style="text-align: right;" @click="toBasket()">详情></view>
-				<view class="gray-text">当日在售赛场 {{pagedata[3]}}场</view>
+				<view class="gray-text">当日在售赛场 {{pagedata[2]}}场</view>
 			</view>
 		</view>		
 		<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
@@ -44,111 +44,97 @@
 		data() {
 			return {
 				backTop: {
-										src: '../../static/top.png',
-										scrollTop: 0
+					src: '../../static/top.png',
+					scrollTop: 0
 				},
 				scrollTop: 0,
 				showModel:{},
-				 pagedata:[1,2,3,4],
-				 tableColumns:[{
+				pagedata:[1,2,3,4],
+				tableColumns:[{
 								title: "赛制",
 								key: "id",
-								$width:"100px",
+								$width:"185rpx",
 							},
 							{
 								title: '场次',
 								key: 'area',
-								$width:"50px"
+								$width:"185rpx"
 							},],
-				//足球
-				 tableData:[],
-				 //篮球
-				 tableData1:[]
-				 }
+				//完赛
+				tableData:[],
+				 //在售
+				tableData1:[]
+				}
 		},
 		methods: {
 			loadData(){
+				var token =getApp().globalData.token;
 				var that=this;
-				var url = 'pentaho/plugin/cda/api/doQuery11/1/1/2/2';
-				urlAPI.getRequest(url, null).then((res)=>{
+				var url = '/pentaho/dailyPaper/getMatchSceneCount';
+				var param={dateTime:'2020-01-03',
+							regionId:'',
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.concreteBean;	
+					var data =res.data.data;	
 					this.$set(that.pagedata,0,data[0]);
 					this.$set(that.pagedata,1,data[1]);
+					this.$set(that.pagedata,2,data[2]);
+					this.$set(that.pagedata,3,data[3]);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 				});
-				url = 'pentaho/plugin/cda/api/doQuery12/1/1/2/2';
-				urlAPI.getRequest(url, null).then((res)=>{
-					this.loading = false;
-					var data =res.data.concreteBean;	
-					this.$set(that.pagedata,2,data[0]);
-					this.$set(that.pagedata,3,data[1]);
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				});
+				//加载
 				
-				url = 'pentaho/plugin/cda/api/doQuery12/1/1/2/2';
-				urlAPI.getRequest(url, null).then((res)=>{
-					this.loading = false;
-					var data =res.data.concreteBean;	
-					this.$set(that.pagedata,2,data[0]);
-					this.$set(that.pagedata,3,data[1]);
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				});
-				//加载足球所有
-				url = 'pentaho/plugin/cda/api/doQuery13/1/1/2/2';
-				urlAPI.getRequest(url, null).then((res)=>{
-					this.loading = false;
-					var data =res.data.concreteBean;	
-					that.tableData =data;
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				});
-				//加载篮球所有
-				
-				url = 'pentaho/plugin/cda/api/doQuery14/1/1/2/2';
-				urlAPI.getRequest(url, null).then((res)=>{
-					this.loading = false;
-					var data =res.data.concreteBean;	
-					that.tableData1 =data;
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				});
 				
 			},
 			toFoot(){
 				var that =this;
-				console.log(this.tableData)
+				this.loadDetail('1');
 				uni.navigateTo({
-					url:'/pages/common/tableDetail?col='+JSON.stringify(encodeURIComponent(that.tableColumns))+'&da='+JSON.stringify(encodeURIComponent(that.tableData)),
-					success: function(res) {
-					    // 通过eventChannel向被打开页面传送数据
-					    res.eventChannel.emit('heheh', 
-												{ col: JSON.stringify(encodeURIComponent(that.tableColumns))},
-												);
-					}
+					title:'足球赛事详情',
+					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData)+
+					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData1),
+					
 				});
 			},
 			toBasket(){
 				var that =this;
-				console.log(this.tableData1)
+				this.loadDetail('2');
 				uni.navigateTo({
-					url:'/pages/common/tableDetail?col='+JSON.stringify(encodeURIComponent(that.tableColumns1))+'&da='+JSON.stringify(encodeURIComponent(that.tableData1)),
-					success: function(res) {
-					    // 通过eventChannel向被打开页面传送数据
-					    res.eventChannel.emit('heheh', 
-												{ col: JSON.stringify(encodeURIComponent(that.tableColumns))},
-												);
+					title:'篮球赛事详情',
+					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData)+
+					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData1),
+					
+				});
+			},
+			loadDetail(ballType){
+				var token =getApp().globalData.token;
+				//加载足球
+				var url = '/pentaho/dailyPaper/getDetailMatchSceneCount';
+				var param={dateTime:'2020-01-03',
+							gameFlag:ballType,
+							token:token};
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = true;
+					var data =res.data.data;	
+					var finish =data.finish;
+					var onSale = data.onsale;
+					if(finish.length==0){
+						finish =[{'id':'无','area':0}];
 					}
+					if(onSale.length==0){
+						onSale =[{'id':'无','area':0}];
+					}
+					that.tableData=finish;
+					that.tableData1=onSale;
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
 				});
 			}
+			
 		},
 		created() {
 			this.loadData();

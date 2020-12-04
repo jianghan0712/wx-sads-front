@@ -24,16 +24,8 @@
 			toAll() {
 				var title = getApp().globalData.ballType+"游戏销量及占比";
 				uni.navigateTo({
-					url: './gameView/gameViewCompare?title='+JSON.stringify(encodeURIComponent(title)),
-					success: function(res) {
-					    // 通过eventChannel向被打开页面传送数据
-					    res.eventChannel.emit('all', 
-												{ type: 'all' }
-												); 
-					},
-					fail: function(res) {
-						console.log(res)
-					}
+					url: './gameView/gameViewCompare?title='+JSON.stringify(title),
+				
 				});
 			}
 		}

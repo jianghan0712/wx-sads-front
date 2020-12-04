@@ -108,31 +108,34 @@
 			</view>
 		</view>
 		
-		<!-- 全国返奖情况-->
-		<view class="box-contaniner">
-			<view class="shop-title">全国返奖情况</view>
-			<view class="shop-item-title">
-				<view style="width: 400rpx;">返奖率</view>				
-				<view style="width: 200rpx;">同比</view>
-				<view style="-webkit-flex: 1;flex: 1;">环比</view>
+		<block v-if="today!= selfParam.businessDate.view">
+			<!-- 全国返奖情况-->
+			<view class="box-contaniner">
+				<view class="shop-title">{{selfParam.provinceCenterName}}返奖情况</view>
+				<view class="shop-item-title">
+					<view style="width: 400rpx;">返奖率</view>				
+					<view style="width: 200rpx;">同比</view>
+					<view style="-webkit-flex: 1;flex: 1;">环比</view>
+				</view>
+				<view class="shop-item-content">
+					<view style="width: 400rpx;">{{returnData.rate.sum}}</view>
+					<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(returnData.rate.tongbi)}}</view>
+					<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+				</view>
 			</view>
-			<view class="shop-item-content">
-				<view style="width: 400rpx;">{{shopData.shop.sum}}</view>
-				<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(shopData.shop.tongbi)}}</view>
-				<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(shopData.shop.huanbi)}}</view>
+			
+			<!-- 各地区返奖情况-->
+			<view class="box-contaniner">
+				<view class="rankTable-title">
+					<view>各地区返奖情况</view>
+					<view class="rankTable-more" @click="goSaleRank(tableDataDetail2,tableColumns2)">全部>></view>
+				</view>
+				<view class="example">
+					<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
+				</view>
 			</view>
-		</view>
-		
-		<!-- 各地区返奖情况-->
-		<view class="box-contaniner">
-			<view class="rankTable-title">
-				<view>各地区返奖情况</view>
-				<view class="rankTable-more" @click="goSaleRank(tableData2,tableColumns2)">全部>></view>
-			</view>
-			<view class="example">
-				<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
-			</view>
-		</view>
+		</block>
+
 		
 		<slot />
 	</view>
@@ -148,6 +151,7 @@
 	import numberFun from '@/common/tools/number.js';
 	import {globalRequest} from '@/common/request.js'
 	import commonFun from '@/common/tools/watcher.js';
+	import dateUtils from '@/common/tools/dateUtils.js';
 	
 	
 	export default {
@@ -171,6 +175,7 @@
 				selfParam:{
 					token:'',
 					provinceCenterId:'',
+					provinceCenterName:'',
 					businessDate:{
 						view:'',
 						date:{startDate:'', endDate:''},
@@ -186,8 +191,10 @@
 					dateType:'date',
 					compareType:'date',
 					compareOne:'',
-					compareTwo:''
+					compareTwo:'',
+					selfProvinceCenterId:''
 				},
+				today:dateUtils.getToday(),
 				totalData:{},	
 				footballData:{},	
 				basketballData:{},	
@@ -199,45 +206,12 @@
 				arcbar1: {},
 				shopData: {shop:{sum:0,tongbi:0,huanbi:0},
 						   rate:{sum:0,tongbi:0,huanbi:0}},
+				returnData: {rate:{sum:0,tongbi:0,huanbi:0}},
 				rankData:{sum:0,tongbi:0,huanbi:0},
 				tableData: [],
 				tableDataDetail:[],
-				tableData2: [{
-							id: "1",
-							area: "北京市",
-							return: "10233.5",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "2",
-							area: "上海市",
-							return: "9965.5",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "3",
-							area: "广东省",
-							return: "9754.5",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "4",
-							area: "重庆市",
-							return: "6745.6",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "5",
-							area: "河北省",
-							return: "6554",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						}
-					],
+				tableData2: [],
+				tableDataDetail2:[],
 				tableColumns: [{
 							title: "排名",
 							key: "id",
@@ -341,7 +315,7 @@
 				this.showView();
 			},
 			showView(){
-				commonFun.sleep(2000)
+				// commonFun.sleep(2000)
 				this.$nextTick(() => {				
 					this.$refs['arcbar0'].showCharts();
 					this.$refs['arcbar1'].showCharts();
@@ -613,6 +587,59 @@
 					console.log('request fail', err);
 				});
 			},
+			getReturnRateState(){
+				var url = '/pentaho/sales/getReturnRateState';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+									
+					this.returnData.rate.sum=data[0].toFixed(0);
+					this.returnData.rate.tongbi=(data[1]/100).toFixed(4);
+					this.returnData.rate.huanbi=(data[2]/100).toFixed(4)
+				
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
+			getReturnRateRankingList(){
+				var url = '/pentaho/sales/returnRateRankingList';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+					for(var i=0;i<data.length;i++){
+						var json = {id:i+1, 
+									area:data[i][0], 
+									return:data[i][1]+'%', 
+									tongbi:this.valueToPercent((data[i][2]/100).toFixed(4)),
+									huanbi:this.valueToPercent((data[i][3]/100).toFixed(4))}						
+						if(i<=4){
+							this.tableData2[i] = json
+						}
+						this.tableDataDetail2[i] = json
+					}
+			
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
 			getServerData() {				
 				console.log("getServerData data=",this.param.provinceCenterId)
 				this.getDataSet(this.param.provinceCenterId, this.param.businessDate);
@@ -622,6 +649,8 @@
 				this.getShopData(this.param.provinceCenterId, this.param.businessDate, this.param.cityCenterId);
 				this.getSalesRankingList(this.param.provinceCenterId, this.param.cityCenterId, this.param.businessDate);
 				this.getProSalesRanking(this.param.provinceCenterId, this.param.cityCenterId, this.param.businessDate);
+				this.getReturnRateState();
+				this.getReturnRateRankingList();				
 			},
 			change(e) {
 			      this.btnnum = e

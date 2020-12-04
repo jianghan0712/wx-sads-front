@@ -19,6 +19,7 @@
     import {mapActions} from 'vuex'
 	import urlAPI from '@/common/vmeitime-http/';
 	import dateUtils from '@/common/tools/dateUtils.js';
+	import loginUtil from '@/common/tools/util.js'
 	
     export default {
         data() {
@@ -163,6 +164,7 @@
 				uni.setStorageSync("area",selfParam.provinceCenterId)
 				uni.setStorageSync("areaName",selfParam.provinceCenterName)
 				uni.setStorageSync("businessDate", JSON.stringify(selfParam.businessDate));
+				uni.setStorageSync("token",selfParam.token)
 				// uni.navigateBack()
 				uni.switchTab({
 					url: "/pages/sales/index"
@@ -171,7 +173,11 @@
             submit(){		
 				console.log(this.form)
 				var url = '/pentaho/user/logIn';
-				var param={userName:this.loginInfo.username, userPwd:this.loginInfo.password}
+				//,this.loginInfo.password
+				var password = loginUtil.encrypt('0000zxcv.','');
+				var param={userName:'Test001', userPwd:password}
+				//'dRZ9LYoPExQPDWhTBFWRNw==   0000zxcv.'
+				//var param={userName:this.loginInfo.username, userPwd:password}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -182,7 +188,8 @@
 					});
 					
 					var data = res.data.data;
-					this.selfParam.token = data.msg
+					this.selfParam.token = data.msg;
+					getApp().globalData.token=data.msg;
 					console.log(data)
 					if(data.flag){
 						this.getUserInfo()

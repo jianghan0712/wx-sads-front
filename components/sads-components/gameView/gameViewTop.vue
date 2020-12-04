@@ -51,13 +51,8 @@
 			},
 			toCompare(){
 				uni.navigateTo({
-				    url: './gameView/gameViewCompare?title='+JSON.stringify(encodeURIComponent('对比')),
-					success: function(res) {
-					    // 通过eventChannel向被打开页面传送数据
-					    res.eventChannel.emit('hahahah', 
-												{ type: 'compare' },
-												);
-					}
+				    url: './gameView/gameViewCompare?title='+JSON.stringify('对比'),
+					
 				}); 
 			}
 			

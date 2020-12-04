@@ -13,7 +13,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">+{{((pagedata[0]-pagedatacompare[0])*100/pagedatacompare[0]).toFixed(2)}}%</view>
+					<view class="big-text">{{((pagedata[0]-pagedatacompare[0])*100/pagedatacompare[0]).toFixed(2)}}%</view>
 				</view>
 				<view class="row-box"style="width: 33%;">
 					<view class="small-text">红箭头</view>
@@ -26,7 +26,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">+{{((pagedata[1]-pagedatacompare[1])*100/pagedatacompare[1]).toFixed(2)}}%</view>
+					<view class="big-text">{{((pagedata[1]-pagedatacompare[1])*100/pagedatacompare[1]).toFixed(2)}}%</view>
 				</view>
 				<view class="row-box"style="width: 33%;">
 					<view class="small-text">红箭头</view>
@@ -39,7 +39,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">+{{((pagedata[2]-pagedatacompare[2])*100/pagedatacompare[2]).toFixed(2)}}%</view>
+					<view class="big-text">{{((pagedata[2]-pagedatacompare[2])*100/pagedatacompare[2]).toFixed(2)}}%</view>
 				</view>
 				<view class="row-box"style="width: 33%;">
 					<view class="small-text">绿箭头</view>
@@ -134,70 +134,108 @@
 				
 			},
 			loadData(){
+				var token=getApp().globalData.token;
 				if('周同比'==this.arcbarNumTop){
 					var that=this;
-					//日销量 日票数
-					var url = 'pentaho/plugin/cda/api/doQuery/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					//日销量 
+					var url = '/pentaho/dailyPaper/getSalesAndComRanking';
+					var param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,0,data[0]);
+						var data =res.data.data;	
+						this.$set(that.pagedata,0,data[1]);
 						this.$set(that.pagedatacompare,0,data[2]);
+						
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+					//日票数
+					url = '/pentaho/dailyPaper/getVotesAndComRanking';
+					param={dateTime:'2020-11-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						var data =res.data.data;		
 						this.$set(that.pagedata,1,data[1]);
-						this.$set(that.pagedatacompare,1,data[3]);
+						this.$set(that.pagedatacompare,1,data[2]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
 					//有销量门店
-					url = 'pentaho/plugin/cda/api/doQuery1/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getShowCountRanking';
+					param={dateTime:'2020-11-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,2,data[0]);
-						this.$set(that.pagedatacompare,2,data[1]);
+						var data =res.data.data;		
+						this.$set(that.pagedata,2,data[1]);
+						this.$set(that.pagedatacompare,2,0);
+						this.$set(that.pagedata,8,data[2]);
+						this.$set(that.pagedatacompare,8,0);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
 					//足球日销量
-					url = 'pentaho/plugin/cda/api/doQuery2/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getSalesAndComRanking';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,3,data[0]);
-						this.$set(that.pagedatacompare,3,data[1]);
+						var data =res.data.data;		
+						this.$set(that.pagedata,3,data[1]);
+						this.$set(that.pagedatacompare,3,data[2]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//篮球日销量
-					url = 'pentaho/plugin/cda/api/doQuery3/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getSalesAndComRanking';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,4,data[0]);
-						this.$set(that.pagedatacompare,4,data[1]);
+						var data =res.data.data;		
+						this.$set(that.pagedata,4,data[1]);
+						this.$set(that.pagedatacompare,4,data[2]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
 					//1-2关次销量
-					url = 'pentaho/plugin/cda/api/doQuery4/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getTwoPassSales';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
+						var data =res.data.data;	
 						this.$set(that.pagedata,5,data[0]);
 						this.$set(that.pagedatacompare,5,data[1]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
 					//单票金额
-					url = 'pentaho/plugin/cda/api/doQuery5/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getSingleVoteAmount';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
+						var data =res.data.data;		
 						this.$set(that.pagedata,6,data[0]);
 						this.$set(that.pagedatacompare,6,data[1]);
 					}).catch((err)=>{
@@ -205,32 +243,28 @@
 						console.log('request fail', err);
 					});
 					//返奖率
-					url = 'pentaho/plugin/cda/api/doQuery6/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getReturnRateRanking';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,7,data[0]);
-						this.$set(that.pagedatacompare,7,data[1]);
+						var data =res.data.data;	
+						this.$set(that.pagedata,7,data[0][1]);
+						this.$set(that.pagedatacompare,7,0);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
-					//0销量门店
-					url = 'pentaho/plugin/cda/api/doQuery7/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
-						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,8,data[0]);
-						this.$set(that.pagedatacompare,8,data[1]);
-					}).catch((err)=>{
-						this.loading = false;
-						console.log('request fail', err);
-					});
+					
 					//本月累计销量
-					url = 'pentaho/plugin/cda/api/doQuery8/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getOnMonthSales';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
+						var data =res.data.data;	
 						this.$set(that.pagedata,9,data[0]);
 						this.$set(that.pagedatacompare,9,data[1]);
 					}).catch((err)=>{
@@ -238,10 +272,13 @@
 						console.log('request fail', err);
 					});
 					//本年累计销量
-					url = 'pentaho/plugin/cda/api/doQuery9/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getOnYearSales';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
+						var data =res.data.data;	
 						this.$set(that.pagedata,10,data[0]);
 						this.$set(that.pagedatacompare,10,data[1]);
 					}).catch((err)=>{
@@ -253,68 +290,104 @@
 				}else {
 					//环比
 					var that=this;
-					//日销量 日票数
-					var url = 'pentaho/plugin/cda/api/doQuery/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					//日销量 
+					var url = '/pentaho/dailyPaper/getSalesAndComRanking';
+					var param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,0,data[0]);
+						var data =res.data.data;		
+						this.$set(that.pagedata,0,data[1]);
 						this.$set(that.pagedatacompare,0,data[2]);
+						
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+					//日票数
+					url = '/pentaho/dailyPaper/getVotesAndComRanking';
+					param={dateTime:'2020-11-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						var data =res.data.data;	
 						this.$set(that.pagedata,1,data[1]);
-						this.$set(that.pagedatacompare,1,data[3]);
+						this.$set(that.pagedatacompare,1,data[2]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
 					//有销量门店
-					url = 'pentaho/plugin/cda/api/doQuery1/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getShowCountRanking';
+					param={dateTime:'2020-11-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,2,data[0]);
-						this.$set(that.pagedatacompare,2,data[1]);
+						var data =res.data.data;		
+						this.$set(that.pagedata,2,data[1]);
+						this.$set(that.pagedatacompare,2,0);
+						this.$set(that.pagedata,8,data[2]);
+						this.$set(that.pagedatacompare,8,0);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
 					//足球日销量
-					url = 'pentaho/plugin/cda/api/doQuery2/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getSalesAndComRanking';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,3,data[0]);
-						this.$set(that.pagedatacompare,3,data[1]);
+						var data =res.data.data;	
+						this.$set(that.pagedata,3,data[1]);
+						this.$set(that.pagedatacompare,3,data[2]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//篮球日销量
-					url = 'pentaho/plugin/cda/api/doQuery3/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getSalesAndComRanking';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,4,data[0]);
-						this.$set(that.pagedatacompare,4,data[1]);
+						var data =res.data.data;		
+						this.$set(that.pagedata,4,data[1]);
+						this.$set(that.pagedatacompare,4,data[2]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
 					//1-2关次销量
-					url = 'pentaho/plugin/cda/api/doQuery4/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getTwoPassSales';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
+						var data =res.data.data;	
 						this.$set(that.pagedata,5,data[0]);
-						this.$set(that.pagedatacompare,5,data[1]);
+						this.$set(that.pagedatacompare,5,data[2]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//单票金额
-					url = 'pentaho/plugin/cda/api/doQuery5/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getSingleVoteAmount';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
+						var data =res.data.data;	
 						this.$set(that.pagedata,6,data[0]);
 						this.$set(that.pagedatacompare,6,data[1]);
 					}).catch((err)=>{
@@ -322,49 +395,48 @@
 						console.log('request fail', err);
 					});
 					//返奖率
-					url = 'pentaho/plugin/cda/api/doQuery6/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getReturnRateRanking';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,7,data[0]);
-						this.$set(that.pagedatacompare,7,data[1]);
-					}).catch((err)=>{
-						this.loading = false;
-						console.log('request fail', err);
-					});
-					//0销量门店
-					url = 'pentaho/plugin/cda/api/doQuery7/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
-						this.loading = false;
-						var data =res.data.concreteBean;	
-						this.$set(that.pagedata,8,data[0]);
-						this.$set(that.pagedatacompare,8,data[1]);
+						var data =res.data.data;	
+						this.$set(that.pagedata,7,data[0][1]);
+						this.$set(that.pagedatacompare,7,0);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//本月累计销量
-					url = 'pentaho/plugin/cda/api/doQuery8/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getOnMonthSales';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
+						var data =res.data.data;	
 						this.$set(that.pagedata,9,data[0]);
-						this.$set(that.pagedatacompare,9,data[1]);
+						this.$set(that.pagedatacompare,9,data[2]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//本年累计销量
-					url = 'pentaho/plugin/cda/api/doQuery9/1/1/2/2';
-					urlAPI.getRequest(url, null).then((res)=>{
+					url = '/pentaho/dailyPaper/getOnYearSales';
+					param={dateTime:'2020-01-03',
+								regionId:'',
+								token:token};
+					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.concreteBean;	
+						var data =res.data.data;	
 						this.$set(that.pagedata,10,data[0]);
-						this.$set(that.pagedatacompare,10,data[1]);
+						this.$set(that.pagedatacompare,10,data[2]);
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
 					
 				}
 				
