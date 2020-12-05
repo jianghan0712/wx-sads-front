@@ -25,19 +25,21 @@
 			</view>		
 		</view>
 		
-		<view class="box-contaniner">
-			<view class="shop-title">全国排名</view>
-			<view class="shop-item-title">
-				<view style="width: 300rpx;">排名</view>				
-				<view style="width: 200rpx;">周同比</view>
-				<view style="-webkit-flex: 1;flex: 1;">环比</view>
+		<block v-if="selfParam.provinceCenterId!=0">
+			<view class="box-contaniner">
+				<view class="shop-title">全国排名</view>
+				<view class="shop-item-title">
+					<view style="width: 300rpx;">排名</view>				
+					<view style="width: 200rpx;">周同比</view>
+					<view style="-webkit-flex: 1;flex: 1;">环比</view>
+				</view>
+				<view class="shop-item-content">
+					<view style="width: 300rpx;">{{rankData.sum}} 名</view>
+					<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;"> {{rankData.tongbi}}</view>
+					<view :class="rankData.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{rankData.huanbi}}</view>
+				</view>
 			</view>
-			<view class="shop-item-content">
-				<view style="width: 300rpx;">{{rankData.sum}} 名</view>
-				<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;"> {{rankData.tongbi}}</view>
-				<view :class="rankData.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{rankData.huanbi}}</view>
-			</view>
-		</view>
+		</block>
 		
 		<!-- 圆环图区域 -->
 		<view class="box-contaniner">
@@ -174,25 +176,30 @@
 			return {			
 				selfParam:{
 					token:'',
-					provinceCenterId:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
 					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
 					businessDate:{
-						view:'',
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
 						date:{startDate:'', endDate:''},
 						week:{startDate:'', endDate:''},
 						month:{startDate:'', endDate:''},
 						year:{startDate:'', endDate:''},
-					},					
-					startDate:'',
-					endDate:'',
-					cityCenterId:'',
-					userId:'',
-					countyCenterId:'',
-					dateType:'date',
-					compareType:'date',
-					compareOne:'',
-					compareTwo:'',
-					selfProvinceCenterId:''
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
 				},
 				today:dateUtils.getToday(),
 				totalData:{},	
@@ -279,29 +286,29 @@
 		methods: {
 			createParam(){
 				console.log("createParam begin")
-				var dateType = this.selfParam.dateType
+				var dateType = this.selfParam.businessDate.dateType
 				var param = {}
 				if(dateType=='date'){
 					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.date.dateTimeEnd,
+							 dateTimeEnd: this.selfParam.businessDate.date.endDate,
 							 dateFlag:"1",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='week'){
 					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.week.dateTimeEnd,
+							 dateTimeEnd: this.selfParam.businessDate.week.endDate,
 							 dateFlag:"2",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='month'){
 					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.month.dateTimeEnd,
+							 dateTimeEnd: this.selfParam.businessDate.month.endDate,
 							 dateFlag:"3",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='year'){
 					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.year.dateTimeEnd,
+							 dateTimeEnd: this.selfParam.businessDate.year.endDate,
 							 dateFlag:"4",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }

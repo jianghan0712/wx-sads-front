@@ -121,6 +121,7 @@ class Calendar {
 	_currentMonthDys(dateData, full) {
 		let dateArr = []
 		let fullDate = this.date.fullDate
+		console.log('dateData=',dateData)
 		for (let i = 1; i <= dateData; i++) {
 			let isinfo = false
 			let nowDate = full.year + '-' + (full.month < 10 ?
@@ -150,7 +151,7 @@ class Calendar {
 			let multiples = this.multipleStatus.data
 			let checked = false
 			let multiplesStatus = -1
-			if (this.range) {
+			// if (this.range) {
 				if (multiples) {
 					multiplesStatus = multiples.findIndex((item) => {
 						return this.dateEqual(item, nowDate)
@@ -159,12 +160,14 @@ class Calendar {
 				if (multiplesStatus !== -1) {
 					checked = true
 				}
-			}
+				
+			// }
 			let data = {
 				fullDate: nowDate,
 				year: full.year,
 				date: i,
 				multiple: this.range ? checked : false,
+				// multiple: true,
 				beforeMultiple: this.dateEqual(this.multipleStatus.before, nowDate),
 				afterMultiple: this.dateEqual(this.multipleStatus.after, nowDate),
 				month: full.month,
@@ -172,12 +175,14 @@ class Calendar {
 				disable: !disableBefore || !disableAfter,
 				isDay
 			}
+			console.log('data=',data)
 			if (info) {
 				data.extraInfo = info
 			}
 
-			dateArr.push(data)
+			dateArr.push(data)			
 		}
+		console.log('data=',dateArr)
 		return dateArr
 	}
 	/**
@@ -274,6 +279,14 @@ class Calendar {
 		this._getWeek(data)
 	}
 
+	setMultipleDate(before,after){
+		console.log("before:",before,"after:",after)
+		this.multipleStatus.before=before
+		this.multipleStatus.after=after
+		this.multipleStatus.data = this.geDateAll(this.multipleStatus.before, this.multipleStatus.after);
+		console.log("this.multipleStatus:",this.multipleStatus)
+		this._getWeek(after)
+	}
 	/**
 	 *  获取多选状态
 	 */
@@ -283,7 +296,7 @@ class Calendar {
 			after
 		} = this.multipleStatus
 
-		if (!this.range) return
+		// if (!this.range) return
 		if (before && after) {
 			this.multipleStatus.before = ''
 			this.multipleStatus.after = ''
@@ -300,6 +313,7 @@ class Calendar {
 				}
 			}
 		}
+		// console.log("this.multipleStatus:",this.multipleStatus)
 		this._getWeek(fullDate)
 	}
 
@@ -308,6 +322,7 @@ class Calendar {
 	 * @param {Object} dateData
 	 */
 	_getWeek(dateData) {
+		console.log("_getWeek.dateData=",dateData)
 		const {
 			fullDate,
 			year,

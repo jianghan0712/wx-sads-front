@@ -10,7 +10,7 @@
 			
 			<view class="end-cont" :class="{dis:btnnum == 0}">	
 				<view class ="content">
-					<uni-calendar class="uni-calendar--hook" :selected="info.selected" :showMonth="true" @change="selectWeek" @monthSwitch="monthSwitch" />
+					<uni-calendar class="uni-calendar--hook" :selected="info.selected" :showMonth="true" @change="setDate" @monthSwitch="monthSwitch" />
 				</view>
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">
@@ -93,9 +93,10 @@
 				date:'',
 				month:{year:'',month:''},
 				week:{start:'',end:''},
-				year:'',
-				businessDate:{
+				year:'',			
+				dateInfo:{
 					view:'',
+					dateType:'date',
 					date:{startDate:'', endDate:''},
 					week:{startDate:'', endDate:''},
 					month:{startDate:'', endDate:''},
@@ -154,6 +155,9 @@
 			}, 2000)
 		},
 		methods: {
+			PrefixInteger(num, m) {
+			      return (Array(m).join(0) + num).slice(-m);
+			},
 			setYear(index){		
 				for(var i=0;i<this.years.length;i++){
 					if(i!=index){
@@ -170,9 +174,10 @@
 						}					
 					}				
 				}
-				this.businessDate.view = this.year
-				this.businessDate.year.startDate = this.year + '-01-01'
-				this.businessDate.year.endDate = this.year + '-12-31'
+				this.dateInfo.dateType='year'
+				this.dateInfo.view = this.year
+				this.dateInfo.year.startDate = this.year + '-01-01'
+				this.dateInfo.year.endDate = this.year + '-12-31'
 			},
 			setMonth(yearIndex, monthIndex){
 				console.log("yearIndex=",yearIndex, " monthIndex=",monthIndex)
@@ -205,9 +210,17 @@
 					}
 				}
 				
-				this.businessDate.view = this.month.year + '-' +  this.month.month 
-				this.businessDate.month.startDate = this.month.year + '-' +  this.month.month + '-01'
-				this.businessDate.month.endDate = this.month.year + '-' +  this.month.month + getDaysInOneMonth(this.month.year,this.month.month)
+				this.dateInfo.dateType='month'
+				var month =''
+				if(this.month.month<10){
+					month = '0'+this.month.month
+				}else{
+					month = this.month.month
+				}
+				
+				this.dateInfo.view = this.month.year + '-' + month 
+				this.dateInfo.month.startDate = this.month.year + '-' +  month + '-01'
+				this.dateInfo.month.endDate = this.month.year + '-' +  month + '-' + getDaysInOneMonth(this.month.year,this.month.month)
 				
 				console.log("this.month=",this.businessDate.view)
 			},
@@ -230,25 +243,18 @@
 				}
 
 			},
-			selectWeek(e){
+			setDate(e){
 				var fulldate = e.fulldate;
 				var tDay = e.lunar.nWeek;
-				var monday = this.getNextDate(fulldate, 0-(tDay-1));
-				var sunday = this.getNextDate(fulldate, 7-tDay);
-				// console.log('monday:', monday);
-				// console.log('sunday:', sunday);
-				this.date.date = monday + "~~" + sunday;
+				
+				this.dateInfo.dateType='date'
+				this.dateInfo.view = fulldate 
+				this.dateInfo.date.startDate = fulldate
+				this.dateInfo.date.endDate = fulldate
 			},
 			change(e) {
 				console.log('change 返回:', e)
 				this.date.date = e.fulldate;
-				// // 模拟动态打卡
-				// if (this.info.selected.length > 5) return
-				// this.info.selected.push({
-				// 	date: e.fulldate,
-				// 	info: '打卡'
-				// })
-
 			},
 			getNextDate(date, day) {  
 				// console.log('date:', date,'day:',day);
@@ -273,7 +279,7 @@
 					uni.setStorageSync("dateType", "year");
 				}
 				
-				uni.setStorageSync("businessDate", JSON.stringify(this.businessDate));
+				uni.setStorageSync("businessDate", JSON.stringify(this.dateInfo));
 				uni.navigateBack();
 			}
 		}

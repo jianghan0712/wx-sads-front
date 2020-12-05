@@ -77,6 +77,7 @@
 		},
 		methods: {
 			choiceDate(weeks) {
+				console.log("item.weeks:",weeks)
 				this.$emit('change', weeks)
 			}
 		}
@@ -160,12 +161,12 @@
 	}
 
 	.uni-calendar-item--before-checked {
-		background-color: #ff5a5f;
+		background-color: #00FF00;
 		color: #fff;
 	}
 
 	.uni-calendar-item--after-checked {
-		background-color: #ff5a5f;
+		background-color: #00FF00;
 		color: #fff;
 	}
 </style>

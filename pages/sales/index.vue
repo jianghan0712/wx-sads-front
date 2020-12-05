@@ -58,25 +58,30 @@
             return {
 				selfParam:{
 					token:'',
-					provinceCenterId:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
 					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
 					businessDate:{
-						view:'',
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
 						date:{startDate:'', endDate:''},
 						week:{startDate:'', endDate:''},
 						month:{startDate:'', endDate:''},
 						year:{startDate:'', endDate:''},
-					},					
-					startDate:'',
-					endDate:'',
-					cityCenterId:'',
-					userId:'',
-					countyCenterId:'',
-					dateType:'date',
-					compareType:'date',
-					compareOne:'',
-					compareTwo:'',
-					selfProvinceCenterId:''
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
 				},
 				areaMap:{},
 				isFirstLoad:true,
@@ -99,6 +104,7 @@
         onLoad() {
 			this.returnFromDatePicker()	
 			console.log("sales-self-onLoad:",this.selfParam)
+			commonFun.sleep(2000)
         },
 		created(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -120,20 +126,17 @@
 			// uni.removeStorageSync("dateObj");
 		},
         methods: {
-			returnFromDatePicker(){
-				
+			returnFromDatePicker(){			
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-			
-				
+						
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
-				
+				this.selfParam.provinceCenterName=areaName			
 			},
 			goCompare(){
 				uni.navigateTo({

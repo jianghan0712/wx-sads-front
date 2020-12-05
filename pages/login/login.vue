@@ -30,25 +30,30 @@
                 },
 				selfParam:{
 					token:'',
-					provinceCenterId:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
 					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
 					businessDate:{
-						view:dateUtils.getToday(),
+						dateType:'date',// date/week/month/year
+						view:dateUtils.getToday(),//用于展示日期、年、月等
 						date:{startDate:dateUtils.getToday(), endDate:dateUtils.getToday()},
 						week:{startDate:'', endDate:''},
 						month:{startDate:'', endDate:''},
 						year:{startDate:'', endDate:''},
-					},					
-					startDate:'',
-					endDate:'',
-					cityCenterId:'',
-					userId:'',
-					countyCenterId:'',
-					dateType:'date',
-					compareType:'date',
-					compareOne:dateUtils.getToday(),
-					compareTwo:'',
-					selfProvinceCenterId:''
+					},
+					compareDate:{
+						dateType:'date',
+						view:dateUtils.getToday(),//用于展示日期、年、月等
+						date:{startDate:dateUtils.getToday(), endDate:dateUtils.getToday()},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
 				},
 				userinfo:{
 					userId:'',
@@ -113,8 +118,7 @@
 						this.selfParam.userId = data.userId
 					
 						this.res = '请求结果 : ' + JSON.stringify(res);
-						console.log('getUserRight=', this.selfParam)
-						
+						console.log('getUserRight=', this.selfParam)						
 						
 					}).catch((err)=>{
 						this.loading = false;
@@ -243,7 +247,6 @@
     .login{
         width: 400rpx;
         margin-top: 150rpx;
-        color: white;
-		background-color: rgba(200, 199, 204, 0.36);
+		background-color: #3366FF;
     }
 </style>

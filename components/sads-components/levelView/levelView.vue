@@ -79,23 +79,30 @@
 			return {
 				selfParam:{
 					token:'',
-					provinceCenterId:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
 					businessDate:{
-						view:'',
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
 						date:{startDate:'', endDate:''},
 						week:{startDate:'', endDate:''},
 						month:{startDate:'', endDate:''},
 						year:{startDate:'', endDate:''},
-					},					
-					startDate:'',
-					endDate:'',
-					cityCenterId:'',
-					userId:'',
-					countyCenterId:'',
-					dateType:'',
-					compareType:'',
-					compareOne:'',
-					compareTwo:''
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
 				},
 				btnnum: 0,
 				index: 0,
@@ -173,29 +180,29 @@
 			},
 			createParam(){
 				console.log("createParam begin")
-				var dateType = this.selfParam.dateType
+				var dateType = this.selfParam.businessDate.dateType
 				var param = {}
 				if(dateType=='date'){
 					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.date.dateTimeEnd,
+							 dateTimeEnd: this.selfParam.businessDate.date.endDate,
 							 dateFlag:"1",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='week'){
 					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.week.dateTimeEnd,
+							 dateTimeEnd: this.selfParam.businessDate.week.endDate,
 							 dateFlag:"2",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='month'){
 					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.month.dateTimeEnd,
+							 dateTimeEnd: this.selfParam.businessDate.month.endDate,
 							 dateFlag:"3",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='year'){
 					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.year.dateTimeEnd,
+							 dateTimeEnd: this.selfParam.businessDate.year.endDate,
 							 dateFlag:"4",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }

@@ -133,7 +133,10 @@
 				weeks: [],
 				calendar: {},
 				nowDate: '',
-				aniMaskShow: false
+				aniMaskShow: false,
+				before:'',
+				after:'',
+				mode:'date'
 			}
 		},
 		watch: {
@@ -159,11 +162,17 @@
 				selected: this.selected,
 				startDate: this.startDate,
 				endDate: this.endDate,
-				range: this.range,
+				range: this.range
 			})
 			// 选中某一天
 			// this.cale.setDate(this.date)
-			this.init(this.date)
+			if(this.mode == 'week'){
+				this.selectWeek('2020-10-14','2020-10-26')
+			}else if(this.mode == 'date'){
+				this.init(this.date)				
+			}
+							
+
 			// this.setDay
 		},
 		methods: {
@@ -181,7 +190,25 @@
 			init(date) {
 				this.cale.setDate(date)
 				this.weeks = this.cale.weeks
+				this.nowDate = this.calendar = this.cale.getInfo(date)	
+				
+				
+				// 设置多选
+				// this.cale.setMultiple('2020-10-10')
+				// this.cale.setMultiple('2020-10-16')
+				// this.weeks = this.cale.weeks
+				// this.choiceDate(this.weeks)
+				
+				// this.cale.setMultipleDate('2020-10-10','2020-10-16')
+				// this.change()
+				// this.setEmit('change')
+			},			
+			selectWeek(before, after) {		
+				this.cale.setDate(date)
+				this.weeks = this.cale.weeks
 				this.nowDate = this.calendar = this.cale.getInfo(date)
+				this.cale.setMultipleDate(before,after)
+				this.setEmit('change')
 			},
 			/**
 			 * 打开日历弹窗
@@ -225,6 +252,7 @@
 			change() {
 				if (!this.insert) return
 				this.setEmit('change')
+				console.log('变化触发,week=',this.weeks)				
 			},
 			/**
 			 * 选择月份触发
@@ -268,11 +296,48 @@
 			 */
 			choiceDate(weeks) {
 				if (weeks.disable) return
+				console.log("calendar choiceDate ,weeks=",weeks)
 				this.calendar = weeks
 				// 设置多选
 				this.cale.setMultiple(this.calendar.fullDate)
 				this.weeks = this.cale.weeks
-				this.change()
+				this.change()			
+			},
+			// choiceDate(weeks) {
+			// 	console.log("calendar choiceDate ,weeks=",weeks)
+			// 	if (weeks.disable) return
+			// 	this.calendar = weeks
+			// 	var fulldate= this.calendar.fullDate
+			// 	var weekArray = new Array(0,1,2,3,4,5,6);
+			// 	var tDay = weekArray[new Date(fulldate).getDay()];
+				
+			// 	var monday =this.getNextDate(fulldate, 0-(tDay-1))
+			// 	var sunday =this.getNextDate(fulldate, 7-tDay)
+			// 	console.log("monday=",monday)
+			// 	console.log("sunday=",sunday)				
+				
+			// 	this.cale.setMultiple(monday)
+			// 	this.cale.setMultiple(sunday)
+			// 	this.weeks = this.cale.weeks
+			// 	this.change()
+			// },
+			getNextDate(date, day) {
+				// console.log('date:', date,'day:',day);
+				var dd = new Date(date);
+				dd.setDate(dd.getDate() + day);
+				var y = dd.getFullYear();
+				var m = dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1;
+				var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
+				return y + "-" + m + "-" + d;
+			},
+			selectWeek(e){
+				var fulldate = e.fulldate;
+				var tDay = e.lunar.nWeek;
+				var monday = this.getNextDate(fulldate, 0-(tDay-1));
+				var sunday = this.getNextDate(fulldate, 7-tDay);
+				// console.log('monday:', monday);
+				// console.log('sunday:', sunday);
+				this.date.date = monday + "~~" + sunday;
 			},
 			/**
 			 * 回到今天
