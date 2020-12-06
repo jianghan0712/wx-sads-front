@@ -90,64 +90,64 @@
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id
 				},
-					areaMap:{},
-					isFirstLoad:true,
-					totalData:{},
-					num:'',
-					areaIdList:{},
-					amountTableData: [],
-					amountTableDataDetail:[],
-					amountTableColumns: [{
-								title: "排名",
-								key: "id",
-								$width:"50px",
-							},
-							{
-								title: '省份/地市',
-								key: 'area',
-								$width:"100px"
-							},
-							{
-								title: '门店编号',
-								key: 'number',
-								$width:"150px"
-							},
-							{
-								title: '销量',
-								key: 'amount'
-							}
-						],	
-					beyondLimitTableData: [],
-					beyondLimitTableDataDetail:[],
-					beyondLimitTableColumns: [{
-								title: "排名",
-								key: "id",
-								$width:"50px",
-							},
-							{
-								title: '省份/地市',
-								key: 'area',
-								$width:"100px"
-							},
-							{
-								title: '门店数量',
-								key: 'count',
-								$width:"150px"
-							},
-							{
-								title: '环比变化值',
-								key: 'change'
-							}
-						],
+				areaMap:{},
+				isFirstLoad:true,
+				totalData:{},
+				num:'',
+				areaIdList:{},
+				amountTableData: [],
+				amountTableDataDetail:[],
+				amountTableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '省份/地市',
+							key: 'area',
+							$width:"100px"
+						},
+						{
+							title: '门店编号',
+							key: 'number',
+							$width:"150px"
+						},
+						{
+							title: '销量',
+							key: 'amount'
+						}
+					],	
+				beyondLimitTableData: [],
+				beyondLimitTableDataDetail:[],
+				beyondLimitTableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '省份/地市',
+							key: 'area',
+							$width:"100px"
+						},
+						{
+							title: '门店数量',
+							key: 'count',
+							$width:"150px"
+						},
+						{
+							title: '环比变化值',
+							key: 'change'
+						}
+					],
 				}				
 			},
 			onLoad() {
 				this.returnFromDatePicker()	
-				console.log("sales-self-onLoad:totalData=",this.totalData)
 			},
 			created(){
 				/* this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				console.log(this.selfParam) */
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.areaMap = JSON.parse(uni.getStorageSync("areaMap"))
 				this.getServerData();
 				this.showView()

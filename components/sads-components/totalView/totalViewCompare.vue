@@ -211,7 +211,7 @@
 			this.showView();
 		},
 		created() {		
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam")) 
 			//ajax调用
 			this.getServerData();	
 		},

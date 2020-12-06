@@ -133,7 +133,7 @@
 		methods: {
 			showView(){
 				console.log("ticket showView" ,this.pieData);
-				commonFun.sleep(3000)
+				// commonFun.sleep(3000)
 				this.$refs['ticketData'].showDataContainer();		
 				this.$refs['ringChart0'].showCharts();
 				this.$refs['ringChart1'].showCharts();

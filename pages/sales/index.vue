@@ -109,7 +109,7 @@
         onLoad() {
 			this.returnFromDatePicker()	
 			console.log("sales-self-onLoad:",this.selfParam)
-			commonFun.sleep(2000)
+			// commonFun.sleep(2000)
         },
 		created(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
