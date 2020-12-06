@@ -5,7 +5,13 @@
 				<text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
 			</view>
 		</scroll-view>
-		<view class="line-h"></view>
+		<view class="content">
+			<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+			<uni-section class="section" type="line"></uni-section>
+			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+			<uni-section class="section" type="line"></uni-section>
+			<view @click="goCompare">对比</view>
+		</view>	
 		<block v-if="tabIndex==0">
 			<channelTotalView></channelTotalView>
 		</block>
@@ -43,9 +49,39 @@
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.modelSet.gateNo = option.number
+			this.returnFromDatePicker();
 		},
 		data() {
-			return {		
+			return {
+				selfParam:{
+					token:'',
+					provinceCenterId:'0',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'全国',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
+				areaMap:{},
+				isFirstLoad:true,
 				modelSet:{
 					area:'hubei', page:'gameView',gateNo:'12545'
 				},
@@ -84,6 +120,18 @@
 			}
 		},
 		methods: {
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName			
+			},
 			getList(index) {
 				let activeTab = this.newsList[index];
 				let list = [];
@@ -187,6 +235,21 @@
 				uni.navigateTo({
 				    url: './gameView/gameViewCompare?id='+1
 				}); 
+			},
+			goCompare(){
+				uni.navigateTo({
+					url:"/pages/report/indexCompare?tabIndex="+this.tabIndex
+				});
+			},
+			goArea(){
+				uni.navigateTo({
+					url:"/pages/common/areaSelector?area="+this.selfParam.provinceCenterId
+				});
+			},
+			goDatePicker() {
+				uni.navigateTo({
+					url:"/pages/common/dateSelector"
+				});
 			}
 			
 		}
@@ -358,5 +421,16 @@
 		font-size: $font-base + 2upx;
 		background: $uni-color-primary;
 		box-shadow: 1px 2px 5px rgba(217, 60, 93, 0.72)
+	}
+	.content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 32rpx;
+		color: #333;
+		padding-top: 40rpx;
+	}
+	.section{
+		background-color: #FFFFFF;
 	}
 </style>

@@ -1,8 +1,5 @@
 <template>
 	<view >
-		<view >
-			<gametop></gametop>
-		</view>
 		<view class = "box-container">
 			<view class="arcbarChart-tab">
 			    <view @tap="changeTop('足球')" :class="arcbarNumTop =='足球'?'btna':'hide'" style="width: 50%;" >足球</view>
@@ -32,7 +29,7 @@
 				<gamebottom></gamebottom>
 			</view>
 			
-			<view v-if="model.area=='all'">
+			<view >
 				<view class="container-title">
 					<view>各地区{{arcbarNumTop}}销量及占比</view>
 					<view><button style="width: 200;height: 50upx;text-align: top;font-size: 10rpx;" @click="toAll()">全部>></button></view>
@@ -50,7 +47,6 @@
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import PieChart from '@/components/basic-chart/PieChart.vue';
 	import RingChart from '@/components/basic-chart/RingChart.vue';
-	import gametop  from './gameViewTop.vue';
 	import gamebottom from './gameViewBottom.vue';
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import vTable from "@/components/table/table.vue";
@@ -62,7 +58,6 @@
 				LineChart,
 				PieChart,
 				RingChart,
-				gametop,
 				gamebottom,dataContainer,vTable
 			},
 			props: {
@@ -80,34 +75,7 @@
 				}else{
 					this.totalData = this.basketballData;
 				}
-				/* uni.getLocation({
-				    type: 'wgs84',
-					geocode: true,
-				    success: function (res) {
-				        console.log('当前位置的经度：' + res.latitude);
-				        console.log('当前位置的纬度：' + res.longitude);
-						let locationString = res.latitude + "," + res.longitude;
-						uni.request({
-						    url: 'https://apis.map.qq.com/ws/geocoder/v1',
-						    data: {
-								key: "FZIBZ-RXJE6-Q7GSP-E3TUR-HMTKE-SMBBY",
-								location: locationString,
-								get_poi : 1
-						    },
-							method: 'GET',
-							success: (res) => {
-						        console.log(res.data);
-						    },
-							fail:(res)=>{
-								console.log(res);
-							}
-						});
-					
-				    },
-					complete:function (res) {
-
-				    }
-				}); */
+				
 				this.$nextTick(()=>{
 					this.loadData();
 				});
@@ -115,12 +83,39 @@
 					this.loadData();
 					this.changeTop("足球")
 				}, 1);
-				
+				this.returnFromDatePicker();
 				 
 				
 			},
 			data() {
 				return {
+					selfParam:{
+						token:'',
+						provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+						cityCenterId:'',
+						provinceCenterName:'',
+						countyCenterId:'',	
+						compareType:'date',
+						compareFlag:false,
+						businessDate:{
+							dateType:'',// date/week/month/year
+							view:'',//用于展示日期、年、月等
+							date:{startDate:'', endDate:''},
+							week:{startDate:'', endDate:''},
+							month:{startDate:'', endDate:''},
+							year:{startDate:'', endDate:''},
+						},
+						compareDate:{
+							dateType:'date',
+							view:'',//用于展示日期、年、月等
+							date:{startDate:'', endDate:''},
+							week:{startDate:'', endDate:''},
+							month:{startDate:'', endDate:''},
+							year:{startDate:'', endDate:''},
+						},	
+						userId:'',			
+						selfProvinceCenterId:''//存登录时候的id
+					},
 					showModel:{},
 					totalData:{
 						big1:{},
@@ -233,27 +228,59 @@
 					tableColumns: [{
 								title: "排名",
 								key: "id",
-								$width:"50px",
+								$width:"90px",
 							},
 							{
 								title: '省份',
 								key: 'area',
-								$width:"80px"
+								$width:"90px"
 							},
 							{
 								title: '占比',
 								key: 'zhanbi',
-								$width:"80px"
+								$width:"100px"
 							},
 							{
 								title: '销量（元）',
 								key: 'count',
-								$width:"85px"
+								$width:"100px"
 							}
 						],	
 				};
 			},
 			methods: {
+				createParam(){
+					console.log("createParam begin")
+					var dateType = this.selfParam.businessDate.dateType
+					var param = {}
+					if(dateType=='date'){
+						param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+								 dateTimeEnd: this.selfParam.businessDate.date.endDate,
+								 dateFlag:"1",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}else if(dateType=='week'){
+						param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+								 dateTimeEnd: this.selfParam.businessDate.week.endDate,
+								 dateFlag:"2",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}else if(dateType=='month'){
+						param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+								 dateTimeEnd: this.selfParam.businessDate.month.endDate,
+								 dateFlag:"3",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}else if(dateType=='year'){
+						param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+								 dateTimeEnd: this.selfParam.businessDate.year.endDate,
+								 dateFlag:"4",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}
+					console.log("createParam end:",param)
+					return param
+				},
 				changeTop(e){
 					this.arcbarNumTop = e;;
 					getApp().globalData.ballType=e; 
@@ -268,14 +295,9 @@
 				loadTopData(ballType){
 					var url = '/pentaho/sales/getGameSalesAndVotes';
 					var that=this;
-					var param ={dateTimeStart:'2020-11-03',
-								dataTimeEnd:'2020-11-10',
-								dateFlag:1,
-								gameFlag:'1',
-								regionId:'',
-								token:getApp().globalData.token};
+					var param =this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
-						var alldata=res.data;
+						var alldata=res.data.data;
 						var bk=alldata.bk;
 						var fb= alldata.fb;
 						if(ballType=='足球'){
@@ -302,7 +324,7 @@
 									name:'环比',
 									value:fb[5]
 								}}
-							this.$set(this.totalData,'big2',index0);
+							this.$set(this.totalData,'big2',index1);
 						}else{
 							let index0={
 								name:ballType+'销量（百万元）',
@@ -333,32 +355,41 @@
 						
 					}).catch((err)=>{
 						//this.loading = false;
+						this.totalData=this.footballData;
 						console.log('request fail', err);
 					});
 					
 				},
+				returnFromDatePicker(){
+					const dateType = uni.getStorageSync("dateType")
+					const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+					this.selfParam.businessDate = bussinessDate;
+					console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+							
+					const area = uni.getStorageSync("area")
+					const areaName = uni.getStorageSync("areaName")
+					console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+					this.selfParam.provinceCenterId=area
+					this.selfParam.provinceCenterName=areaName
+					this.selfParam.token=uni.getStorageSync("token");
+				},
 				loadMidData(ballType){
 					var url = '/pentaho/sales/getGameTrendChart';
-					var param ={dateTimeStart:'2020-11-03',
-								dataTimeEnd:'2020-11-10',
-								dateFlag:1,
-								gameFlag:'1',
-								token:getApp().globalData.token};
+					var param  =this.createParam();
 					var that2 =this;
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						
 						var dates;
 						var sales;
 						var votes;
 						if(ballType=='足球'){
-							dates=res.data.fb.dates;
-							sales =res.data.fb.sales;
-							votes = res.data.fb.votes;
+							dates=res.data.data.fb.dates;
+							sales =res.data.data.fb.sales;
+							votes = res.data.data.fb.votes;
 						}else {
-							dates=res.data.bk.dates;
-							sales =res.data.bk.sales;
-							votes = res.data.bk.votes;
+							dates=res.data.data.bk.dates;
+							sales =res.data.data.bk.sales;
+							votes = res.data.data.bk.votes;
 						}
 						
 						if(that2.arcbarNumMid=='销量'){
@@ -390,37 +421,14 @@
 					}else {
 						gameFlag='2';
 					}
-					var param ={dateTimeStart:'2020-11-03',
-								dataTimeEnd:'2020-11-10',
-								dateFlag:'1',
-								regionId:'',
-								gameFlag:gameFlag,
-								token:getApp().globalData.token};
+					param =this.createParam();
+					this.$set(param,'gameFlag',gameFlag);
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data;
-						/* arcbar1: {
-								type: 'radar',
-								series:[
-										{name: '胜平负',data: 100},
-										 {name: '半全场胜平负',data: 30},
-										 {name: '让球胜平负',data: 50},
-								],
-								索引1	String		游戏种类
-								索引2	String		游戏名称
-								索引3	Integer		销量
-								索引4	Double		销量占比
-								extra: {
-									pie: {
-										lableWidth: 15,
-										ringWidth: 10, //圆环的宽度
-										offsetAngle: 0 //圆环的角度
-									}
-								}
-						}, */
+						var datas =res.data.data;
 						var series =[];
-						for(var i=0;i<data.length;i++){
-							var obj={name:data[i].gameName,data:data[i].values[1]};
+						for(var i=0;i<datas.length;i++){
+							var obj={name:datas[i].gameName,data: parseInt(datas[i].values[0])};
 							series.push(obj);
 							
 						}
@@ -444,17 +452,14 @@
 					var url = '/pentaho/sales/getGameSalesRankingList';
 					var that =this;
 					var ballType =getApp().globalData.ballType;
+					var gameFlag;
 					if(ballType=='足球'){
 						gameFlag='1';
 					}else {
 						gameFlag='2';
 					}
-					var param ={dateTimeStart:'2020-11-03',
-								dataTimeEnd:'2020-11-10',
-								dateFlag:1,
-								gameFlag:'1',
-								regionId:'',
-								token:getApp().globalData.token};
+					var param =this.createParam();
+					this.$set(param,'gameFlag',gameFlag);
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;	
@@ -473,6 +478,7 @@
 					var that =this;
 					uni.navigateTo({
 						url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData),
+						
 						
 					});
 				}

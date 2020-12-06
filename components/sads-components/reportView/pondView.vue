@@ -47,6 +47,33 @@
 		}, */
 		data() {
 			return {
+				selfParam:{
+					token:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
 				backTop: {
 										src: '../../static/top.png',
 										scrollTop: 0
@@ -83,13 +110,52 @@
 			 }
 		},
 		methods: {
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token=uni.getStorageSync("token");		
+			},
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.businessDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTime: this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTime: this.selfParam.businessDate.week.startDate,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTime: this.selfParam.businessDate.month.startDate,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTime: this.selfParam.businessDate.year.startDate,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
+			},
 			loadData(){
 				var that=this;
 				var token=getApp().globalData.token;
 				//地区日销量及周同比
-				var param={dateTime:'2020-01-03',
-							regionId:'',
-							token:token};
+				var param=this.createParam();
 				var url = '/pentaho/dailyPaper/getAwardAndSystem';
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
@@ -110,7 +176,7 @@
 					var shangzhou4=[];
 					var benzhou4=[];
 					//先按7条记录
-					for(var i=0;i<data.length/2;i++){
+					for(var i=0;i<fbCum.length/2;i++){
 						shangzhou1.push(fbCum[i]);
 						shangzhou2.push(fbAdjust[i]);
 						shangzhou3.push(bkCum[i]);
@@ -157,6 +223,7 @@
 			}
 		},
 		mounted() {
+			this.returnFromDatePicker();
 			this.loadData();
 		},
 		onPageScroll(e) {

@@ -8,13 +8,13 @@
         </scroll-view>
 	
 		<view class="content">
-				<view @click="goDatePicker" style="width: 400rpx;">{{selfParam.compareDate.viewLeft}}</view>
-				<view @click="goDatePicker" style="width: 280rpx;">{{selfParam.compareDate.viewRight}}</view>
+				<view @click="goDatePicker" style="width: 400rpx;">{{selfParam.businessDate}}</view>
+				<view @click="goDatePicker" style="width: 280rpx;">{{selfParam.businessDate}}</view>
 				<view style="-webkit-flex: 1;flex: 1;">取消</view>		
 		</view>	 
 		<block v-if="tabIndex==0">
-			<totalViewCompare ref="totalViewCompare" :param="selfParam"></totalViewCompare>
-		</block> 
+			<totalViewCompare ref="totalViewCompare" :model="selfParam"></totalViewCompare>
+		</block>
 		<block v-if="tabIndex==1">
 			<gameView ref="gameView" :model="selfParam"></gameView>
 		</block>
@@ -55,37 +55,13 @@
         },
         data() {
             return {
-				selfParam:{
-					token:'',
-					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
-					cityCenterId:'',
-					provinceCenterName:'',
-					countyCenterId:'',	
-					compareType:'date',
-					compareFlag:false,
-					businessDate:{
-						dateType:'',// date/week/month/year
-						view:'',//用于展示日期、年、月等
-						date:{startDate:'', endDate:''},
-						week:{startDate:'', endDate:''},
-						month:{startDate:'', endDate:''},
-						year:{startDate:'', endDate:''},
-					},
-					compareDate:{
-						dateType:'date',
-						viewLeft:'',//用于展示日期、年、月等
-						viewRight:'',
-						dateLeft:{startDate:'', endDate:''},
-						dateRight:{startDate:'', endDate:''},
-						weekLeft:{startDate:'', endDate:''},
-						weekRight:{startDate:'', endDate:''},
-						monthLeft:{startDate:'', endDate:''},
-						monthRight:{startDate:'', endDate:''},
-						yearLeft:{startDate:'', endDate:''},
-						yearRight:{startDate:'', endDate:''},
-					},	
-					userId:'',			
-					selfProvinceCenterId:''//存登录时候的id
+				selfParam:{ provinceCenterId:0,
+							businessDate:dateUtils.getToday(),
+							startDate:'',
+							endDate:'',
+							cityCenterId:1,
+							userId:1141,
+							countyCenterId:1
 				},
                 newsList: [],
                 cacheTab: [],
@@ -106,13 +82,13 @@
         onLoad(option) {
 			// const _dateObj=uni.getStorageSync("dateObj")
 			this.tabIndex = option.tabIndex
-			this.selfParam=JSON.parse(option.selfParam)
-					
-			// this.$refs['totalViewCompare'].showView();
+			this.selfParam.businessDate = dateUtils.getToday();
+			
+			this.$refs['totalViewCompare'].showView();
 			// this.$refs['gameView'].showView();
-			// this.$refs['matchView'].showView();
-			// this.$refs['levelViewCompare'].showView();
-			// this.$refs['ticketViewCompare'].showView();
+			this.$refs['matchView'].showView();
+			this.$refs['levelViewCompare'].showView();
+			this.$refs['ticketViewCompare'].showView();
         },
 		onShow() {//此处接受来自日期选择页面的参数
 		    const _dateObj=uni.getStorageSync("dateObj");			

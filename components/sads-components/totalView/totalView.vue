@@ -192,11 +192,16 @@
 					},
 					compareDate:{
 						dateType:'date',
-						view:'',//用于展示日期、年、月等
-						date:{startDate:'', endDate:''},
-						week:{startDate:'', endDate:''},
-						month:{startDate:'', endDate:''},
-						year:{startDate:'', endDate:''},
+						viewLeft:'',//用于展示日期、年、月等
+						viewRight:'',
+						dateLeft:{startDate:'', endDate:''},
+						dateRight:{startDate:'', endDate:''},
+						weekLeft:{startDate:'', endDate:''},
+						weekRight:{startDate:'', endDate:''},
+						monthLeft:{startDate:'', endDate:''},
+						monthRight:{startDate:'', endDate:''},
+						yearLeft:{startDate:'', endDate:''},
+						yearRight:{startDate:'', endDate:''},
 					},	
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id
@@ -340,44 +345,39 @@
 				var param = this.createParam()
 				
 				urlAPI.getRequest(url, param).then((res)=>{
-					setTimeout(() => {
 						this.loading = false;
-							console.log('request success', res)
-							uni.showToast({
-								title: '请求成功',
-								icon: 'success',
-								mask: true
-							});
-							var data = res.data.data;
-							var amount = data[0]
-							var saleNumber = data[1]
-							
-							console.log("amount=",amount,"saleNumber=",saleNumber)
-							var format0 = numberFun.formatCNumber(amount[0]);
-							var format1 = numberFun.formatCNumber(saleNumber[0]);
-							console.log("format0=",format0,"format1=",format1)
-							var left1 = {'name':'周同比','value':amount[1] + '%'};
-							var right1 = {'name':'环比','value':amount[2] + '%'};
-							var big1 = {'name':'销量（'+format0.name +'元）', 'value':amount[0]/format0.value, 'left': left1,'right':right1};
-							
-							var left2 = {'name':'周同比','value':saleNumber[1] + '%'};
-							var right2 = {'name':'环比','value':saleNumber[2] + '%'};
-							var big2 = {'name':'票数（'+format1.name +'张）','value':saleNumber[0]/format1.value, 'left':left2,'right':right2};
+						console.log('request success', res)
+						uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						});
+						var data = res.data.data;
+						var amount = data[0]
+						var saleNumber = data[1]
 						
-							this.$set(this.totalData, 'big1', big1);
-							this.$set(this.totalData, 'big2', big2);
-							console.log('request totalData', this.totalData);
+						console.log("amount=",amount,"saleNumber=",saleNumber)
+						var format0 = numberFun.formatCNumber(amount[0]);
+						var format1 = numberFun.formatCNumber(saleNumber[0]);
+						console.log("format0=",format0,"format1=",format1)
+						var left1 = {'name':'周同比','value':amount[1] + '%'};
+						var right1 = {'name':'环比','value':amount[2] + '%'};
+						var big1 = {'name':'销量（'+format0.name +'元）', 'value':amount[0]/format0.value, 'left': left1,'right':right1};
 						
-							this.res = '请求结果 : ' + JSON.stringify(res);
-						}).catch((err)=>{
-							this.loading = false;
-							uni.showToast({
-								title: err.errMsg,
-								duration: 5000
-							});
-							console.log('request fail', err);
-						})						
-					}, 10000);
+						var left2 = {'name':'周同比','value':saleNumber[1] + '%'};
+						var right2 = {'name':'环比','value':saleNumber[2] + '%'};
+						var big2 = {'name':'票数（'+format1.name +'张）','value':saleNumber[0]/format1.value, 'left':left2,'right':right2};
+												
+						this.$set(this.totalData, 'big1', big1);
+						this.$set(this.totalData, 'big2', big2);
+						console.log('request totalData', this.totalData);
+												
+						this.res = '请求结果 : ' + JSON.stringify(res);
+											
+					}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
 			},
 			getLinesData(provinceCenterId, businessDate){
 				var url = '/pentaho/sales/getOverviewTrendChart';

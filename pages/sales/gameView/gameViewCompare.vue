@@ -9,13 +9,13 @@
 				 <table  style="width: 100%;">
 					 <view v-for="(item,gameindex) in uidata" :key="gameindex" style="width: 100%;">
 						 <tr style="font-size: 30rpx;width: 100%;">
-							<td align="left" style="width: 190rpx;">{{item[2]}}</td>
-							<td align="left" style="width: 150rpx;">{{item[4].toFixed(2)}}</td>
+							<td align="left" style="width: 190rpx;">{{item[0]}}</td>
+							<td align="left" style="width: 150rpx;">{{item[2].toFixed(2)}}</td>
 							<td align="left" style="width: 150rpx;">销量</td>
-							<td align="left" style="width: 150rpx;">{{(item[3]/10000).toFixed(2)}}万元</td>  
+							<td align="left" style="width: 150rpx;">{{(item[1]/10000).toFixed(2)}}万元</td>  
 						 </tr>
 						 <tr style="font-size: 30rpx;width: 100%;"  >
-							<td align="left" colspan='4'> <progress :percent="item[4].toFixed(2)" stroke-width="4" /></td>
+							<td align="left" colspan='4'> <progress :percent="item[2].toFixed(2)" stroke-width="4" /></td>
 						 </tr>
 						<view class="line-h" colspan='4' style="width: 100%;"></view>
 					 </view>
@@ -42,57 +42,114 @@
 			return {
 				uidata:{},
 				contents :[],
-				type:'all'
+				type:'all',
+				selfParam:{
+					token:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
 			}
 		},
 		methods:{
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token=uni.getStorageSync("token");
+			},
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.businessDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.date.endDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.week.endDate,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.month.endDate,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.year.endDate,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}
+				console.log("createParam end:",param)
+				return param
+			},
 			loadData(){
-				if('all'==this.type){
-				
-				var url = 'exhibition/gameSales/queryGamesSalesList/{currentDate}/{provinceCenterId}/{cityCenterId}';
+				var url = '/pentaho/sales/getGameSalesProp';
+				var gameFlag;
+				var ballType = getApp().globalData.ballType;
+				if(ballType=='足球'){
+					gameFlag='1';
+				}else {
+					gameFlag='2';
+				}
+				var param =this.createParam();
+				this.$set(param,'gameFlag',gameFlag);
 				var that =this;
-				urlAPI.getRequest(url, null).then((res)=>{
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.concreteBean;
-					var ballType = getApp().globalData.ballType;
+					var data =res.data.data;
+					console.log(data);
 					var dataFilter=[];					//获取全局的ballType
 					for(var i=0;i<data.length;i++){
-						//需要 索引1 2 4
-						if(data[i][1].indexOf(ballType)!=-1){
-							dataFilter.push(data[i]);
-						}
+						var item=[];
+						item[0]=data[i].gameName;
+						item[1]=data[i].values[0];
+						item[2]=parseInt(data[i].values[1]);
+						console.log(item)
+						dataFilter.push(item);
 					}
 					that.uidata = dataFilter;
 					
-					/* arcbar1: {
-							type: 'radar',
-							series:[
-									{name: '胜平负',data: 100},
-									 {name: '半全场胜平负',data: 30},
-									 {name: '让球胜平负',data: 50},
-							],
-							索引1	String		游戏种类
-							索引2	String		游戏名称
-							索引3	Integer		销量
-							索引4	Double		销量占比
-							extra: {
-								pie: {
-									lableWidth: 15,
-									ringWidth: 10, //圆环的宽度
-									offsetAngle: 0 //圆环的角度
-								}
-							}
-					}, */
+					
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 				});
-				}else if('all'!=this.type){
-					
-				}
-				
-				}
-				
 				
 		},
 		onLoad(option){
@@ -100,13 +157,12 @@
 			uni.setNavigationBarTitle({
 				title :option.title
 			});
-			const eventChannel = this.getOpenerEventChannel();
-			eventChannel.on('all', function(data) {
-				
-			});
-			this.loadData()
+			this.returnFromDatePicker();
+			this.loadData();
+			
 		}
 		
+	},
 	}
 </script>
 

@@ -5,7 +5,13 @@
                 <text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
             </view>
         </scroll-view>
-        <view class="line-h"></view> 
+        <view class="content">
+        	<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+        	<uni-section class="section" type="line"></uni-section>
+        	<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+        	<uni-section class="section" type="line"></uni-section>
+        	<view @click="goCompare">对比</view>
+        </view>	
 		<block v-if="tabIndex==0">
 			<allView ref="allView"  :model="modelSet" ></allView>
 		</block>
@@ -33,7 +39,11 @@
 	import channelView from "@/components/sads-components/reportView/channelView.vue";
 	import pondView from "@/components/sads-components/reportView/pondView.vue";
 	import salesView from "@/components/sads-components/reportView/salesView.vue";
-
+	import ticketView from "@/components/sads-components/ticketView/ticketView.vue";
+	import dateSelector from "@/components/sads-components/dateSelector.vue";
+	import dateUtils from '@/common/tools/dateUtils.js';
+	import multiSeTime from '@/components/sads-components/time.vue'	
+	import uniSection from "@/components/uni/uni-section/uni-section.vue"
 
     // 缓存每页最多
     const MAX_CACHE_DATA = 100;
@@ -42,10 +52,39 @@
 
     export default {
         components: {
-           allView,matchView,areaView,channelView,pondView,salesView
+           allView,matchView,areaView,channelView,pondView,salesView,multiSeTime,uniSection
         },
         data() {
             return {
+				selfParam:{
+					token:'',
+					provinceCenterId:'0',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'全国',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
+				areaMap:{},
+				isFirstLoad:true,
 				modelSet:{
 					area:'all', page:'totalView',gateNo:''
 				},
@@ -87,9 +126,22 @@
             }
         },
         onLoad() {
+			this.returnFromDatePicker();
 			this.$refs['allView'].showView();
         },
         methods: {
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				alert(bussinessDate);
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName			
+			},
             getList(index) {
                 let activeTab = this.newsList[index];
                 let list = [];
@@ -213,6 +265,21 @@
 				this.type = type
 				this.$refs.popup.open()
 			},
+			goCompare(){
+				uni.navigateTo({
+					url:"/pages/report/indexCompare?tabIndex="+this.tabIndex
+				});
+			},
+			goArea(){
+				uni.navigateTo({
+					url:"/pages/common/areaSelector?area="+this.selfParam.provinceCenterId
+				});
+			},
+			goDatePicker() {
+				uni.navigateTo({
+					url:"/pages/common/dateSelector"
+				});
+			}
         }
     }
 </script>
@@ -297,24 +364,6 @@
         width: 750rpx;
     }
 
-    .update-tips {
-        position: absolute;
-        left: 0;
-        top: 41px;
-        right: 0;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        background-color: #FDDD9B;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
-    .update-tips-text {
-        font-size: 14px;
-        color: #ffffff;
-    }
-
     .refresh {
         width: 750rpx;
         height: 64px;
@@ -354,14 +403,6 @@
         color: #999999;
     }
 
-    .loading-more {
-        align-items: center;
-        justify-content: center;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        text-align: center;
-    }
-
     .loading-more-text {
         font-size: 28rpx;
         color: #999;
@@ -376,6 +417,16 @@
 		background-color: #fff;
 		padding: 15px;
 		height: 500px;
+	}
+	.content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 32rpx;
+		color: #333;
+	}
+	.section{
+		background-color: #FFFFFF;
 	}
 
 	</style>

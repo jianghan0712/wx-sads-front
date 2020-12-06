@@ -70,6 +70,33 @@
 		},
 		data() {
 			return {
+				selfParam:{
+					token:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
 				showModel:{},
 				 btnnum: 0,
 				 index: 0,
@@ -179,6 +206,47 @@
 				 }
 		},
 		methods: {
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token=uni.getStorageSync("token");
+			},
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.businessDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTime: this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTime: this.selfParam.businessDate.week.startDate,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTime: this.selfParam.businessDate.month.startDate,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTime: this.selfParam.businessDate.year.startDate,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
+			},
 			changeTop(e){
 				this.arcbarNumTop = e;;
 				this.loadData();
@@ -189,9 +257,7 @@
 				var token=getApp().globalData.token;
 				//地区日销量及周同比
 				var url = '/pentaho/dailyPaper/getSalesAndComRanking';
-				var param={dateTime:'2020-01-03',
-							regionId:'',
-							token:token};
+				var param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
@@ -214,9 +280,7 @@
 				});
 				//地区日票数及周同比
 				url = '/pentaho/dailyPaper/getVotesAndComRanking';
-				param={dateTime:'2020-01-03',
-							regionId:'',
-							token:token};
+				param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
@@ -226,7 +290,7 @@
 								id: i+1,
 								area: data[i][0],
 								piaoshu: data[i][1],
-								rateChage: data[i][2]
+								rateChange: data[i][2]
 							};
 						that.tableDataAll1.push(arr);
 						if(i<5){
@@ -240,9 +304,7 @@
 				
 				//地区门店情况
 				url = '/pentaho/dailyPaper/getShowCountRanking';
-				param={dateTime:'2020-01-03',
-							regionId:'',
-							token:token};
+				param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
@@ -266,9 +328,7 @@
 				
 				//地区返奖
 				url = '/pentaho/dailyPaper/getReturnRateRanking';
-				param={dateTime:'2020-01-03',
-							regionId:'',
-							token:token};
+				param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
@@ -325,6 +385,7 @@
 			}
 		},
 		created() {
+			this.returnFromDatePicker();
 			this.loadData();
 		},
 		onPageScroll(e) {

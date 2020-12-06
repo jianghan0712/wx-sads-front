@@ -30,9 +30,9 @@
                 },
 				selfParam:{
 					token:'',
-					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					provinceCenterId:'0',//当前查看的省份，如果之前是全国，这里可能会变动
 					cityCenterId:'',
-					provinceCenterName:'',
+					provinceCenterName:'全国',
 					countyCenterId:'',	
 					compareType:'date',
 					compareFlag:false,
@@ -46,11 +46,16 @@
 					},
 					compareDate:{
 						dateType:'date',
-						view:dateUtils.getToday(),//用于展示日期、年、月等
-						date:{startDate:dateUtils.getToday(), endDate:dateUtils.getToday()},
-						week:{startDate:'', endDate:''},
-						month:{startDate:'', endDate:''},
-						year:{startDate:'', endDate:''},
+						viewLeft:dateUtils.getToday(),//用于展示日期、年、月等
+						viewRight:dateUtils.getDate(new Date(),-1),
+						dateLeft:{startDate:dateUtils.getToday(), endDate:dateUtils.getToday()},
+						dateRight:{startDate:dateUtils.getDate(new Date(),-1), endDate:dateUtils.getDate(new Date(),-1)},
+						weekLeft:{startDate:'', endDate:''},
+						weekRight:{startDate:'', endDate:''},
+						monthLeft:{startDate:'', endDate:''},
+						monthRight:{startDate:'', endDate:''},
+						yearLeft:{startDate:'', endDate:''},
+						yearRight:{startDate:'', endDate:''},
 					},	
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id
@@ -72,7 +77,7 @@
         methods: {
 			getUserInfo(){
 				var url = '/pentaho/user/getUserInfo';
-				var param = {userName:this.loginInfo.userame,token:this.selfParam.token}
+				var param = {userName:'Test001'/* this.loginInfo.userame */,token:this.selfParam.token}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)
@@ -102,7 +107,7 @@
 			},
 			getUserRight(){
 				var url = '/pentaho/user/getUserPower';
-				var param = {userId:this.userinfo.userId, token:this.selfParam.token}
+				var param = {userId:1511/* this.userinfo.userId */, token:this.selfParam.token}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)
@@ -111,7 +116,6 @@
 							icon: 'success',
 							mask: true
 						});
-						
 						var data = res.data.data;
 						this.selfParam.provinceCenterId = data.provincialId
 						this.selfParam.selfProvinceCenterId = data.provincialId
@@ -141,10 +145,10 @@
 						
 						var data = res.data.data;
 						for(var i=0;i<data.length;i++){
-							var json = {id:data[i][0],name:data[i][1]}
+							var json = {id:data[i].id,name:data[i].name}
 							result[i]=json
-							if(data[i][0]==this.selfParam.provinceCenterId){
-								 this.selfParam.provinceCenterName = data[i][1]
+							if(data[i].id==this.selfParam.provinceCenterId){
+								 this.selfParam.provinceCenterName = data[i].name
 							}
 						}	
 						this.areaMap=result;
@@ -169,6 +173,7 @@
 				uni.setStorageSync("areaName",selfParam.provinceCenterName)
 				uni.setStorageSync("businessDate", JSON.stringify(selfParam.businessDate));
 				uni.setStorageSync("token",selfParam.token)
+				uni.setStorageSync("selfParam",JSON.stringify(selfParam))
 				// uni.navigateBack()
 				uni.switchTab({
 					url: "/pages/sales/index"
@@ -206,7 +211,6 @@
 							mask: true
 						});
 					}
-					console.log(checkResult)
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;

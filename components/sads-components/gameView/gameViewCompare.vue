@@ -1,7 +1,11 @@
 <template>
 	<view>
 		<view class="box-contaniner">
-			<dataContainerTwoCol ref="dataContain" :dataAs="totalData"></dataContainerTwoCol>
+			<view class="arcbarChart-tab">
+			    <view @tap="changeTop('足球')" :class="arcbarNumTop =='足球'?'btna':'hide'" style="width: 50%;" >足球</view>
+			    <view @tap="changeTop('篮球')" :class="arcbarNumTop =='篮球'?'btna':'hide'" style="width: 50%;" >篮球</view>
+			</view>
+			<dataContainerTwoCol ref="dataContain" ></dataContainerTwoCol>
 		</view>
 		
 		<!-- 折线图区域-->
@@ -81,7 +85,7 @@
 			dataContainerTwoCol,dataContainerTwoColTwo
 		},
 		props: {
-			param:{
+			model:{
 				//数据
 				type: Object,
 				default: () => ({})
@@ -89,40 +93,8 @@
 		},
 		data() {
 			return {			
-				selfParam:{
-					token:'',
-					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
-					cityCenterId:'',
-					provinceCenterName:'',
-					countyCenterId:'',	
-					compareType:'date',
-					compareFlag:false,
-					businessDate:{
-						dateType:'',// date/week/month/year
-						view:'',//用于展示日期、年、月等
-						date:{startDate:'', endDate:''},
-						week:{startDate:'', endDate:''},
-						month:{startDate:'', endDate:''},
-						year:{startDate:'', endDate:''},
-					},
-					compareDate:{
-						dateType:'date',
-						viewLeft:'',//用于展示日期、年、月等
-						viewRight:'',
-						dateLeft:{startDate:'', endDate:''},
-						dateRight:{startDate:'', endDate:''},
-						weekLeft:{startDate:'', endDate:''},
-						weekRight:{startDate:'', endDate:''},
-						monthLeft:{startDate:'', endDate:''},
-						monthRight:{startDate:'', endDate:''},
-						yearLeft:{startDate:'', endDate:''},
-						yearRight:{startDate:'', endDate:''},
-					},	
-					userId:'',			
-					selfProvinceCenterId:''//存登录时候的id
-				},
-				totalData:{	left:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0},
-							right:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0}},	
+				param:{},
+				totalData:{},	
 				footballData:{},	
 				basketballData:{},	
 				btnnum: 0,
@@ -208,57 +180,43 @@
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
-		},
-		created() {		
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			//ajax调用
 			this.getServerData();
-			this.showView();
 		},
 		methods: {
 			showView(){
 				this.$nextTick(() => {				
-					// this.$refs['lineData2'].showCharts();
-					// this.$refs['lineData1'].showCharts();
+					this.$refs['lineData2'].showCharts();
+					this.$refs['lineData1'].showCharts();
 					this.$refs['dataContain'].showDataContainer();
-					// this.$refs['dataContain2'].showDataContainer();
-					// this.$refs['dataContain3'].showDataContainer();
+					this.$refs['dataContain2'].showDataContainer();
+					this.$refs['dataContain3'].showDataContainer();
 				});
 			},
 			createParam(){
 				console.log("createParam begin")
-				var dateType = this.selfParam.compareDate.dateType
+				var dateType = this.selfParam.dateType
 				var param = {}
-
 				if(dateType=='date'){
-					param = {dateTimeStart: this.selfParam.compareDate.dateLeft.startDate,
-							 dateTimeEnd: this.selfParam.compareDate.dateLeft.endDate,
-							 dateTimeStartCom: this.selfParam.compareDate.dateRight.startDate,
-							 dateTimeEndCom: this.selfParam.compareDate.dateRight.endDate,
+					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.date.dateTimeEnd,
 							 dateFlag:"1",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='week'){
-					param = {dateTimeStart: this.selfParam.compareDate.weekLeft.startDate,
-							 dateTimeEnd: this.selfParam.compareDate.weekLeft.endDate,
-							 dateTimeStartCom: this.selfParam.compareDate.weekRight.startDate,
-							 dateTimeEndCom: this.selfParam.compareDate.weekRight.endDate,
+					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.week.dateTimeEnd,
 							 dateFlag:"2",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='month'){
-					param = {dateTimeStart: this.selfParam.compareDate.monthLeft.startDate,
-							 dateTimeEnd: this.selfParam.compareDate.monthLeft.endDate,
-							 dateTimeStartCom: this.selfParam.compareDate.monthRight.startDate,
-							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
+					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.month.dateTimeEnd,
 							 dateFlag:"3",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='year'){
-					param = {dateTimeStart: this.selfParam.compareDate.yearLeft.startDate,
-							 dateTimeEnd: this.selfParam.compareDate.monthLeft.endDate,
-							 dateTimeStartCom: this.selfParam.compareDate.monthRight.startDate,
-							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
+					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.year.dateTimeEnd,
 							 dateFlag:"4",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
@@ -267,47 +225,35 @@
 				return param
 			},
 			// 获取最上层的两个tab
-			getDataSet(){
-				var url = '/pentaho/salesContrast/getContrastSales';
-				var param = this.createParam()
+			getDataSet(provinceCenterId, businessDate){
+				var url = 'mobile/sales/getSalesToday/' + provinceCenterId+'/' + businessDate;
 				
-				urlAPI.getRequest(url, param).then((res)=>{
-					setTimeout(() => { 
-						this.loading = false;
-							console.log('request success', res)
-							uni.showToast({
-								title: '请求成功',
-								icon: 'success',
-								mask: true
-							});
-							var data = res.data.data;
-							var amount1 = data[0][0]
-							var saleNumber1 = data[0][1]
-							var amount2 = data[1][0]
-							var saleNumber2 = data[1][1]
-							
-							var format00 = numberFun.formatCNumber(amount1);
-							var format01 = numberFun.formatCNumber(saleNumber1);
-							var format10 = numberFun.formatCNumber(amount2);
-							var format11 = numberFun.formatCNumber(saleNumber2);
-							
-							var left = {'title1':'销量（'+format00.name +'元）', 'amount1':amount1/format00.value, 'title2':'票数（'+format01.name +'张）', 'amount2':saleNumber1/format01.value};
-							var right = {'title1':'销量（'+format10.name +'元）', 'amount1':amount1/format10.value, 'title2':'票数（'+format11.name +'张）', 'amount2':saleNumber2/format11.value};
-						
-							this.$set(this.totalData, 'left', left);
-							this.$set(this.totalData, 'right', right);
-							console.log('request totalData', this.totalData);
-						
-							this.res = '请求结果 : ' + JSON.stringify(res);
-						}).catch((err)=>{
-							this.loading = false;
-							uni.showToast({
-								title: err.errMsg,
-								duration: 5000
-							});
-							console.log('request fail', err);
-						})						
-					}, 10000);
+				urlAPI.getRequest(url, null).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.concreteBean;
+					var format0 = numberFun.formatCNumber(data[0]);
+					var format1 = numberFun.formatCNumber(data[1]);
+					
+					var left1 = {'name':'周同比','value':'-71.98%'};
+					var right1 = {'name':'环比','value':'-31.11%'};
+					var big1 = {'name':'销量（'+format0.name +'元）', 'value':data[0]/format0.value, 'left': left1,'right':right1};
+					var big2 = {'name':'票数（'+format1.name +'张）','value':data[1]/format1.value, 'left':{'name':'周同比','value':'-70.56%'},'right':{'name':'环比','value':'-28.88%'}};
+				
+					this.$set(this.totalData, 'big1', big1);
+					this.$set(this.totalData, 'big2', big2);
+					console.log('request totalData', this.totalData);
+					
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
 			},
 			getLinesData(provinceCenterId, businessDate){
 				var url = 'mobile/sales/getSalesTodayByHour/' + provinceCenterId+'/' + businessDate;
@@ -416,10 +362,10 @@
 				});
 			},
 			getServerData() {
-				this.getDataSet();
-				// this.getLinesData(this.param.provinceCenterId,this.param.businessDate);
-				// this.getDataContainerTwo('足球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
-				// this.getDataContainerTwo('篮球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
+				this.getDataSet(this.param.provinceCenterId,this.param.businessDate);
+				this.getLinesData(this.param.provinceCenterId,this.param.businessDate);
+				this.getDataContainerTwo('足球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
+				this.getDataContainerTwo('篮球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
 			},
 			change(e) {
 			      this.btnnum = e
@@ -464,8 +410,13 @@
 		},
 		watch: {
 			'$route':'showView'
+		},
+		created() {
+			this.param = this.model;
+			//ajax调用
+			this.getServerData();
+			this.showView();
 		}
-
 	}
 </script>
 

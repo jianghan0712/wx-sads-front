@@ -66,6 +66,33 @@
 		}, */
 		data() {
 			return {
+				selfParam:{
+					token:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
 				backTop: {
 										src: '../../static/top.png',
 										scrollTop: 0
@@ -111,29 +138,68 @@
 			 }
 		},
 		methods: {
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token=uni.getStorageSync("token");		
+			},
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.businessDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTime: this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTime: this.selfParam.businessDate.week.startDate,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTime: this.selfParam.businessDate.month.startDate,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTime: this.selfParam.businessDate.year.startDate,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
+			},
 			loadData(){
 				var that=this;
 				var token =getApp().globalData.token;
 				var url = '/pentaho/dailyPaper/salesAndVotesSevenTread';
-				var param={dateTime:'2020-01-03',
-							regionId:'',
-							token:token};
+				var param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.data;	
+					var datas =res.data.data;	
 					/* 
 					 前7个是上一周 后七个是这一周
 					 销量 票数
 					 */
-					var xiaoliangAll=data.sales;
-					var piaoshuAll=data.votes;
+					var xiaoliangAll=datas.sales;
+					var piaoshuAll=datas.votes;
 					
 					var series =[];
 					var shangzhouXL=[];
 					var benzhouXL=[];
 					var shangzhouPS=[];
 					var benzhouPS=[];
-					for(var i=0;i<data.length/2;i++){
+					for(var i=0;i<xiaoliangAll.length/2;i++){
 						shangzhouXL.push(xiaoliangAll[i]);
 						benzhouXL.push(xiaoliangAll[i+7]);
 						shangzhouPS.push(piaoshuAll[i]);
@@ -160,21 +226,19 @@
 				});
 				//1-2关
 				url = '/pentaho/dailyPaper/getTwoPassSevenTread';
-				param={dateTime:'2020-01-03',
-							regionId:'',
-							token:token};
+				param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.data;	
+					var datas =res.data.data;	
 					/* 
 					 前7个是上一周 后七个是这一周
 					 */
-					var votes=data.votes;
+					var votes=datas.votes;
 					
 					var series =[];
 					var shangzhouvotes=[];
 					var benzhouvotes=[];
-					for(var i=0;i<data.length/2;i++){
+					for(var i=0;i<votes.length/2;i++){
 						shangzhouvotes.push(votes[i]);
 						benzhouvotes.push(votes[i+7]);
 					};
@@ -192,21 +256,19 @@
 				});
 				//1-2关
 				url = '/pentaho/dailyPaper/getMoneySevenTread';
-				param={dateTime:'2020-01-03',
-							regionId:'',
-							token:token};
+				param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.data;	
+					var datas =res.data.data;	
 					/* 
 					 前7个是上一周 后七个是这一周
 					 */
-					var votes=data.votes;
+					var votes=datas.votes;
 					
 					var series =[];
 					var shangzhouvotes=[];
 					var benzhouvotes=[];
-					for(var i=0;i<data.length/2;i++){
+					for(var i=0;i<votes.length/2;i++){
 						shangzhouvotes.push(votes[i]);
 						benzhouvotes.push(votes[i+7]);
 					};
@@ -235,29 +297,25 @@
 				var token =getApp().globalData.token;
 				//返奖率
 				var url = '/pentaho/dailyPaper/getReturnRateSevenTread';
-				var param={dateTime:'2020-01-03',
-							regionId:'',
-							token:token};
+				var param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.data;	
+					var datas =res.data.data;	
 					/* 
 					 前7个是上一周 后七个是这一周
 					 */
 					var votes;
 					if(e=='1'){
-						votes=data.ALL;
+						votes=datas.ALL;
 					}else if(e=='2'){
-						votes=data.FB;
+						votes=datas.FB;
 					}else if(e=='3'){
-						votes=data.BK;
+						votes=datas.BK;
 					}
-					var votes=data.votes;
-					
 					var series =[];
 					var shangzhouvotes=[];
 					var benzhouvotes=[];
-					for(var i=0;i<data.length/2;i++){
+					for(var i=0;i<votes.length/2;i++){
 						shangzhouvotes.push(votes[i]);
 						benzhouvotes.push(votes[i+7]);
 					};
@@ -276,6 +334,7 @@
 			}
 		},
 		mounted() {
+			this.returnFromDatePicker();
 			this.loadData();
 		},
 		onPageScroll(e) {

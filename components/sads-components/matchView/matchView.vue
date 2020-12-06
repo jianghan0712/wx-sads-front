@@ -105,7 +105,19 @@
 					}
 				],	
 				matchEventTableData: [],
-				matchEventTableColumns: [],	
+				matchEventTableColumns: [{
+						title: "排名",
+						key: "id",
+						$width:"50px",
+					},{
+						title: '赛制',
+						key: 'matchType',
+						$width:"200px"
+					},{
+						title: '销量（百万元）',
+						key: 'amount'
+					}
+				],	
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
 			};
 		},
@@ -202,10 +214,11 @@
 						},{
 							title: '赛制',
 							key: 'matchType',
-							$width:"200px"
+							$width:"150px"
 						},{
 							title: '销量（'+format0.name + '元）',
-							key: 'amount'
+							key: 'amount',
+							$width:"100px"
 						}
 					]
 					
@@ -220,6 +233,7 @@
 					console.log('request matchTypeTableData', this.matchTypeTableData);				
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
+					alert(1)
 					this.loading = false;
 					console.log('request fail', err);
 				})
@@ -260,10 +274,11 @@
 						},{
 							title: '赛事',
 							key: 'matchName',
-							$width:"200px"
+							$width:"150px"
 						},{
 							title: '销量（' + format0.name + '元）',
-							key: 'amount'
+							key: 'amount',
+							$width:"100px"
 						}
 					];
 					

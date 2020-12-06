@@ -95,12 +95,31 @@
 				},
 				btnnum: 0,
 				ticketData:{},
-				pieData: {series: []},
+				pieData: {series: [{name:'1',data:1}]},
 				pieData1: {series: []},
 				pieData2: {series: []},
 				tableData: [],
 				tableDataAll: [],
-				tableColumns: [],	
+				tableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '省份',
+							key: 'area',
+							$width:"80px"
+						},{
+							title: '竞彩（元）',
+							key: 'jingcai',
+							$width:"80px"
+						},{
+							title: '足球（元）',
+							key: 'football',
+							$width:"85px"
+						},{
+							title: '篮球（元）',
+							key: 'basketball'
+						}],	
 			}
 		},
 		onLoad() {		
@@ -208,6 +227,7 @@
 				}else if(type=='篮彩'){
 					param.gameFlag = 2
 				}
+				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -223,14 +243,14 @@
 						list[i]={name:data[i].proValueName,data:data[i].values[0]};
 					}
 					if(type=='竞彩'){
-						this.$set(this.pieData, 'series', list);
+						that.$set(that.pieData, 'series', list);
 					}else if(type=='足彩'){
-						this.$set(this.pieData1, 'series', list);
+						that.$set(that.pieData1, 'series', list);
 					}else if(type=='篮彩'){
-						this.$set(this.pieData2, 'series', list);
+						that.$set(that.pieData2, 'series', list);
 					}
 
-					this.res = '请求结果 : ' + JSON.stringify(res);
+					that.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);

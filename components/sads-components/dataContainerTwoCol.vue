@@ -3,24 +3,24 @@
 		<view class="row-box">
 			<view class="left-column_box_2">
 				<view class="column-box">
-					<text class="big-text">销量（百万元）</text>
-					<text class="big-text">14.02</text>
+					<text class="big-text">{{dataList.left.title1}}</text>
+					<text class="big-text">{{dataList.left.amount1}}</text>
 				</view>
 				<view class="column-box">
-					<text class="big-text">票数（万张）</text>
-					<text class="big-text">17.84</text>
+					<text class="big-text">{{dataList.left.title2}}</text>
+					<text class="big-text">{{dataList.left.amount2}}</text>
 				</view>
 			</view>			
 		</view>
 		<view class="row-box">
 			<view class="right-column_box_2">
 				<view class="column-box">
-					<text class="big-text">销量（百万元）</text>
-					<text class="big-text">20.06</text>
+					<text class="big-text">{{dataList.right.title1}}</text>
+					<text class="big-text">{{dataList.right.amount1}}</text>
 				</view>
 				<view class="column-box">
-					<text class="big-text">票数（万张）</text>
-					<text class="big-text">200.84</text>
+					<text class="big-text">{{dataList.right.title2}}</text>
+					<text class="big-text">{{dataList.right.amount2}}</text>
 				</view>
 			</view>			
 		</view>
@@ -38,14 +38,21 @@
 		},
 		data() {
 			return {
-				dataList:{}
+				dataList:{
+					left:{title1:'',amount1:0,title2:'',amount2:0},
+					right:{title1:'',amount1:0,title2:'',amount2:0}
+				}
 			}
+		},
+		created(){
+			// this.dataList = this.dataAs;
+			// console.log("col showDataContainer:", this.dataAs);
 		},
 		methods: {
 			showDataContainer() {			
 				this.dataList = this.dataAs;
 				// var str = JSON.stringify(this.dataAs);
-				console.log("showDataContainer:", this.dataAs);
+				console.log("col showDataContainer:", this.dataAs);
 			},
 		},
 	}

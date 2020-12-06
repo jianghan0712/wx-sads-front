@@ -114,12 +114,39 @@
 		},
 		data() {
 			return {
+				selfParam:{
+					token:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
 				showModel:{},
 				 btnnum: 0,
 				 index: 0,
 				 arcbarNumTop:'周同比',
-				 pagedata:[1,2,3,4,1,2,3,4,1,2,3],
-				 pagedatacompare:[3,5,7,9,3,5,7,9,3,5,7],
+				 pagedata:[0,0,0,0,0,0,0,0,0,0,0],
+				 pagedatacompare:[0,0,0,0,0,0,0,0,0,0,0],
 				 backTop: {
 				 	src: '../../static/top.png',
 				 	scrollTop: 0
@@ -128,6 +155,47 @@
 				 }
 		},
 		methods: {
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token=uni.getStorageSync("token");
+			},
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.businessDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTime: this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTime: this.selfParam.businessDate.week.startDate,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTime: this.selfParam.businessDate.month.startDate,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTime: this.selfParam.businessDate.year.startDate,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
+			},
 			changeTop(e){
 				this.arcbarNumTop = e;;
 				this.loadData();
@@ -139,14 +207,17 @@
 					var that=this;
 					//日销量 
 					var url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					var param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					var param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;	
-						this.$set(that.pagedata,0,data[1]);
-						this.$set(that.pagedatacompare,0,data[2]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,0,0);
+							this.$set(that.pagedatacompare,0,0);
+						}else{
+							this.$set(that.pagedata,0,data[1]);
+							this.$set(that.pagedatacompare,0,data[2]);
+						}
 						
 					}).catch((err)=>{
 						this.loading = false;
@@ -154,14 +225,18 @@
 					});
 					//日票数
 					url = '/pentaho/dailyPaper/getVotesAndComRanking';
-					param={dateTime:'2020-11-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;		
-						this.$set(that.pagedata,1,data[1]);
-						this.$set(that.pagedatacompare,1,data[2]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,1,0);
+							this.$set(that.pagedatacompare,1,0);
+						}else{
+							this.$set(that.pagedata,1,data[1]);
+							this.$set(that.pagedatacompare,1,data[2]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -169,16 +244,21 @@
 					
 					//有销量门店
 					url = '/pentaho/dailyPaper/getShowCountRanking';
-					param={dateTime:'2020-11-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;		
-						this.$set(that.pagedata,2,data[1]);
-						this.$set(that.pagedatacompare,2,0);
-						this.$set(that.pagedata,8,data[2]);
-						this.$set(that.pagedatacompare,8,0);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,2,0);
+							this.$set(that.pagedatacompare,2,0);
+							this.$set(that.pagedata,8,0);
+							this.$set(that.pagedatacompare,8,0);
+						}else{
+							this.$set(that.pagedata,2,data[1]);
+							this.$set(that.pagedatacompare,2,0);
+							this.$set(that.pagedata,8,data[2]);
+							this.$set(that.pagedatacompare,8,0);
+						}		
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -186,28 +266,36 @@
 					
 					//足球日销量
 					url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;		
-						this.$set(that.pagedata,3,data[1]);
-						this.$set(that.pagedatacompare,3,data[2]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,3,0);
+							this.$set(that.pagedatacompare,3,0);
+						}else{
+							this.$set(that.pagedata,3,data[1]);
+							this.$set(that.pagedatacompare,3,data[2]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//篮球日销量
 					url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;		
-						this.$set(that.pagedata,4,data[1]);
-						this.$set(that.pagedatacompare,4,data[2]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,4,0);
+							this.$set(that.pagedatacompare,4,0);
+						}else{
+							this.$set(that.pagedata,4,data[1]);
+							this.$set(that.pagedatacompare,4,data[2]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -215,14 +303,18 @@
 					
 					//1-2关次销量
 					url = '/pentaho/dailyPaper/getTwoPassSales';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;	
-						this.$set(that.pagedata,5,data[0]);
-						this.$set(that.pagedatacompare,5,data[1]);
+						if(data.length==0){
+							this.$set(that.pagedata,5,0);
+							this.$set(that.pagedatacompare,5,0);
+						}else{
+							this.$set(that.pagedata,5,data[0]);
+							this.$set(that.pagedatacompare,5,data[1]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -230,28 +322,36 @@
 					
 					//单票金额
 					url = '/pentaho/dailyPaper/getSingleVoteAmount';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;		
-						this.$set(that.pagedata,6,data[0]);
-						this.$set(that.pagedatacompare,6,data[1]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,6,0);
+							this.$set(that.pagedatacompare,6,0);
+						}else{
+							this.$set(that.pagedata,6,data[0]);
+							this.$set(that.pagedatacompare,6,data[1]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//返奖率
 					url = '/pentaho/dailyPaper/getReturnRateRanking';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;	
-						this.$set(that.pagedata,7,data[0][1]);
-						this.$set(that.pagedatacompare,7,0);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,7,0);
+							this.$set(that.pagedatacompare,7,0);
+						}else{
+							this.$set(that.pagedata,7,data[0][1]);
+							this.$set(that.pagedatacompare,7,0);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -259,28 +359,35 @@
 					
 					//本月累计销量
 					url = '/pentaho/dailyPaper/getOnMonthSales';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;	
-						this.$set(that.pagedata,9,data[0]);
-						this.$set(that.pagedatacompare,9,data[1]);
+						if(data.length==0){
+							this.$set(that.pagedata,9,0);
+							this.$set(that.pagedatacompare,9,0);
+						}else{
+							this.$set(that.pagedata,9,data[0]);
+							this.$set(that.pagedatacompare,9,data[1]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//本年累计销量
 					url = '/pentaho/dailyPaper/getOnYearSales';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;	
-						this.$set(that.pagedata,10,data[0]);
-						this.$set(that.pagedatacompare,10,data[1]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,10,0);
+							this.$set(that.pagedatacompare,10,0);
+						}else{
+							this.$set(that.pagedata,10,data[0]);
+							this.$set(that.pagedatacompare,10,data[1]);
+						}
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -292,14 +399,17 @@
 					var that=this;
 					//日销量 
 					var url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					var param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					var param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;		
-						this.$set(that.pagedata,0,data[1]);
-						this.$set(that.pagedatacompare,0,data[2]);
+						var data =res.data.data;	
+						if(data.length==0){
+							this.$set(that.pagedata,0,0);
+							this.$set(that.pagedatacompare,0,0);
+						}else{
+							this.$set(that.pagedata,0,data[1]);
+							this.$set(that.pagedatacompare,0,data[2]);
+						}
 						
 					}).catch((err)=>{
 						this.loading = false;
@@ -307,14 +417,19 @@
 					});
 					//日票数
 					url = '/pentaho/dailyPaper/getVotesAndComRanking';
-					param={dateTime:'2020-11-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;	
-						this.$set(that.pagedata,1,data[1]);
-						this.$set(that.pagedatacompare,1,data[2]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,1,0);
+							this.$set(that.pagedatacompare,1,0);
+						}else{
+							this.$set(that.pagedata,1,data[1]);
+							this.$set(that.pagedatacompare,1,data[2]);
+						}
+							
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -322,16 +437,23 @@
 					
 					//有销量门店
 					url = '/pentaho/dailyPaper/getShowCountRanking';
-					param={dateTime:'2020-11-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;		
-						this.$set(that.pagedata,2,data[1]);
-						this.$set(that.pagedatacompare,2,0);
-						this.$set(that.pagedata,8,data[2]);
-						this.$set(that.pagedatacompare,8,0);
+						var data =res.data.data;	
+						if(data.length==0){
+							this.$set(that.pagedata,2,0);
+							this.$set(that.pagedatacompare,2,0);
+							this.$set(that.pagedata,8,0);
+							this.$set(that.pagedatacompare,8,0);
+						}else{
+							this.$set(that.pagedata,2,data[1]);
+							this.$set(that.pagedatacompare,2,0);
+							this.$set(that.pagedata,8,data[2]);
+							this.$set(that.pagedatacompare,8,0);
+						}
+							
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -339,28 +461,36 @@
 					
 					//足球日销量
 					url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;	
-						this.$set(that.pagedata,3,data[1]);
-						this.$set(that.pagedatacompare,3,data[2]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,3,0);
+							this.$set(that.pagedatacompare,3,0);
+						}else{
+							this.$set(that.pagedata,3,data[1]);
+							this.$set(that.pagedatacompare,3,data[2]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//篮球日销量
 					url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;		
-						this.$set(that.pagedata,4,data[1]);
-						this.$set(that.pagedatacompare,4,data[2]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,4,0);
+							this.$set(that.pagedatacompare,4,0);
+						}else{
+							this.$set(that.pagedata,4,data[1]);
+							this.$set(that.pagedatacompare,4,data[2]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -368,70 +498,92 @@
 					
 					//1-2关次销量
 					url = '/pentaho/dailyPaper/getTwoPassSales';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;	
-						this.$set(that.pagedata,5,data[0]);
-						this.$set(that.pagedatacompare,5,data[2]);
+						if(data.length==0){
+							this.$set(that.pagedata,5,0);
+							this.$set(that.pagedatacompare,5,0);
+						}else{
+							this.$set(that.pagedata,5,data[0]);
+							this.$set(that.pagedatacompare,5,data[2]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//单票金额
 					url = '/pentaho/dailyPaper/getSingleVoteAmount';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;	
-						this.$set(that.pagedata,6,data[0]);
-						this.$set(that.pagedatacompare,6,data[1]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,6,0);
+							this.$set(that.pagedatacompare,6,0);
+						}else{
+							this.$set(that.pagedata,6,data[0]);
+							this.$set(that.pagedatacompare,6,data[1]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//返奖率
 					url = '/pentaho/dailyPaper/getReturnRateRanking';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;	
-						this.$set(that.pagedata,7,data[0][1]);
-						this.$set(that.pagedatacompare,7,0);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,7,0);
+							this.$set(that.pagedatacompare,7,0);
+						}else{
+							this.$set(that.pagedata,7,0);
+							this.$set(that.pagedatacompare,7,0);
+						}
+							
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//本月累计销量
 					url = '/pentaho/dailyPaper/getOnMonthSales';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;	
-						this.$set(that.pagedata,9,data[0]);
-						this.$set(that.pagedatacompare,9,data[2]);
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,9,0);
+							this.$set(that.pagedatacompare,9,0);
+						}else{
+							this.$set(that.pagedata,9,data[0]);
+							this.$set(that.pagedatacompare,9,data[2]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
 					//本年累计销量
 					url = '/pentaho/dailyPaper/getOnYearSales';
-					param={dateTime:'2020-01-03',
-								regionId:'',
-								token:token};
+					param=this.createParam();
+					param=this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;	
-						this.$set(that.pagedata,10,data[0]);
-						this.$set(that.pagedatacompare,10,data[2]);
+						if(data.length==0){
+							this.$set(that.pagedata,10,0);
+							this.$set(that.pagedatacompare,10,0);
+						}else{
+							this.$set(that.pagedata,10,data[0]);
+							this.$set(that.pagedatacompare,10,data[2]);
+						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -444,6 +596,7 @@
 			
 		},
 		created() {
+			this.returnFromDatePicker();
 			this.loadData();
 		},
 		onPageScroll(e) {
