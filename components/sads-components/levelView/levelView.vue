@@ -159,6 +159,8 @@
 		    change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
+				this.getServerData();
+				this.showView();
 		    },
 			bindPickerChange(e) {
 				console.log('picker发送选择改变，携带值为：' + this.array[e.detail.value].name)
@@ -170,11 +172,11 @@
 				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/levelRingDetail?btnnum="+ JSON.stringify(btnnum) + "&data=" + JSON.stringify(this.pieData)
 					});
 				}else{
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/levelRingDetail?btnnum="+ JSON.stringify(btnnum) + "&data=" + JSON.stringify(this.pieData1)
 					});
 				}
 			},
@@ -220,6 +222,7 @@
 			getPieDate(type){
 				var url = '/pentaho/sales/getCheckpointSalesProp';
 				var param = this.createParam()
+				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -233,20 +236,23 @@
 					var series = []
 					for(var i=0;i<data.length;i++){	
 						var jsonData = {}
-						this.levelList = data[i].customsName						
+						that.levelList = data[i].customsName						
 						jsonData.name=data[i].customsName;
 						jsonData.data=data[i].values[0];
 						series[i]=jsonData					
 					}
 					
 					if(type=='足球'){
-						this.pieData.series=series
+						that.pieData.series=series
+						this.$refs['levelRingChart0'].showCharts();
+						
 					}else if(type=='篮球'){
-						this.pieData1.series=series
+						that.pieData1.series=series
+						this.$refs['levelRingChart1'].showCharts();
 					}
 					
-					console.log('request getTodSalesAmount', this.pieData);				
-					this.res = '请求结果 : ' + JSON.stringify(res);
+					console.log('request getTodSalesAmount', that.pieData);				
+					that.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
@@ -255,7 +261,7 @@
 			getTableDate(btnnum, passName){
 				var url = '/pentaho/sales/checkpointSalesRanking';
 				var param = this.createParam()
-
+				var that =this;
 				param.passName=passName;
 				urlAPI.getRequest(url, param).then((res)=>{	
 					this.loading = false;
@@ -276,9 +282,9 @@
 						jsonData.amount=data[i][2];
 						series[i]=jsonData					
 					}
-					this.tableData = series
+					that.tableData = series
 					
-					console.log('request checkpointSalesRanking', this.tableData);				
+					console.log('request checkpointSalesRanking', that.tableData);				
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -293,6 +299,7 @@
 		},
 		mounted(){
 			this.selfParam=this.param
+			this.getServerData();
 			this.showView();
 		},
 		watch: {

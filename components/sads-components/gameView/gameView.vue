@@ -312,7 +312,7 @@
 									name:'环比',
 									value:fb[2]
 								}}
-							this.$set(this.totalData,'big1',index0);
+							this.$set(that.totalData,'big1',index0);
 							let index1={
 								name:ballType+'票数（万张）',
 								value:fb[3],
@@ -324,7 +324,7 @@
 									name:'环比',
 									value:fb[5]
 								}}
-							this.$set(this.totalData,'big2',index1);
+							this.$set(that.totalData,'big2',index1);
 						}else{
 							let index0={
 								name:ballType+'销量（百万元）',
@@ -337,7 +337,7 @@
 									name:'环比',
 									value:bk[2]
 								}}
-							this.$set(this.totalData,'big1',index0);
+							this.$set(that.totalData,'big1',index0);
 							let index1={
 								name:ballType+'票数（万张）',
 								value:bk[3],
@@ -349,7 +349,7 @@
 									name:'环比',
 									value:bk[5]
 								}}
-							this.$set(this.totalData,'big2',index1);
+							this.$set(that.totalData,'big2',index1);
 						}
 						this.$refs['dataContain'].showDataContainer();
 						

@@ -6,8 +6,8 @@
 			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
 		</view>	 
 		<view class="input">
-			<input class="uni-input" type="number"  placeholder="请输入门店或终端编号" />
-			<view style="color: #007AFF">搜索</view>
+			<input id='num' class="uni-input" @input="onKeyInput" placeholder="请输入门店或终端编号" />
+			<view style="color: #007AFF" @click="resetData()">搜索</view>
 		</view>
 		
 		<view class="box-contaniner">
@@ -54,35 +54,46 @@
 	
 	export default {
 			components:{
-				dateSelector,dataContainer, vTable
+				dateSelector,dataContainer, vTable,uniSection
 			},
 			data() {
 				return {
-					selfParam:{
-						token:'',
-						provinceCenterId:'',
-						provinceCenterName:'',
-						businessDate:{
-							view:'',
-							date:{startDate:'', endDate:''},
-							week:{startDate:'', endDate:''},
-							month:{startDate:'', endDate:''},
-							year:{startDate:'', endDate:''},
-						},					
-						startDate:'',
-						endDate:'',
-						cityCenterId:'',
-						userId:'',
-						countyCenterId:'',
-						dateType:'date',
-						compareType:'date',
-						compareOne:'',
-						compareTwo:'',
-						selfProvinceCenterId:''
+				selfParam:{
+					token:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
 					},
+					compareDate:{
+						dateType:'date',
+						viewLeft:'',//用于展示日期、年、月等
+						viewRight:'',
+						dateLeft:{startDate:'', endDate:''},
+						dateRight:{startDate:'', endDate:''},
+						weekLeft:{startDate:'', endDate:''},
+						weekRight:{startDate:'', endDate:''},
+						monthLeft:{startDate:'', endDate:''},
+						monthRight:{startDate:'', endDate:''},
+						yearLeft:{startDate:'', endDate:''},
+						yearRight:{startDate:'', endDate:''},
+					},		
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
 					areaMap:{},
 					isFirstLoad:true,
-					totalData:{},	
+					totalData:{},
+					num:'',
 					areaIdList:{},
 					amountTableData: [],
 					amountTableDataDetail:[],
@@ -135,7 +146,8 @@
 				console.log("sales-self-onLoad:totalData=",this.totalData)
 			},
 			created(){
-				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				/* this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				console.log(this.selfParam) */
 				this.areaMap = JSON.parse(uni.getStorageSync("areaMap"))
 				this.getServerData();
 				this.showView()
@@ -152,11 +164,15 @@
 					this.getTopHundredShows();
 					this.getTransfiniteShows();
 				},
+				onKeyInput(event){
+					this.num=event.target.value;
+				},
 				getStoreSituation(){	
 					var url = '/pentaho/sales/getStoreSituation';
 					var param = this.createParam()
+					var that = this;
 					urlAPI.getRequest(url, param).then((res)=>{
-						this.loading = false;
+						that.loading = false;
 						console.log('request success', res)
 						uni.showToast({
 							title: '请求成功',
@@ -167,17 +183,19 @@
 						var left1 = {'name':'周同比','value':data[1] + '%'};
 						var right1 = {'name':'环比','value':data[2] + '%'};
 						var big1 = {name:'在售门店数',value:data[0], left:left1, right:right1}
-						this.$set(this.totalData, 'big1', big1);
-						this.res = '请求结果 : ' + JSON.stringify(res);
+						that.$set(that.totalData, 'big1', big1);
+						that.$refs['dataContain'].showDataContainer();
+						
+						that.res = '请求结果 : ' + JSON.stringify(res);
 					}).catch((err)=>{
-						this.loading = false;
+						that.loading = false;
 						console.log('request fail', err);
 					});
 					
 					var url = '/pentaho/sales/getStoreSalesrate';
-					var param = this.createParam()
+					var param = that.createParam()
 					urlAPI.getRequest(url, param).then((res)=>{
-						this.loading = false;
+						that.loading = false;
 						console.log('request success', res)
 						uni.showToast({
 							title: '请求成功',
@@ -189,17 +207,19 @@
 						var right2 = {'name':'环比','value':data[2] + '%'};
 						var big2 = {name:'在售率',value:data[0], left:left2, right:right2}
 						
-						this.$set(this.totalData, 'big2', big2);
+						that.$set(that.totalData, 'big2', big2);
+						that.$refs['dataContain'].showDataContainer();
 						
 					}).catch((err)=>{
-						this.loading = false;
+						that.loading = false;
 						console.log('request fail', err);
 					});
-					this.res = 'channel请求结果 : ' + JSON.stringify(this.totalData);
+					that.res = 'channel请求结果 : ' + JSON.stringify(that.totalData);
 				},
 				getTopHundredShows(){
 					var url = '/pentaho/channel/getTopHundredShows';
 					var param = this.createParam()
+					var that =this;
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						console.log('request success', res)
@@ -215,23 +235,24 @@
 										number:data[i][2], 
 										amount:data[i][3]}						
 							if(i<=4){
-								this.amountTableData[i] = json
+								that.amountTableData[i] = json
 							}
-							this.amountTableDataDetail[i] = json
+							that.amountTableDataDetail[i] = json
 						}
 								
-						this.res = '请求结果 : ' + JSON.stringify(res);
-						console.log(this.amountTableData)
+						that.res = '请求结果 : ' + JSON.stringify(res);
+						console.log(that.amountTableData)
 					}).catch((err)=>{
-						this.loading = false;
+						that.loading = false;
 						console.log('request fail', err);
 					});
 				},
 				getTransfiniteShows(){
 					var url = '/pentaho/channel/getTransfiniteShows';
 					var param = this.createParam()
+					var that =this ;
 					urlAPI.getRequest(url, param).then((res)=>{
-						this.loading = false;
+						that.loading = false;
 						console.log('request success', res)
 						uni.showToast({
 							title: '请求成功',
@@ -246,16 +267,16 @@
 										change:data[i][3]}	
 							var areaId={id:data[i][0],name:data[i][1]}
 							if(i<=4){
-								this.beyondLimitTableData[i] = json
+								that.beyondLimitTableData[i] = json
 							}
-							this.beyondLimitTableDataDetail[i] = json
-							this.areaIdList[i]=areaId
+							that.beyondLimitTableDataDetail[i] = json
+							that.areaIdList[i]=areaId
 						}
 								
-						this.res = '请求结果 : ' + JSON.stringify(res);
-						console.log(this.beyondLimitTableData)
+						that.res = '请求结果 : ' + JSON.stringify(res);
+						console.log(that.beyondLimitTableData)
 					}).catch((err)=>{
-						this.loading = false;
+						that.loading = false;
 						console.log('request fail', err);
 					});
 				},
@@ -269,7 +290,8 @@
 					const areaName = uni.getStorageSync("areaName")
 					console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 					this.selfParam.provinceCenterId=area
-					this.selfParam.provinceCenterName=areaName			
+					this.selfParam.provinceCenterName=areaName	
+					this.selfParam.token=uni.getStorageSync("token")
 				},
 				goArea(){
 					uni.navigateTo({
@@ -278,6 +300,7 @@
 				},
 				goDetail(number){
 					console.log(number)
+					uni.setStorageSync("shopNo", number)
 					uni.navigateTo({
 						url:"/pages/channel/index-inner?number="+number
 					});
@@ -289,29 +312,29 @@
 				},
 				createParam(){
 					console.log("createParam begin")
-					var dateType = this.selfParam.dateType
+					var dateType = this.selfParam.businessDate.dateType
 					var param = {}
 					if(dateType=='date'){
 						param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
-								 dateTimeEnd: this.selfParam.businessDate.date.dateTimeEnd,
+								 dateTimeEnd: this.selfParam.businessDate.date.endDate,
 								 dateFlag:"1",
 								 regionId:this.selfParam.provinceCenterId,
 								 token:this.selfParam.token }
 					}else if(dateType=='week'){
 						param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
-								 dateTimeEnd: this.selfParam.businessDate.week.dateTimeEnd,
+								 dateTimeEnd: this.selfParam.businessDate.week.endDate,
 								 dateFlag:"2",
 								 regionId:this.selfParam.provinceCenterId,
 								 token:this.selfParam.token }
 					}else if(dateType=='month'){
 						param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
-								 dateTimeEnd: this.selfParam.businessDate.month.dateTimeEnd,
+								 dateTimeEnd: this.selfParam.businessDate.month.endDate,
 								 dateFlag:"3",
 								 regionId:this.selfParam.provinceCenterId,
 								 token:this.selfParam.token }
 					}else if(dateType=='year'){
 						param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
-								 dateTimeEnd: this.selfParam.businessDate.year.dateTimeEnd,
+								 dateTimeEnd: this.selfParam.businessDate.year.endDate,
 								 dateFlag:"4",
 								 regionId:this.selfParam.provinceCenterId,
 								 token:this.selfParam.token }
@@ -321,9 +344,7 @@
 				},
 				showView(){
 					// commonFun.sleep(2000)
-					this.$nextTick(() => {				
-						this.$refs['dataContain'].showDataContainer();
-					});
+					this.$refs['dataContain'].showDataContainer();
 				},
 				goLimitShopDetail(tableData, tableColumns){
 					uni.navigateTo({
@@ -342,6 +363,10 @@
 				goLimitDetail(){
 					var areaId = 
 					this.areaMap  
+				},
+				resetData(){
+					//根据门店编号跳转
+					this.goDetail(this.num)
 				}
 			},
 			mounted(){

@@ -38,21 +38,15 @@
 		},
 		data() {
 			return {
-				dataList:{
-					left:{title1:'',amount1:0,title2:'',amount2:0},
-					right:{title1:'',amount1:0,title2:'',amount2:0}
-				}
+				hackReset : false,
+				dataList:{}
 			}
-		},
-		created(){
-			// this.dataList = this.dataAs;
-			// console.log("col showDataContainer:", this.dataAs);
 		},
 		methods: {
 			showDataContainer() {			
 				this.dataList = this.dataAs;
 				// var str = JSON.stringify(this.dataAs);
-				console.log("col showDataContainer dataAs:", this.dataAs);
+				console.log("col showDataContainer data:", this.dataAs);
 				console.log("col showDataContainer dataList:", this.dataList);
 			},
 		},

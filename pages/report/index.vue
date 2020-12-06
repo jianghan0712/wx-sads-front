@@ -133,7 +133,6 @@
 			returnFromDatePicker(){
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
-				alert(bussinessDate);
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 				const area = uni.getStorageSync("area")

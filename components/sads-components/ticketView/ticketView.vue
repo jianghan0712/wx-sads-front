@@ -95,7 +95,7 @@
 				},
 				btnnum: 0,
 				ticketData:{},
-				pieData: {series: [{name:'1',data:1}]},
+				pieData: {series: []},
 				pieData1: {series: []},
 				pieData2: {series: []},
 				tableData: [],
@@ -134,12 +134,10 @@
 			showView(){
 				console.log("ticket showView" ,this.pieData);
 				commonFun.sleep(3000)
-				this.$nextTick(() => {
-					this.$refs['ticketData'].showDataContainer();		
-					this.$refs['ringChart0'].showCharts();
-					this.$refs['ringChart1'].showCharts();
-					this.$refs['ringChart2'].showCharts();
-				});
+				this.$refs['ticketData'].showDataContainer();		
+				this.$refs['ringChart0'].showCharts();
+				this.$refs['ringChart1'].showCharts();
+				this.$refs['ringChart2'].showCharts();
 			},
 			getServerData() {
 				this.getDataSet(this.selfParam.provinceCenterId,this.selfParam.businessDate,this.selfParam.cityCenterId);
@@ -147,10 +145,17 @@
 				this.getPieData('足彩');
 				this.getPieData('篮彩');
 				this.getRankTable(this.selfParam.provinceCenterId,this.selfParam.businessDate);
+				this.$refs['ticketData'].showDataContainer();
 			},
 			change(e) {
 			    this.btnnum = e;
-			    console.log(this.btnnum);
+				if(0==e){
+				this.getPieData('竞彩');
+				}else if(1==e){
+					this.getPieData('足彩');
+				}else if(2==e){
+					this.getPieData('篮彩');
+				}
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -244,12 +249,17 @@
 					}
 					if(type=='竞彩'){
 						that.$set(that.pieData, 'series', list);
+						this.$refs['ringChart0'].showCharts();
+						
 					}else if(type=='足彩'){
 						that.$set(that.pieData1, 'series', list);
+						this.$refs['ringChart1'].showCharts();
+						
 					}else if(type=='篮彩'){
 						that.$set(that.pieData2, 'series', list);
+						this.$refs['ringChart2'].showCharts();
+						
 					}
-
 					that.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -322,15 +332,15 @@
 			gotoLunBo(btnnum){
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/ticketRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
 					});
 				}else if(btnnum==1){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/ticketRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
 					});
 				}else if(btnnum==2){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData2)
+						url:"/pages/common/ticketRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData2)
 					});
 				}
 			},

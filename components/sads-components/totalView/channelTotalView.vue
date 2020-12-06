@@ -35,8 +35,8 @@
 			</view>
 			<view class="shop-item-content">
 				<view style="width: 400rpx;">{{shopData.shop.sum}}</view>
-				<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(shopData.shop.tongbi)}}</view>
-				<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(shopData.shop.huanbi)}}</view>
+				<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{shopData.shop.tongbi}}名</view>
+				<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.shop.huanbi}}名</view>
 			</view>
 			<view class="shop-item-title">
 				<view style="width: 400rpx;">省内排名</view>				
@@ -45,8 +45,8 @@
 			</view>
 			<view class="shop-item-content">
 				<view style="width: 400rpx;">{{valueToPercent2(shopData.rate.sum)}}</view>				
-				<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(shopData.rate.tongbi)}}</view>
-				<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(shopData.rate.huanbi)}}</view>
+				<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{shopData.rate.tongbi}}名</view>
+				<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi}}名</view>
 			</view>
 		</view>		
 		
@@ -152,7 +152,7 @@
 		},
 		data() {
 			return {			
-				param:{},
+				selfParam:{},
 				totalData:{},	
 				footballData:{},	
 				basketballData:{},	
@@ -297,49 +297,90 @@
 		methods: {
 			showView(){
 				this.$nextTick(() => {				
-					this.$refs['arcbar0'].showCharts();
-					this.$refs['arcbar1'].showCharts();
+					// this.$refs['arcbar0'].showCharts();
+					// this.$refs['arcbar1'].showCharts();
 					this.$refs['lineData2'].showCharts();
 					this.$refs['lineData1'].showCharts();
 					this.$refs['dataContain'].showDataContainer();
-					this.$refs['dataContain2'].showDataContainer();
-					this.$refs['dataContain3'].showDataContainer();
+					// this.$refs['dataContain2'].showDataContainer();
+					// this.$refs['dataContain3'].showDataContainer();
 				});
 			},
-			// 获取最上层的两个tab
-			getDataSet(provinceCenterId, businessDate){
-				var url = 'mobile/sales/getSalesToday/' + provinceCenterId+'/' + businessDate;
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.businessDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.date.endDate,
+							 dateFlag:"1",
+							 showNumber:this.selfParam.shopNo,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.week.endDate,
+							 dateFlag:"2",
+							 showNumber:this.selfParam.shopNo,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.month.endDate,
+							 dateFlag:"3",
+							 showNumber:this.selfParam.shopNo,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.year.endDate,
+							 dateFlag:"4",
+							 showNumber:this.selfParam.shopNo,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
+			},
+			getDataSet(){
+				var url = '/pentaho/shows/getShowSalesAndVotes';
+				var param = this.createParam()
 				
-				urlAPI.getRequest(url, null).then((res)=>{
-					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
-					var data = res.data.concreteBean;
-					var format0 = numberFun.formatCNumber(data[0]);
-					var format1 = numberFun.formatCNumber(data[1]);
-					
-					var left1 = {'name':'周同比','value':'-71.98%'};
-					var right1 = {'name':'环比','value':'-31.11%'};
-					var big1 = {'name':'销量（'+format0.name +'元）', 'value':data[0]/format0.value, 'left': left1,'right':right1};
-					var big2 = {'name':'票数（'+format1.name +'张）','value':data[1]/format1.value, 'left':{'name':'周同比','value':'-70.56%'},'right':{'name':'环比','value':'-28.88%'}};
-				
-					this.$set(this.totalData, 'big1', big1);
-					this.$set(this.totalData, 'big2', big2);
-					console.log('request totalData', this.totalData);
-					
-					this.res = '请求结果 : ' + JSON.stringify(res);
-				}).catch((err)=>{
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						uni.showToast({
+							title: '请求成功',
+							icon: 'success',
+							mask: true
+						});
+						var data = res.data.data;
+						var amount = data[0]
+						var saleNumber = data[1]
+						
+						console.log("amount=",amount,"saleNumber=",saleNumber)
+						var format0 = numberFun.formatCNumber(amount[0]);
+						var format1 = numberFun.formatCNumber(saleNumber[0]);
+						console.log("format0=",format0,"format1=",format1)
+						var left1 = {'name':'周同比','value':amount[1] + '%'};
+						var right1 = {'name':'环比','value':amount[2] + '%'};
+						var big1 = {'name':'销量（'+format0.name +'元）', 'value':amount[0]/format0.value, 'left': left1,'right':right1};
+						
+						var left2 = {'name':'周同比','value':saleNumber[1] + '%'};
+						var right2 = {'name':'环比','value':saleNumber[2] + '%'};
+						var big2 = {'name':'票数（'+format1.name +'张）','value':saleNumber[0]/format1.value, 'left':left2,'right':right2};
+												
+						this.$set(this.totalData, 'big1', big1);
+						this.$set(this.totalData, 'big2', big2);
+						console.log('request totalData', this.totalData);
+												
+						this.res = '请求结果 : ' + JSON.stringify(res);
+											
+					}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-				})
+				});
 			},
-			getLinesData(provinceCenterId, businessDate){
-				var url = 'mobile/sales/getSalesTodayByHour/' + provinceCenterId+'/' + businessDate;
-				urlAPI.getRequest(url, null).then((res)=>{
+			getLinesData(){
+				var url = '/pentaho/shows/showSalesVotesTrendChart';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -347,23 +388,27 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;					
+					var data = res.data.data;	
+					var sales = data.sales
+					var dates = data.dates
+					var votes = data.votes
+					
 					var categories=[];
 					var series=[];
 					var amountData = [];
 					var volData = [];
 					var j=0,k = 0,tempAmount=0,tempVol=0;
 					
-					for(var i=0;i<data.length;i++){	
+					for(var i=0;i<dates.length;i++){	
 						if(j==3){
-							categories[k] = data[i][0];
-							amountData[k] = data[i][1]/1000000;
-							volData[k] = data[i][2]/10000;
+							categories[k] = dates[i];
+							amountData[k] = sales[i];
+							volData[k] = votes[i];
 							k++;
 							j=0;
 						}else{
-							tempAmount = tempAmount+data[i][1]/1000000;
-							tempVol = tempVol+data[i][2]/10000;
+							tempAmount = tempAmount+sales[i];
+							tempVol = tempVol+votes[i];
 							j=j+1;
 						}
 					}
@@ -380,7 +425,7 @@
 					var json2 = {'name':'销量','data':volData};
 					var series2 = [];
 					series2[0] = json2;
-					this.$set(this.lineData1, 'categories', categories);
+					this.$set(this.lineData1, 'categories', categories); 
 					this.$set(this.lineData1, 'series', series2);
 					
 					this.res = '请求结果 : ' + JSON.stringify(res);
@@ -389,13 +434,10 @@
 					console.log('request fail', err);
 				});
 			},
-			getDataContainerTwo(type, provinceCenterId, businessDate, cityCenterId){
-				var url=''
-				if(type=='足球'){
-					url = '/exhibition/gameSales/queryGameSalesOfFb/' + businessDate + '/' + provinceCenterId + '/' + cityCenterId;
-				}else{
-					url = '/exhibition/gameSales/queryGameSalesOfBk/' + businessDate + '/' + provinceCenterId + '/' + cityCenterId;
-				}
+			getDataContainerTwo(type){
+				var url='/pentaho/shows/getShowsGameSales'
+				var param = this.createParam()
+				
 				var big1 = {'name':'销量'};
 				var left1 = {'name':'周同比'};
 				var right1 = {'name':'环比'};				
@@ -403,7 +445,7 @@
 				var big2 = {'name':'占比'};
 				var left2 = {'name':'周同比'};
 				var right2 = {'name':'环比'};
-				urlAPI.getRequest(url, null).then((res)=>{
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -411,41 +453,53 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;
-					var format0 = numberFun.formatCNumber(data[0]);
-					var format1 = numberFun.formatCNumber(data[1]);
+					var data = res.data.data;	
+					var tempObj;
+					if(type=='足球'){
+						tempObj = data.football
+					}else{
+						tempObj = data.basketball
+					}
 					
-					var amount = data[0]/format0.value + format0.name +'元';
-					left1.value = (data[0]/data[1]-1).toFixed(4);
-					right1.value = -0.3111;
-					big1.value = amount;
+					var format0 = numberFun.formatCNumber(tempObj[0]);
+					var amount0 = tempObj[0]/format0.value.toFixed(2) + format0.name +'元';
+					left1.value = tempObj[1];
+					right1.value = tempObj[2];
+					big1.value = amount0;
 					big1.left = left1;
 					big1.right = right1;
 					
-					big2.value = 0.63;
-					left2.value = -0.0132;
-					right2.value = 0.1069;
+					var amount1 = tempObj[3];					
+					left2.value = tempObj[4];
+					right2.value = tempObj[5];
+					big2.value = amount1;
 					big2.left = left2;
-					big2.right = right2;					
+					big2.right = right2;							
 					
-					if(type=='足球'){
+					if(type=='足球'){					
 						this.$set(this.footballData, 'big1', big1);
 						this.$set(this.footballData, 'big2', big2);
+						var json = [{name: '足球',data: (tempObj[3]/100).toFixed(2)}]
+						this.$set(this.arcbar0, 'series', json);
+						console.log('request basketballData', this.footballData);
 					}else{
 						this.$set(this.basketballData, 'big1', big1);
 						this.$set(this.basketballData, 'big2', big2);
+						var json = [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
+						this.$set(this.arcbar1, 'series', json);
+						console.log('request basketballData', this.basketballData);
 					}
-					
-					// console.log('request basketballData', this.basketballData);
+			
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 				});
 			},
-			getShopData(provinceCenterId, cityCenterId, businessDate){
-				var url = '/exhibition/shopOverview/queryShopCountAndRateToday/'+provinceCenterId+'/'+cityCenterId +'/'+businessDate;
-				urlAPI.getRequest(url, null).then((res)=>{
+			getShopData(){
+				var url = '/pentaho/shows/getShowRankingCountry';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -453,11 +507,36 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;					
-					this.shopData.shop.sum=data[0].toFixed(0);
-					this.shopData.shop.tongbi=data[1].toFixed(4);
-					this.shopData.rate.sum=data[2].toFixed(4);
-					this.shopData.rate.tongbi=data[3].toFixed(4);
+					var data = res.data.data;	
+					
+					this.shopData.shop.sum=data[0];
+					this.shopData.shop.tongbi=data[1];
+					this.shopData.shop.huabi=data[2];
+					
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
+			getRankByProvince(){
+				var url = '/pentaho/shows/getShowRankingPro';
+				var param = this.createParam()
+				param.provincialId = this.selfParam.provincialId
+				
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+					
+					this.shopData.rate.sum=data[0];
+					this.shopData.rate.tongbi=data[1];
+					this.shopData.rate.sum=data[2];
 					
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -466,11 +545,12 @@
 				});
 			},
 			getServerData() {
-				this.getDataSet(this.param.provinceCenterId,this.param.businessDate);
-				this.getLinesData(this.param.provinceCenterId,this.param.businessDate);
-				this.getDataContainerTwo('足球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
-				this.getDataContainerTwo('篮球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
-				this.getShopData(this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
+				this.getDataSet();
+				this.getLinesData();
+				this.getDataContainerTwo('足球');
+				this.getDataContainerTwo('篮球');
+				this.getShopData();
+				this.getRankByProvince();
 			},
 			change(e) {
 			      this.btnnum = e
@@ -517,7 +597,10 @@
 			'$route':'showView'
 		},
 		created() {
-			this.param = this.model;
+			// this.param = this.model;
+			// console.log("channel created:",this.param)
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.selfParam.shopNo = uni.getStorageSync("shopNo")
 			//ajax调用
 			this.getServerData();
 			this.showView();

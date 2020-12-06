@@ -13,7 +13,7 @@
 			<view @click="goCompare">对比</view>
 		</view>	
 		<block v-if="tabIndex==0">
-			<channelTotalView></channelTotalView>
+			<channelTotalView :model="selfParam"></channelTotalView>
 		</block>
 		<block v-if="tabIndex==1">
 			<gameView :model="modelSet"></gameView>
@@ -37,6 +37,7 @@
 	import channelLevelView from "@/components/sads-components/levelView/channelLevelView.vue";
 	import channelTicketView from "@/components/sads-components/ticketView/channelTicketView.vue";
 	import channelMatchView from "@/components/sads-components/matchView/channelMatchView.vue";
+	import uniSection from "@/components/uni/uni-section/uni-section.vue"
 	
 	// 缓存每页最多
     const MAX_CACHE_DATA = 100;
@@ -45,7 +46,7 @@
 
 	export default {
 		components: {
-			gameView,channelTotalView	,channelLevelView	,channelTicketView,channelMatchView
+			gameView,channelTotalView,channelLevelView,channelTicketView,channelMatchView,uniSection
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.modelSet.gateNo = option.number
@@ -78,7 +79,8 @@
 						year:{startDate:'', endDate:''},
 					},	
 					userId:'',			
-					selfProvinceCenterId:''//存登录时候的id
+					selfProvinceCenterId:'',//存登录时候的id
+					shopNo:''
 				},
 				areaMap:{},
 				isFirstLoad:true,

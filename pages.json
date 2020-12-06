@@ -44,6 +44,9 @@
 		    "path" : "pages/common/levelRingDetail",
 		    "style" : {}
 		},{
+		    "path" : "pages/common/ticketRingDetail",
+		    "style" : {}
+		},{
 		    "path" : "pages/common/tableDetail",
 		    "style" : {}
 		},{

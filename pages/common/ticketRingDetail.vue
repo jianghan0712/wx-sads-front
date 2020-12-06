@@ -11,7 +11,7 @@
 						 <tr style="font-size: 30rpx;width: 100%;">
 							<td align="left" style="width: 190rpx;">{{item[0]}}</td>
 							<td align="left" style="width: 150rpx;">{{item[2].toFixed(2)}}</td>
-							<td align="left" style="width: 150rpx;">销量</td>
+							<td align="left" style="width: 150rpx;"></td>
 							<td align="left" style="width: 150rpx;">{{(item[1]/10000).toFixed(2)}}万元</td>  
 						 </tr>
 						 <tr style="font-size: 30rpx;width: 100%;"  >
@@ -43,6 +43,7 @@
 				uidata:{},
 				contents :[],
 				type:'all',
+				btnnum:0,
 				selfParam:{
 					token:'',
 					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
@@ -114,46 +115,49 @@
 							 dateFlag:"4",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
+				}	
+				if(type=='竞彩'){
+					param.gameFlag = 0
+				}else if(type=='足彩'){
+					param.gameFlag = 1
+				}else if(type=='篮彩'){
+					param.gameFlag = 2
 				}
 				console.log("createParam end:",param)
 				return param
 			},
 			loadData(){
-				var url = '/pentaho/sales/getGameSalesProp';
-				var gameFlag;
-				var ballType = getApp().globalData.ballType;
-				if(ballType=='足球'){
-					gameFlag='1';
-				}else {
-					gameFlag='2';
-				}
-				var param =this.createParam();
-				this.$set(param,'gameFlag',gameFlag);
+				var url = '/pentaho/proValue/getProValueVotesProp';
+				var param = this.createParam()
 				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.data;
-					console.log(data);
-					var dataFilter=[];					//获取全局的ballType
-					for(var i=0;i<data.length;i++){
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+				   var data = res.data.data;
+				   var dataFilter=[];					//获取全局的ballType
+				   for(var i=0;i<data.length;i++){
 						var item=[];
-						item[0]=data[i].gameName;
+						item[0]=data[i].customsName;
 						item[1]=data[i].values[0];
 						item[2]=parseInt(data[i].values[1]);
 						console.log(item)
 						dataFilter.push(item);
-					}
-					that.uidata = dataFilter;
-					
-					
+				   }
+				   that.uidata = dataFilter;
+					console.log(data)
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-				});
+				})
 				
 		},
 		onLoad(option){
-			console.log(option.title)
+			this.btnnum=JSON.parse(option.btnnum);
 			uni.setNavigationBarTitle({
 				title :option.title
 			});

@@ -13,7 +13,7 @@
 				<view style="-webkit-flex: 1;flex: 1;">取消</view>		
 		</view>	 
 		<block v-if="tabIndex==0">
-			<totalViewCompare ref="totalViewCompare" :param="selfParam"></totalViewCompare>
+			<totalViewCompare ref="totalViewCompare"></totalViewCompare>
 		</block> 
 		<block v-if="tabIndex==1">
 			<gameView ref="gameView" :model="selfParam"></gameView>
@@ -202,28 +202,6 @@
                 }
                 return (s4() + s4() + "-" + s4() + "-4" + s4().substr(0, 3) + "-" + s4() + "-" + s4() + s4() + s4()).toUpperCase();
             },
-			onShowDatePicker(type){//显示
-				// uni.navigateTo({
-				// 	url:"/pages/common/dateSelector"
-				// });
-				this.type = type;
-				this.showPicker = true;
-				this.value = this[type];
-			},
-			onSelected(e) {//选择
-				this.showPicker = false;
-				if(e) {
-					this[this.type] = e.value; 
-					//选择的值
-					console.log('value => '+ e.value);
-					//原始的Date对象
-					console.log('date => ' + e.date);
-				}
-			},
-			toggle(type) {
-				this.type = type
-				this.$refs.popup.open()
-			},
 			goDatePicker() {
 				//跳转日期选择页面,同时传递日期初始化参数
 				// 单选就传递单选参数，复选就传递复选参数

@@ -120,11 +120,11 @@
 		onShow() {//此处接受来自日期选择页面的参数
 			this.returnFromDatePicker()
 			console.log("sales-self-onShow:",this.selfParam)
-			if(!this.isFirstLoad){
+			/* if(!this.isFirstLoad){
 				console.log("重新加载")
 				this.$refs['totalView'].refresh(JSON.stringify(this.selfParam));
 			}
-			this.isFirstLoad=false
+			this.isFirstLoad=false */
 		},
 		onUnload() {
 			//页面销毁删除缓存日期数据
@@ -146,7 +146,7 @@
 			goCompare(){
 				uni.navigateTo({
 					url:"/pages/sales/indexCompare?tabIndex="+this.tabIndex + '&selfParam=' + JSON.stringify(this.selfParam)
-				});
+				});			
 			},
 			goArea(){
 				uni.navigateTo({

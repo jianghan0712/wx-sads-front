@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="box-contaniner">
-			<dataContainerTwoCol ref="dataContain" :dataAs="totalData"></dataContainerTwoCol>
+			<dataContainerTwoCol ref="dataContain" :dataAs="topData"></dataContainerTwoCol>
 		</view>
 		
 		<!-- 折线图区域-->
@@ -121,8 +121,8 @@
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id
 				},
-				totalData:{	left:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0},
-							right:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0}},	
+				topData:{	left:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0},
+							right:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0}},			
 				footballData:{},	
 				basketballData:{},	
 				btnnum: 0,
@@ -216,6 +216,12 @@
 			this.getServerData();	
 		},
 		methods: {
+			getServerData() {
+				this.getDataSet();
+				// this.getLinesData(this.param.provinceCenterId,this.param.businessDate);
+				// this.getDataContainerTwo('足球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
+				// this.getDataContainerTwo('篮球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
+			},
 			showView(){
 				this.$nextTick(() => {				
 					// this.$refs['lineData2'].showCharts();
@@ -294,10 +300,10 @@
 							var left = {'title1':'销量（'+format00.name +'元）', 'amount1':amount1/format00.value, 'title2':'票数（'+format01.name +'张）', 'amount2':saleNumber1/format01.value};
 							var right = {'title1':'销量（'+format10.name +'元）', 'amount1':amount1/format10.value, 'title2':'票数（'+format11.name +'张）', 'amount2':saleNumber2/format11.value};
 						
-							this.$set(this.totalData, 'left', left);
-							this.$set(this.totalData, 'right', right);
-							console.log('request totalData', this.totalData);
-						
+							this.$set(this.topData, 'left', left);
+							this.$set(this.topData, 'right', right);
+							console.log('request topData', this.topData);
+							
 							this.res = '请求结果 : ' + JSON.stringify(res);
 						}).catch((err)=>{
 							this.loading = false;
@@ -415,12 +421,7 @@
 					console.log('request fail', err);
 				});
 			},
-			getServerData() {
-				this.getDataSet();
-				// this.getLinesData(this.param.provinceCenterId,this.param.businessDate);
-				// this.getDataContainerTwo('足球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
-				// this.getDataContainerTwo('篮球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
-			},
+
 			change(e) {
 			      this.btnnum = e
 			      console.log(this.btnnum)

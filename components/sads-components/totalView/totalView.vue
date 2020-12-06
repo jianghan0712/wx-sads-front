@@ -328,15 +328,13 @@
 			},
 			showView(){
 				// commonFun.sleep(2000)
-				this.$nextTick(() => {				
-					this.$refs['arcbar0'].showCharts();
-					this.$refs['arcbar1'].showCharts();
-					this.$refs['lineData2'].showCharts();
-					this.$refs['lineData1'].showCharts();
-					this.$refs['dataContain'].showDataContainer();
-					this.$refs['dataContain2'].showDataContainer();
-					this.$refs['dataContain3'].showDataContainer();
-				});
+				this.$refs['arcbar0'].showCharts();
+				this.$refs['arcbar1'].showCharts();
+				this.$refs['lineData2'].showCharts();
+				this.$refs['lineData1'].showCharts();
+				this.$refs['dataContain'].showDataContainer();
+				this.$refs['dataContain2'].showDataContainer();
+				this.$refs['dataContain3'].showDataContainer();
 			},
 			// 获取最上层的两个tab
 			getDataSet(provinceCenterId, businessDate){
@@ -371,10 +369,11 @@
 						this.$set(this.totalData, 'big1', big1);
 						this.$set(this.totalData, 'big2', big2);
 						console.log('request totalData', this.totalData);
-												
+						this.$refs['dataContain'].showDataContainer();						
 						this.res = '请求结果 : ' + JSON.stringify(res);
 											
 					}).catch((err)=>{
+						alert(1)
 					this.loading = false;
 					console.log('request fail', err);
 				});
@@ -429,7 +428,8 @@
 					series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories);
 					this.$set(this.lineData1, 'series', series2);
-					
+					this.$refs['lineData2'].showCharts();
+					this.$refs['lineData1'].showCharts();
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -483,12 +483,16 @@
 						this.$set(this.footballData, 'big2', big2);
 						var json = [{name: '足球',data: (tempObj[3]/100).toFixed(2)}]
 						this.$set(this.arcbar0, 'series', json);
+						this.$refs['arcbar0'].showCharts();
+						this.$refs['dataContain2'].showDataContainer();
 						console.log('request basketballData', this.footballData);
 					}else{
 						this.$set(this.basketballData, 'big1', big1);
 						this.$set(this.basketballData, 'big2', big2);
 						var json = [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
 						this.$set(this.arcbar1, 'series', json);
+						this.$refs['arcbar1'].showCharts();
+						this.$refs['dataContain3'].showDataContainer();
 						console.log('request basketballData', this.basketballData);
 					}
 			
@@ -662,10 +666,14 @@
 			change(e) {
 			      this.btnnum = e
 			      console.log(this.btnnum)
+				  this.getServerData();
+				  this.showView();
 			},
 			changeArcbar(e){
 				this.arcbarNum = e
 				console.log(this.arcbarNum)
+				this.getServerData();
+				this.showView();
 			},
 			goSaleRank(tableData, tableColumns){
 				uni.navigateTo({
@@ -700,6 +708,7 @@
 		},
 		mounted(){
 			// this.selfParam=this.model
+			this.getServerData();
 			this.showView();
 		},
 		watch: {

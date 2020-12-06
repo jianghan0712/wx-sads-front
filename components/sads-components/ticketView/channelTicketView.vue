@@ -51,13 +51,14 @@
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
+	import commonFun from '@/common/tools/watcher.js';
 	
 	export default {
 		components: {
 			ticketData,RingChart,vTable
 		},
 		props: {
-			model:{
+			param:{
 				//数据
 				type: Object,
 				default: () => ({})
@@ -65,48 +66,131 @@
 		},
 		data() {
 			return {
-				param:{},
+				selfParam:{
+					token:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
 				btnnum: 0,
 				ticketData:{},
-				pieData: {
-					//饼状图数据
-					series: [{name: '100',data: 222100},{name: '4-20',data: 70300},{name: '22-48',data: 32100},{name: '100以上',data: 25400},
-						{name: '52-98',data: 19700},{name: '2',data: 16000},{name: '50',data: 10500},
-					]
-				},
+				pieData: {series: []},
 				pieData1: {series: []},
 				pieData2: {series: []},
 				tableData: [],
 				tableDataAll: [],
-				tableColumns: [],	
+				tableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '省份',
+							key: 'area',
+							$width:"80px"
+						},{
+							title: '竞彩（元）',
+							key: 'jingcai',
+							$width:"80px"
+						},{
+							title: '足球（元）',
+							key: 'football',
+							$width:"85px"
+						},{
+							title: '篮球（元）',
+							key: 'basketball'
+						}],	
 			}
 		},
-		onLoad() {
-			_self = this;
+		onLoad() {		
+			_self = this;	
+		},
+		created() {
+			this.selfParam=this.param
 			this.getServerData();
 			this.showView()
 		},
 		methods: {
 			showView(){
 				console.log("ticket showView" ,this.pieData);
-				this.$nextTick(() => {
-					this.$refs['ticketData'].showDataContainer();		
-					this.$refs['ringChart0'].showCharts();
-					this.$refs['ringChart1'].showCharts();
-					this.$refs['ringChart2'].showCharts();
-				});
+				commonFun.sleep(3000)
+				this.$refs['ticketData'].showDataContainer();		
+				this.$refs['ringChart0'].showCharts();
+				this.$refs['ringChart1'].showCharts();
+				this.$refs['ringChart2'].showCharts();
 			},
 			getServerData() {
-				this.getDataSet(this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
-				this.getPieData(this.param.provinceCenterId,this.param.businessDate);
-				this.getRankTable(this.param.provinceCenterId,this.param.businessDate);
+				this.getDataSet(this.selfParam.provinceCenterId,this.selfParam.businessDate,this.selfParam.cityCenterId);
+				this.getPieData('竞彩');
+				this.getPieData('足彩');
+				this.getPieData('篮彩');
+				this.getRankTable(this.selfParam.provinceCenterId,this.selfParam.businessDate);
+				this.$refs['ticketData'].showDataContainer();
+				this.$refs['ringChart0'].showCharts();
+				this.$refs['ringChart1'].showCharts();
+				this.$refs['ringChart2'].showCharts();
 			},
 			change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
 			},
-			getTicketData(url, mode){				
-				urlAPI.getRequest(url, null).then((res)=>{
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.businessDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.date.endDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.week.endDate,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.month.endDate,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.year.endDate,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
+			},
+			getTicketData(){		
+				var url = "/pentaho/proValue/getSingleVoteMoney";
+				var param = this.createParam();
+				
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -114,18 +198,14 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;
-					var format0 = numberFun.formatCNumber(data[0][0]);
-					if(mode==1){
-						var big1 = {'name':'竞彩（'+format0.name +'元）', 'value':data[0][0].toFixed(2)/format0.value}									
-						this.$set(this.ticketData, 'big1', big1);
-					}else if(mode==2){
-						var small1 = {'name':'足彩（'+format0.name +'元）', 'value':data[0][0].toFixed(2)/format0.value}
-						this.$set(this.ticketData, 'small1', small1);
-					}else if(mode==3){
-						var small2 = {'name':'篮彩（'+format0.name +'元）', 'value':data[0][0].toFixed(2)/format0.value}
-						this.$set(this.ticketData, 'small2', small2);
-					}
+					var data = res.data.data;
+					var format0 = numberFun.formatCNumber(data[0]);
+					var big1 = {'name':'竞彩（'+format0.name +'元）', 'value':data[0].toFixed(2)/format0.value}
+					var small1 = {'name':'足彩（'+format0.name +'元）', 'value':data[1].toFixed(2)/format0.value}
+					var small2 = {'name':'篮彩（'+format0.name +'元）', 'value':data[2].toFixed(2)/format0.value}
+					this.$set(this.ticketData, 'big1', big1);
+					this.$set(this.ticketData, 'small1', small1);
+					this.$set(this.ticketData, 'small2', small2);
 
 					console.log('request ticketData', this.ticketData);				
 					this.res = '请求结果 : ' + JSON.stringify(res);
@@ -136,48 +216,52 @@
 			},
 			// 获取最上层的两个tab
 			getDataSet(provinceCenterId, currentDate){
-				var url1 = '/exhibition/ticketAmount/queryAvgTicket/' + provinceCenterId + '/' + currentDate;
-				var url2 = '/exhibition/ticketAmount/queryAvgTicketOfFb/' + provinceCenterId + '/' + currentDate;
-				var url3 = '/exhibition/ticketAmount/queryAvgTicketOfBk/' + provinceCenterId + '/' + currentDate;
-				this.getTicketData(url1,1);
-				this.getTicketData(url2,2);
-				this.getTicketData(url3,3);
+				this.getTicketData();
 			},
-			getPieData(provinceCenterId, currentDate){
-				var url = '/exhibition/ticketAmount/querySalesTickets/' + provinceCenterId + '/' + currentDate;
-				urlAPI.getRequest(url, null).then((res)=>{
+			getPieData(type){
+				var url = '/pentaho/proValue/getProValueVotesProp';
+				var param = this.createParam();
+				
+				if(type=='竞彩'){
+					param.gameFlag = 0
+				}else if(type=='足彩'){
+					param.gameFlag = 1
+				}else if(type=='篮彩'){
+					param.gameFlag = 2
+				}
+				var that =this;
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
 						title: '请求成功',
-						icon: 'success',
+						icon: 'success',	
 						mask: true
 					});
 					
-					var data = res.data.concreteBean;
-					var ftList=[];
-					var bkList=[];
+					var data = res.data.data;
+					var list=[];	
 					for(var i=0; i<data.length; i++){
-						var ftObject = {name:data[i][0],data:data[i][1]};
-						var bkObject = {name:data[i][0],data:data[i][2]};
-						ftList[i]=ftObject;
-						bkList[i]=bkObject;
+						list[i]={name:data[i].proValueName,data:data[i].values[0]};
 					}
-					
-					this.$set(this.pieData1, 'series', ftList);
-					this.$set(this.pieData2, 'series', bkList);
-					
-					console.log('request pieData1', this.pieData1);	
-					console.log('request pieData2', this.pieData2);
-					this.res = '请求结果 : ' + JSON.stringify(res);
+					if(type=='竞彩'){
+						that.$set(that.pieData, 'series', list);
+					}else if(type=='足彩'){
+						that.$set(that.pieData1, 'series', list);
+					}else if(type=='篮彩'){
+						that.$set(that.pieData2, 'series', list);
+					}
+
+					that.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 				})
 			},
 			getRankTable(provinceCenterId, currentDate){
-				var url = '/exhibition/ticketAmount/queryAvgTicketRegion/' + provinceCenterId+'/'+currentDate;				
-				urlAPI.getRequest(url, null).then((res)=>{
+				var url ='/pentaho/proValue/getSingleVoteMoneyRanking';	
+				var param = this.createParam();
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -185,7 +269,7 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;
+					var data = res.data.data;
 					var format0 = null;
 					if(data.length>0){
 						format0 = numberFun.formatCNumber(data[0][1]);							
@@ -248,7 +332,7 @@
 					});
 				}else if(btnnum==2){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData2)
 					});
 				}
 			},
@@ -259,15 +343,11 @@
 			}
 		},
 		mounted(){
+			this.selfParam = this.param
 			this.showView();
 		},
 		watch: {
 			'$route':'showView'
-		},
-		created() {
-			this.param = this.model;
-			this.getServerData();
-			// this.showView();
 		},
 	}
 </script>
