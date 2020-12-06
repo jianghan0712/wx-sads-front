@@ -1,7 +1,11 @@
 <template>
 	<view>
-		<view class ='centerView' style="width: 100%; padding-top: 30rpx;">
-			<view style="text-align: center;width: 100%;padding-bottom: 20rpx;color: blue;">总览</view>
+		<view class ='centerView' style="width: 100%; padding-top: 5rpx;">
+			<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
+				<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
+				 总览
+				<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
+			</view>
 			<view class="arcbarChart-tab">
 			    <view @tap="changeTop('周同比')"  :class="arcbarNumTop =='周同比'?'btna':'hide'" style="width: 12%;border-radius:50rpx 0rpx 0rpx 50rpx;border:solid;border-right: 0;border-color: #C0C0C0;font-size: 30rpx;align-content: center;" >周同比</view>
 			    <view @tap="changeTop('环比')" :class="arcbarNumTop =='环比'?'btna':'hide'" style="width: 11%;border:solid; border-radius:0rpx 50rpx 50rpx 0rpx;border-color: #C0C0C0;font-size: 30rpx;align-content: center;" >环比</view>

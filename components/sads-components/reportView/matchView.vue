@@ -1,7 +1,9 @@
 <template>
 	<view>
-		<view class='centerView' style="width: 100%;display: flex; padding-top: 20rpx;">
-			<view style="text-align: center;width: 100%;padding-bottom: 20rpx;color: blue;">赛事</view>
+		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
+			<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
+			 赛事
+			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
 		</view>
 		<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
 			<view style="width: 350rpx;">

@@ -1,7 +1,9 @@
 <template>
 	<view>
-		<view class ='centerView' style="width: 100%; padding-top: 30rpx;">
-			<view style="text-align: center;width: 100%;padding-bottom: 20rpx;color: blue;">奖池</view>
+		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
+			<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
+			 奖池
+			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
 		</view>
 		<view class="padding">
 			<view style="font-size: 30rpx;padding-left: 20rpx;" >足球奖池七天走势</view>

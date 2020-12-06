@@ -208,12 +208,12 @@
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
+			this.showView();
 		},
 		created() {		
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			//ajax调用
-			this.getServerData();
-			this.showView();
+			this.getServerData();	
 		},
 		methods: {
 			showView(){

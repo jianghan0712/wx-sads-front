@@ -52,7 +52,8 @@
 			showDataContainer() {			
 				this.dataList = this.dataAs;
 				// var str = JSON.stringify(this.dataAs);
-				console.log("col showDataContainer:", this.dataAs);
+				console.log("col showDataContainer dataAs:", this.dataAs);
+				console.log("col showDataContainer dataList:", this.dataList);
 			},
 		},
 	}
