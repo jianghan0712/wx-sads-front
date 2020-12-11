@@ -383,7 +383,7 @@
 <style>
 	.box-contaniner{
 		width: 100%;
-		margin: 20rpx 10rpx 40rpx 10rpx;
+		/* margin: 20rpx 10rpx 40rpx 10rpx; */
 		text-align: center;
 	}
 	.datePick{

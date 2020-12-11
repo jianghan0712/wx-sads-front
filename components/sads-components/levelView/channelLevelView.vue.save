@@ -9,38 +9,37 @@
 				<view class="end-cont" :class="{dis:btnnum == 0}">	
 					<view style="font-size: 30rpx;font-weight: bold;">足球关次销量及占比</view>				
 					<view class="ring_chart">
-						<ring-chart :dataAs="pieData" ref="levelRingChart0" canvasId="index_ring_0"/>
-					</view>
-					<!-- <button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button> -->
-					<!-- 各地区销量排行-->
+						<ring-chart :dataAs="pieData" ref="ringChart0" canvasId="index_ring_0"/>
+					</view>		
 					<progress ref="progress_0" :dataAs="pieData"></progress>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
 					<view style="font-size: 30rpx;font-weight: bold;">篮球关次销量及占比</view>　
 					<view class="ring_chart">
-						<ring-chart :dataAs="pieData1" ref="levelRingChart1" canvasId="index_ring_1"/>
+						<ring-chart :dataAs="pieData1" ref="ringChart1" canvasId="index_ring_1"/>
 					</view>
-					<!-- <button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button> -->
 					<progress ref="progress_1" :dataAs="pieData1"></progress>
 				</view>		
 			</view>
-		<slot />
 		</view>
+		
+		<!-- <view class="box-contaniner"> -->
+			
+		<!-- </view> -->
+		<slot />
 	</view>
 </template>
 
 <script>
 	import RingChart from "@/components/basic-chart/RingChart.vue";
 	import vTable from "@/components/table/table.vue";
-	import urlAPI from '@/common/vmeitime-http/';
-	import numberFun from '@/common/tools/number.js';
 	import progress from "@/components/sads-components/progress.vue";
-
+	import urlAPI from '@/common/vmeitime-http/';
 	
 	export default {
 		components: {
 			RingChart,
-			vTable,progress
+			vTable, progress
 		},
 		props: {
 			param:{
@@ -51,39 +50,8 @@
 		},
 		data() {
 			return {
-				selfParam:{
-					token:'',
-					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
-					cityCenterId:'',
-					provinceCenterName:'',
-					countyCenterId:'',	
-					compareType:'date',
-					compareFlag:false,
-					businessDate:{
-						dateType:'',// date/week/month/year
-						view:'',//用于展示日期、年、月等
-						date:{startDate:'', endDate:''},
-						week:{startDate:'', endDate:''},
-						month:{startDate:'', endDate:''},
-						year:{startDate:'', endDate:''},
-					},
-					compareDate:{
-						dateType:'date',
-						viewLeft:'',//用于展示日期、年、月等
-						viewRight:'',
-						dateLeft:{startDate:'', endDate:''},
-						dateRight:{startDate:'', endDate:''},
-						weekLeft:{startDate:'', endDate:''},
-						weekRight:{startDate:'', endDate:''},
-						monthLeft:{startDate:'', endDate:''},
-						monthRight:{startDate:'', endDate:''},
-						yearLeft:{startDate:'', endDate:''},
-						yearRight:{startDate:'', endDate:''},
-					},	
-					userId:'',			
-					selfProvinceCenterId:'',//存登录时候的id
-					shopNo:''
-				},
+				selfParam:{},
+				today:dateUtils.getToday(),
 				btnnum: 0,
 				index: 0,
 				levelList:['单关','2x1','3x1','4x1-8x1','MXN','自有过关'],
@@ -91,28 +59,6 @@
 					series: [],
 					},
 				pieData1: {},
-				tableData: [],
-				tableColumns: [{
-						title: "排名",
-						key: "id",
-						$width:"50px",
-					},
-					{
-						title: '省份',
-						key: 'area',
-						$width:"100px"
-					},
-					{
-						title: '占比',
-						key: 'zhanbi',
-						$width:"150px"
-					},
-					{
-						title: '销量（元）',
-						key: 'amount'
-					}
-				],	
-				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
 			};
 		},
 		onLoad() {
@@ -126,30 +72,18 @@
 			this.showView();
 		},
 		methods: {
-			showView(){				
+			showView(){
+				console.log("channel level showView" ,this.pieData);
 				this.$nextTick(() => {	
-					this.$refs['levelRingChart0'].showCharts();
-					this.$refs['levelRingChart1'].showCharts();
+					this.$refs['ringChart0'].showCharts();
+					this.$refs['ringChart1'].showCharts();
 					this.$refs['progress_0'].showProgress(this.pieData);
 					this.$refs['progress_1'].showProgress(this.pieData1);
-					console.log("init ringChart0:" ,this.pieData);
 				});
 			},
 			getServerData() {
 				this.getPieDate('足球')
 				this.getPieDate('篮球')
-			},
-		    change(e) {
-			    this.btnnum = e;
-			    console.log(this.btnnum);
-				this.getServerData();
-				this.showView();
-		    },
-			bindPickerChange(e) {
-				console.log('picker发送选择改变，携带值为：' + this.array[e.detail.value].name)
-				console.log(this.selfParam)
-				this.index = e.detail.value
-				this.getTableDate(this.btnnum, this.array[e.detail.value].name)
 			},
 			gotoLunBo(btnnum){
 				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
@@ -163,10 +97,59 @@
 					});
 				}
 			},
-			refresh(selfParam){
-				this.selfParam = JSON.parse(selfParam)
-				this.getServerData();
-				this.showView();
+			getPieDate(type){
+				var url = '/pentaho/shows/getShowPassSalesProp';
+				var param = this.createParam(type)
+				// var that =this;
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;
+				   
+					var series = []
+					for(var i=0;i<data.length;i++){	
+						var jsonData = {}
+						this.levelList = data[i].customsName						
+						jsonData.name=data[i].customsName;
+						jsonData.data=data[i].values[0];
+						series[i]=jsonData					
+					}
+					
+					if(type=='足球'){
+						this.pieData.series=series
+						// this.$set(this.pieData, 'series', series);
+						this.$refs['ringChart0'].showCharts();
+						
+					}else if(type=='篮球'){
+						this.pieData1.series=series
+						// this.$set(this.pieData1, 'series', series);
+						this.$refs['ringChart1'].showCharts();
+					}
+					
+					console.log('request getTodSalesAmount', that.pieData);				
+					that.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+		    change(e) {
+			    this.btnnum = e;
+			    console.log(this.btnnum);
+		    },
+			bindPickerChange: function(e) {
+				console.log('picker发送选择改变，携带值为：' + e.detail.value)
+				this.index = e.detail.value
+			},
+			gotoLunBo(btnnum){
+				uni.navigateTo({	
+					url:"/pages/common/levelRingDetail?btnnum="+btnnum
+				});
 			},
 			createParam(type){
 				console.log("createParam begin")
@@ -211,87 +194,8 @@
 				console.log("createParam end:",param)
 				return param
 			},
-			getPieDate(type){
-				var url = '/pentaho/shows/getShowPassSalesProp';
-				var param = this.createParam(type)
-				var that =this;
-				urlAPI.getRequest(url, param).then((res)=>{
-					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
-					var data = res.data.data;
-				   
-					var series = []
-					for(var i=0;i<data.length;i++){	
-						var jsonData = {}
-						that.levelList = data[i].customsName						
-						jsonData.name=data[i].customsName;
-						jsonData.data=data[i].values[0];
-						series[i]=jsonData					
-					}
-					
-					if(type=='足球'){
-						that.pieData.series=series
-						this.$refs['levelRingChart0'].showCharts();
-						
-					}else if(type=='篮球'){
-						that.pieData1.series=series
-						this.$refs['levelRingChart1'].showCharts();
-					}
-					
-					console.log('request getTodSalesAmount', that.pieData);				
-					that.res = '请求结果 : ' + JSON.stringify(res);
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				})
-			},
-			getTableDate(btnnum, passName){
-				var url = '/pentaho/sales/checkpointSalesRanking';
-				var param = this.createParam()
-				var that =this;
-				param.passName=passName;
-				urlAPI.getRequest(url, param).then((res)=>{	
-					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
-					var data = res.data.data;
-
-					var series = []
-					for(var i=0;i<data.length;i++){	
-						var jsonData = {}
-						jsonData.id=i+1
-						jsonData.area=data[i][0];
-						jsonData.zhanbi=data[i][1]+'%';
-						jsonData.amount=data[i][2];
-						series[i]=jsonData					
-					}
-					that.tableData = series
-					
-					console.log('request checkpointSalesRanking', that.tableData);				
-					this.res = '请求结果 : ' + JSON.stringify(res);
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				})
-			},
-			gotoTableDetail(btnnum){
-				uni.navigateTo({
-					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableData) + '&tableColumns=' + JSON.stringify(this.tableColumns)
-				});
-			}
 		},
 		mounted(){
-			this.selfParam=this.param
-			this.getServerData();
 			this.showView();
 		},
 		watch: {

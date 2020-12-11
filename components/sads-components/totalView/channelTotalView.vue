@@ -28,28 +28,33 @@
 		<!-- 排名区域-->
 		<view class="box-contaniner">
 			<view class="shop-title">排名</view>
-			<view class="shop-item-title">
-				<view style="width: 400rpx;">全国排名</view>				
-				<view style="width: 200rpx;">周同比</view>
-				<view style="-webkit-flex: 1;flex: 1;">环比</view>
-			</view>
-			<view class="shop-item-content">
-				<view style="width: 400rpx;">{{shopData.shop.sum}}</view>
-				<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{shopData.shop.tongbi}}名</view>
-				<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.shop.huanbi}}名</view>
-			</view>
-			<view class="shop-item-title">
-				<view style="width: 400rpx;">省内排名</view>				
-				<view style="width: 200rpx;">周同比</view>
-				<view style="-webkit-flex: 1;flex: 1;">环比</view>
-			</view>
-			<view class="shop-item-content">
-				<view style="width: 400rpx;">{{valueToPercent2(shopData.rate.sum)}}</view>				
-				<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{shopData.rate.tongbi}}名</view>
-				<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi}}名</view>
+			<view class="line">
+				<view class="shop-item-title">
+					<view style="width: 50%;">全国排名</view>				
+					<view style="width: 25%;">周同比</view>
+					<view style="-webkit-flex: 1;flex: 1;">环比</view>
+				</view>
+				<view class="shop-item-content">
+					<view style="width: 50%;">{{shopData.shop.sum}}</view>
+					<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.tongbi}}名</view>
+					<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.shop.huanbi}}名</view>
+				</view>
 			</view>
 		</view>		
-		
+		<view class="box-contaniner">
+			<view class="line">
+				<view class="shop-item-title">
+					<view style="width: 50%;">省内排名</view>				
+					<view style="width: 25%;">周同比</view>
+					<view style="-webkit-flex: 1;flex: 1;">环比</view>
+				</view>
+				<view class="shop-item-content">
+					<view style="width: 50%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
+					<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.tongbi}}名</view>
+					<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi}}名</view>
+				</view>
+			</view>
+		</view>
 		<!-- 圆环图区域 -->
 		<view class="box-contaniner">
 			<view class="clineChart-title">
@@ -81,46 +86,41 @@
 			</view>				
 		</view>		
 
-	
-		<!-- 各地区销量排行-->
 		<view class="box-contaniner">
-			<view class="rankTable-title">
-				<view>各地区销量排行</view>
-				<view class="rankTable-more" @click="goSaleRank(tableData,tableColumns)">全部>></view>
-			</view>
-			<view class="example">
-				<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
-			</view>
-		</view>
-		
-		<!-- 返奖情况-->
-		<view class="box-contaniner">
-			<view class="shop-title">返奖情况</view>
-			<view class="shop-item-title">
-				<view style="width: 400rpx;">返奖率</view>				
-				<view style="width: 200rpx;">周同比</view>
-				<view style="-webkit-flex: 1;flex: 1;">环比</view>
-			</view>
-			<view class="shop-item-content">
-				<view style="width: 400rpx;">{{shopData.shop.sum}}</view>
-				<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(shopData.shop.tongbi)}}</view>
-				<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(shopData.shop.huanbi)}}</view>
-			</view>
-		</view>
-		
-		<view class="box-contaniner">
-			<view class="sale-row-2">
+			<view class="sale-row-2">		
 				<view class="row-box">
-					<view class="row_box_2">全国足球销量占比</view>
-					<view class="row_box_2">100.00%</view>				
+					<view class="lineTwo">
+						<view class="row_box_2">全国足球销量占比</view>
+						<view class="row_box_2">100.00%</view>				
+					</view>
 				</view>
 				<view class="row-box">
-					<view class="row_box_2">全省足球销量占比</view>
-					<view class="row_box_2">100.00%</view>
+					<view class="lineTwo">
+						<view class="row_box_2">全省足球销量占比</view>
+						<view class="row_box_2">100.00%</view>
+					</view>
 				</view>
 			</view>
 		</view>
 	
+		<block v-if="today!= selfParam.businessDate.view">	 
+			<view class="box-contaniner">
+				<view class="shop-title">{{selfParam.provinceCenterName}}返奖情况</view>
+				<view class="line">
+					<view class="shop-item-title">
+						<view style="width: 40%;">返奖率</view>				
+						<view style="width: 35%;">同比</view>
+						<view style="width: 20%;">环比</view>
+					</view>
+					<view class="shop-item-content">
+						<view style="width: 40%;">{{returnData.rate.sum}}</view>
+						<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 35%;">{{valueToPercent(returnData.rate.tongbi)}}</view>
+						<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 20%;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+					</view>
+				</view>
+			</view>			
+		</block>
+		
 		<slot />
 	</view>
 </template>
@@ -133,6 +133,7 @@
 	import dataContainerTwo from '@/components/sads-components/dataContainerTwo.vue';
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
+	import dateUtils from '@/common/tools/dateUtils.js';
 	
 	export default {
 		name: 'Index',
@@ -144,7 +145,7 @@
 			dataContainerTwo
 		},
 		props: {
-			model:{
+			param:{
 				//数据
 				type: Object,
 				default: () => ({})
@@ -153,6 +154,7 @@
 		data() {
 			return {			
 				selfParam:{},
+				today:dateUtils.getToday(),
 				totalData:{},	
 				footballData:{},	
 				basketballData:{},	
@@ -160,150 +162,36 @@
 				arcbarNum: 0,
 				lineData2: {},
 				lineData1: {},
-				arcbar0: {series: [{name: '足球',data: 0.6921}]},
-				arcbar1: {series: [{name: '篮球',data: 0.3079}]},
-				shopData: {shop:{sum:365041,tongbi:0.129,huanbi:0.0123},
-						   rate:{sum:0.95,tongbi:-0.64,huanbi:-0.123}},
-				tableData: [{
-							id: "1",
-							area: "北京市",
-							amount: "10233.5",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "2",
-							area: "上海市",
-							amount: "9965.5",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "3",
-							area: "广东省",
-							amount: "9754.5",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "4",
-							area: "重庆市",
-							amount: "6745.6",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "5",
-							area: "河北省",
-							amount: "6554",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						}
-					],
-				tableData2: [{
-							id: "1",
-							area: "北京市",
-							return: "10233.5",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "2",
-							area: "上海市",
-							return: "9965.5",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "3",
-							area: "广东省",
-							return: "9754.5",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "4",
-							area: "重庆市",
-							return: "6745.6",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						},
-						{
-							id: "5",
-							area: "河北省",
-							return: "6554",
-							tongbi: "+12.6%",
-							huanbi: "+45.21%"
-						}
-					],
-				tableColumns: [{
-							title: "排名",
-							key: "id",
-							$width:"50px",
-						},
-						{
-							title: '省份',
-							key: 'area',
-							$width:"100px"
-						},
-						{
-							title: '销量',
-							key: 'amount',
-							$width:"80px"
-						},
-						{
-							title: '同比',
-							key: 'tongbi',
-							$width:"80px"
-						},
-						{
-							title: '环比',
-							key: 'huanbi'
-						}
-					],
-				tableColumns2: [{
-							title: "排名",
-							key: "id",
-							$width:"50px",
-						},
-						{
-							title: '省份',
-							key: 'area',
-							$width:"100px"
-						},
-						{
-							title: '返奖率',
-							key: 'return',
-							$width:"80px"
-						},
-						{
-							title: '同比',
-							key: 'tongbi',
-							$width:"80px"
-						},
-						{
-							title: '环比',
-							key: 'huanbi'
-						}
-					],	
+				arcbar0: {},
+				arcbar1: {},
+				shopData: {shop:{sum:0,tongbi:0,huanbi:0},
+						   rate:{sum:0,tongbi:0,huanbi:0}},
+				returnData: {rate:{sum:0,tongbi:0,huanbi:0}},
 			};
 		},
 		onLoad() {
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
+			// this.getServerData();
+		},
+		created() {
+			this.selfParam=this.param
+			this.selfParam.shopNo = uni.getStorageSync("shopNo")
 			this.getServerData();
+			this.showView()
+			console.log(this.selfParam)
 		},
 		methods: {
 			showView(){
 				this.$nextTick(() => {				
-					// this.$refs['arcbar0'].showCharts();
-					// this.$refs['arcbar1'].showCharts();
+					this.$refs['arcbar0'].showCharts();
+					this.$refs['arcbar1'].showCharts();
 					this.$refs['lineData2'].showCharts();
 					this.$refs['lineData1'].showCharts();
 					this.$refs['dataContain'].showDataContainer();
-					// this.$refs['dataContain2'].showDataContainer();
-					// this.$refs['dataContain3'].showDataContainer();
+					this.$refs['dataContain2'].showDataContainer();
+					this.$refs['dataContain3'].showDataContainer();
 				});
 			},
 			createParam(){
@@ -489,7 +377,8 @@
 						this.$set(this.arcbar1, 'series', json);
 						console.log('request basketballData', this.basketballData);
 					}
-			
+					console.log("this.footballData=",this.footballData)
+					console.log("this.basketballData=",this.basketballData)
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -544,13 +433,42 @@
 					console.log('request fail', err);
 				});
 			},
+			getShowReturnRate(){
+				var url = '/pentaho/shows/getReturnRateState';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+									
+					this.returnData.rate.sum=data[0];
+					this.returnData.rate.tongbi=data[1];
+					this.returnData.rate.huanbi=data[2]
+				
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
 			getServerData() {
 				this.getDataSet();
 				this.getLinesData();
 				this.getDataContainerTwo('足球');
 				this.getDataContainerTwo('篮球');
 				this.getShopData();
-				this.getRankByProvince();
+				this.getRankByProvince();		
+				this.getShowReturnRate();
+			},
+			refresh(selfParam){
+				this.selfParam = JSON.parse(selfParam)
+				this.getServerData();
+				this.showView();
 			},
 			change(e) {
 			      this.btnnum = e
@@ -571,7 +489,8 @@
 				const pointIndex = value.indexOf('.');
 				if (pointIndex === -1) return (value - 0) * 100;
 				const powIndex = value.length - pointIndex - 1;
-				let result = (value.replace('.', '') - 0) * Math.pow(10, 2 - powIndex);
+				// let result = (value.replace('.', '') - 0) * Math.pow(10, 2 - powIndex);
+				let result = value;
 				if(value>=0){
 					result = "+" + result + "%";
 				}else{
@@ -591,19 +510,11 @@
 			}
 		},
 		mounted(){
+			this.selfParam=this.param
 			this.showView();
 		},
 		watch: {
 			'$route':'showView'
-		},
-		created() {
-			// this.param = this.model;
-			// console.log("channel created:",this.param)
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.selfParam.shopNo = uni.getStorageSync("shopNo")
-			//ajax调用
-			this.getServerData();
-			this.showView();
 		}
 	}
 </script>
@@ -621,22 +532,18 @@
 	.shop-item-title{
 		width: 100%;
 		display: flex;
-		margin: 0rpx 10rpx 0rpx 10rpx;
-		padding: 0 10rpx 0 10rpx;
+/* 		margin: 0rpx 10rpx 0rpx 10rpx;
+		padding: 0 10rpx 0 10rpx; */
 		flex-direction: row;
 		font-size: 30rpx;
-		
-		background:rgba(220, 241, 250 ,0.5);
 	}
 	.shop-item-content{
 		width: 100%;
 		display: flex;
-		margin: 0rpx 10rpx 0rpx 10rpx;
-		padding: 0 10rpx 0rpx 10rpx;
+/* 		margin: 0rpx 10rpx 0rpx 10rpx;
+		padding: 0 10rpx 0rpx 10rpx; */
 		flex-direction: row;
 		font-size: 40rpx;
-		
-		background:rgba(220, 241, 250 ,0.5);
 	}
 	
 	.rankTable{
@@ -677,8 +584,8 @@
 		border-color:#FFFFFF;
 	}
 	.box-contaniner{
-		width: 100%;
-		margin: 20rpx 10rpx 40rpx 10rpx;
+		width: 90%;
+		margin: 20px 10px;
 	}
 	
 	.clineChart-title{
@@ -687,16 +594,16 @@
 	}
 	/* 将三个内容view的display设置为none(隐藏) */
 	.linechart-tab{
-		padding:0rpx 5rpx 0rpx 5rpx;
+		/* padding:0rpx 5rpx 0rpx 5rpx; */
 		flex-direction: row;
 		display: flex;
 		text-align: right;
-		justify-content:flex-end;
+		justify-content:space-around;
 		font-size: 30rpx;
 	}
 	
 	.arcbarChart-box{
-		margin: 20rpx 10rpx 20rpx 10rpx;
+		/* margin: 20rpx 10rpx 20rpx 10rpx; */
 		/* padding: 20rpx 0rpx 20rpx 0rpx; */
 	}
 	
@@ -721,6 +628,7 @@
 	.arcbar-text{
 		flex-direction: column;
 		display: flex;
+		padding:20px 10px ;
 		/* justify-content:space-between; */
 	}
 	.arcbar-text-line{
@@ -735,7 +643,7 @@
 	.btna{
 		color: #000000;
 		background: #ebebeb;
-		padding:0px 30rpx 0px 30rpx;
+		padding:0px 30px 0px 30px;
 	}
 	.dis{
 		display: block;
@@ -744,7 +652,7 @@
 	.hide{
 		color: #000000;
 		background: #FFFFFF;
-		padding:0px 30rpx 0px 30rpx;
+		padding:0px 30px 0px 30px;
 	}
 	.small-text-green{
 		color: #00FF00;
@@ -759,21 +667,35 @@
 	.sale-row-2{
 		display: flex;
 		flex-direction: row;	
-		margin: 20rpx 10rpx 20rpx 10rpx;
-		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
+		/* margin: 20rpx 10rpx 20rpx 10rpx; */
 	}
 	
 	.row-box {
 		display: flex;
 		width: 50%;
-		margin: 10rpx 10rpx;
-		/* padding: 0 10rpx; */
 		flex-direction: column;
-		background:rgba(220, 241, 250 ,0.5);
 	}
 	
 	.row_box_2{
 		display: flex;
 		flex-direction: row;	
+	}
+	
+	.line{
+		/* margin: 30px 10px; */
+		padding:20px 10px ;
+		display: flex;
+		flex-direction: column;
+		background:rgba(220, 241, 250 ,0.5);
+		border-radius: 15px;
+	}
+	
+	.lineTwo{
+		margin: 10px 10px;
+		padding:10px 5px ;
+		display: flex;
+		flex-direction: column;
+		background:rgba(220, 241, 250 ,0.5);
+		border-radius: 15px;
 	}
 </style>

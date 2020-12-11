@@ -14,7 +14,7 @@
 			<view @click="goCompare">对比</view>
 		</view>	 
 		<block v-if="tabIndex==0">
-			<totalView ref="totalView" :param="selfParam"></totalView>
+			<totalView class="page-css" ref="totalView" :param="selfParam"></totalView>
 		</block>
 		<block v-if="tabIndex==1">
 			<gameView ref="gameView" :param="selfParam"></gameView>
@@ -120,11 +120,11 @@
 		onShow() {//此处接受来自日期选择页面的参数
 			this.returnFromDatePicker()
 			console.log("sales-self-onShow:",this.selfParam)
-			/* if(!this.isFirstLoad){
+			if(!this.isFirstLoad){
 				console.log("重新加载")
 				this.$refs['totalView'].refresh(JSON.stringify(this.selfParam));
 			}
-			this.isFirstLoad=false */
+			this.isFirstLoad=false
 		},
 		onUnload() {
 			//页面销毁删除缓存日期数据
@@ -240,23 +240,23 @@
 
 <style>
     /* #ifndef APP-PLUS */
-    page {
+  /*  page {
         width: 100%;
         min-height: 100%;
         display: flex;
-    }
+    } */
 
     /* #endif */
-
-    .tabs {
-        flex: 1;
+	.page-css{
 		width: 100%;
+	}
+	
+    .tabs {
+        /* flex: 1; */
+		/* width: 100%; */
         flex-direction: column;
         overflow: hidden;
         background-color: #ffffff;
-        /* #ifdef MP-ALIPAY || MP-BAIDU */
-        height: 80vh;
-        /* #endif */
     }
 
     .scroll-h {
@@ -271,12 +271,7 @@
 		border-bottom-style: solid;
 		border-bottom-width: 1px; */
     }
-
-    .line-h {
-        height: 1rpx;
-        background-color: #cccccc;
-    }
-
+	
     .uni-tab-item {
         /* #ifndef APP-PLUS */
         display: inline-block;
@@ -318,24 +313,6 @@
         width: 750rpx;
     }
 
-    .update-tips {
-        position: absolute;
-        left: 0;
-        top: 41px;
-        right: 0;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        background-color: #FDDD9B;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
-    .update-tips-text {
-        font-size: 14px;
-        color: #ffffff;
-    }
-
     .refresh {
         width: 750rpx;
         height: 64px;
@@ -358,31 +335,6 @@
 		transform-origin: 15px 15px;
 	}
 
-	.refresh-icon-active {
-		transform: rotate(180deg);
-	}
-
-	.loading-icon {
-		width: 20px;
-		height: 20px;
-		margin-right: 5px;
-		color: #999999;
-	}
-
-    .loading-text {
-        margin-left: 2px;
-        font-size: 16px;
-        color: #999999;
-    }
-
-    .loading-more {
-        align-items: center;
-        justify-content: center;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        text-align: center;
-    }
-
     .loading-more-text {
         font-size: 28rpx;
         color: #999;
@@ -393,11 +345,6 @@
 		padding: 10px 0;
 	}
 	
-	.popup-content {
-		background-color: #fff;
-		padding: 15px;
-		height: 500px;
-	}
 	.content {
 		display: flex;
 		align-items: center;

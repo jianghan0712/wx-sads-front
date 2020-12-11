@@ -13,19 +13,19 @@
 			<view @click="goCompare">对比</view>
 		</view>	
 		<block v-if="tabIndex==0">
-			<channelTotalView :model="selfParam"></channelTotalView>
+			<channelTotalView ref="totalView" :param="selfParam"></channelTotalView>
 		</block>
 		<block v-if="tabIndex==1">
-			<gameView :model="modelSet"></gameView>
+			<gameView ref="gameView" :param="modelSet"></gameView>
 		</block>
 		<block v-if="tabIndex==2">
-			<channelLevelView></channelLevelView>
+			<channelLevelView ref="levelView" :param="selfParam"></channelLevelView>
 		</block>
 		<block v-if="tabIndex==3">
-			<channelTicketView></channelTicketView>
+			<channelTicketView ref="ticketView" :param="selfParam"></channelTicketView>
 		</block>
 		<block v-if="tabIndex==4">
-			<channelMatchView></channelMatchView>
+			<channelMatchView ref="matchView" :param="selfParam"></channelMatchView>
 		</block>
 	</view>
 </template>
@@ -50,7 +50,28 @@
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.modelSet.gateNo = option.number
+			this.selfParam.shopNo = uni.getStorageSync("shopNo")
 			this.returnFromDatePicker();
+		},
+		onShow() {//此处接受来自日期选择页面的参数
+			this.returnFromDatePicker()
+			console.log("sales-self-onShow:",this.selfParam)
+			if(!this.isFirstLoad){
+				console.log("重新加载")
+				if(this.tabIndex==0){
+					this.$refs['totalView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.tabIndex==1){
+					this.$refs['gameView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.tabIndex==2){
+					this.$refs['levelView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.tabIndex==3){
+					this.$refs['ticketView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.tabIndex==4){
+					this.$refs['matchView'].refresh(JSON.stringify(this.selfParam));
+				}
+				
+			}
+			this.isFirstLoad=false
 		},
 		data() {
 			return {
@@ -430,7 +451,7 @@
 		justify-content: center;
 		font-size: 32rpx;
 		color: #333;
-		padding-top: 40rpx;
+		/* padding-top: 40rpx; */
 	}
 	.section{
 		background-color: #FFFFFF;

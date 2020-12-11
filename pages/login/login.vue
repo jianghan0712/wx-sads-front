@@ -174,10 +174,12 @@
 				uni.setStorageSync("businessDate", JSON.stringify(selfParam.businessDate));
 				uni.setStorageSync("token",selfParam.token)
 				uni.setStorageSync("selfParam",JSON.stringify(selfParam))
+				console.log("this.areaMap",this.areaMap) 
 				// uni.navigateBack()
 				uni.switchTab({
 					url: "/pages/sales/index"
 				});
+				
 			},
             submit(){		
 				console.log(this.form)

@@ -95,11 +95,16 @@
 					},
 					compareDate:{
 						dateType:'date',
-						view:'',//用于展示日期、年、月等
-						date:{startDate:'', endDate:''},
-						week:{startDate:'', endDate:''},
-						month:{startDate:'', endDate:''},
-						year:{startDate:'', endDate:''},
+						viewLeft:'',//用于展示日期、年、月等
+						viewRight:'',
+						dateLeft:{startDate:'', endDate:''},
+						dateRight:{startDate:'', endDate:''},
+						weekLeft:{startDate:'', endDate:''},
+						weekRight:{startDate:'', endDate:''},
+						monthLeft:{startDate:'', endDate:''},
+						monthRight:{startDate:'', endDate:''},
+						yearLeft:{startDate:'', endDate:''},
+						yearRight:{startDate:'', endDate:''},
 					},	
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id

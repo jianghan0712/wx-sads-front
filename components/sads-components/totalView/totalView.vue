@@ -28,15 +28,17 @@
 		<block v-if="selfParam.provinceCenterId!=0">
 			<view class="box-contaniner">
 				<view class="shop-title">全国排名</view>
-				<view class="shop-item-title">
-					<view style="width: 300rpx;">排名</view>				
-					<view style="width: 200rpx;">周同比</view>
-					<view style="-webkit-flex: 1;flex: 1;">环比</view>
-				</view>
-				<view class="shop-item-content">
-					<view style="width: 300rpx;">{{rankData.sum}} 名</view>
-					<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;"> {{rankData.tongbi}}</view>
-					<view :class="rankData.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{rankData.huanbi}}</view>
+				<view class="line">	
+					<view class="shop-item-title">
+						<view style="width: 50%;">排名</view>				
+						<view style="width: 25%;">周同比</view>
+						<view style="-webkit-flex: 1;flex: 1;">环比</view>
+					</view>
+					<view class="shop-item-content">
+						<view style="width: 50%;">{{rankData.sum}} 名</view>
+						<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;"> {{rankData.tongbi}}</view>
+						<view :class="rankData.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{rankData.huanbi}}</view>
+					</view>
 				</view>
 			</view>
 		</block>
@@ -75,27 +77,32 @@
 		<!-- 门店在售情况-->
 		<view class="box-contaniner">
 			<view class="shop-title">门店在售情况</view>
-			<view class="shop-item-title">
-				<view style="width: 300rpx;">在售门店数</view>				
-				<view style="width: 200rpx;">同比</view>
-				<view style="-webkit-flex: 1;flex: 1;">环比</view>
-			</view>
-			<view class="shop-item-content">
-				<view style="width: 300rpx;">{{shopData.shop.sum}}</view>
-				<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(shopData.shop.tongbi)}}</view>
-				<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(shopData.shop.huanbi)}}</view>
+			<view class="line">			
+				<view class="shop-item-title">
+					<view style="width: 40%;">在售门店数</view>				
+					<view style="width: 30%;">同比</view>
+					<view style="width: 25%;">环比</view>
+				</view>
+				<view class="shop-item-content">
+					<view style="width: 40%;">{{shopData.shop.sum}}</view>
+					<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(shopData.shop.tongbi)}}</view>
+					<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(shopData.shop.huanbi)}}</view>
+				</view>
 			</view>
 		</view>
 		<view class="box-contaniner">
-			<view class="shop-item-title">
-				<view style="width: 300rpx;">门店在售率</view>				
-				<view style="width: 200rpx;">同比</view>
-				<view style="-webkit-flex: 1;flex: 1;">环比</view>
-			</view>
-			<view class="shop-item-content">
-				<view style="width: 300rpx;">{{valueToPercent2(shopData.rate.sum)}}</view>				
-				<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(shopData.rate.tongbi)}}</view>
-				<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(shopData.rate.huanbi)}}</view>
+			<view class="line">
+				<view class="shop-item-title">
+					<view style="width: 40%;">门店在售率</view>				
+					<view style="width: 30%;">同比</view>
+					<view style="width: 25%;">环比</view>
+				</view>
+				
+				<view class="shop-item-content">
+					<view style="width: 40%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
+					<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(shopData.rate.tongbi)}}</view>
+					<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(shopData.rate.huanbi)}}</view>
+				</view>
 			</view>
 		</view>
 		
@@ -114,15 +121,17 @@
 			<!-- 全国返奖情况-->
 			<view class="box-contaniner">
 				<view class="shop-title">{{selfParam.provinceCenterName}}返奖情况</view>
-				<view class="shop-item-title">
-					<view style="width: 400rpx;">返奖率</view>				
-					<view style="width: 200rpx;">同比</view>
-					<view style="-webkit-flex: 1;flex: 1;">环比</view>
-				</view>
-				<view class="shop-item-content">
-					<view style="width: 400rpx;">{{returnData.rate.sum}}</view>
-					<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 200rpx;">{{valueToPercent(returnData.rate.tongbi)}}</view>
-					<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+				<view class="line">
+					<view class="shop-item-title">
+						<view style="width: 40%;">返奖率</view>				
+						<view style="width: 30%;">同比</view>
+						<view style="width: 25%;">环比</view>
+					</view>
+					<view class="shop-item-content">
+						<view style="width: 40%;">{{returnData.rate.sum}}</view>
+						<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(returnData.rate.tongbi)}}</view>
+						<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+					</view>
 				</view>
 			</view>
 			
@@ -728,24 +737,24 @@
 	}
 	
 	.shop-item-title{
-		width: 100%;
+		/* width: 100%; */
 		display: flex;
-		margin: 0rpx 10rpx 0rpx 10rpx;
-		padding: 0 10rpx 0 10rpx;
+		/* margin: 0rpx 10rpx 0rpx 10rpx; */
+		/* padding: 0 10rpx 0 10rpx; */
 		flex-direction: row;
 		font-size: 30rpx;
 		
-		background:rgba(220, 241, 250 ,0.5);
+		/* background:rgba(220, 241, 250 ,0.5); */
 	}
 	.shop-item-content{
-		width: 100%;
+		/* width: 100%; */
 		display: flex;
-		margin: 0rpx 10rpx 0rpx 10rpx;
-		padding: 0 10rpx 0rpx 10rpx;
+		/* margin: 0rpx 10rpx 0rpx 10rpx; */
+		/* padding: 0 10rpx 0rpx 10rpx; */
 		flex-direction: row;
 		font-size: 40rpx;
 		
-		background:rgba(220, 241, 250 ,0.5);
+		/* background:rgba(220, 241, 250 ,0.5); */
 	}
 	
 	.rankTable{
@@ -786,8 +795,8 @@
 		border-color:#FFFFFF;
 	}
 	.box-contaniner{
-		width: 100%;
-		margin: 20rpx 10rpx 40rpx 10rpx;
+		width: 95%;
+		margin: 20px 10px;
 	}
 	
 	.clineChart-title{
@@ -844,7 +853,7 @@
 	.btna{
 		color: #000000;
 		background: #ebebeb;
-		padding:0px 30rpx 0px 30rpx;
+		padding:0px 30px 0px 30px;
 	}
 	.dis{
 		display: block;
@@ -853,7 +862,7 @@
 	.hide{
 		color: #000000;
 		background: #FFFFFF;
-		padding:0px 30rpx 0px 30rpx;
+		padding:0px 30px 0px 30px;
 	}
 	.small-text-green{
 		color: #00FF00;
@@ -863,5 +872,14 @@
 	.small-text-red{
 		color: #FF0000;
 		/* font-size: 30rpx; */
+	}
+	
+	.line{
+		/* margin: 30px 10px; */
+		padding:30px 10px;
+		display: flex;
+		flex-direction: column;
+		background:rgba(220, 241, 250 ,0.5);
+		border-radius: 15px;
 	}
 </style>
