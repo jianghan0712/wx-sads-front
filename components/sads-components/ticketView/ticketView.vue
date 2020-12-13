@@ -1,47 +1,49 @@
 <template>
 	<view>
 		<view class="box-contaniner">
-			<view class="container-title">单票金额</view>
-			<ticketData ref="ticketData" :dataAs="ticketData"></ticketData>
-		</view>
-		
-		<view class="box-contaniner">
-			<view class="container-title">各票面区间的票数及占比</view>
-			<view class="tab-content">
-				<view class="tab-title">
-					<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">竞彩</view>
-				　　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">足球</view>
-				  　<view @tap="change(2)" :class="btnnum == 2?'btna':'hide'">篮球</view>
-				</view>	
-				<view class="end-cont" :class="{dis:btnnum == 0}">	
-					<view class="ring_chart">
-						<ring-chart :dataAs="pieData" ref="ringChart0" canvasId="index_ring_0"/>
+			<view class="box-contaniner">
+				<view class="container-title">单票金额</view>
+				<ticketData ref="ticketData" :dataAs="ticketData"></ticketData>
+			</view>
+			
+			<view class="box-contaniner">
+				<view class="container-title">各票面区间的票数及占比</view>
+				<view class="tab-content">
+					<view class="tab-title">
+						<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">竞彩</view>
+					　　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">足球</view>
+					  　<view @tap="change(2)" :class="btnnum == 2?'btna':'hide'">篮球</view>
+					</view>	
+					<view class="end-cont" :class="{dis:btnnum == 0}">	
+						<view class="ring_chart">
+							<ring-chart :dataAs="pieData" ref="ringChart0" canvasId="index_ring_0"/>
+						</view>
 					</view>
-				</view>
-				<view class="end-cont" :class="{dis:btnnum == 1}">
-					<view class="ring_chart">
-						<ring-chart :dataAs="pieData1" ref="ringChart1" canvasId="index_ring_1"/>
+					<view class="end-cont" :class="{dis:btnnum == 1}">
+						<view class="ring_chart">
+							<ring-chart :dataAs="pieData1" ref="ringChart1" canvasId="index_ring_1"/>
+						</view>
 					</view>
+					<view class="end-cont" :class="{dis:btnnum == 2}">
+						<view class="ring_chart">
+							<ring-chart :dataAs="pieData2" ref="ringChart2" canvasId="index_ring_2"/>
+						</view>					
+					</view>
+					<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
 				</view>
-				<view class="end-cont" :class="{dis:btnnum == 2}">
-					<view class="ring_chart">
-						<ring-chart :dataAs="pieData2" ref="ringChart2" canvasId="index_ring_2"/>
-					</view>					
+			</view>
+			
+			<view class="box-contaniner">
+				<view class="container-title">				
+					<view>各地区单票金额</view>
+					<view @click="gotoRankAll()">全部>></view>
 				</view>
-				<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+				<view class="table">
+					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
+				</view>
 			</view>
+			<slot />
 		</view>
-		
-		<view class="box-contaniner">
-			<view class="container-title">				
-				<view>各地区单票金额</view>
-				<view @click="gotoRankAll()">全部>></view>
-			</view>
-			<view class="table">
-				<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
-			</view>
-		</view>
-		<slot />
 	</view>	
 </template>
 
@@ -124,9 +126,11 @@
 		},
 		onLoad() {		
 			_self = this;	
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 		},
 		created() {
-			this.selfParam=this.param
+			// this.selfParam=this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.getServerData();
 			this.showView()
 		},
@@ -145,7 +149,6 @@
 				this.getPieData('足彩');
 				this.getPieData('篮彩');
 				this.getRankTable(this.selfParam.provinceCenterId,this.selfParam.businessDate);
-				this.$refs['ticketData'].showDataContainer();
 			},
 			change(e) {
 			    this.btnnum = e;
@@ -209,6 +212,7 @@
 					this.$set(this.ticketData, 'big1', big1);
 					this.$set(this.ticketData, 'small1', small1);
 					this.$set(this.ticketData, 'small2', small2);
+					this.$refs['ticketData'].showDataContainer();
 
 					console.log('request ticketData', this.ticketData);				
 					this.res = '请求结果 : ' + JSON.stringify(res);
@@ -351,7 +355,7 @@
 			}
 		},
 		mounted(){
-			this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.showView();
 		},
 		watch: {

@@ -61,21 +61,22 @@
 				gamebottom,dataContainer,vTable
 			},
 			props: {
-				// model:{
-				// 	//数据
-				// 	type: Object,
-				// 	default: () => ({})
-				// }
+				param:{
+					//数据
+					type: Object,
+					default: () => ({})
+				}
 			},
 			created() {
 				// this.showModel = this.model;
 				this.showModel = JSON.parse(uni.getStorageSync("selfParam"))
+				console.log(this.showModel)
 				if(this.arcbarNumTop=='足球'){
 					this.totalData = this.footballData;
 				}else{
 					this.totalData = this.basketballData;
 				}
-				
+				this.returnFromDatePicker();
 				this.$nextTick(()=>{
 					this.loadData();
 				});
@@ -83,9 +84,10 @@
 					this.loadData();
 					this.changeTop("足球")
 				}, 1);
+			},
+			onShow() {
 				this.returnFromDatePicker();
-				 
-				
+				this.loadData();
 			},
 			data() {
 				return {
@@ -247,6 +249,10 @@
 							}
 						],	
 				};
+			},
+			onShow() {
+				this.returnFromDatePicker();
+				this.loadData();
 			},
 			methods: {
 				createParam(){
@@ -734,5 +740,6 @@
 		justify-content: space-between;
 		background-color: #FFFFFF;
 	}
+	
 	
 </style>

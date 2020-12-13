@@ -1,154 +1,156 @@
 <template>
 	<view>
 		<view class="box-contaniner">
-			<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
-		</view>
-		
-		<!-- 折线图区域-->
-		<view class="box-contaniner">
-			<view class="clineChart-title">
-				<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
-				<view class="linechart-tab">
-				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
-				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
-				</view>
-			</view>		
-			<view class="end-cont" :class="{dis:btnnum == 0}">		
-				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
-							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
-			</view>
-			<view class="end-cont" :class="{dis:btnnum == 1}">		　
-				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
-							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'张',fixed: 0}}"/>
-			</view>		
-		</view>
-		
-		<block v-if="selfParam.provinceCenterId!=0">
 			<view class="box-contaniner">
-				<view class="shop-title">全国排名</view>
-				<view class="line">	
-					<view class="shop-item-title">
-						<view style="width: 50%;">排名</view>				
-						<view style="width: 25%;">周同比</view>
-						<view style="-webkit-flex: 1;flex: 1;">环比</view>
-					</view>
-					<view class="shop-item-content">
-						<view style="width: 50%;">{{rankData.sum}} 名</view>
-						<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;"> {{rankData.tongbi}}</view>
-						<view :class="rankData.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{rankData.huanbi}}</view>
-					</view>
-				</view>
+				<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
 			</view>
-		</block>
-		
-		<!-- 圆环图区域 -->
-		<view class="box-contaniner">
-			<view class="clineChart-title">
-				<view style="font-size: 30rpx;font-weight: bold;">竞彩足篮球销量及占比</view>
-				<view class="arcbarChart-tab">
-					<view @tap="changeArcbar(0)" :class="arcbarNum == 0?'btna':'hide'" >足球</view>
-					<view @tap="changeArcbar(1)" :class="arcbarNum == 1?'btna':'hide'" >篮球</view>
-				</view>
-			</view>	
-			<view class="end-cont" :class="{dis:arcbarNum == 0}" >
-				<view class="arcbarChart-content">
-					<view class="arcbar" style="width: 50%;">
-						<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
-					</view>
-					<view class="arcbar-text" style="width: 50%;">
-						<dataContainerTwo  ref="dataContain2" :dataAs="footballData"></dataContainerTwo>
-					</view>
-				</view>
-			</view>
-			<view class="end-cont" :class="{dis:arcbarNum == 1}">		　						 
-				<view class="arcbarChart-content">
-					<view class="arcbar" style="width: 50%;">
-						<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
-					</view>
-					<view class="arcbar-text" style="width: 50%;">
-						<dataContainerTwo  ref="dataContain3" :dataAs="basketballData"></dataContainerTwo>
-					</view>
-				</view>
-			</view>				
-		</view>		
-		
-		<!-- 门店在售情况-->
-		<view class="box-contaniner">
-			<view class="shop-title">门店在售情况</view>
-			<view class="line">			
-				<view class="shop-item-title">
-					<view style="width: 40%;">在售门店数</view>				
-					<view style="width: 30%;">同比</view>
-					<view style="width: 25%;">环比</view>
-				</view>
-				<view class="shop-item-content">
-					<view style="width: 40%;">{{shopData.shop.sum}}</view>
-					<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(shopData.shop.tongbi)}}</view>
-					<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(shopData.shop.huanbi)}}</view>
-				</view>
-			</view>
-		</view>
-		<view class="box-contaniner">
-			<view class="line">
-				<view class="shop-item-title">
-					<view style="width: 40%;">门店在售率</view>				
-					<view style="width: 30%;">同比</view>
-					<view style="width: 25%;">环比</view>
-				</view>
-				
-				<view class="shop-item-content">
-					<view style="width: 40%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
-					<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(shopData.rate.tongbi)}}</view>
-					<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(shopData.rate.huanbi)}}</view>
-				</view>
-			</view>
-		</view>
-		
-		<!-- 各地区销量排行-->
-		<view class="box-contaniner">
-			<view class="rankTable-title">
-				<view>各地区销量排行</view>
-				<view class="rankTable-more" @click="goSaleRank(tableDataDetail,tableColumns)">全部>></view>
-			</view>
-			<view class="example">
-				<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
-			</view>
-		</view>
-		
-		<block v-if="today!= selfParam.businessDate.view">
-			<!-- 全国返奖情况-->
+			
+			<!-- 折线图区域-->
 			<view class="box-contaniner">
-				<view class="shop-title">{{selfParam.provinceCenterName}}返奖情况</view>
-				<view class="line">
+				<view class="clineChart-title">
+					<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
+					<view class="linechart-tab">
+					　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
+					  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
+					</view>
+				</view>		
+				<view class="end-cont" :class="{dis:btnnum == 0}">		
+					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
+								:xAxisAs="{scrollShow:false}" 
+								:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
+				</view>
+				<view class="end-cont" :class="{dis:btnnum == 1}">		　
+					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
+								:xAxisAs="{scrollShow:false}" 
+								:yAxisAs="{formatter: {type: 'number', name:'张',fixed: 0}}"/>
+				</view>		
+			</view>
+			
+			<block v-if="selfParam.provinceCenterId!=0">
+				<view class="box-contaniner">
+					<view class="shop-title">全国排名</view>
+					<view class="line">	
+						<view class="shop-item-title">
+							<view style="width: 50%;">排名</view>				
+							<view style="width: 25%;">周同比</view>
+							<view style="-webkit-flex: 1;flex: 1;">环比</view>
+						</view>
+						<view class="shop-item-content">
+							<view style="width: 50%;">{{rankData.sum}} 名</view>
+							<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;"> {{rankData.tongbi}}</view>
+							<view :class="rankData.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{rankData.huanbi}}</view>
+						</view>
+					</view>
+				</view>
+			</block>
+			
+			<!-- 圆环图区域 -->
+			<view class="box-contaniner">
+				<view class="clineChart-title">
+					<view style="font-size: 30rpx;font-weight: bold;">竞彩足篮球销量及占比</view>
+					<view class="arcbarChart-tab">
+						<view @tap="changeArcbar(0)" :class="arcbarNum == 0?'btna':'hide'" >足球</view>
+						<view @tap="changeArcbar(1)" :class="arcbarNum == 1?'btna':'hide'" >篮球</view>
+					</view>
+				</view>	
+				<view class="end-cont" :class="{dis:arcbarNum == 0}" >
+					<view class="arcbarChart-content">
+						<view class="arcbar" style="width: 50%;">
+							<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
+						</view>
+						<view class="arcbar-text" style="width: 50%;">
+							<dataContainerTwo  ref="dataContain2" :dataAs="footballData"></dataContainerTwo>
+						</view>
+					</view>
+				</view>
+				<view class="end-cont" :class="{dis:arcbarNum == 1}">		　						 
+					<view class="arcbarChart-content">
+						<view class="arcbar" style="width: 50%;">
+							<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
+						</view>
+						<view class="arcbar-text" style="width: 50%;">
+							<dataContainerTwo  ref="dataContain3" :dataAs="basketballData"></dataContainerTwo>
+						</view>
+					</view>
+				</view>				
+			</view>		
+			
+			<!-- 门店在售情况-->
+			<view class="box-contaniner">
+				<view class="shop-title">门店在售情况</view>
+				<view class="line">			
 					<view class="shop-item-title">
-						<view style="width: 40%;">返奖率</view>				
+						<view style="width: 40%;">在售门店数</view>				
 						<view style="width: 30%;">同比</view>
 						<view style="width: 25%;">环比</view>
 					</view>
 					<view class="shop-item-content">
-						<view style="width: 40%;">{{returnData.rate.sum}}</view>
-						<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(returnData.rate.tongbi)}}</view>
-						<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+						<view style="width: 40%;">{{shopData.shop.sum}}</view>
+						<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(shopData.shop.tongbi)}}</view>
+						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(shopData.shop.huanbi)}}</view>
+					</view>
+				</view>
+			</view>
+			<view class="box-contaniner">
+				<view class="line">
+					<view class="shop-item-title">
+						<view style="width: 40%;">门店在售率</view>				
+						<view style="width: 30%;">同比</view>
+						<view style="width: 25%;">环比</view>
+					</view>
+					
+					<view class="shop-item-content">
+						<view style="width: 40%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
+						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(shopData.rate.tongbi)}}</view>
+						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(shopData.rate.huanbi)}}</view>
 					</view>
 				</view>
 			</view>
 			
-			<!-- 各地区返奖情况-->
+			<!-- 各地区销量排行-->
 			<view class="box-contaniner">
 				<view class="rankTable-title">
-					<view>各地区返奖情况</view>
-					<view class="rankTable-more" @click="goSaleRank(tableDataDetail2,tableColumns2)">全部>></view>
+					<view>各地区销量排行</view>
+					<view class="rankTable-more" @click="goSaleRank(tableDataDetail,tableColumns)">全部>></view>
 				</view>
 				<view class="example">
-					<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
+					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 				</view>
 			</view>
-		</block>
+			
+			<block v-if="today!= selfParam.businessDate.view">
+				<!-- 全国返奖情况-->
+				<view class="box-contaniner">
+					<view class="shop-title">{{selfParam.provinceCenterName}}返奖情况</view>
+					<view class="line">
+						<view class="shop-item-title">
+							<view style="width: 40%;">返奖率</view>				
+							<view style="width: 30%;">同比</view>
+							<view style="width: 25%;">环比</view>
+						</view>
+						<view class="shop-item-content">
+							<view style="width: 40%;">{{returnData.rate.sum}}</view>
+							<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(returnData.rate.tongbi)}}</view>
+							<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+						</view>
+					</view>
+				</view>
+				
+				<!-- 各地区返奖情况-->
+				<view class="box-contaniner">
+					<view class="rankTable-title">
+						<view>各地区返奖情况</view>
+						<view class="rankTable-more" @click="goSaleRank(tableDataDetail2,tableColumns2)">全部>></view>
+					</view>
+					<view class="example">
+						<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
+					</view>
+				</view>
+			</block>
 
-		
-		<slot />
+			
+			<slot />
+		</view>
 	</view>
 </template>
 
@@ -292,7 +294,8 @@
 			this.cHeight=uni.upx2px(500);
 		},
 		created() {
-			this.selfParam = this.param
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			console.log("totalView created:",this.selfParam)
 			this.getServerData();
 			this.showView();
@@ -716,7 +719,7 @@
 
 		},
 		mounted(){
-			// this.selfParam=this.model
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.getServerData();
 			this.showView();
 		},
@@ -795,8 +798,8 @@
 		border-color:#FFFFFF;
 	}
 	.box-contaniner{
-		width: 95%;
-		margin: 20px 10px;
+		width: 100%;
+		margin: 0px 10px 10px 0px;
 	}
 	
 	.clineChart-title{

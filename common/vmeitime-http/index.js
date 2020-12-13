@@ -14,8 +14,8 @@ export const getRequest = (url,data) => {
 		return response;
 	}
     return http.request({
-		// baseUrl: 'http://127.0.0.1:8091/',
-		baseUrl: 'http://192.168.1.105:8091/',
+		baseUrl: 'http://192.168.1.105:8901/',
+		// baseUrl: 'http://192.168.54.110:8088/',
 		
 		// baseUrl: 'https://www.jianghan0712.com/',
         url,

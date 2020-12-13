@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class ='centerView' style="width: 100%; padding-top: 5rpx;">
+		<view class ='box-container' style="width: 100%; padding-top: 5rpx;">
 			<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
 				<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
 				 总览
@@ -603,6 +603,10 @@
 			this.returnFromDatePicker();
 			this.loadData();
 		},
+		onShow() {
+			this.returnFromDatePicker();
+			this.loadData();
+		},
 		onPageScroll(e) {
 			this.backTop.scrollTop = e.scrollTop;
 		}
@@ -666,5 +670,8 @@
 		padding: 0rpx 0rpx 0rpx 0rpx;
 		border-color:initial;
 	}
-	
+	.box-contaniner{
+		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
+	}
 </style>

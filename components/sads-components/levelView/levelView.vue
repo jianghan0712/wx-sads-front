@@ -115,7 +115,9 @@
 				pieData: {					//饼状图数据
 					series: [],
 					},
-				pieData1: {},
+				pieData1: {
+					series: [],
+				},
 				tableData: [],
 				tableColumns: [{
 						title: "排名",
@@ -130,7 +132,7 @@
 					{
 						title: '占比',
 						key: 'zhanbi',
-						$width:"150px"
+						$width:"130px"
 					},
 					{
 						title: '销量（元）',

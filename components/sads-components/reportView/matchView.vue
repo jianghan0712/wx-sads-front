@@ -1,31 +1,33 @@
 <template>
 	<view>
-		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
-			<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
-			 赛事
-			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
+		<view class = "box-container">
+			<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
+				<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
+				 赛事
+				<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
+			</view>
+			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+				<view style="width: 350rpx;">
+					<view class="black-text">足球赛事</view>
+					<view class="gray-text">当日完赛场 {{pagedata[1]}}场</view>
+				</view>
+				<view style="width: 350rpx;">
+					<view class="black-text" style="text-align: right;" @click="toFoot()">详情></view>
+					<view class="gray-text">当日在售赛场 {{pagedata[0]}}场</view>
+				</view>
+			</view>
+			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+				<view style="width: 350rpx;">
+					<view class="black-text">篮球赛事</view>
+					<view class="gray-text">当日完赛场 {{pagedata[3]}}场</view>
+				</view>
+				<view style="width: 350rpx;">
+					<view class="black-text" style="text-align: right;" @click="toBasket()">详情></view>
+					<view class="gray-text">当日在售赛场 {{pagedata[2]}}场</view>
+				</view>
+			</view>		
+			<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 		</view>
-		<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
-			<view style="width: 350rpx;">
-				<view class="black-text">足球赛事</view>
-				<view class="gray-text">当日完赛场 {{pagedata[1]}}场</view>
-			</view>
-			<view style="width: 350rpx;">
-				<view class="black-text" style="text-align: right;" @click="toFoot()">详情></view>
-				<view class="gray-text">当日在售赛场 {{pagedata[0]}}场</view>
-			</view>
-		</view>
-		<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
-			<view style="width: 350rpx;">
-				<view class="black-text">篮球赛事</view>
-				<view class="gray-text">当日完赛场 {{pagedata[3]}}场</view>
-			</view>
-			<view style="width: 350rpx;">
-				<view class="black-text" style="text-align: right;" @click="toBasket()">详情></view>
-				<view class="gray-text">当日在售赛场 {{pagedata[2]}}场</view>
-			</view>
-		</view>		
-		<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 	</view>
 </template>
 
@@ -145,16 +147,16 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;
-					if(data.length=0){
+					if(data.length==0){
 						this.$set(that.pagedata,0,0);
 						this.$set(that.pagedata,1,0);
 						this.$set(that.pagedata,2,0);
 						this.$set(that.pagedata,3,0);
 					}else {
-						this.$set(that.pagedata,0,0);
-						this.$set(that.pagedata,1,0);
-						this.$set(that.pagedata,2,0);
-						this.$set(that.pagedata,3,0);
+						this.$set(that.pagedata,0,data[0]);
+						this.$set(that.pagedata,1,data[1]);
+						this.$set(that.pagedata,2,data[2]);
+						this.$set(that.pagedata,3,data[3]);
 					}
 				}).catch((err)=>{
 					this.loading = false;
@@ -176,10 +178,11 @@
 			toBasket(){
 				var that =this;
 				this.loadDetail('2');
+				alert('111111’');
 				uni.navigateTo({
 					title:'篮球赛事详情',
 					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData)+
-					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData1),
+					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData1)
 					
 				});
 			},
@@ -187,12 +190,18 @@
 				var token =getApp().globalData.token;
 				//加载足球
 				var url = '/pentaho/dailyPaper/getDetailMatchSceneCount';
-				var param=param=this.createParam();
+				var param=this.createParam();
+				if(ballType=='1'){
+					param.gameFlag = 1
+				}else if(ballType=='2'){
+					param.gameFlag = 2
+				}
+				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = true;
-					var data =res.data.data;	
-					var finish =data.finish;
-					var onSale = data.onsale;
+					var data1 =res.data.data;	
+					var finish =data1.finish;
+					var onSale = data1.onSale;
 					if(finish.length==0){
 						finish =[{'id':'无','area':0}];
 					}
@@ -209,6 +218,10 @@
 			
 		},
 		created() {
+			this.returnFromDatePicker();
+			this.loadData();
+		},
+		onShow() {
 			this.returnFromDatePicker();
 			this.loadData();
 		},
@@ -247,5 +260,9 @@
 	.viewborder{
 		border-radius: 20rpx;
 		padding: 0rpx 0rpx 0rpx 0rpx;
+	}
+	.box-contaniner{
+		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
 </style>

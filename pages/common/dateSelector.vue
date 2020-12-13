@@ -10,7 +10,7 @@
 			
 			<view class="end-cont" :class="{dis:btnnum == 0}">	
 				<view class ="content">
-					<uni-calendar class="uni-calendar--hook" :selected="info.selected" :showMonth="true" @change="setDate" @monthSwitch="monthSwitch" />
+					<uni-calendar class="uni-calendar--hook" :date="date" :selected="info.selected" :showMonth="true" @change="setDate" @monthSwitch="monthSwitch" />
 				</view>
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">
@@ -50,6 +50,7 @@
 	import zzxCalendar from "@/components/zzx-calendar/zzx-calendar.vue";
 	import uniTag from "@/components/uni/uni-tag/uni-tag.vue"
 	import uniSection from "@/components/uni/uni-section/uni-section.vue"
+	import dateUtils from '@/common/tools/dateUtils.js';
 	/**
 	 * 获取任意时间
 	 */
@@ -81,8 +82,7 @@
 	    var day= new Date(year, month, 0);  
 	    return day.getDate();  
 	}
-	
-	
+		
 	
 	export default {	
 		components: {
@@ -90,7 +90,7 @@
 		},
 		data() {
 		    return {							
-				date:'',
+				date:dateUtils.getToday(),
 				month:{year:'',month:''},
 				week:{start:'',end:''},
 				year:'',			
@@ -119,7 +119,8 @@
 				months:[],
 			}
 		},
-		onLoad() {
+		onLoad(option) {
+			this.date = option.date
 			var date = getDate(new Date())
 			var years = []
 			var j = 0
@@ -222,7 +223,7 @@
 				this.dateInfo.month.startDate = this.month.year + '-' +  month + '-01'
 				this.dateInfo.month.endDate = this.month.year + '-' +  month + '-' + getDaysInOneMonth(this.month.year,this.month.month)
 				
-				console.log("this.month=",this.businessDate.view)
+				// console.log("this.month=",this.businessDate.view)
 			},
 			change2(e) {
 			    this.btnnum = e;

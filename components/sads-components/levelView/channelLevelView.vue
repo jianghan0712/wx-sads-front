@@ -116,12 +116,10 @@
 			};
 		},
 		onLoad() {
-			_self = this;
+			this.returnFromDatePicker();
 		},
 		created() {
-			this.selfParam=this.param
-			this.selfParam.shopNo = uni.getStorageSync("shopNo")
-			this.selfParam.token = uni.getStorageSync("token")
+			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
 		},
@@ -142,6 +140,7 @@
 		    change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
+				this.returnFromDatePicker();
 				this.getServerData();
 				this.showView();
 		    },
@@ -167,6 +166,21 @@
 				this.selfParam = JSON.parse(selfParam)
 				this.getServerData();
 				this.showView();
+			},
+			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName	
+				this.selfParam.token=uni.getStorageSync("token")
+				this.selfParam.shopNo = uni.getStorageSync("shopNo");
 			},
 			createParam(type){
 				console.log("createParam begin")

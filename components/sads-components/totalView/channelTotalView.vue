@@ -1,127 +1,129 @@
 <template>
 	<view>
-		<view class="box-contaniner">
-			<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
-		</view>
-		
-		<!-- 折线图区域-->
-		<view class="box-contaniner">
-			<view class="clineChart-title">
-				<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
-				<view class="linechart-tab">
-				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
-				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
-				</view>
-			</view>		
-			<view class="end-cont" :class="{dis:btnnum == 0}">		
-				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
-							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'百万元',fixed: 0}}"/>
-			</view>
-			<view class="end-cont" :class="{dis:btnnum == 1}">		　
-				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
-							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
-			</view>		
-		</view>
-		
-		<!-- 排名区域-->
-		<view class="box-contaniner">
-			<view class="shop-title">排名</view>
-			<view class="line">
-				<view class="shop-item-title">
-					<view style="width: 50%;">全国排名</view>				
-					<view style="width: 25%;">周同比</view>
-					<view style="-webkit-flex: 1;flex: 1;">环比</view>
-				</view>
-				<view class="shop-item-content">
-					<view style="width: 50%;">{{shopData.shop.sum}}</view>
-					<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.tongbi}}名</view>
-					<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.shop.huanbi}}名</view>
-				</view>
-			</view>
-		</view>		
-		<view class="box-contaniner">
-			<view class="line">
-				<view class="shop-item-title">
-					<view style="width: 50%;">省内排名</view>				
-					<view style="width: 25%;">周同比</view>
-					<view style="-webkit-flex: 1;flex: 1;">环比</view>
-				</view>
-				<view class="shop-item-content">
-					<view style="width: 50%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
-					<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.tongbi}}名</view>
-					<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi}}名</view>
-				</view>
-			</view>
-		</view>
-		<!-- 圆环图区域 -->
-		<view class="box-contaniner">
-			<view class="clineChart-title">
-				<view style="font-size: 30rpx;font-weight: bold;">竞彩足篮球销量及占比</view>
-				<view class="arcbarChart-tab">
-					<view @tap="changeArcbar(0)" :class="arcbarNum == 0?'btna':'hide'" >足球</view>
-					<view @tap="changeArcbar(1)" :class="arcbarNum == 1?'btna':'hide'" >篮球</view>
-				</view>
-			</view>	
-			<view class="end-cont" :class="{dis:arcbarNum == 0}" >
-				<view class="arcbarChart-content">
-					<view class="arcbar" style="width: 50%;">
-						<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
-					</view>
-					<view class="arcbar-text" style="width: 50%;">
-						<dataContainerTwo  ref="dataContain2" :dataAs="footballData"></dataContainerTwo>
-					</view>
-				</view>
-			</view>
-			<view class="end-cont" :class="{dis:arcbarNum == 1}">		　						 
-				<view class="arcbarChart-content">
-					<view class="arcbar" style="width: 50%;">
-						<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
-					</view>
-					<view class="arcbar-text" style="width: 50%;">
-						<dataContainerTwo  ref="dataContain3" :dataAs="basketballData"></dataContainerTwo>
-					</view>
-				</view>
-			</view>				
-		</view>		
-
-		<view class="box-contaniner">
-			<view class="sale-row-2">		
-				<view class="row-box">
-					<view class="lineTwo">
-						<view class="row_box_2">全国足球销量占比</view>
-						<view class="row_box_2">100.00%</view>				
-					</view>
-				</view>
-				<view class="row-box">
-					<view class="lineTwo">
-						<view class="row_box_2">全省足球销量占比</view>
-						<view class="row_box_2">100.00%</view>
-					</view>
-				</view>
-			</view>
-		</view>
-	
-		<block v-if="today!= selfParam.businessDate.view">	 
+		<!-- <view class="box-contaniner"> -->
 			<view class="box-contaniner">
-				<view class="shop-title">{{selfParam.provinceCenterName}}返奖情况</view>
+				<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
+			</view>
+			
+			<!-- 折线图区域-->
+			<view class="box-contaniner">
+				<view class="clineChart-title">
+					<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
+					<view class="linechart-tab">
+					　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
+					  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
+					</view>
+				</view>		
+				<view class="end-cont" :class="{dis:btnnum == 0}">		
+					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
+								:xAxisAs="{scrollShow:false}" 
+								:yAxisAs="{formatter: {type: 'number', name:'百万元',fixed: 0}}"/>
+				</view>
+				<view class="end-cont" :class="{dis:btnnum == 1}">		　
+					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
+								:xAxisAs="{scrollShow:false}" 
+								:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
+				</view>		
+			</view>
+			
+			<!-- 排名区域-->
+			<view class="box-contaniner">
+				<view class="shop-title">排名</view>
 				<view class="line">
 					<view class="shop-item-title">
-						<view style="width: 40%;">返奖率</view>				
-						<view style="width: 35%;">同比</view>
-						<view style="width: 20%;">环比</view>
+						<view style="width: 50%;">全国排名</view>				
+						<view style="width: 25%;">周同比</view>
+						<view style="-webkit-flex: 1;flex: 1;">环比</view>
 					</view>
 					<view class="shop-item-content">
-						<view style="width: 40%;">{{returnData.rate.sum}}</view>
-						<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 35%;">{{valueToPercent(returnData.rate.tongbi)}}</view>
-						<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 20%;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+						<view style="width: 50%;">{{shopData.shop.sum}}</view>
+						<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.tongbi}}名</view>
+						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.shop.huanbi}}名</view>
 					</view>
 				</view>
-			</view>			
-		</block>
+			</view>		
+			<view class="box-contaniner">
+				<view class="line">
+					<view class="shop-item-title">
+						<view style="width: 50%;">省内排名</view>				
+						<view style="width: 25%;">周同比</view>
+						<view style="-webkit-flex: 1;flex: 1;">环比</view>
+					</view>
+					<view class="shop-item-content">
+						<view style="width: 50%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
+						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.tongbi}}名</view>
+						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi}}名</view>
+					</view>
+				</view>
+			</view>
+			<!-- 圆环图区域 -->
+			<view class="box-contaniner">
+				<view class="clineChart-title">
+					<view style="font-size: 30rpx;font-weight: bold;">竞彩足篮球销量及占比</view>
+					<view class="arcbarChart-tab">
+						<view @tap="changeArcbar(0)" :class="arcbarNum == 0?'btna':'hide'" >足球</view>
+						<view @tap="changeArcbar(1)" :class="arcbarNum == 1?'btna':'hide'" >篮球</view>
+					</view>
+				</view>	
+				<view class="end-cont" :class="{dis:arcbarNum == 0}" >
+					<view class="arcbarChart-content">
+						<view class="arcbar" style="width: 50%;">
+							<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
+						</view>
+						<view class="arcbar-text" style="width: 50%;">
+							<dataContainerTwo  ref="dataContain2" :dataAs="footballData"></dataContainerTwo>
+						</view>
+					</view>
+				</view>
+				<view class="end-cont" :class="{dis:arcbarNum == 1}">		　						 
+					<view class="arcbarChart-content">
+						<view class="arcbar" style="width: 50%;">
+							<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
+						</view>
+						<view class="arcbar-text" style="width: 50%;">
+							<dataContainerTwo  ref="dataContain3" :dataAs="basketballData"></dataContainerTwo>
+						</view>
+					</view>
+				</view>				
+			</view>		
+
+			<view class="box-contaniner">
+				<view class="sale-row-2">		
+					<view class="row-box">
+						<view class="lineTwo">
+							<view class="row_box_2">全国足球销量占比</view>
+							<view class="row_box_2">{{allData.footRate}}</view>				
+						</view>
+					</view>
+					<view class="row-box">
+						<view class="lineTwo">
+							<view class="row_box_2">全省足球销量占比</view>
+							<view class="row_box_2">{{allData.baskRate}}</view>
+						</view>
+					</view>
+				</view>
+			</view>
 		
-		<slot />
+			<block v-if="today!= selfParam.businessDate.view">	 
+				<view class="box-contaniner">
+					<view class="shop-title">{{selfParam.provinceCenterName}}返奖情况</view>
+					<view class="line">
+						<view class="shop-item-title">
+							<view style="width: 40%;">返奖率</view>				
+							<view style="width: 35%;">同比</view>
+							<view style="width: 20%;">环比</view>
+						</view>
+						<view class="shop-item-content">
+							<view style="width: 40%;">{{returnData.rate.sum}}</view>
+							<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 35%;">{{valueToPercent(returnData.rate.tongbi)}}</view>
+							<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 20%;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+						</view>
+					</view>
+				</view>			
+			</block>
+			
+			<slot />
+		<!-- </view> -->
 	</view>
 </template>
 
@@ -167,17 +169,19 @@
 				shopData: {shop:{sum:0,tongbi:0,huanbi:0},
 						   rate:{sum:0,tongbi:0,huanbi:0}},
 				returnData: {rate:{sum:0,tongbi:0,huanbi:0}},
+				allData: {footRate:0,
+						  baskRate:0},
 			};
 		},
 		onLoad() {
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
+			this.returnFromDatePicker();
 			// this.getServerData();
 		},
 		created() {
-			this.selfParam=this.param
-			this.selfParam.shopNo = uni.getStorageSync("shopNo")
+			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
 			console.log(this.selfParam)
@@ -193,6 +197,21 @@
 					this.$refs['dataContain2'].showDataContainer();
 					this.$refs['dataContain3'].showDataContainer();
 				});
+			},
+			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName	
+				this.selfParam.token=uni.getStorageSync("token")
+				this.selfParam.shopNo = uni.getStorageSync("shopNo");
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -256,6 +275,7 @@
 												
 						this.$set(this.totalData, 'big1', big1);
 						this.$set(this.totalData, 'big2', big2);
+						this.$refs['dataContain'].showDataContainer();
 						console.log('request totalData', this.totalData);
 												
 						this.res = '请求结果 : ' + JSON.stringify(res);
@@ -309,13 +329,14 @@
 					series[0] = json;				
 					this.$set(this.lineData2, 'categories', categories);
 					this.$set(this.lineData2, 'series', series);
+					this.$refs['lineData2'].showCharts();
 					
 					var json2 = {'name':'销量','data':volData};
 					var series2 = [];
 					series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories); 
 					this.$set(this.lineData1, 'series', series2);
-					
+					this.$refs['lineData1'].showCharts();
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -333,6 +354,7 @@
 				var big2 = {'name':'占比'};
 				var left2 = {'name':'周同比'};
 				var right2 = {'name':'环比'};
+				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -341,7 +363,9 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.data;	
+					var data = res.data.data;
+					this.$set(that.allData,'footRate',data.football[3]);
+					this.$set(that.allData,'baskRate',data.basketball[3]);
 					var tempObj;
 					if(type=='足球'){
 						tempObj = data.football
@@ -367,14 +391,18 @@
 					if(type=='足球'){					
 						this.$set(this.footballData, 'big1', big1);
 						this.$set(this.footballData, 'big2', big2);
+						this.$refs['dataContain2'].showDataContainer();
 						var json = [{name: '足球',data: (tempObj[3]/100).toFixed(2)}]
 						this.$set(this.arcbar0, 'series', json);
+						this.$refs['arcbar0'].showCharts();
 						console.log('request basketballData', this.footballData);
 					}else{
 						this.$set(this.basketballData, 'big1', big1);
 						this.$set(this.basketballData, 'big2', big2);
 						var json = [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
+						this.$refs['dataContain3'].showDataContainer();
 						this.$set(this.arcbar1, 'series', json);
+						this.$refs['arcbar1'].showCharts();
 						console.log('request basketballData', this.basketballData);
 					}
 					console.log("this.footballData=",this.footballData)
@@ -401,7 +429,7 @@
 					this.shopData.shop.sum=data[0];
 					this.shopData.shop.tongbi=data[1];
 					this.shopData.shop.huabi=data[2];
-					
+					alert(data);
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -426,7 +454,7 @@
 					this.shopData.rate.sum=data[0];
 					this.shopData.rate.tongbi=data[1];
 					this.shopData.rate.sum=data[2];
-					
+					alert(data);
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -449,7 +477,7 @@
 					this.returnData.rate.sum=data[0];
 					this.returnData.rate.tongbi=data[1];
 					this.returnData.rate.huanbi=data[2]
-				
+					alert(data);
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -510,7 +538,7 @@
 			}
 		},
 		mounted(){
-			this.selfParam=this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.showView();
 		},
 		watch: {
@@ -584,7 +612,7 @@
 		border-color:#FFFFFF;
 	}
 	.box-contaniner{
-		width: 90%;
+		width: 100%;
 		margin: 20px 10px;
 	}
 	

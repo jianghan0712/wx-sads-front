@@ -1,51 +1,53 @@
 <template>
 	<view>
-		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
-			<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
-			 销售
-			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
-		</view>
-		<view class="padding" >
-			<view style="font-size: 30rpx;padding-left: 20rpx; " >竞猜销量七天走势</view>
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
-			<view >
-				<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" />
+		<view class = "box-container">
+			<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
+				<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
+				 销售
+				<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
 			</view>
-		</view>
-		<view class="padding">
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >竞猜票数七天走势</view>
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(百万张)</view>
-			<view >
-				<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" />
-			</view >
-		</view>
-		<view class="padding">
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >1-2关七天走势</view>
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
-			<view >	
-				<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" />
-			</view >
-		</view>
-		<view class="padding"> 
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >竞猜单票金额七天走势</view>
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(元)</view>
-			<view >
-				<histogram-chart ref="histogramChart4" canvasId="histogramChart4" :dataAs="histogramChart4" />
-			</view >
-		</view>
-		<view class="padding">
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >返奖率七天走势</view>
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(%)</view>
-			<view style="text-align: right;">
-			    <view @tap="changeTop('1')"  :class="fjltype =='1'?'btna':'hide'" >竞猜</view>
-			    <view @tap="changeTop('2')" :class="fjltype =='2'?'btna':'hide'" >足球</view>
-				<view @tap="changeTop('3')" :class="fjltype =='3'?'btna':'hide'" >篮球</view>
+			<view class="padding" >
+				<view style="font-size: 30rpx;padding-left: 20rpx; " >竞猜销量七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
+				<view >
+					<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" />
+				</view>
 			</view>
-			<view >
-				<histogram-chart ref="histogramChart5" canvasId="histogramChart5" :dataAs="histogramChart5" />
-			</view >	
+			<view class="padding">
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >竞猜票数七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(百万张)</view>
+				<view >
+					<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" />
+				</view >
+			</view>
+			<view class="padding">
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >1-2关七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
+				<view >	
+					<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" />
+				</view >
+			</view>
+			<view class="padding"> 
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >竞猜单票金额七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(元)</view>
+				<view >
+					<histogram-chart ref="histogramChart4" canvasId="histogramChart4" :dataAs="histogramChart4" />
+				</view >
+			</view>
+			<view class="padding">
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >返奖率七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(%)</view>
+				<view style="text-align: right;">
+					<view @tap="changeTop('1')"  :class="fjltype =='1'?'btna':'hide'" >竞猜</view>
+					<view @tap="changeTop('2')" :class="fjltype =='2'?'btna':'hide'" >足球</view>
+					<view @tap="changeTop('3')" :class="fjltype =='3'?'btna':'hide'" >篮球</view>
+				</view>
+				<view >
+					<histogram-chart ref="histogramChart5" canvasId="histogramChart5" :dataAs="histogramChart5" />
+				</view >	
+			</view>
+			<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 		</view>
-		<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 	</view>
 </template>
 
@@ -339,6 +341,10 @@
 			this.returnFromDatePicker();
 			this.loadData();
 		},
+		onShow() {
+			this.returnFromDatePicker();
+			this.loadData();
+		},
 		onPageScroll(e) {
 			this.backTop.scrollTop = e.scrollTop;
 		}
@@ -370,5 +376,9 @@
 		font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 		width: 100rpx;
 		display: inline;
+	}
+	.box-contaniner{
+		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
 </style>

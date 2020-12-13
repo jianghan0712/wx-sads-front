@@ -32,7 +32,7 @@ http.delete('user/1').then((res)=>{
 export default {
 	config: {
 		// baseUrl: "http://192.168.1.105:8901/",
-		baseUrl: "https://122.51.159.32:8901/",
+		baseUrl: "https://192.168.54.110:8088/",
 		header: {
 			'Content-Type':'application/json;charset=UTF-8',
 			'Content-Type':'application/x-www-form-urlencoded'

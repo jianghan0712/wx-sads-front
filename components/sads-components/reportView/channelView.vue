@@ -1,26 +1,28 @@
 <template>
 	<view>
-		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
-			<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
-			 渠道
-			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
+		<view class = "box-container">
+			<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
+				<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
+				 渠道
+				<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
+			</view>
+			<view class="padding">
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >有销量门店数七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
+				<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" />
+			</view>
+			<view class="padding">
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >"0"销量门店数七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
+				<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" />
+			</view>
+			<view class="padding">
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >销量超限门店七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(个)</view>
+				<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" />
+			</view>
+			<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 		</view>
-		<view class="padding">
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >有销量门店数七天走势</view>
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
-			<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" />
-		</view>
-		<view class="padding">
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >"0"销量门店数七天走势</view>
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
-			<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" />
-		</view>
-		<view class="padding">
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >销量超限门店七天走势</view>
-			<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(个)</view>
-			<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" />
-		</view>
-		<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 	</view>
 </template>
 
@@ -244,6 +246,10 @@
 			this.returnFromDatePicker();
 			this.loadData();
 		},
+		onShow() {
+			this.returnFromDatePicker();
+			this.loadData();
+		},
 		onPageScroll(e) {
 			this.backTop.scrollTop = e.scrollTop;
 		}
@@ -254,5 +260,9 @@
 	.padding{
 		padding-top: 20rpx;
 		padding-bottom: 30rpx;
+	}
+	.box-contaniner{
+		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
 </style>

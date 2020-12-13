@@ -1,4 +1,5 @@
 <template>
+	<view class="box-contaniner">
 	<view class="tab">
 		<scroll-view id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
 			<view v-for="(tab,index) in tabBars" :key="tab.id" class="uni-tab-item" :id="tab.id" :data-current="index" @click="ontabtap">
@@ -16,7 +17,7 @@
 			<channelTotalView ref="totalView" :param="selfParam"></channelTotalView>
 		</block>
 		<block v-if="tabIndex==1">
-			<gameView ref="gameView" :param="modelSet"></gameView>
+			<channelGameView ref="gameView" :param="selfParam"></channelGameView>
 		</block>
 		<block v-if="tabIndex==2">
 			<channelLevelView ref="levelView" :param="selfParam"></channelLevelView>
@@ -28,10 +29,11 @@
 			<channelMatchView ref="matchView" :param="selfParam"></channelMatchView>
 		</block>
 	</view>
+	</view>
 </template>
 
 <script>
-	import gameView from "@/components/sads-components/gameView/gameView.vue";	
+	import channelGameView from "@/components/sads-components/gameView/channelGameView.vue";	
 	import MxDatePicker from '@/components/mx-datepicker/mx-datepicker.vue';
 	import channelTotalView from "@/components/sads-components/totalView/channelTotalView.vue";
 	import channelLevelView from "@/components/sads-components/levelView/channelLevelView.vue";
@@ -46,11 +48,12 @@
 
 	export default {
 		components: {
-			gameView,channelTotalView,channelLevelView,channelTicketView,channelMatchView,uniSection
+			channelGameView,channelTotalView,channelLevelView,channelTicketView,channelMatchView,uniSection
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.modelSet.gateNo = option.number
 			this.selfParam.shopNo = uni.getStorageSync("shopNo")
+			alert(this.selfParam.shopNo );
 			this.returnFromDatePicker();
 		},
 		onShow() {//此处接受来自日期选择页面的参数
@@ -153,7 +156,8 @@
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName			
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.tooken=getApp().globalData.token;	
 			},
 			getList(index) {
 				let activeTab = this.newsList[index];
@@ -455,5 +459,9 @@
 	}
 	.section{
 		background-color: #FFFFFF;
+	}
+	.box-contaniner{
+		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
 </style>

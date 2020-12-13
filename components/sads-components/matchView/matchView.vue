@@ -94,28 +94,30 @@
 				matchTypeTableColumns: [{
 						title: "排名",
 						key: "id",
-						$width:"50px",
+						$width:"20%",
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"200px"
+						$width:"40%"
 					},{
 						title: '销量（百万元）',
-						key: 'amount'
+						key: 'amount',
+						$width:"40%"
 					}
 				],	
 				matchEventTableData: [],
 				matchEventTableColumns: [{
 						title: "排名",
 						key: "id",
-						$width:"50px",
+						$width:"20%",
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"200px"
+						$width:"40%"
 					},{
 						title: '销量（百万元）',
-						key: 'amount'
+						key: 'amount',
+						$width:"40%"
 					}
 				],	
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
@@ -123,7 +125,9 @@
 		},
 		onLoad() {
 			_self = this;
-			this.selfParam = this.param
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
 			this.getServerData(getServerData);
 		},
 		methods: {
@@ -148,6 +152,19 @@
 				uni.navigateTo({	
 					url:"/pages/common/levelRingDetail?btnnum="+btnnum
 				});
+			},
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token=uni.getStorageSync("token");
 			},
 			createParam(btnnum){
 				console.log("createParam begin")
@@ -214,11 +231,11 @@
 						},{
 							title: '赛制',
 							key: 'matchType',
-							$width:"150px"
+							$width:"200px"
 						},{
 							title: '销量（'+format0.name + '元）',
 							key: 'amount',
-							$width:"100px"
+							$width:"150px"
 						}
 					]
 					
@@ -274,11 +291,11 @@
 						},{
 							title: '赛事',
 							key: 'matchName',
-							$width:"150px"
+							$width:"200px"
 						},{
 							title: '销量（' + format0.name + '元）',
 							key: 'amount',
-							$width:"100px"
+							$width:"150px"
 						}
 					];
 					
@@ -291,11 +308,13 @@
 			},
 		},
 		created() {
-			this.selfParam = this.param
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			//ajax调用
 			this.getServerData(this.btnnum);
 		},
 		mounted(){
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.showView();
 		},
 		watch: {

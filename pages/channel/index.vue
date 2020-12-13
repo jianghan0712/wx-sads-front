@@ -33,12 +33,14 @@
 				<view>各地区超限门店</view>
 				<view class="rankTable-more" @click="goLimitShopDetail(beyondLimitTableDataDetail,beyondLimitTableColumns)">全部>></view>
 			</view>
-			<view class="table">
-				<v-table :columns="beyondLimitTableColumns" :list="beyondLimitTableData"   :slot-cols="['area']"  border-color="#FFFFFF">
-					<template v-slot="{ row }">
-						<view style="font-weight: blod;color:blue;" @click="goLimitDetail(row.area)">{{ row.area }}</view>
-					</template>
-				</v-table>
+			<view v-if="update2">
+				<view class="table">
+					<v-table :columns="beyondLimitTableColumns" :list="beyondLimitTableData"   :slot-cols="['area']"  border-color="#FFFFFF">
+						<template v-slot="{ row }">
+							<view style="font-weight: blod;color:blue;" @click="goLimitDetail(row.area)">{{ row.area }}</view>
+						</template>
+					</v-table>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -90,6 +92,7 @@
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id
 				},
+				update2:false,
 				areaMap:{},
 				isFirstLoad:true,
 				totalData:{},
@@ -142,7 +145,9 @@
 				}				
 			},
 			onLoad() {
-				this.returnFromDatePicker()	
+				this.returnFromDatePicker();
+				this.getServerData();
+				this.showView();
 			},
 			created(){
 				/* this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -155,7 +160,9 @@
 				console.log("sales-self-created:", this.selfParam)
 			},
 			onShow() {//此处接受来自日期选择页面的参数
-				this.returnFromDatePicker()
+				this.returnFromDatePicker();
+				this.getServerData();
+				this.showView();
 				console.log("sales-self-onShow:",this.selfParam)
 			},
 			methods:{
@@ -251,6 +258,7 @@
 					var url = '/pentaho/channel/getTransfiniteShows';
 					var param = this.createParam()
 					var that =this ;
+					this.update2=false;
 					urlAPI.getRequest(url, param).then((res)=>{
 						that.loading = false;
 						console.log('request success', res)
@@ -267,18 +275,23 @@
 										change:data[i][3]}	
 							var areaId={id:data[i][0],name:data[i][1]}
 							if(i<=4){
+								this.$set(that.beyondLimitTableDataDetail,i,json);	
 								that.beyondLimitTableData[i] = json
 							}
 							that.beyondLimitTableDataDetail[i] = json
+							this.$set(that.beyondLimitTableDataDetail,i,json);	
 							that.areaIdList[i]=areaId
+							this.$set(that.areaIdList,i,areaId);
+							
 						}
-								
+							
 						that.res = '请求结果 : ' + JSON.stringify(res);
 						console.log(that.beyondLimitTableData)
 					}).catch((err)=>{
 						that.loading = false;
 						console.log('request fail', err);
 					});
+					this.update2=true;
 				},
 				returnFromDatePicker(){
 					const dateType = uni.getStorageSync("dateType")

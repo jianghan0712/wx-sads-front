@@ -1,55 +1,57 @@
 <template>
 	<view>
-		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
-			<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
-			 区域
-			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
-		</view>
-		<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
-			<view style="width: 700rpx;">
-				<view class="black-text" style="padding-left: 10rpx;">地区日销量及周同比变化</view>
+		<view class = "box-container">
+			<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
+				<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
+				 区域
+				<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
 			</view>
-			<view style="width: 350rpx;">
-				<view class="gray-text" style="text-align: right;padding-right: 0rpx;" @click="toAll()">全部></view>
+			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+				<view style="width: 700rpx;">
+					<view class="black-text" style="padding-left: 10rpx;">地区日销量及周同比变化</view>
+				</view>
+				<view style="width: 350rpx;">
+					<view class="gray-text" style="text-align: right;padding-right: 0rpx;" @click="toAll()">全部></view>
+				</view>
 			</view>
-		</view>
-		<view class="table" style="width: 700rpx;margin-left: 30rpx;" >
-			<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
-		</view>
-		<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
-			<view style="width: 700rpx;">
-				<view class="black-text" style="padding-left: 10rpx;">地区日票数及周同比变化</view>
+			<view class="table" style="width: 700rpx;margin-left: 30rpx;" >
+				<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 			</view>
-			<view style="width: 350rpx;">
-				<view class="gray-text" style="text-align: right;padding-right: 0rpx;" @click="toAll1()">全部></view>
+			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+				<view style="width: 700rpx;">
+					<view class="black-text" style="padding-left: 10rpx;">地区日票数及周同比变化</view>
+				</view>
+				<view style="width: 350rpx;">
+					<view class="gray-text" style="text-align: right;padding-right: 0rpx;" @click="toAll1()">全部></view>
+				</view>
 			</view>
-		</view>
-		<view class="table" style="width: 700rpx;margin-left: 30rpx;" >
-			<v-table :columns="tableColumns1" :list="tableData1"  border-color="#FFFFFF"></v-table>
-		</view>
-		<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
-			<view style="width: 350rpx;">
-				<view class="black-text" style="padding-left: 10rpx;">地区门店情况</view>
+			<view class="table" style="width: 700rpx;margin-left: 30rpx;" >
+				<v-table :columns="tableColumns1" :list="tableData1"  border-color="#FFFFFF"></v-table>
 			</view>
-			<view style="width: 350rpx;">
-				<view class="gray-text" style="text-align: right;padding-right: 0rpx;" @click="toAll2()">全部></view>
+			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+				<view style="width: 350rpx;">
+					<view class="black-text" style="padding-left: 10rpx;">地区门店情况</view>
+				</view>
+				<view style="width: 350rpx;">
+					<view class="gray-text" style="text-align: right;padding-right: 0rpx;" @click="toAll2()">全部></view>
+				</view>
 			</view>
-		</view>
-		<view class="table" style="width: 700rpx;margin-left: 30rpx;" >
-			<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
-		</view>
-		<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
-			<view style="width: 350rpx;">
-				<view class="black-text" style="padding-left: 10rpx;">地区返奖情况</view>
+			<view class="table" style="width: 700rpx;margin-left: 30rpx;" >
+				<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
 			</view>
-			<view style="width: 350rpx;">
-				<view class="gray-text" style="text-align: right;padding-right: 0rpx;" @click="toAll3()">全部></view>
+			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+				<view style="width: 350rpx;">
+					<view class="black-text" style="padding-left: 10rpx;">地区返奖情况</view>
+				</view>
+				<view style="width: 350rpx;">
+					<view class="gray-text" style="text-align: right;padding-right: 0rpx;" @click="toAll3()">全部></view>
+				</view>
 			</view>
+			<view class="table" style="width: 700rpx;margin-left: 30rpx;" >
+				<v-table :columns="tableColumns3" :list="tableData3"  border-color="#FFFFFF"></v-table>
+			</view>
+			<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 		</view>
-		<view class="table" style="width: 700rpx;margin-left: 30rpx;" >
-			<v-table :columns="tableColumns3" :list="tableData3"  border-color="#FFFFFF"></v-table>
-		</view>
-		<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 	</view>
 </template>
 <script>
@@ -389,6 +391,10 @@
 			this.returnFromDatePicker();
 			this.loadData();
 		},
+		onShow() {
+			this.returnFromDatePicker();
+			this.loadData();
+		},
 		onPageScroll(e) {
 			this.backTop.scrollTop = e.scrollTop;
 		}
@@ -410,5 +416,9 @@
 		color: #777;
 		font-size: 30rpx;
 		margin: 20rpx 30rpx;
+	}
+	.box-contaniner{
+		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
 </style>
