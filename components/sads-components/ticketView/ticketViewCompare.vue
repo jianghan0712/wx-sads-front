@@ -2,7 +2,7 @@
 	<view>
 		<view class="box-contaniner">
 			<view class="container-title">单票金额对比</view>
-			<dataContainerTwoColThree></dataContainerTwoColThree>
+			<dataContainerTwoColThree ref="compareAmount" :dataAs="compareAmount"></dataContainerTwoColThree>
 		</view>
 		
 		<view class="box-contaniner">
@@ -74,7 +74,7 @@
 		},
 		data() {
 			return {
-				param:{},
+				selfParam:{},
 				btnnum: 0,
 				pieData: {
 					//饼状图数据
@@ -87,6 +87,11 @@
 				tableData: [],
 				tableDataAll: [],
 				tableColumns: [],	
+				compareAmount:{
+					title:{nameOne:'竞彩单票金额（元）',nameTwo:'足球单票金额（元）',nameThree:'篮球单票金额（元）'},
+					left:{valueOne:'0元',valueTwo:'0元',valueThree:'0元'},
+					right:{valueOne:'0元',valueTwo:'0元',valueThree:'0元'},
+				},
 				legend: {
 					show: false
 				},
@@ -107,15 +112,90 @@
 					this.$refs['ringChart3'].showCharts();
 					this.$refs['ringChart4'].showCharts();
 					this.$refs['ringChart5'].showCharts();
+					this.$refs['compareAmount'].showDataContainer();
 				});
 			},
 			getServerData() {
-				this.getPieData(this.param.provinceCenterId,this.param.businessDate);
-				this.getRankTable(this.param.provinceCenterId,this.param.businessDate);
+				this.getPieData(this.selfParam.provinceCenterId,this.selfParam.businessDate);
+				this.getRankTable(this.selfParam.provinceCenterId,this.selfParam.businessDate);
+				this.getAmountCompare()
 			},
 			change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
+			},
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.compareDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart: this.selfParam.compareDate.dateLeft.startDate,
+							 dateTimeEnd: this.selfParam.compareDate.dateLeft.endDate,
+							 dateTimeStartCom: this.selfParam.compareDate.dateRight.startDate,
+							 dateTimeEndCom: this.selfParam.compareDate.dateRight.endDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTimeStart: this.selfParam.compareDate.weekLeft.startDate,
+							 dateTimeEnd: this.selfParam.compareDate.weekLeft.endDate,
+							 dateTimeStartCom: this.selfParam.compareDate.weekRight.startDate,
+							 dateTimeEndCom: this.selfParam.compareDate.weekRight.endDate,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTimeStart: this.selfParam.compareDate.monthLeft.startDate,
+							 dateTimeEnd: this.selfParam.compareDate.monthLeft.endDate,
+							 dateTimeStartCom: this.selfParam.compareDate.monthRight.startDate,
+							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTimeStart: this.selfParam.compareDate.yearLeft.startDate,
+							 dateTimeEnd: this.selfParam.compareDate.yearLeft.endDate,
+							 dateTimeStartCom: this.selfParam.compareDate.yearRight.startDate,
+							 dateTimeEndCom: this.selfParam.compareDate.yearRight.endDate,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
+			},
+			getAmountCompare(){
+				var url = '/pentaho/proValue/getSingleVoteMoneyCom';
+				var param = this.createParam();
+				
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+
+					var data = res.data.data;
+					var format0 = numberFun.formatCNumber(data[0]);
+					var format1 = numberFun.formatCNumber(data[1]);
+					var format2 = numberFun.formatCNumber(data[2]);
+					var title = {'nameOne':'竞彩单票金额（'+format0.name +'元）', 'nameTwo':'足球单票金额（'+format0.name +'元）','nameThree':'篮球单票金额（'+format0.name +'元）'}
+					var left = {'valueOne':data[0].toFixed(2)/format0.value , 'valueTwo':data[1].toFixed(2)/format1.value ,'valueThree':data[2].toFixed(2)/format1.value }
+					var right = {'valueOne':data[3].toFixed(2)/format0.value , 'valueTwo':data[1].toFixed(4)/format1.value ,'valueThree':data[5].toFixed(2)/format1.value }
+					
+					this.$set(this.compareAmount, 'title', title);
+					this.$set(this.compareAmount, 'left', left);
+					this.$set(this.compareAmount, 'right', right);
+					this.$refs['compareAmount'].showDataContainer();
+
+					console.log('request ticketData', this.ticketData);				
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
 			},
 			getPieData(provinceCenterId, currentDate){
 				var url = '/exhibition/ticketAmount/querySalesTickets/' + provinceCenterId + '/' + currentDate;
@@ -230,16 +310,21 @@
 				uni.navigateTo({
 					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataAll) + '&tableColumns=' + JSON.stringify(this.tableColumns)
 				});
-			}
+			},
+			refresh(selfParam){
+				this.selfParam.token = uni.getStorageSync("token")
+				this.getServerData();
+				this.showView();
+			},
 		},
-		mounted(){
+		mounted(){			
 			this.showView();
 		},
 		watch: {
 			'$route':'showView'
 		},
 		created() {
-			this.param = this.model;
+			this.selfParam = this.model;
 			this.getServerData();
 			// this.showView();
 		},

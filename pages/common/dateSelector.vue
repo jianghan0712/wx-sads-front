@@ -91,6 +91,8 @@
 		data() {
 		    return {							
 				date:dateUtils.getToday(),
+				type:'common',//common或者compare
+				position:'',
 				month:{year:'',month:''},
 				week:{start:'',end:''},
 				year:'',			
@@ -121,6 +123,8 @@
 		},
 		onLoad(option) {
 			this.date = option.date
+			this.type = option.type
+			this.position = option.position
 			var date = getDate(new Date())
 			var years = []
 			var j = 0
@@ -269,18 +273,35 @@
 			monthSwitch(e) {
 				console.log('monthSwitchs 返回:', e)
 			},
-			confirmDate(){			
-				if(this.btnnum==0){
-					uni.setStorageSync("dateType", "date");
-				}else if(this.btnnum==1){
-					uni.setStorageSync("dateType", "week");
-				}else if(this.btnnum==2){
-					uni.setStorageSync("dateType", "month");
-				}else if(this.btnnum==3){
-					uni.setStorageSync("dateType", "year");
+			confirmDate(){	
+				if(this.type=='common'){
+					if(this.btnnum==0){
+						uni.setStorageSync("dateType", "date");
+					}else if(this.btnnum==1){
+						uni.setStorageSync("dateType", "week");
+					}else if(this.btnnum==2){
+						uni.setStorageSync("dateType", "month");
+					}else if(this.btnnum==3){
+						uni.setStorageSync("dateType", "year");
+					}				
+					uni.setStorageSync("businessDate", JSON.stringify(this.dateInfo));
+				}else if(this.type=='compare'){
+					if(this.btnnum==0){
+						uni.setStorageSync("compareDateType", "date");
+					}else if(this.btnnum==1){
+						uni.setStorageSync("compareDateType", "week");
+					}else if(this.btnnum==2){
+						uni.setStorageSync("compareDateType", "month");
+					}else if(this.btnnum==3){
+						uni.setStorageSync("compareDateType", "year");
+					}			
+					if(this.position=='left'){
+						uni.setStorageSync("leftBusinessDate", JSON.stringify(this.dateInfo));
+					}else if(this.position=='right'){
+						uni.setStorageSync("rightBusinessDate", JSON.stringify(this.dateInfo));
+					}				
 				}
-				
-				uni.setStorageSync("businessDate", JSON.stringify(this.dateInfo));
+
 				uni.navigateBack();
 			}
 		}

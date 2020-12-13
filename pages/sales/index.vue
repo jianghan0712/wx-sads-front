@@ -232,7 +232,7 @@
             },
 			goDatePicker() {
 				uni.navigateTo({
-					url:"/pages/common/dateSelector?date=" + this.selfParam.businessDate.date.startDate
+					url:"/pages/common/dateSelector?type=common&date=" + this.selfParam.businessDate.date.startDate
 				});
 			},
         }

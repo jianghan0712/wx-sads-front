@@ -8,8 +8,8 @@
         </scroll-view>
 	
 		<view class="content">
-				<view @click="goDatePicker" style="width: 400rpx;">{{selfParam.compareDate.viewLeft}}</view>
-				<view @click="goDatePicker" style="width: 280rpx;">{{selfParam.compareDate.viewRight}}</view>
+				<view @click="goDatePickerLeft" style="width: 400rpx;">{{selfParam.compareDate.viewLeft}}</view>
+				<view @click="goDatePickerRight" style="width: 280rpx;">{{selfParam.compareDate.viewRight}}</view>
 				<view style="-webkit-flex: 1;flex: 1;">取消</view>		
 		</view>	 
 		<block v-if="tabIndex==0">
@@ -115,17 +115,69 @@
 			// this.$refs['ticketViewCompare'].showView();
         },
 		onShow() {//此处接受来自日期选择页面的参数
-		    const _dateObj=uni.getStorageSync("dateObj");			
-			if(_dateObj){
-				this.selfParam.businessDate = _dateObj.date; 
-			}
-			console.log(_dateObj)
+			this.returnFromDatePicker()
 		},
 		onUnload() {
 			//页面销毁删除缓存日期数据
 			uni.removeStorageSync("dateObj");
 		},
         methods: {
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("compareDateType")
+				const leftDate = JSON.parse(uni.getStorageSync("leftBusinessDate"))
+				const rightDate = JSON.parse(uni.getStorageSync("rightBusinessDate"))
+				console.log("dateType:",dateType)
+				console.log("leftDate:",leftDate)
+				console.log("rightDate:",rightDate)
+				
+				if(leftDate==null || rightDate==null){
+					return
+				}
+				
+				if(leftDate.dateType!=dateType || rightDate.dateType!=dateType){
+					console.log("dateType不匹配:")
+					const compareDate={
+							dateType:dateType,
+							viewLeft:leftDate.view,//用于展示日期、年、月等
+							viewRight:rightDate.view,
+							dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
+							dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
+							weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
+							weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
+							monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
+							monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
+							yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
+							yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
+						}
+					this.selfParam.compareDate=compareDate
+					return
+				}
+				console.log("leftDate:",leftDate)
+				const compareDate={
+						dateType:dateType,
+						viewLeft:leftDate.view,//用于展示日期、年、月等
+						viewRight:rightDate.view,
+						dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
+						dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
+						weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
+						weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
+						monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
+						monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
+						yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
+						yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
+					}
+				this.selfParam.compareDate=compareDate
+				console.log("compareDate:",compareDate)
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName			
+			},
             getList(index) {
                 let activeTab = this.newsList[index];
                 let list = [];
@@ -202,12 +254,20 @@
                 }
                 return (s4() + s4() + "-" + s4() + "-4" + s4().substr(0, 3) + "-" + s4() + "-" + s4() + s4() + s4()).toUpperCase();
             },
-			goDatePicker() {
+			goDatePickerLeft() {
 				//跳转日期选择页面,同时传递日期初始化参数
 				// 单选就传递单选参数，复选就传递复选参数
 			    uni.setStorageSync("dateOption", this.goodDatePickerOption3);
 				uni.navigateTo({
-					url:"/pages/common/dateSelector"
+					url:"/pages/common/dateSelector?type=compare&position=left&date=" + this.selfParam.compareDate.viewLeft
+				});
+			},
+			goDatePickerRight() {
+				//跳转日期选择页面,同时传递日期初始化参数
+				// 单选就传递单选参数，复选就传递复选参数
+			    uni.setStorageSync("dateOption", this.goodDatePickerOption3);
+				uni.navigateTo({
+					url:"/pages/common/dateSelector?type=compare&position=right&date=" + this.selfParam.compareDate.viewRight
 				});
 			},
         }

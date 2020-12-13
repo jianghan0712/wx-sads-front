@@ -174,6 +174,25 @@
 				uni.setStorageSync("businessDate", JSON.stringify(selfParam.businessDate));
 				uni.setStorageSync("token",selfParam.token)
 				uni.setStorageSync("selfParam",JSON.stringify(selfParam))
+				var compareDateLeft = {
+					view:this.selfParam.compareDate.viewLeft,
+					dateType:'date',
+					date:{startDate:this.selfParam.compareDate.dateLeft.startDate, endDate:this.selfParam.compareDate.dateLeft.endDate},
+					week:{startDate:this.selfParam.compareDate.weekLeft.startDate, endDate:this.selfParam.compareDate.weekLeft.endDate},
+					month:{startDate:this.selfParam.compareDate.monthLeft.startDate, endDate:this.selfParam.compareDate.monthLeft.endDate},
+					year:{startDate:this.selfParam.compareDate.yearLeft.startDate, endDate:this.selfParam.compareDate.yearLeft.endDate},
+				}
+				var compareDateRight = {
+					view:this.selfParam.compareDate.viewRight,
+					dateType:'date',
+					date:{startDate:this.selfParam.compareDate.dateRight.startDate, endDate:this.selfParam.compareDate.dateRight.endDate},
+					week:{startDate:this.selfParam.compareDate.weekRight.startDate, endDate:this.selfParam.compareDate.weekRight.endDate},
+					month:{startDate:this.selfParam.compareDate.monthRight.startDate, endDate:this.selfParam.compareDate.monthRight.endDate},
+					year:{startDate:this.selfParam.compareDate.yearRight.startDate, endDate:this.selfParam.compareDate.yearRight.endDate},
+				}
+				uni.setStorageSync("leftBusinessDate", JSON.stringify(compareDateLeft));
+				uni.setStorageSync("rightBusinessDate", JSON.stringify(compareDateRight));
+				
 				console.log("this.areaMap",this.areaMap) 
 				// uni.navigateBack()
 				uni.switchTab({

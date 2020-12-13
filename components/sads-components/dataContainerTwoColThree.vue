@@ -3,32 +3,32 @@
 		<view class="row-box">
 			<view class="left-column_box_2">
 				<view class="column-box">
-					<text class="big-text">竞彩单票金额（元）</text>
-					<text class="big-text">78.64</text>
+					<text class="big-text">{{dataList.title.nameOne}}</text>
+					<text class="big-text">{{dataList.left.valueOne}}</text>
 				</view>
 				<view class="column-box">
-					<text class="big-text">足球单票金额（元）</text>
-					<text class="big-text">78.64</text>
+					<text class="big-text">{{dataList.title.nameTwo}}</text>
+					<text class="big-text">{{dataList.left.valueTwo}}</text>
 				</view>
 				<view class="column-box">
-					<text class="big-text">篮球单票金额（元）</text>
-					<text class="big-text">0.00</text>
+					<text class="big-text">{{dataList.title.nameThree}}</text>
+					<text class="big-text">{{dataList.left.valueThree}}</text>
 				</view>
 			</view>			
 		</view>
 		<view class="row-box">
 			<view class="right-column_box_2">
 				<view class="column-box">
-					<text class="big-text">竞彩单票金额（元）</text>
-					<text class="big-text">81.23</text>
+					<text class="big-text">{{dataList.title.nameOne}}</text>
+					<text class="big-text">{{dataList.right.valueOne}}</text>
 				</view>
 				<view class="column-box">
-					<text class="big-text">足球单票金额（元）</text>
-					<text class="big-text">81.15</text>
+					<text class="big-text">{{dataList.title.nameTwo}}</text>
+					<text class="big-text">{{dataList.right.valueTwo}}</text>
 				</view>
 				<view class="column-box">
-					<text class="big-text">篮球单票金额（元）</text>
-					<text class="big-text">86.06</text>
+					<text class="big-text">{{dataList.title.nameThree}}</text>
+					<text class="big-text">{{dataList.right.valueThree}}</text>
 				</view>
 			</view>	
 			</view>			
@@ -47,7 +47,11 @@
 		},
 		data() {
 			return {
-				dataList:{}
+				dataList:{
+					title:{nameOne:'竞彩单票金额（元）',nameTwo:'足球单票金额（元）',nameThree:'篮球单票金额（元）'},
+					left:{valueOne:'0元',valueTwo:'0元',valueThree:'0元'},
+					right:{valueOne:'0元',valueTwo:'0元',valueThree:'0元'},
+				}
 			}
 		},
 		methods: {
