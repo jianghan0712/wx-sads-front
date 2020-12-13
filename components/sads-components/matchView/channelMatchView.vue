@@ -94,30 +94,30 @@
 				matchTypeTableColumns: [{
 						title: "排名",
 						key: "id",
-						$width:"20%",
+						$width:"50px",
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"40%"
+						$width:"200px"
 					},{
 						title: '销量（百万元）',
 						key: 'amount',
-						$width:"40%"
+						$width:"150px"
 					}
 				],	
 				matchEventTableData: [],
 				matchEventTableColumns: [{
 						title: "排名",
 						key: "id",
-						$width:"20%",
+						$width:"50px",
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"40%"
+						$width:"200px"
 					},{
 						title: '销量（百万元）',
 						key: 'amount',
-						$width:"40%"
+						$width:"150px"
 					}
 				],	
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
