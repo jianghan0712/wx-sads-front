@@ -13,7 +13,9 @@
 					</view>
 					<!-- <button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button> -->
 					<!-- 各地区销量排行-->
-					<progress ref="progress_0" :dataAs="pieData"></progress>
+					<view class="progress">
+						<progress ref="progress_0" :dataAs="pieData"></progress>
+					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
 					<view style="font-size: 30rpx;font-weight: bold;">篮球关次销量及占比</view>　
@@ -21,7 +23,10 @@
 						<ring-chart :dataAs="pieData1" ref="levelRingChart1" canvasId="index_ring_1"/>
 					</view>
 					<!-- <button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button> -->
-					<progress ref="progress_1" :dataAs="pieData1"></progress>
+					<view class="progress">
+						<progress ref="progress_1" :dataAs="pieData1"></progress>
+					</view>
+					
 				</view>		
 			</view>
 		<slot />
@@ -152,13 +157,18 @@
 			},
 			gotoLunBo(btnnum){
 				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
+				// if(btnnum==0){
+				// 	uni.navigateTo({
+				// 		url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
+				// 	});
+				// }
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ JSON.stringify(btnnum) + "&data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
 					});
-				}else{
+				}else if(btnnum==1){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ JSON.stringify(btnnum) + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData1)
 					});
 				}
 			},
@@ -375,6 +385,9 @@
 		/* line-height: 40px; */
 		/* font-weight: bold; */
 		border-color:#FFFFFF;
+	}
+	.progress{
+		width: 95%;
 	}
 	
 	button {

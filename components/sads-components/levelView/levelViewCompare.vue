@@ -11,10 +11,7 @@
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData" ref="levelRingChart0" canvasId="index_ring_0"/>
 					</view>
-					<view class="ring_chart">
-						<ring-chart :dataAs="pieData" ref="levelRingChart2" canvasId="index_ring_2"/>
-					</view>
-					<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+					<button  @click="gotoLunBo(btnnum)">查看全部</button>
 					<!-- 各地区销量排行-->
 					<view class="rankTable">
 						<view class="rankTable-title">
@@ -26,16 +23,9 @@
 							</view>
 						</view>
 						<view class="example">
-							<view class="sale-row-2">
-								<view class="left-row-box">
-									<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="#FFFFFF"></v-table>
-								</view>
-								<view class="right-row-box">
-									<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
-								</view>
-							</view>			
+							<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 						</view>
-						<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+						<button  @click="gotoTableDetail(btnnum)">查看全部</button>
 					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
@@ -43,10 +33,7 @@
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData1" ref="levelRingChart1" canvasId="index_ring_1"/>
 					</view>
-					<view class="ring_chart">
-						<ring-chart :dataAs="pieData1" ref="levelRingChart3" canvasId="index_ring_3"/>
-					</view>
-					<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+					<button  @click="gotoLunBo(btnnum)">查看全部</button>
 					<!-- 各地区销量排行-->
 					<view class="rankTable">
 						<view class="rankTable-title">
@@ -58,16 +45,9 @@
 							</view>
 						</view>
 						<view class="example">
-							<view class="sale-row-2">
-								<view class="left-row-box">
-									<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="#FFFFFF"></v-table>
-								</view>
-								<view class="right-row-box">
-									<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
-								</view>
-							</view>			
+							<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 						</view>
-						<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+						<button  @click="gotoTableDetail(btnnum)">查看全部</button>
 					</view>
 				</view>		
 			</view>
@@ -89,7 +69,7 @@
 			vTable
 		},
 		props: {
-			model:{
+			param:{
 				//数据
 				type: Object,
 				default: () => ({})
@@ -97,130 +77,160 @@
 		},
 		data() {
 			return {
-				param:{},
+				selfParam:{
+					token:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						viewLeft:'',//用于展示日期、年、月等
+						viewRight:'',
+						dateLeft:{startDate:'', endDate:''},
+						dateRight:{startDate:'', endDate:''},
+						weekLeft:{startDate:'', endDate:''},
+						weekRight:{startDate:'', endDate:''},
+						monthLeft:{startDate:'', endDate:''},
+						monthRight:{startDate:'', endDate:''},
+						yearLeft:{startDate:'', endDate:''},
+						yearRight:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
+				},
 				btnnum: 0,
 				index: 0,
 				levelList:['单关','2x1','3x1','4x1-8x1','MXN','自有过关'],
 				pieData: {					//饼状图数据
 					series: [],
 					},
-				pieData1: {},
-				leftTableData: [{
-							id: "1",
-							area: "北京市",						
-							amount: "10233.5"
-						},
-						{
-							id: "2",
-							area: "上海市",
-							amount: "9965.5"
-						},
-						{
-							id: "3",
-							area: "广东省",
-							amount: "9754.5"
-						},
-						{
-							id: "4",
-							area: "重庆市",
-							amount: "6745.6"
-						},
-						{
-							id: "5",
-							area: "河北省",
-							amount: "6554"
-						}
-					],
-				rightTableData: [{
-							id: "1",
-							amount: "10233.5"
-						},
-						{
-							id: "2",
-							amount: "9965.5"
-						},
-						{
-							id: "3",
-							amount: "9754.5"
-						},
-						{
-							id: "4",
-							amount: "6745.6"
-						},
-						{
-							id: "5",
-							amount: "6554"
-						}
-					],
-				leftTableColumns: [
+				pieData1: {
+					series: [],
+				},
+				tableData: [],
+				tableColumns: [{
+						title: "排名",
+						key: "id",
+						$width:"50px",
+					},
 					{
 						title: '省份',
 						key: 'area',
 						$width:"100px"
-					},{
-						title: "排名",
-						key: "id",
-						$width:"50px",
-					},{
-						title: '销量',
-						key: 'amount',
-						$width:"100px"
-					}],
-				rightTableColumns: [{
-							title: "排名",
-							key: "id",
-							$width:"50px",
-						},
-						{
-							title: '销量',
-							key: 'amount',
-							$width:"80px"
-						}
-					],	
+					},
+					{
+						title: '占比',
+						key: 'zhanbi',
+						$width:"130px"
+					},
+					{
+						title: '销量（元）',
+						key: 'amount'
+					}
+				],	
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
 			};
 		},
 		onLoad() {
 			_self = this;
+		},
+		created() {
+			this.selfParam=this.param
 			this.getServerData();
-			this.showView()
+			this.showView();
 		},
 		methods: {
-			showView(){
-				console.log("level showView" ,this.pieData);
+			showView(){				
 				this.$nextTick(() => {	
 					this.$refs['levelRingChart0'].showCharts();
 					this.$refs['levelRingChart1'].showCharts();
-					this.$refs['levelRingChart2'].showCharts();
-					this.$refs['levelRingChart3'].showCharts();
+					console.log("init ringChart0:" ,this.pieData);
 				});
 			},
 			getServerData() {
-				this.getPieDate(this.param.businessDate,this.param.provinceCenterId,this.param.cityCenterId)
+				this.getPieDate('足球')
+				this.getPieDate('篮球')
+				this.getTableDate(this.btnnum, '单关')
 			},
 		    change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
+				this.getServerData();
+				this.showView();
 		    },
-			bindPickerChange: function(e) {
-				console.log('picker发送选择改变，携带值为：' + e.detail.value)
+			bindPickerChange(e) {
+				console.log('picker发送选择改变，携带值为：' + this.array[e.detail.value].name)
+				console.log(this.selfParam)
 				this.index = e.detail.value
+				this.getTableDate(this.btnnum, this.array[e.detail.value].name)
 			},
 			gotoLunBo(btnnum){
-				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
+				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));				
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
 					});
 				}else{
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData1)
 					});
 				}
 			},
-			getPieDate(currentDate, provinceCenterId,cityCenterId){
-				var url = 'exhibition/aupSales/getTodSalesAmount/'+currentDate+'/'+provinceCenterId+'/'+cityCenterId;
-				urlAPI.getRequest(url, null).then((res)=>{
+			createParam(){
+				console.log("createParam begin")
+				var dateType = this.selfParam.compareDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.date.endDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.week.endDate,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.month.endDate,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.year.endDate,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}
+				
+				if(this.btnnum==0){
+					param.gameFlag = 1
+				}else if(this.btnnum==1){
+					param.gameFlag = 2
+				}
+				
+				console.log("createParam end:",param)
+				return param
+			},
+			getPieDate(type){
+				var url = '/pentaho/sales/getCheckpointSalesProp';
+				var param = this.createParam()
+				var that =this;
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -228,47 +238,79 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;
-				
-					for(var i=0;i<data.length;i++){						
-						if(data[i][0]=='BK'){
-							var series = []							
-							for(var j=0;j<this.levelList.length;j++){	
-								var jsonData = {}
-								jsonData.name=this.levelList[j];
-								jsonData.data=data[i][j+1];
-								series[j]=jsonData
-							}
-							this.pieData1.series=series
-						}else if(data[i][0]=='FB'){
-							var series = []
-							for(var j=0;j<this.levelList.length;j++){	
-								var jsonData = {}
-								jsonData.name=this.levelList[j];
-								jsonData.data=data[i][j+1];
-								series[j]=jsonData
-							}
-							this.pieData.series=series
-						}						
+					var data = res.data.data;
+				   
+					var series = []
+					for(var i=0;i<data.length;i++){	
+						var jsonData = {}
+						that.levelList = data[i].customsName						
+						jsonData.name=data[i].customsName;
+						jsonData.data=data[i].values[0];
+						series[i]=jsonData					
 					}
-					console.log('request getTodSalesAmount', this.pieData);				
+					
+					if(type=='足球'){
+						that.pieData.series=series
+						this.$refs['levelRingChart0'].showCharts();
+						
+					}else if(type=='篮球'){
+						that.pieData1.series=series
+						this.$refs['levelRingChart1'].showCharts();
+					}
+					
+					console.log('request getTodSalesAmount', that.pieData);				
+					that.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getTableDate(btnnum, passName){
+				var url = '/pentaho/sales/checkpointSalesRanking';
+				var param = this.createParam()
+				var that =this;
+				param.passName=passName;
+				urlAPI.getRequest(url, param).then((res)=>{	
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;
+
+					var series = []
+					for(var i=0;i<data.length;i++){	
+						var jsonData = {}
+						jsonData.id=i+1
+						jsonData.area=data[i][0];
+						jsonData.zhanbi=data[i][1]+'%';
+						jsonData.amount=data[i][2];
+						series[i]=jsonData					
+					}
+					that.tableData = series
+					
+					console.log('request checkpointSalesRanking', that.tableData);				
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 				})
 			},
+			gotoTableDetail(btnnum){
+				uni.navigateTo({
+					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableData) + '&tableColumns=' + JSON.stringify(this.tableColumns)
+				});
+			}
 		},
 		mounted(){
+			this.selfParam=this.param
+			this.getServerData();
 			this.showView();
 		},
 		watch: {
 			'$route':'showView'
-		},
-		created() {
-			this.param = this.model;
-			this.getServerData();
-			// this.showView();
 		},
 	}
 </script>
@@ -291,17 +333,18 @@
         flex-grow: 1;
         text-align: center;
     }
-    .end-cont{
+   .end-cont{
 		display: none;
 		background: #FFFFFF;
     }
-    .btna{
-		color: #000000;
-		background: #ebebeb;
-		/* padding:0px 5rpx 0px 5rpx; */
+   .btna{
+		color: #FFFFFF;
+		background:rgba(47, 98, 248 ,0.5);	
     }
     .dis{
         display: block;
+		color: #000000;
+		background:#FFFFFF;
     } 
 	
 	
@@ -341,29 +384,8 @@
 	    margin-top: 30rpx;
 	    margin-bottom: 30rpx;
 		font-size: 30rpx;
-	}
-	
-	.left-row-box {
-		display: flex;
-		width: 65%;
-		margin: 0rpx 5rpx;
-		/* padding: 0 10rpx; */
-		/* background-color: #ebebeb; */
-		flex-direction: column;
-	}
-	.right-row-box {
-		display: flex;
-		width: 35%;
-		margin: 0rpx 5rpx;
-		/* padding: 0 10rpx; */
-		/* background-color: #ebebeb; */
-		flex-direction: column;
-	}
-	.sale-row-2{
-		display: flex;
-		flex-direction: row;	
-		margin: 20rpx 10rpx;
-		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
+		background-color: rgba(220, 241, 250,0.5);
+		color: #007AFF;
 	}
 
 </style>

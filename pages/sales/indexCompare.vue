@@ -19,7 +19,7 @@
 			<gameView ref="gameView" :model="selfParam"></gameView>
 		</block>
 		<block v-if="tabIndex==2">
-			<levelViewCompare ref="levelViewCompare" :model="selfParam"></levelViewCompare>
+			<levelViewCompare ref="levelViewCompare" :param="selfParam"></levelViewCompare>
 		</block>
 		<block v-if="tabIndex==3">
 			<ticketViewCompare ref="ticketViewCompare" :model="selfParam"></ticketViewCompare>

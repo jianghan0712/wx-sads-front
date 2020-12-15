@@ -11,7 +11,7 @@
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData" ref="levelRingChart0" canvasId="index_ring_0"/>
 					</view>
-					<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+					<button  @click="gotoLunBo(btnnum)">查看全部</button>
 					<!-- 各地区销量排行-->
 					<view class="rankTable">
 						<view class="rankTable-title">
@@ -25,7 +25,7 @@
 						<view class="example">
 							<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 						</view>
-						<button type="default" plain="true" @click="gotoTableDetail(btnnum)">查看全部</button>
+						<button  @click="gotoTableDetail(btnnum)">查看全部</button>
 					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
@@ -33,7 +33,7 @@
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData1" ref="levelRingChart1" canvasId="index_ring_1"/>
 					</view>
-					<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
+					<button  @click="gotoLunBo(btnnum)">查看全部</button>
 					<!-- 各地区销量排行-->
 					<view class="rankTable">
 						<view class="rankTable-title">
@@ -47,7 +47,7 @@
 						<view class="example">
 							<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 						</view>
-						<button type="default" plain="true" @click="gotoTableDetail(btnnum)">查看全部</button>
+						<button  @click="gotoTableDetail(btnnum)">查看全部</button>
 					</view>
 				</view>		
 			</view>
@@ -176,14 +176,14 @@
 				this.getTableDate(this.btnnum, this.array[e.detail.value].name)
 			},
 			gotoLunBo(btnnum){
-				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
+				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));				
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ JSON.stringify(btnnum) + "&data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
 					});
 				}else{
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ JSON.stringify(btnnum) + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData1)
 					});
 				}
 			},
@@ -333,17 +333,18 @@
         flex-grow: 1;
         text-align: center;
     }
-    .end-cont{
+   .end-cont{
 		display: none;
 		background: #FFFFFF;
     }
-    .btna{
-		color: #000000;
-		background: #ebebeb;
-		/* padding:0px 5rpx 0px 5rpx; */
+   .btna{
+		color: #FFFFFF;
+		background:rgba(47, 98, 248 ,0.5);	
     }
     .dis{
         display: block;
+		color: #000000;
+		background:#FFFFFF;
     } 
 	
 	
@@ -383,6 +384,8 @@
 	    margin-top: 30rpx;
 	    margin-bottom: 30rpx;
 		font-size: 30rpx;
+		background-color: rgba(220, 241, 250,0.5);
+		color: #007AFF;
 	}
 
 </style>

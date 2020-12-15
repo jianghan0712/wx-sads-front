@@ -12,6 +12,7 @@ import urlAPI from '@/common/vmeitime-http/'
 import numberFun from '@/common/tools/number.js'
 import dateUtils from '@/common/tools/dateUtils.js'
 import commonFun from './common/tools/watcher.js'
+import './common/style/style.css'
 
     // 全局挂载后使用
 Vue.prototype.$urlAPI = urlAPI

@@ -854,8 +854,8 @@
 		background: #FFFFFF;
 	}
 	.btna{
-		color: #000000;
-		background: #ebebeb;
+		color: #FFFFFF;
+		background:rgba(47, 98, 248 ,0.5);	
 		padding:0px 30px 0px 30px;
 	}
 	.dis{

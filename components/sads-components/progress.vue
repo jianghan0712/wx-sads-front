@@ -86,6 +86,7 @@
 		flex-direction: row;
 		margin: 20rpx 20rpx 40rpx 20rpx;
 		width: 100%;
+		height: 40px;
 	}
 	
     .progress-box {

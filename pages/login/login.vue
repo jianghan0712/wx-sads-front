@@ -274,4 +274,5 @@
         margin-top: 150rpx;
 		background-color: #3366FF;
     }
+
 </style>

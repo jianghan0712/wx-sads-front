@@ -4,7 +4,7 @@
 		    <view class="user" hoverClass="none">
 		      <view class="user_box">
 		        <view catchtap="previewImage" class="logo">
-		          <image src="../../static/qq.png"></image>
+		          <image src="../../static/头像.png"></image>
 		          <view class="cu-tag badge"></view>
 		        </view>
 		          <view class="user_info">
@@ -45,7 +45,7 @@
 		   </view>
 		   <view class="buttom">
 			   <view class="btn-row">
-					<button  class="primary" type="primary" @tap="bindLogout">退出登录</button>
+					<button  class="logout"  @tap="bindLogout">退出登录</button>
 			   </view>
 		   </view>
 	</view>
@@ -347,4 +347,10 @@ page {
   color:#dab643;
   text-decoration:underline;
 }
+  .logout{
+        margin-top: 150rpx;
+		justify-content: center;
+		background-color: #00BFFF;
+		color: #FFFFFF;
+    }
 </style>

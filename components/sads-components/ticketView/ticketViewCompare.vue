@@ -42,14 +42,35 @@
 		</view>
 		
 		<view class="box-contaniner">
-			<view class="container-title">				
+			<view class="container-title">
 				<view>各地区单票金额</view>
 				<view @click="gotoRankAll()">全部>></view>
 			</view>
-			<view class="table">
-				<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
+			<view class="tab-content">
+				<view class="tab-title">
+					<view @tap="changeTable(0)" :class="tableIndex == 0?'btna':'hide'">竞彩</view>
+				　　<view @tap="changeTable(1)" :class="tableIndex == 1?'btna':'hide'">足球</view>
+				  　<view @tap="changeTable(2)" :class="tableIndex == 2?'btna':'hide'">篮球</view>
+				</view>	
+
+				<view class="end-cont" :class="{dis:tableIndex == 0}">
+					<view class="table">
+						<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
+					</view>
+				</view>
+				<view class="end-cont" :class="{dis:tableIndex == 1}">
+					<view class="table">
+						<v-table :columns="tableColumnsFB" :list="tableDataFB"  border-color="#FFFFFF"></v-table>
+					</view>
+				</view>
+				<view class="end-cont" :class="{dis:tableIndex == 2}">
+					<view class="table">
+						<v-table :columns="tableColumnsBK" :list="tableDataBK"  border-color="#FFFFFF"></v-table>
+					</view>
+				</view>
 			</view>
 		</view>
+
 		<slot />
 	</view>	
 </template>
@@ -76,6 +97,7 @@
 			return {
 				selfParam:{},
 				btnnum: 0,
+				tableIndex:0,
 				pieData: {
 					//饼状图数据
 					series: [{name: '100',data: 222100},{name: '4-20',data: 70300},{name: '22-48',data: 32100},{name: '100以上',data: 25400},
@@ -86,7 +108,75 @@
 				pieData2: {series: []},
 				tableData: [],
 				tableDataAll: [],
-				tableColumns: [],	
+				tableColumns: [{
+							title: "排名",
+							key: "leftRank",
+							$width:"50px",
+						},{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},{
+							title: '竞彩（元）',
+							key: 'leftAmount',
+							$width:"80px"
+						},{
+							title: '排名',
+							key: 'rightRank',
+							$width:"100px"
+						},{
+							title: '竞彩（元）',
+							key: 'rightAmount',
+							$width:"80px"
+						}],	
+				
+				tableDataFB: [],
+				tableDataAllFB: [],
+				tableColumnsFB: [{
+							title: "排名",
+							key: "leftRank",
+							$width:"50px",
+						},{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},{
+							title: '足彩（元）',
+							key: 'leftAmount',
+							$width:"80px"
+						},{
+							title: '排名',
+							key: 'rightRank',
+							$width:"100px"
+						},{
+							title: '足彩（元）',
+							key: 'rightAmount',
+							$width:"80px"
+						}],	
+				
+				tableDataBK: [],
+				tableDataAllBK: [],
+				tableColumnsBK: [{
+							title: "排名",
+							key: "leftRank",
+							$width:"50px",
+						},{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},{
+							title: '篮彩（元）',
+							key: 'leftAmount',
+							$width:"80px"
+						},{
+							title: '排名',
+							key: 'rightRank',
+							$width:"100px"
+						},{
+							title: '篮彩（元）',
+							key: 'rightAmount',
+							$width:"80px"
+						}],	
 				compareAmount:{
 					title:{nameOne:'竞彩单票金额（元）',nameTwo:'足球单票金额（元）',nameThree:'篮球单票金额（元）'},
 					left:{valueOne:'0元',valueTwo:'0元',valueThree:'0元'},
@@ -116,13 +206,19 @@
 				});
 			},
 			getServerData() {
-				this.getPieData(this.selfParam.provinceCenterId,this.selfParam.businessDate);
-				this.getRankTable(this.selfParam.provinceCenterId,this.selfParam.businessDate);
+				// this.getPieData(this.selfParam.provinceCenterId,this.selfParam.businessDate);
+				this.getRankTable('竞彩');
+				this.getRankTable('足彩');
+				this.getRankTable('篮彩');
 				this.getAmountCompare()
 			},
 			change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
+			},
+			changeTable(e){
+				this.tableIndex = e;
+				console.log(this.tableIndex);
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -198,40 +294,63 @@
 				})
 			},
 			getPieData(provinceCenterId, currentDate){
-				var url = '/exhibition/ticketAmount/querySalesTickets/' + provinceCenterId + '/' + currentDate;
-				urlAPI.getRequest(url, null).then((res)=>{
+				var url = '/pentaho/proValue/getProValueVotesProp';
+				var param = this.createParam();
+				
+				if(type=='竞彩'){
+					param.gameFlag = 0
+				}else if(type=='足彩'){
+					param.gameFlag = 1
+				}else if(type=='篮彩'){
+					param.gameFlag = 2
+				}
+				var that =this;
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
 						title: '请求成功',
-						icon: 'success',
+						icon: 'success',	
 						mask: true
 					});
 					
-					var data = res.data.concreteBean;
-					var ftList=[];
-					var bkList=[];
+					var data = res.data.data;
+					var list=[];	
 					for(var i=0; i<data.length; i++){
-						var ftObject = {name:data[i][0],data:data[i][1]};
-						var bkObject = {name:data[i][0],data:data[i][2]};
-						ftList[i]=ftObject;
-						bkList[i]=bkObject;
+						list[i]={name:data[i].proValueName,data:data[i].values[0]};
 					}
-					
-					this.$set(this.pieData1, 'series', ftList);
-					this.$set(this.pieData2, 'series', bkList);
-					
-					console.log('request pieData1', this.pieData1);	
-					console.log('request pieData2', this.pieData2);
-					this.res = '请求结果 : ' + JSON.stringify(res);
+					if(type=='竞彩'){
+						that.$set(that.pieData, 'series', list);
+						this.$refs['ringChart0'].showCharts();
+						
+					}else if(type=='足彩'){
+						that.$set(that.pieData1, 'series', list);
+						this.$refs['ringChart1'].showCharts();
+						
+					}else if(type=='篮彩'){
+						that.$set(that.pieData2, 'series', list);
+						this.$refs['ringChart2'].showCharts();
+						
+					}
+					that.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 				})
 			},
-			getRankTable(provinceCenterId, currentDate){
-				var url = '/exhibition/ticketAmount/queryAvgTicketRegion/' + provinceCenterId+'/'+currentDate;				
-				urlAPI.getRequest(url, null).then((res)=>{
+			getRankTable(type){
+				var url ='/pentaho/proValue/getSingleVoteRankingCom';	
+				var param = this.createParam();
+				var table = []
+				var tableAll = []
+				if(type=='竞彩'){
+					param.gameFlag=0
+				}else if (type=='足彩'){
+					param.gameFlag=1
+				}else if (type=='篮彩'){
+					param.gameFlag=2
+				}
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -239,49 +358,35 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;
+					var data = res.data.data;
 					var format0 = null;
 					if(data.length>0){
-						format0 = numberFun.formatCNumber(data[0][1]);							
+						format0 = numberFun.formatCNumber(data[0][2]);							
 					}else{
 						return;
-					}	
-					
-					this.tableColumns= [{
-							title: "排名",
-							key: "id",
-							$width:"50px",
-						},{
-							title: '省份',
-							key: 'area',
-							$width:"80px"
-						},{
-							title: '竞彩（元）',
-							key: 'jingcai',
-							$width:"80px"
-						},{
-							title: '足球（元）',
-							key: 'football',
-							$width:"85px"
-						},{
-							title: '篮球（元）',
-							key: 'basketball'
-						}
-					
-					]
+					}			
 					
 					for(var i=0;i<data.length;i++){
-						var jsonData = {id:i+1, 
+						var jsonData = {leftRank:data[i][1], 
 									    area:data[i][0], 
-										jingcai:data[i][1].toFixed(2)/format0.value, 
-										football:data[i][2].toFixed(2)/format0.value,
-										basketball:data[i][3].toFixed(2)/format0.value,
-									   }
-						this.tableDataAll[i]=jsonData;						
+										leftAmount:(data[i][2]/format0.value).toFixed(2), 
+										rightRank:data[i][3], 
+										rightAmount:(data[i][4]/format0.value).toFixed(2)}
+						tableAll[i]=jsonData;						
 						if(i>4){
 							continue;
 						}
-						this.tableData[i]=jsonData;
+						table[i]=jsonData;
+					}
+					if(type=='竞彩'){
+						this.tableData=table
+						this.tableDataAll=tableAll
+					}else if (type=='足彩'){
+						this.tableDataFB=table
+						this.tableDataAllFB=tableAll
+					}else if (type=='篮彩'){
+						this.tableDataBK=table
+						this.tableDataAllBK=tableAll
 					}
 			
 					console.log('request tableData', this.tableData);				
@@ -306,10 +411,21 @@
 					});
 				}
 			},
-			gotoRankAll(){				
-				uni.navigateTo({
-					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataAll) + '&tableColumns=' + JSON.stringify(this.tableColumns)
-				});
+			gotoRankAll(){
+				if(this.tableIndex==0){
+					uni.navigateTo({
+						url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataAll) + '&tableColumns=' + JSON.stringify(this.tableColumns)
+					});
+				}else if(this.tableIndex==1){
+					uni.navigateTo({
+						url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataAllFB) + '&tableColumns=' + JSON.stringify(this.tableColumnsFB)
+					});
+				}else if(this.tableIndex==2){
+					uni.navigateTo({
+						url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataAllBK) + '&tableColumns=' + JSON.stringify(this.tableColumnsBK)
+					});
+				}
+
 			},
 			refresh(selfParam){
 				this.selfParam.token = uni.getStorageSync("token")
@@ -370,8 +486,8 @@
 		background: #FFFFFF;
 	}
 	.btna{
-		color: #000000;
-		background: #ebebeb;
+		color: #FFFFFF;
+		background:rgba(47, 98, 248 ,0.5);		
 		padding:0px 30rpx 0px 30rpx;
 	}
 	.dis{

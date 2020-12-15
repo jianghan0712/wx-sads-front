@@ -336,15 +336,15 @@
 			gotoLunBo(btnnum){
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/ticketRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
 					});
 				}else if(btnnum==1){
 					uni.navigateTo({
-						url:"/pages/common/ticketRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData1)
 					});
 				}else if(btnnum==2){
 					uni.navigateTo({
-						url:"/pages/common/ticketRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData2)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData2)
 					});
 				}
 			},
@@ -403,8 +403,8 @@
 		background: #FFFFFF;
 	}
 	.btna{
-		color: #000000;
-		background: #ebebeb;
+		color: #FFFFFF;
+		background:rgba(47, 98, 248 ,0.5);		
 		padding:0px 30rpx 0px 30rpx;
 	}
 	.dis{

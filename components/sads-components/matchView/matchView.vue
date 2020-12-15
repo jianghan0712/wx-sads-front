@@ -345,14 +345,21 @@
 		display: none;
 		background: #FFFFFF;
     }
-    .btna{
+	.dis{
+	    display: block;
+	} 
+	
+	.hide{
 		color: #000000;
-		background: #ebebeb;
-		/* padding:0px 5rpx 0px 5rpx; */
-    }
-    .dis{
-        display: block;
-    } 
+		background: #FFFFFF;
+		padding:0px 30rpx 0px 30rpx;
+	}
+	
+	.table {
+		/* line-height: 40px; */
+		font-weight: bold;
+		border-color:#FFFFFF;
+	}
 	
 	
 	.rankTable{
