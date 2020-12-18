@@ -95,7 +95,8 @@
 				pieData: {					//饼状图数据
 					series: [],
 					},
-				pieData1: {},
+				pieData1: {series: [],
+					},
 				tableData: [],
 				tableColumns: [{
 						title: "排名",
@@ -121,12 +122,18 @@
 			};
 		},
 		onLoad() {
-			this.returnFromDatePicker();
-		},
-		created() {
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.change(0);
+		},
+		created() {
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView();
+			this.change(0);
 		},
 		methods: {
 			showView(){				
@@ -139,8 +146,8 @@
 				});
 			},
 			getServerData() {
-				this.getPieDate('足球')
-				this.getPieDate('篮球')
+				this.getPieData('足球')
+				this.getPieData('篮球')
 			},
 		    change(e) {
 			    this.btnnum = e;
@@ -153,6 +160,7 @@
 				console.log('picker发送选择改变，携带值为：' + this.array[e.detail.value].name)
 				console.log(this.selfParam)
 				this.index = e.detail.value
+				this.selfParam.token = getApp().globalData.token;
 				this.getTableDate(this.btnnum, this.array[e.detail.value].name)
 			},
 			gotoLunBo(btnnum){
@@ -174,8 +182,10 @@
 			},
 			refresh(selfParam){
 				this.selfParam = JSON.parse(selfParam)
+				this.selfParam.token = getApp().globalData.token;
 				this.getServerData();
 				this.showView();
+				this.change(0);
 			},
 			returnFromDatePicker(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -189,8 +199,10 @@
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName	
-				this.selfParam.token=uni.getStorageSync("token")
+				this.selfParam.token = uni.getStorageSync("token")
 				this.selfParam.shopNo = uni.getStorageSync("shopNo");
+				this.selfParam.token = getApp().globalData.token;
+				
 			},
 			createParam(type){
 				console.log("createParam begin")
@@ -235,7 +247,7 @@
 				console.log("createParam end:",param)
 				return param
 			},
-			getPieDate(type){
+			getPieData(type){
 				var url = '/pentaho/shows/getShowPassSalesProp';
 				var param = this.createParam(type)
 				var that =this;
@@ -261,10 +273,11 @@
 					if(type=='足球'){
 						that.pieData.series=series
 						this.$refs['levelRingChart0'].showCharts();
-						
+						this.$refs['progress_0'].showProgress(this.pieData);
 					}else if(type=='篮球'){
 						that.pieData1.series=series
 						this.$refs['levelRingChart1'].showCharts();
+						this.$refs['progress_1'].showProgress(this.pieData1);
 					}
 					
 					console.log('request getTodSalesAmount', that.pieData);				
@@ -276,7 +289,7 @@
 			},
 			getTableDate(btnnum, passName){
 				var url = '/pentaho/sales/checkpointSalesRanking';
-				var param = this.createParam()
+				var param = this.createParam('足球')
 				var that =this;
 				param.passName=passName;
 				urlAPI.getRequest(url, param).then((res)=>{	
@@ -385,9 +398,6 @@
 		/* line-height: 40px; */
 		/* font-weight: bold; */
 		border-color:#FFFFFF;
-	}
-	.progress{
-		width: 95%;
 	}
 	
 	button {

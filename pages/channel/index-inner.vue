@@ -17,7 +17,7 @@
 			<channelTotalView ref="totalView" :param="selfParam"></channelTotalView>
 		</block>
 		<block v-if="tabIndex==1">
-			<channelGameView ref="gameView" :param="selfParam"></channelGameView>
+			<channelGameView ref="channelGameView" :param="selfParam"></channelGameView>
 		</block>
 		<block v-if="tabIndex==2">
 			<channelLevelView ref="levelView" :param="selfParam"></channelLevelView>
@@ -53,7 +53,6 @@
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.modelSet.gateNo = option.number
 			this.selfParam.shopNo = uni.getStorageSync("shopNo")
-			alert(this.selfParam.shopNo );
 			this.returnFromDatePicker();
 		},
 		onShow() {//此处接受来自日期选择页面的参数
@@ -265,7 +264,7 @@
 			},
 			goCompare(){
 				uni.navigateTo({
-					url:"/pages/report/indexCompare?tabIndex="+this.tabIndex
+					url:"/pages/channel/indexCompare?tabIndex="+this.tabIndex
 				});
 			},
 			goArea(){

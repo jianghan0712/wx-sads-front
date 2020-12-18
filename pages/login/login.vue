@@ -3,7 +3,10 @@
         <view class="title">
             <p>登录</p>
         </view>
-        <view>
+		<view style="padding-left: 0rpx;">
+			<image src="../../static/logo.png" style="width: 450rpx;height: 150rpx;"></image>
+		</view>
+        <view style="padding-top: 100rpx;">
             <p>账号</p>
             <input type="text" v-model="loginInfo.username" class="username">
             <p>密码</p>
@@ -271,8 +274,7 @@
     }
     .login{
         width: 400rpx;
-        margin-top: 150rpx;
+        margin-top: 200rpx;
 		background-color: #3366FF;
     }
-
 </style>

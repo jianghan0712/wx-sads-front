@@ -98,7 +98,7 @@
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"200px"
+						$width:"150px"
 					},{
 						title: '销量（百万元）',
 						key: 'amount',
@@ -113,7 +113,7 @@
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"200px"
+						$width:"150px"
 					},{
 						title: '销量（百万元）',
 						key: 'amount',

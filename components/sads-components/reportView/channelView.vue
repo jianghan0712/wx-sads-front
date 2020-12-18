@@ -156,7 +156,6 @@
 					 销量 票数
 					 */
 					var votes=data.votes;
-					alert(data)
 					var series =[];
 					var shangzhou=[];
 					var benzhou=[];

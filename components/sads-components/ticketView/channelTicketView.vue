@@ -104,7 +104,7 @@
 					shopNo:''
 				},
 				btnnum: 0,
-				ticketData:{},
+				ticketData:{big1:{name:"",value:""},big2:{name:"",value:""}},
 				pieData: {series: []},
 				pieData1: {series: []},
 				pieData2: {series: []},
@@ -113,6 +113,13 @@
 		},
 		onLoad() {
 			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView();
+		},
+		onShow() {
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView();
 		},
 		created() {
 			this.returnFromDatePicker();
@@ -223,7 +230,7 @@
 					this.$set(this.ticketData, 'big1', big1);
 					this.$set(this.ticketData, 'small1', small1);
 					this.$set(this.ticketData, 'small2', small2);
-
+					this.$refs['ticketData'].showDataContainer();		
 					console.log('request ticketData', this.ticketData);				
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -342,6 +349,26 @@
 						console.log('request fail', err);
 					});
 			},
+			gotoLunBo(btnnum){
+				if(btnnum==0){
+					uni.navigateTo({
+						url:"/pages/common/ticketRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
+					});
+				}else if(btnnum==1){
+					uni.navigateTo({
+						url:"/pages/common/ticketRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+					});
+				}else if(btnnum==2){
+					uni.navigateTo({
+						url:"/pages/common/ticketRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData2)
+					});
+				}
+			},
+			gotoRankAll(){				
+				uni.navigateTo({
+					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataAll) + '&tableColumns=' + JSON.stringify(this.tableColumns)
+				});
+			}
 		},
 		mounted(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))

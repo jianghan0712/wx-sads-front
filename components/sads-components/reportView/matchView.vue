@@ -178,7 +178,6 @@
 			toBasket(){
 				var that =this;
 				this.loadDetail('2');
-				alert('111111’');
 				uni.navigateTo({
 					title:'篮球赛事详情',
 					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData)+

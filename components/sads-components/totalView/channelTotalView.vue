@@ -158,8 +158,22 @@
 				selfParam:{},
 				today:dateUtils.getToday(),
 				totalData:{},	
-				footballData:{},	
-				basketballData:{},	
+				footballData:{big1:{name:"",value:"",
+									left:{name:"",value:""},
+									right:{name:"",value:""},
+									},
+							 big2:{name:"",value:"",
+												left:{name:"",value:""},
+												right:{name:"",value:""},
+												}},	
+				basketballData:{big1:{name:"",value:"",
+									left:{name:"",value:""},
+									right:{name:"",value:""},
+									},
+							 big2:{name:"",value:"",
+												left:{name:"",value:""},
+												right:{name:"",value:""},
+												}},	
 				btnnum: 0,
 				arcbarNum: 0,
 				lineData2: {},
@@ -178,12 +192,25 @@
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
 			this.returnFromDatePicker();
-			// this.getServerData();
+			this.getServerData();
+			this.showView();
+			this.change(0)
+			this.changeArcbar(0)
+		},
+		onShow() {
+			_self = this;
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView()
+			this.change(0)
+			this.changeArcbar(0)
 		},
 		created() {
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
+			this.change(0)
+			this.changeArcbar(0)
 			console.log(this.selfParam)
 		},
 		methods: {
@@ -429,7 +456,6 @@
 					this.shopData.shop.sum=data[0];
 					this.shopData.shop.tongbi=data[1];
 					this.shopData.shop.huabi=data[2];
-					alert(data);
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -454,7 +480,6 @@
 					this.shopData.rate.sum=data[0];
 					this.shopData.rate.tongbi=data[1];
 					this.shopData.rate.sum=data[2];
-					alert(data);
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -462,8 +487,9 @@
 				});
 			},
 			getShowReturnRate(){
-				var url = '/pentaho/shows/getReturnRateState';
+				var url = '/pentaho/sales/getReturnRateState';
 				var param = this.createParam()
+				param.token =getApp().globalData.token;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -473,11 +499,9 @@
 						mask: true
 					});
 					var data = res.data.data;	
-									
 					this.returnData.rate.sum=data[0];
 					this.returnData.rate.tongbi=data[1];
 					this.returnData.rate.huanbi=data[2]
-					alert(data);
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -501,10 +525,16 @@
 			change(e) {
 			      this.btnnum = e
 			      console.log(this.btnnum)
+				  this.returnFromDatePicker();
+				  this.getServerData();
+				  this.showView()
 			},
 			changeArcbar(e){
 				this.arcbarNum = e
 				console.log(this.arcbarNum)
+				this.returnFromDatePicker();
+				this.getServerData();
+				this.showView()
 			},
 			goSaleRank(tableData, tableColumns){
 				uni.navigateTo({

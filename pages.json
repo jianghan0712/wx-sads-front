@@ -27,6 +27,11 @@
 				"navigationBarTitleText" : "竞彩渠道"
             }
         }, {
+			"path": "pages/channel/indexCompare",
+			"style": {
+				"navigationBarTitleText": "竞彩渠道对比"
+			}
+		},{
             "path" : "pages/channel/index-inner",
             "style": {}
         },{
@@ -91,20 +96,20 @@
 		"list" : [
 			{
 				"pagePath" : "pages/sales/index",
-				"iconPath" : "static/home.png",
-				"selectedIconPath" : "static/home-active.png",
+				"iconPath" : "static/sale.png",
+				"selectedIconPath" : "static/sale-active.png",
 				"text" : "销售"
 			},
 			{
 				"pagePath" : "pages/channel/index",
-				"iconPath" : "static/order.png",
-				"selectedIconPath" : "static/order-active.png",
+				"iconPath" : "static/channel.png",
+				"selectedIconPath" : "static/channel-active.png",
 				"text" : "渠道"
 			},
 			{
 				"pagePath" : "pages/report/index",
-				"iconPath" : "static/menu.png",
-				"selectedIconPath" : "static/menu-active.png",
+				"iconPath" : "static/report.png",
+				"selectedIconPath" : "static/report-active.png",
 				"text" : "日报"
 			},
 			{

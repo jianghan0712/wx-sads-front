@@ -19,9 +19,6 @@
 					<view class="small-text">{{arcbarNumTop}}</view>
 					<view class="big-text">{{((pagedata[0]-pagedatacompare[0])*100/pagedatacompare[0]).toFixed(2)}}%</view>
 				</view>
-				<view class="row-box"style="width: 33%;">
-					<view class="small-text">红箭头</view>
-				</view>
 			</view>	
 			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
 				<view style="width: 450rpx;">
@@ -32,9 +29,6 @@
 					<view class="small-text">{{arcbarNumTop}}</view>
 					<view class="big-text">{{((pagedata[1]-pagedatacompare[1])*100/pagedatacompare[1]).toFixed(2)}}%</view>
 				</view>
-				<view class="row-box"style="width: 33%;">
-					<view class="small-text">红箭头</view>
-				</view>
 			</view>
 			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
 				<view style="width: 450rpx;">
@@ -44,9 +38,6 @@
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
 					<view class="big-text">{{((pagedata[2]-pagedatacompare[2])*100/pagedatacompare[2]).toFixed(2)}}%</view>
-				</view>
-				<view class="row-box"style="width: 33%;">
-					<view class="small-text">绿箭头</view>
 				</view>
 			</view>
 			<view class ="column-box" style="width: 100%; display: flex;" >

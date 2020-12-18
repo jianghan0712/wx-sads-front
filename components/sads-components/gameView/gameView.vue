@@ -245,7 +245,7 @@
 							{
 								title: '销量（元）',
 								key: 'count',
-								$width:"100px"
+								$width:"80px"
 							}
 						],	
 				};
@@ -255,6 +255,10 @@
 				this.loadData();
 			},
 			methods: {
+				refresh() {
+					this.returnFromDatePicker();
+					this.loadData();
+				},
 				createParam(){
 					console.log("createParam begin")
 					var dateType = this.selfParam.businessDate.dateType

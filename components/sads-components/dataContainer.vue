@@ -84,6 +84,7 @@
 		display: flex;
 		flex-direction: column;
 		background:rgba(220, 241, 250 ,0.5);
+		background-image: url(../../static/card.png);
 		border-radius: 15px;
 	}
 	
@@ -91,6 +92,7 @@
 		display: flex;
 		width: 50%;
 		margin: 10rpx 10rpx;
+		background-image: url(../../static/card.png);
 		/* padding: 0 10rpx; */
 		flex-direction: column;
 	}

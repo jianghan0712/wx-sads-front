@@ -32,7 +32,7 @@
 			<view >
 				<view class="container-title">
 					<view>各地区{{arcbarNumTop}}销量及占比</view>
-					<view><button style="width: 200;height: 50upx;text-align: top;font-size: 10rpx;" @click="toAll()">全部>></button></view>
+					<view style="width: 200rpx;height: 50rpx;text-align: top;font-size: 30rpx;" @click="toAll()">全部>></view>
 				</view>
 				<view class="table">
 					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
@@ -69,6 +69,7 @@
 			},
 			created() {
 				// this.showModel = this.model;
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.showModel = JSON.parse(uni.getStorageSync("selfParam"))
 				console.log(this.showModel)
 				if(this.arcbarNumTop=='足球'){
@@ -86,6 +87,7 @@
 				}, 1);
 			},
 			onShow() {
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.returnFromDatePicker();
 				this.loadData();
 			},
@@ -235,17 +237,17 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"90px"
+								$width:"80px"
 							},
 							{
 								title: '占比',
 								key: 'zhanbi',
-								$width:"100px"
+								$width:"80px"
 							},
 							{
 								title: '销量（元）',
 								key: 'count',
-								$width:"100px"
+								$width:"80px"
 							}
 						],	
 				};
@@ -255,6 +257,10 @@
 				this.loadData();
 			},
 			methods: {
+				refresh() {
+					this.returnFromDatePicker();
+					this.loadData();
+				},
 				createParam(type){
 					console.log("createParam begin")
 					var dateType = this.selfParam.businessDate.dateType
@@ -262,28 +268,28 @@
 					if(dateType=='date'){
 						param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
 								 dateTimeEnd: this.selfParam.businessDate.date.endDate,
-								 dateFlag:"1",
+								 dateFlag:1,
 								 showNumber:this.selfParam.shopNo,
 								 regionId:this.selfParam.provinceCenterId,
 								 token:this.selfParam.token }
 					}else if(dateType=='week'){
 						param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
 								 dateTimeEnd: this.selfParam.businessDate.week.endDate,
-								 dateFlag:"2",
+								 dateFlag:2,
 								 showNumber:this.selfParam.shopNo,
 								 regionId:this.selfParam.provinceCenterId,
 								 token:this.selfParam.token }
 					}else if(dateType=='month'){
 						param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
 								 dateTimeEnd: this.selfParam.businessDate.month.endDate,
-								 dateFlag:"3",
+								 dateFlag:3,
 								 showNumber:this.selfParam.shopNo,
 								 regionId:this.selfParam.provinceCenterId,
 								 token:this.selfParam.token }
 					}else if(dateType=='year'){
 						param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
 								 dateTimeEnd: this.selfParam.businessDate.year.endDate,
-								 dateFlag:"4",
+								 dateFlag:4,
 								 showNumber:this.selfParam.shopNo,
 								 regionId:this.selfParam.provinceCenterId,
 								 token:this.selfParam.token }
@@ -308,7 +314,7 @@
 					this.loadData();
 				},
 				loadTopData(ballType){
-					var url = '/pentaho/sales/getGameSalesAndVotes';
+					var url = '/pentaho/shows/getShowGameSalesAndVotes';
 					var that=this;
 					var param =this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
@@ -390,7 +396,7 @@
 					this.selfParam.shopNo = uni.getStorageSync("shopNo");
 				},
 				loadMidData(ballType){
-					var url = '/pentaho/sales/getGameTrendChart';
+					var url = '/pentaho/shows/getShowGameTrendChart';
 					var param  =this.createParam();
 					var that2 =this;
 					urlAPI.getRequest(url, param).then((res)=>{
@@ -430,7 +436,7 @@
 						console.log('request fail', err);
 					});
 					
-					url = '/pentaho/sales/getGameSalesProp';
+					url = '/pentaho/shows/getShowGameSalesProp';
 					var gameFlag;
 					if(ballType=='足球'){
 						gameFlag='1';

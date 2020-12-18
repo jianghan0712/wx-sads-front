@@ -96,7 +96,7 @@
 					selfProvinceCenterId:''//存登录时候的id
 				},
 				btnnum: 0,
-				ticketData:{},
+				ticketData:{big1:{name:"",value:""},big2:{name:"",value:""}},
 				pieData: {series: []},
 				pieData1: {series: []},
 				pieData2: {series: []},
@@ -127,18 +127,44 @@
 		onLoad() {		
 			_self = this;	
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView()
+		},
+		onShow() {
+			_self = this;	
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView()
 		},
 		created() {
 			// this.selfParam=this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
 		},
 		methods: {
+			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName	
+				this.selfParam.token=uni.getStorageSync("token")
+				this.selfParam.shopNo = uni.getStorageSync("shopNo");
+			},
 			showView(){
 				console.log("ticket showView" ,this.pieData);
-				// commonFun.sleep(3000)
-				this.$refs['ticketData'].showDataContainer();		
+				// commonFun.sleep(3000) 
+				//this.$refs['ticketData'].showDataContainer();		
 				this.$refs['ringChart0'].showCharts();
 				this.$refs['ringChart1'].showCharts();
 				this.$refs['ringChart2'].showCharts();

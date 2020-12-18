@@ -113,9 +113,15 @@
 					<view>各地区销量排行</view>
 					<view class="rankTable-more" @click="goSaleRank(tableDataDetail,tableColumns)">全部>></view>
 				</view>
-				<view class="example">
-					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
-				</view>
+				<block v-if="tableData.length==0">
+					<noData :message="nodataMessage"></noData>
+					<!--<image src="../../../static/noData.png" ></image> -->
+				</block>
+				<block v-if="tableData.length>0">
+					<view class="example">
+						<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
+					</view>
+				</block>
 			</view>
 			
 			<block v-if="today!= selfParam.businessDate.view">
@@ -165,6 +171,7 @@
 	import {globalRequest} from '@/common/request.js'
 	import commonFun from '@/common/tools/watcher.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
+	import noData from '@/components/sads-components/noData.vue';
 	
 	
 	export default {
@@ -174,7 +181,7 @@
 			ArcbarChart,
 			vTable,
 			dataContainer,
-			dataContainerTwo
+			dataContainerTwo,noData
 		},
 		props: {
 			param:{
@@ -218,6 +225,7 @@
 					selfProvinceCenterId:''//存登录时候的id
 				},
 				today:dateUtils.getToday(),
+				nodataMessage:'没有找到相关数据',
 				totalData:{},	
 				footballData:{},	
 				basketballData:{},	
@@ -257,7 +265,8 @@
 						},
 						{
 							title: '环比',
-							key: 'huanbi'
+							key: 'huanbi',
+							$width:"80px"
 						}
 					],
 				tableColumns2: [{
@@ -282,7 +291,8 @@
 						},
 						{
 							title: '环比',
-							key: 'huanbi'
+							key: 'huanbi',
+							$width:"80px"
 						}
 					],	
 			};
@@ -385,7 +395,6 @@
 						this.res = '请求结果 : ' + JSON.stringify(res);
 											
 					}).catch((err)=>{
-						alert(1)
 					this.loading = false;
 					console.log('request fail', err);
 				});
@@ -788,6 +797,7 @@
 	
 	.example {
 		/* line-height: 40px; */
+		width: 100%;
 		font-weight: bold;
 		border-color:#FFFFFF;
 	}

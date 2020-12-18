@@ -10,33 +10,32 @@
 		<view class="content">
 				<view @click="goDatePicker" style="width: 400rpx;">{{selfParam.businessDate}}</view>
 				<view @click="goDatePicker" style="width: 280rpx;">{{selfParam.businessDate}}</view>
-				<view style="-webkit-flex: 1;flex: 1;">取消</view>		
+				<view style="-webkit-flex: 1;flex: 1;" @click="returnBack()">取消</view>		
 		</view>	 
 		<block v-if="tabIndex==0">
-			<totalViewCompare ref="totalViewCompare" :model="selfParam"></totalViewCompare>
+			<totalViewCompareC ref="totalViewCompareC" :model="selfParam"></totalViewCompareC>
 		</block>
 		<block v-if="tabIndex==1">
-			<gameView ref="gameView" :model="selfParam"></gameView>
+			<gameViewCompareC ref="gameViewCompareC" :model="selfParam"></gameViewCompareC>
 		</block>
 		<block v-if="tabIndex==2">
-			<levelViewCompare ref="levelViewCompare" :model="selfParam"></levelViewCompare>
+			<levelViewCompareC ref="levelViewCompareC" :model="selfParam"></levelViewCompareC>
 		</block>
 		<block v-if="tabIndex==3">
-			<ticketViewCompare ref="ticketViewCompare" :model="selfParam"></ticketViewCompare>
+			<ticketViewCompareC ref="ticketViewCompareC" :model="selfParam"></ticketViewCompareC>
 		</block>
 		<block v-if="tabIndex==4">
-			<matchView ref="matchView" :model="selfParam"></matchView>
+			<matchViewCompareC ref="matchViewCompareC" :model="selfParam"></matchViewCompareC>
 		</block>
     </view>
 </template>
 <script>
-    import mediaItem from './news-item.nvue';
 	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
-	import totalViewCompare from "@/components/sads-components/totalView/totalViewCompare.vue";
-	import levelViewCompare from "@/components/sads-components/levelView/levelViewCompare.vue";
-	import ticketViewCompare from "@/components/sads-components/ticketView/ticketViewCompare.vue";
-	import gameView from "@/components/sads-components/gameView/gameView.vue";
-	import matchView from "@/components/sads-components/matchView/matchView.vue";
+	import totalViewCompareC from "@/components/sads-components/totalView/totalViewCompareC.vue";
+	import levelViewCompareC from "@/components/sads-components/levelView/levelViewCompareC.vue";
+	import ticketViewCompareC from "@/components/sads-components/ticketView/ticketViewCompareC.vue";
+	import gameViewCompareC from "@/components/sads-components/gameView/gameViewCompareC.vue";
+	import matchViewCompareC from "@/components/sads-components/matchView/matchViewCompareC.vue";
 	import dateSelector from "@/components/sads-components/dateSelector.vue";
 	import dateUtils from '@/common/tools/dateUtils.js';
 	import multiSeTime from '@/components/sads-components/time.vue'
@@ -49,9 +48,9 @@
 
     export default {
         components: {
-            mediaItem, MxDatePicker,
-			totalViewCompare, levelViewCompare,
-			ticketViewCompare, gameView,dateSelector,matchView,multiSeTime
+            MxDatePicker,
+			totalViewCompareC, levelViewCompareC,
+			ticketViewCompareC, gameViewCompareC,dateSelector,matchViewCompareC,multiSeTime
         },
         data() {
             return {
@@ -63,14 +62,15 @@
 							userId:1141,
 							countyCenterId:1
 				},
+				goodDatePickerOption3:'compare',
                 newsList: [],
                 cacheTab: [],
                 tabIndex: 0,
-                tabBars: [{name: '总览',id: 'totalView'
-                }, {name: '游戏',id: 'game'
-                }, {name: '关次',id: 'gameLevel'
-                }, {name: '票面',id: 'ticket'
-                }, {name: '赛事',id: 'match'}],
+                tabBars: [{name: '总览',id: 'totalViewCompareC'
+                }, {name: '游戏',id: 'gameViewCompareC'
+                }, {name: '关次',id: 'levelViewCompareC'
+                }, {name: '票面',id: 'ticketViewCompareC'
+                }, {name: '赛事',id: 'matchViewCompareC'}],
                 scrollInto: "",
                 showTips: false,
                 navigateFlag: false,
@@ -84,11 +84,11 @@
 			this.tabIndex = option.tabIndex
 			this.selfParam.businessDate = dateUtils.getToday();
 			
-			this.$refs['totalViewCompare'].showView();
-			// this.$refs['gameView'].showView();
-			this.$refs['matchView'].showView();
-			this.$refs['levelViewCompare'].showView();
-			this.$refs['ticketViewCompare'].showView();
+			/* this.$refs['totalViewCompareC'].showView();
+			this.$refs['gameViewCompareC'].showView();
+			this.$refs['matchViewCompareC'].showView();
+			this.$refs['levelViewCompareC'].showView();
+			this.$refs['ticketViewCompareC'].showView(); */
         },
 		onShow() {//此处接受来自日期选择页面的参数
 		    const _dateObj=uni.getStorageSync("dateObj");			
@@ -199,6 +199,11 @@
 			toggle(type) {
 				this.type = type
 				this.$refs.popup.open()
+			},
+			returnBack(){
+				uni.navigateBack({
+					delta:1
+				})
 			},
 			goDatePicker() {
 				//跳转日期选择页面,同时传递日期初始化参数

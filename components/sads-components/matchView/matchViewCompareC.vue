@@ -46,11 +46,11 @@
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
-	
+	import PieChart from '@/components/basic-chart/PieChart.vue';
 	export default {
 		components: {
 			RingChart,
-			vTable
+			vTable,PieChart
 		},
 		props: {
 			param:{
@@ -98,7 +98,7 @@
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"100px"
+						$width:"150px"
 					},{
 						title: '销量（百万元）',
 						key: 'amount',
@@ -113,7 +113,7 @@
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"100px"
+						$width:"150px"
 					},{
 						title: '销量（百万元）',
 						key: 'amount',
@@ -154,6 +154,7 @@
 				});
 			},
 			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
@@ -164,7 +165,8 @@
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName
-				this.selfParam.token=uni.getStorageSync("token");
+				this.selfParam.token=uni.getStorageSync("token")
+				this.selfParam.shopNo = uni.getStorageSync("shopNo");
 			},
 			createParam(btnnum){
 				console.log("createParam begin")
