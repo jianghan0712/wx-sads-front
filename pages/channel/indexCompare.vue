@@ -91,17 +91,42 @@
 			this.$refs['ticketViewCompareC'].showView(); */
         },
 		onShow() {//此处接受来自日期选择页面的参数
-		    const _dateObj=uni.getStorageSync("dateObj");			
+		   this.returnFromDatePicker();
+			const _dateObj=uni.getStorageSync("dateObj");			
 			if(_dateObj){
 				this.selfParam.businessDate = _dateObj.date; 
 			}
-			console.log(_dateObj)
+			if(this.$refs['totalViewCompareC']!=null){
+				this.$refs['totalViewCompareC'].refresh();
+			}else if(this.$refs['gameViewCompareC']!=null){
+				this.$refs['gameViewCompareC'].refresh();
+			}else if(this.$refs['matchViewCompareC']!=null){
+				this.$refs['matchViewCompareC'].refresh();
+			}else if(this.$refs['levelViewCompareC']!=null){
+				this.$refs['levelViewCompareC'].refresh();
+			}else if(this.$refs['ticketViewCompareC']!=null){
+				this.$refs['ticketViewCompareC'].refresh();
+			}
 		},
 		onUnload() {
 			//页面销毁删除缓存日期数据
 			uni.removeStorageSync("dateObj");
 		},
         methods: {
+			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token =getApp().globalData.token;
+			},
             getList(index) {
                 let activeTab = this.newsList[index];
                 let list = [];

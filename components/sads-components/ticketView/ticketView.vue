@@ -378,7 +378,12 @@
 				uni.navigateTo({
 					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataAll) + '&tableColumns=' + JSON.stringify(this.tableColumns)
 				});
-			}
+			},
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.getServerData();
+				this.showView();
+			},
 		},
 		mounted(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))

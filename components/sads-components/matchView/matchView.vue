@@ -135,6 +135,11 @@
 				this.$nextTick(() => {				
 				});
 			},
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.getServerData();
+				this.showView();
+			},
 			getServerData(btnnum) {
 				this.getMatchTable(btnnum);
 				this.getMatchEventTable(btnnum);

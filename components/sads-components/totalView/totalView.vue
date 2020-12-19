@@ -350,8 +350,8 @@
 				console.log("createParam end:",param)
 				return param
 			},
-			refresh(selfParam){
-				this.selfParam = JSON.parse(selfParam)
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.getServerData();
 				this.showView();
 			},
@@ -665,8 +665,8 @@
 						var json = {id:i+1, 
 									area:data[i][0], 
 									return:data[i][1]+'%', 
-									tongbi:this.valueToPercent((data[i][2]/100).toFixed(4)),
-									huanbi:this.valueToPercent((data[i][3]/100).toFixed(4))}						
+									tongbi:data[i][2],
+									huanbi:ata[i][3]}						
 						if(i<=4){
 							this.tableData2[i] = json
 						}

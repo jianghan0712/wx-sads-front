@@ -84,31 +84,49 @@
 				tableColumns:[{
 								title: "赛制",
 								key: "id",
-								$width:"185rpx",
+								$width:"155rpx",
 							},
 							{
 								title: '场次',
 								key: 'area',
-								$width:"185rpx"
+								$width:"155rpx"
 							},],
 				//完赛
-				tableData:[],
+				tableData1:[],
 				 //在售
-				tableData1:[]
+				tableData11:[],
+				tableColumns:[{
+								title: "赛制",
+								key: "id",
+								$width:"155rpx",
+							},
+							{
+								title: '场次',
+								key: 'area',
+								$width:"155rpx"
+							},],
+				//完赛
+				tableData2:[],
+				 //在售
+				tableData22:[]
 				}
 		},
 		methods: {
 			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				const area = uni.getStorageSync("area")
+				var area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
+				if(-1==area){
+					area=0;
+				}
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
+				this.selfParam.provinceCenterName=areaName		
 				this.selfParam.token=uni.getStorageSync("token");		
 			},
 			createParam(){
@@ -170,8 +188,8 @@
 				this.loadDetail('1');
 				uni.navigateTo({
 					title:'足球赛事详情',
-					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData)+
-					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData1),
+					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData1)+
+					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData11),
 					
 				});
 			},
@@ -180,8 +198,8 @@
 				this.loadDetail('2');
 				uni.navigateTo({
 					title:'篮球赛事详情',
-					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData)+
-					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData1)
+					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData2)+
+					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData22)
 					
 				});
 			},
@@ -203,12 +221,30 @@
 					var onSale = data1.onSale;
 					if(finish.length==0){
 						finish =[{'id':'无','area':0}];
+					}else {
+						for(var i=0;i<finish.length;i++){
+							var obj={'id':finish[i][0],'area':finish[i][1]};
+							if(ballType=='1'){
+								that.tableData1.push(obj);
+							}else if(ballType=='2'){
+								that.tableData2.push(obj);
+							
+							}
+						};
 					}
 					if(onSale.length==0){
 						onSale =[{'id':'无','area':0}];
+					}else{
+						for(var j=0;j<onSale.length;j++){
+							var obj={'id':onSale[j][0],'area':onSale[j][1]};
+							if(ballType=='1'){
+								that.tableData11.push(obj);
+							}else if(ballType=='2'){
+								that.tableData22.push(obj);
+							
+							}
+						};
 					}
-					that.tableData=finish;
-					that.tableData1=onSale;
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);

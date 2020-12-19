@@ -124,9 +124,14 @@
 		onShow() {//此处接受来自日期选择页面的参数
 			this.returnFromDatePicker()
 			console.log("sales-self-onShow:",this.selfParam)
-			if(!this.isFirstLoad){
-				console.log("重新加载")
-				this.$refs['totalView'].refresh(JSON.stringify(this.selfParam));
+			if(this.$refs['totalView']!=null){
+				this.$refs['totalView'].refresh();
+			}else if(this.$refs['levelView']!=null){
+				this.$refs['levelView'].refresh();
+			}else if(this.$refs['tickView']!=null){
+				this.$refs['tickView'].refresh();
+			}else if(this.$refs['matchView']!=null){
+				this.$refs['matchView'].refresh();
 			}
 			this.isFirstLoad=false
 		},
@@ -146,7 +151,8 @@
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName			
+				this.selfParam.provinceCenterName=areaName		
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			goCompare(){
 				uni.navigateTo({

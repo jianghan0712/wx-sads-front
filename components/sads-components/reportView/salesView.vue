@@ -8,7 +8,7 @@
 			</view>
 			<view class="padding" >
 				<view style="font-size: 30rpx;padding-left: 20rpx; " >竞猜销量七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
 				<view >
 					<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" />
 				</view>
@@ -62,12 +62,12 @@
 			HistogramChart,
 			backTop
 		},
-		/* props: {
+		 props: {
 			model:{
 				type: Object,
 				default: () => ({})
 			}
-		}, */
+		}, 
 		data() {
 			return {
 				selfParam:{
@@ -107,8 +107,8 @@
 				 histogramChart1: {
 						categories: ['周一', '周二','周三', '周四', '周五', '周六','周日'],
 						series: [
-							{ name: '上周', data: [35, 8, 25, 37, 4, 20] },
-							{ name: '本周', data: [35, 8, 25, 37, 4, 20] }
+						/* 	{ name: '上周', data: [35, 8, 25, 37, 4, 20] },
+							{ name: '本周', data: [35, 8, 25, 37, 4, 20] } */
 						],
 				 },
 				 histogramChart2: {
@@ -143,16 +143,20 @@
 		},
 		methods: {
 			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				const area = uni.getStorageSync("area")
+				var area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
+				if(-1==area){
+					area=0;
+				}
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
+				this.selfParam.provinceCenterName=areaName				
 				this.selfParam.token=uni.getStorageSync("token");		
 			},
 			createParam(){
@@ -204,10 +208,10 @@
 					var shangzhouPS=[];
 					var benzhouPS=[];
 					for(var i=0;i<xiaoliangAll.length/2;i++){
-						shangzhouXL.push(xiaoliangAll[i]);
-						benzhouXL.push(xiaoliangAll[i+7]);
-						shangzhouPS.push(piaoshuAll[i]);
-						benzhouPS.push(piaoshuAll[i+7]);
+						shangzhouXL.push((xiaoliangAll[i]/100000000).toFixed(0));
+						benzhouXL.push((xiaoliangAll[i+7]/100000000).toFixed(0));
+						shangzhouPS.push((piaoshuAll[i]/1000000).toFixed(0));
+						benzhouPS.push((piaoshuAll[i+7]/1000000).toFixed(0));
 					};
 					
 					var series1 =[
@@ -219,8 +223,9 @@
 							{ name: '上周', data: shangzhouPS},
 							{ name: '本周', data: benzhouPS }
 						];
-					that.$set(that.histogramChart1,'series',series1);
-					that.$set(that.histogramChart2,'series',series2);
+					that.$set(this.histogramChart1,'series',series1);
+					that.$set(this.histogramChart2,'series',series2);
+					
 					this.$refs['histogramChart1'].showCharts();
 					this.$refs['histogramChart2'].showCharts();
 					
@@ -243,15 +248,15 @@
 					var shangzhouvotes=[];
 					var benzhouvotes=[];
 					for(var i=0;i<votes.length/2;i++){
-						shangzhouvotes.push(votes[i]);
-						benzhouvotes.push(votes[i+7]);
+						shangzhouvotes.push((votes[i]/100000000).toFixed(0));
+						benzhouvotes.push((votes[i+7]/100000000).toFixed(0));
 					};
 					
 					var series1 =[
 							{ name: '上周', data: shangzhouvotes },
 							{ name: '本周', data: benzhouvotes }
 						];
-					that.$set(that.histogramChart3,'series',series1);
+					this.$set(this.histogramChart3,'series',series1);
 					this.$refs['histogramChart3'].showCharts();
 					
 				}).catch((err)=>{
@@ -281,7 +286,7 @@
 							{ name: '上周', data: shangzhouvotes },
 							{ name: '本周', data: benzhouvotes }
 						];
-					that.$set(that.histogramChart4,'series',series1);
+					this.$set(this.histogramChart4,'series',series1);
 					this.$refs['histogramChart4'].showCharts();
 					
 				}).catch((err)=>{
@@ -328,7 +333,7 @@
 							{ name: '上周', data: shangzhouvotes },
 							{ name: '本周', data: benzhouvotes }
 						];
-					that.$set(that.histogramChart5,'series',series1);
+					this.$set(this.histogramChart5,'series',series1);
 					this.$refs['histogramChart5'].showCharts();
 					
 				}).catch((err)=>{

@@ -17,7 +17,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{((pagedata[0]-pagedatacompare[0])*100/pagedatacompare[0]).toFixed(2)}}%</view>
+					<view class="big-text">{{(pagedatacompare[0]==0||pagedatacompare[0]=='--')?'--':((pagedata[0]-pagedatacompare[0])*100/pagedatacompare[0]).toFixed(2)}}%</view>
 				</view>
 			</view>	
 			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -27,7 +27,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{((pagedata[1]-pagedatacompare[1])*100/pagedatacompare[1]).toFixed(2)}}%</view>
+					<view class="big-text">{{(pagedatacompare[1]==0||pagedatacompare[1]=='--')?'--':((pagedata[1]-pagedatacompare[1])*100/pagedatacompare[1]).toFixed(2)}}%</view>
 				</view>
 			</view>
 			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -37,55 +37,55 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{((pagedata[2]-pagedatacompare[2])*100/pagedatacompare[2]).toFixed(2)}}%</view>
+					<view class="big-text">{{(pagedatacompare[2]==0||pagedatacompare[2]=='--')?'--':((pagedata[2]-pagedatacompare[2])*100/pagedatacompare[2]).toFixed(2)}}%</view>
 				</view>
 			</view>
 			<view class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">足球日销量(亿元)</view>
 					<view class="big-text">{{pagedata[3]}}</view>
-					<view class="small-text">{{arcbarNumTop}} +{{((pagedata[3]-pagedatacompare[3])*100/pagedatacompare[3]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[3]==0||pagedatacompare[3]=='--')?'--':((pagedata[3]-pagedatacompare[3])*100/pagedatacompare[3]).toFixed(2)}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">蓝球日销量(亿元)</view>
 					<view class="big-text">{{pagedata[4]}}</view>
-					<view class="small-text">{{arcbarNumTop}} +{{((pagedata[4]-pagedatacompare[4])*100/pagedatacompare[4]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[4]==0||pagedatacompare[4]=='--')?'--':((pagedata[4]-pagedatacompare[4])*100/pagedatacompare[4]).toFixed(2)}}%</view>
 				</view>
 			</view>
 			<view class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">1-2关次销量(亿元)</view>
 					<view class="big-text">{{pagedata[5]}}</view>
-					<view class="small-text">{{arcbarNumTop}} +{{((pagedata[5]-pagedatacompare[5])*100/pagedatacompare[5]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[5]==0||pagedatacompare[5]=='--')?'--':((pagedata[5]-pagedatacompare[5])*100/pagedatacompare[5]).toFixed(2)}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">单票金额(元)</view>
 					<view class="big-text">{{pagedata[6]}}</view>
-					<view class="small-text">{{arcbarNumTop}} +{{((pagedata[6]-pagedatacompare[6])*100/pagedatacompare[6]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[6]==0||pagedatacompare[6]=='--')?'--':((pagedata[6]-pagedatacompare[6])*100/pagedatacompare[6]).toFixed(2)}}%</view>
 				</view>
 			</view>
 			<view class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">返奖率</view>
 					<view class="big-text">{{pagedata[7]}}</view>
-					<view class="small-text">{{arcbarNumTop}} +{{((pagedata[7]-pagedatacompare[7])*100/pagedatacompare[7]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[7]==0||pagedatacompare[7]=='--')?'--':((pagedata[7]-pagedatacompare[7])*100/pagedatacompare[7]).toFixed(2)}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">"0"销量门店数</view>
 					<view class="big-text">{{pagedata[8]}}</view>
-					<view class="small-text">{{arcbarNumTop}} +{{((pagedata[8]-pagedatacompare[8])*100/pagedatacompare[8]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[8]==0||pagedatacompare[8]=='--')?'--':((pagedata[8]-pagedatacompare[8])*100/pagedatacompare[8]).toFixed(2)}}%</view>
 				</view>
 			</view>
 			<view class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">本月累计销量(亿元)</view>
 					<view class="big-text">{{pagedata[9]}}</view>
-					<view class="small-text">{{arcbarNumTop}} +{{((pagedata[9]-pagedatacompare[9])*100/pagedatacompare[9]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[9]==0||pagedatacompare[9]=='--')?'--':((pagedata[9]-pagedatacompare[9])*100/pagedatacompare[9]).toFixed(2)}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">本年累计销量(亿元)</view>
 					<view class="big-text">{{pagedata[10]}}</view>
-					<view class="small-text">{{arcbarNumTop}} +{{((pagedata[10]-pagedatacompare[10])*100/pagedatacompare[10]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[10]==0||pagedatacompare[10]=='--')?'--':((pagedata[10]-pagedatacompare[10])*100/pagedatacompare[10]).toFixed(2)}}%</view>
 				</view>
 			</view>
 		</view>
@@ -151,16 +151,20 @@
 		},
 		methods: {
 			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				const area = uni.getStorageSync("area")
+				var area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
+				if(-1==area){
+					area=0;
+				}
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
+				this.selfParam.provinceCenterName=areaName			
 				this.selfParam.token=uni.getStorageSync("token");
 			},
 			createParam(){
@@ -210,8 +214,8 @@
 							this.$set(that.pagedata,0,0);
 							this.$set(that.pagedatacompare,0,0);
 						}else{
-							this.$set(that.pagedata,0,data[1]);
-							this.$set(that.pagedatacompare,0,data[2]);
+							this.$set(that.pagedata,0,(data[0][1]/100000000).toFixed(2));
+							this.$set(that.pagedatacompare,0,data[0][2]);
 						}
 						
 					}).catch((err)=>{
@@ -249,9 +253,9 @@
 							this.$set(that.pagedata,8,0);
 							this.$set(that.pagedatacompare,8,0);
 						}else{
-							this.$set(that.pagedata,2,data[1]);
+							this.$set(that.pagedata,2,data[0][1]);
 							this.$set(that.pagedatacompare,2,0);
-							this.$set(that.pagedata,8,data[2]);
+							this.$set(that.pagedata,8,data[0][2]);
 							this.$set(that.pagedatacompare,8,0);
 						}		
 					}).catch((err)=>{
@@ -269,8 +273,8 @@
 							this.$set(that.pagedata,3,0);
 							this.$set(that.pagedatacompare,3,0);
 						}else{
-							this.$set(that.pagedata,3,data[1]);
-							this.$set(that.pagedatacompare,3,data[2]);
+							this.$set(that.pagedata,3,(data[0][1]/200000000).toFixed(2));
+							this.$set(that.pagedatacompare,3,data[0][2]);
 						}
 						
 					}).catch((err)=>{
@@ -287,8 +291,8 @@
 							this.$set(that.pagedata,4,0);
 							this.$set(that.pagedatacompare,4,0);
 						}else{
-							this.$set(that.pagedata,4,data[1]);
-							this.$set(that.pagedatacompare,4,data[2]);
+							this.$set(that.pagedata,4,(data[0][1]/200000000).toFixed(2));
+							this.$set(that.pagedatacompare,4,data[0][2]);
 						}
 						
 					}).catch((err)=>{
@@ -306,7 +310,7 @@
 							this.$set(that.pagedata,5,0);
 							this.$set(that.pagedatacompare,5,0);
 						}else{
-							this.$set(that.pagedata,5,data[0]);
+							this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2));
 							this.$set(that.pagedatacompare,5,data[1]);
 						}
 						
@@ -362,7 +366,7 @@
 							this.$set(that.pagedata,9,0);
 							this.$set(that.pagedatacompare,9,0);
 						}else{
-							this.$set(that.pagedata,9,data[0]);
+							this.$set(that.pagedata,9,(data[0]/100000000).toFixed(2));
 							this.$set(that.pagedatacompare,9,data[1]);
 						}
 						
@@ -380,7 +384,7 @@
 							this.$set(that.pagedata,10,0);
 							this.$set(that.pagedatacompare,10,0);
 						}else{
-							this.$set(that.pagedata,10,data[0]);
+							this.$set(that.pagedata,10,(data[0]/100000000).toFixed(2));
 							this.$set(that.pagedatacompare,10,data[1]);
 						}
 					}).catch((err)=>{
@@ -402,8 +406,8 @@
 							this.$set(that.pagedata,0,0);
 							this.$set(that.pagedatacompare,0,0);
 						}else{
-							this.$set(that.pagedata,0,data[1]);
-							this.$set(that.pagedatacompare,0,data[2]);
+							this.$set(that.pagedata,0,(data[0][1]/100000000).toFixed(2));
+							this.$set(that.pagedatacompare,0,data[0][2]);
 						}
 						
 					}).catch((err)=>{
@@ -420,11 +424,9 @@
 							this.$set(that.pagedata,1,0);
 							this.$set(that.pagedatacompare,1,0);
 						}else{
-							this.$set(that.pagedata,1,data[1]);
-							this.$set(that.pagedatacompare,1,data[2]);
+							this.$set(that.pagedata,1,(data[0][1]/100000000).toFixed(2));
+							this.$set(that.pagedatacompare,1,data[0][2]);
 						}
-							
-						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -442,9 +444,9 @@
 							this.$set(that.pagedata,8,0);
 							this.$set(that.pagedatacompare,8,0);
 						}else{
-							this.$set(that.pagedata,2,data[1]);
+							this.$set(that.pagedata,2,data[0][1]);
 							this.$set(that.pagedatacompare,2,0);
-							this.$set(that.pagedata,8,data[2]);
+							this.$set(that.pagedata,8,data[0][2]);
 							this.$set(that.pagedatacompare,8,0);
 						}
 							
@@ -464,8 +466,8 @@
 							this.$set(that.pagedata,3,0);
 							this.$set(that.pagedatacompare,3,0);
 						}else{
-							this.$set(that.pagedata,3,data[1]);
-							this.$set(that.pagedatacompare,3,data[2]);
+							this.$set(that.pagedata,3,(data[0][1]/200000000).toFixed(2));
+							this.$set(that.pagedatacompare,3,data[0][2]);
 						}
 						
 					}).catch((err)=>{
@@ -482,8 +484,8 @@
 							this.$set(that.pagedata,4,0);
 							this.$set(that.pagedatacompare,4,0);
 						}else{
-							this.$set(that.pagedata,4,data[1]);
-							this.$set(that.pagedatacompare,4,data[2]);
+							this.$set(that.pagedata,4,(data[0][1]/200000000).toFixed(2));
+							this.$set(that.pagedatacompare,4,data[0][2]);
 						}
 						
 					}).catch((err)=>{
@@ -501,7 +503,7 @@
 							this.$set(that.pagedata,5,0);
 							this.$set(that.pagedatacompare,5,0);
 						}else{
-							this.$set(that.pagedata,5,data[0]);
+							this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2));
 							this.$set(that.pagedatacompare,5,data[2]);
 						}
 						
@@ -556,7 +558,7 @@
 							this.$set(that.pagedata,9,0);
 							this.$set(that.pagedatacompare,9,0);
 						}else{
-							this.$set(that.pagedata,9,data[0]);
+							this.$set(that.pagedata,9,(data[0]/100000000).toFixed(2));
 							this.$set(that.pagedatacompare,9,data[2]);
 						}
 						
@@ -575,7 +577,7 @@
 							this.$set(that.pagedata,10,0);
 							this.$set(that.pagedatacompare,10,0);
 						}else{
-							this.$set(that.pagedata,10,data[0]);
+							this.$set(that.pagedata,10,(data[0]/100000000).toFixed(2));
 							this.$set(that.pagedatacompare,10,data[2]);
 						}
 						

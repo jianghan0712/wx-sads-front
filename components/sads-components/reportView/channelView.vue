@@ -103,16 +103,20 @@
 		},
 		methods: {
 			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				const area = uni.getStorageSync("area")
+				var area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
+				if(-1==area){
+					area=0;
+				}
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
+				this.selfParam.provinceCenterName=areaName				
 				this.selfParam.token=uni.getStorageSync("token");		
 			},
 			createParam(){
@@ -160,8 +164,8 @@
 					var shangzhou=[];
 					var benzhou=[];
 					for(var i=0;i<votes.length/2;i++){
-						shangzhou.push(votes[i]);
-						benzhou.push(votes[i+7]);
+						shangzhou.push((votes[i]/10000).toFixed(0));
+						benzhou.push((votes[i+7]/10000).toFixed(0));
 					};
 					
 					var series =[
@@ -191,8 +195,8 @@
 					var shangzhou=[];
 					var benzhou=[];
 					for(var i=0;i<storeCount.length/2;i++){
-						shangzhou.push(storeCount[i]);
-						benzhou.push(storeCount[i+7]);
+						shangzhou.push((storeCount[i]/10000).toFixed(0));
+						benzhou.push((storeCount[i+7]/10000).toFixed(0));
 					};
 					
 					var series =[
@@ -222,8 +226,8 @@
 					var shangzhou=[];
 					var benzhou=[];
 					for(var i=0;i<storeCount.length/2;i++){
-						shangzhou.push(storeCount[i]);
-						benzhou.push(storeCount[i+7]);
+						shangzhou.push((storeCount[i]/10000).toFixed(0));
+						benzhou.push((storeCount[i+7]/10000).toFixed(0));
 					};
 					
 					var series =[

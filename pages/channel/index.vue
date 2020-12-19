@@ -294,6 +294,7 @@
 					this.update2=true;
 				},
 				returnFromDatePicker(){
+					this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 					const dateType = uni.getStorageSync("dateType")
 					const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 					this.selfParam.businessDate = bussinessDate;
@@ -303,7 +304,7 @@
 					const areaName = uni.getStorageSync("areaName")
 					console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 					this.selfParam.provinceCenterId=area
-					this.selfParam.provinceCenterName=areaName	
+					this.selfParam.provinceCenterName=areaName		
 					this.selfParam.token=uni.getStorageSync("token")
 				},
 				goArea(){

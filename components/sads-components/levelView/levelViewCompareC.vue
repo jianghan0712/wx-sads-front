@@ -240,6 +240,11 @@
 			this.showView()
 		},
 		methods: {
+			refresh(selfParam){
+				this.selfParam.token = uni.getStorageSync("token")
+				this.getServerData();
+				this.showView();
+			},
 			createParam(){
 				console.log("createParam begin")
 				var dateType = this.selfParam.compareDate.dateType
@@ -282,17 +287,60 @@
 				return param
 			},
 			returnFromDatePicker(){
-				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-				const dateType = uni.getStorageSync("dateType")
-				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
-				this.selfParam.businessDate = bussinessDate;
-				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-						
-				const area = uni.getStorageSync("area")
-				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
-				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
+			const dateType = uni.getStorageSync("compareDateType")
+			const leftDate = JSON.parse(uni.getStorageSync("leftBusinessDate"))
+			const rightDate = JSON.parse(uni.getStorageSync("rightBusinessDate"))
+			console.log("dateType:",dateType)
+			console.log("leftDate:",leftDate)
+			console.log("rightDate:",rightDate)
+			
+			if(leftDate==null || rightDate==null){
+				return
+			}
+			
+			if(leftDate.dateType!=dateType || rightDate.dateType!=dateType){
+				console.log("dateType不匹配:")
+				const compareDate={
+						dateType:dateType,
+						viewLeft:leftDate.view,//用于展示日期、年、月等
+						viewRight:rightDate.view,
+						dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
+						dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
+						weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
+						weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
+						monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
+						monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
+						yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
+						yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
+					}
+				this.selfParam.compareDate=compareDate
+				return
+			}
+			console.log("leftDate:",leftDate)
+			const compareDate={
+					dateType:dateType,
+					viewLeft:leftDate.view,//用于展示日期、年、月等
+					viewRight:rightDate.view,
+					dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
+					dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
+					weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
+					weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
+					monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
+					monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
+					yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
+					yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
+				}
+			this.selfParam.compareDate=compareDate
+			console.log("compareDate:",compareDate)
+			const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+			this.selfParam.businessDate = bussinessDate;
+			console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+					
+			const area = uni.getStorageSync("area")
+			const areaName = uni.getStorageSync("areaName")
+			console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+			this.selfParam.provinceCenterId=area
+			this.selfParam.provinceCenterName=areaName
 				this.selfParam.token=uni.getStorageSync("token")
 				this.selfParam.shopNo = uni.getStorageSync("shopNo");
 			},

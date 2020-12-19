@@ -8,12 +8,12 @@
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >足球奖池七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
 				<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" />
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >足球调节基金七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(百万张)</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
 				<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" />
 			</view>
 			<view class="padding">
@@ -23,7 +23,7 @@
 			</view>
 			<view class="padding"> 
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >篮球调节基金七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(元)</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
 				<histogram-chart ref="histogramChart4" canvasId="histogramChart4" :dataAs="histogramChart4" />
 			</view>
 			<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
@@ -115,16 +115,20 @@
 		},
 		methods: {
 			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				const area = uni.getStorageSync("area")
+				var area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
+				if(-1==area){
+					area=0;
+				}
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
+				this.selfParam.provinceCenterName=areaName			
 				this.selfParam.token=uni.getStorageSync("token");		
 			},
 			createParam(){
@@ -181,14 +185,14 @@
 					var benzhou4=[];
 					//先按7条记录
 					for(var i=0;i<fbCum.length/2;i++){
-						shangzhou1.push(fbCum[i]);
-						shangzhou2.push(fbAdjust[i]);
-						shangzhou3.push(bkCum[i]);
-						shangzhou4.push(bkAdjust[i]);
-						benzhou1.push(fbCum[i+7]);
-						benzhou2.push(fbAdjust[i+7]);
-						benzhou3.push(bkCum[i+7]);
-						benzhou4.push(bkAdjust[i+7]);
+						shangzhou1.push((fbCum[i]/100000000).toFixed(0));
+						shangzhou2.push((fbAdjust[i]/100000000).toFixed(0));
+						shangzhou3.push((bkCum[i]/100000000).toFixed(0));
+						shangzhou4.push((bkAdjust[i]/100000000).toFixed(0));
+						benzhou1.push((fbCum[i+7]/100000000).toFixed(0));
+						benzhou2.push((fbAdjust[i+7]/100000000).toFixed(0));
+						benzhou3.push((bkCum[i+7]/100000000).toFixed(0));
+						benzhou4.push((bkAdjust[i+7]/100000000).toFixed(0));
 					};
 					
 					var series1 =[

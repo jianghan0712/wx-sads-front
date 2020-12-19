@@ -7,10 +7,7 @@
         </scroll-view>
         <view class="content">
         	<view @click="goArea">{{selfParam.provinceCenterName}}</view>
-        	<uni-section class="section" type="line"></uni-section>
         	<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
-        	<uni-section class="section" type="line"></uni-section>
-        	<view @click="goCompare">对比</view>
         </view>	
 		<block v-if="tabIndex==0">
 			<allView ref="allView"  :model="modelSet" ></allView>

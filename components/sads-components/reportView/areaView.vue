@@ -119,7 +119,7 @@
 				 		{
 				 			title: '省份',
 				 			key: 'area',
-				 			$width:"80px"
+				 			$width:"60px"
 				 		},
 				 		{
 				 			title: '销量(百万元)',
@@ -129,7 +129,7 @@
 				 		{
 				 			title: '周同比变化(百万元)',
 				 			key: 'rateChange',
-				 			$width:"150px"
+				 			$width:"130px"
 				 		}
 				 	],
 					tableData1: [],
@@ -142,7 +142,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"80px"
+								$width:"60px"
 							},
 							{
 								title: '票数(张)',
@@ -152,7 +152,7 @@
 							{
 								title: '周同比变化(张)',
 								key: 'rateChange',
-								$width:"150px"
+								$width:"130px"
 							}
 						],
 					tableData2: [],
@@ -165,7 +165,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"80px"
+								$width:"60px"
 							},
 							{
 								title: '有销量门店数',
@@ -175,7 +175,7 @@
 							{
 								title: '"0"销量门店数',
 								key: 'nonecount',
-								$width:"150px"
+								$width:"130px"
 							}
 						],
 					tableData3: [],
@@ -183,7 +183,7 @@
 					tableColumns3: [{
 								title: "排名",
 								key: "id",
-								$width:"50px",
+								$width:"30px",
 							},
 							{
 								title: '省份',
@@ -193,7 +193,7 @@
 							{
 								title: '竞彩',
 								key: 'jingcai',
-								$width:"90px"
+								$width:"60px"
 							},
 							{
 								title: '足球',
@@ -203,23 +203,27 @@
 							{
 								title: '篮球',
 								key: 'basketball',
-								$width:"90px"
+								$width:"120px"
 							},
 						],
 				 }
 		},
 		methods: {
 			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				const area = uni.getStorageSync("area")
+				var area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
+				if(-1==area){
+					area=0;
+				}
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
+				this.selfParam.provinceCenterName=areaName				
 				this.selfParam.token=uni.getStorageSync("token");
 			},
 			createParam(){
@@ -269,8 +273,8 @@
 						var arr={
 								id: i+1,
 								area: data[i][0],
-								xiaoliang: data[i][1],
-								rateChange: data[i][2]
+								xiaoliang: (data[i][1]/1000000).toFixed(2),
+								rateChange: (data[i][2]/1000000).toFixed(2)
 							};
 						that.tableDataAll.push(arr);
 						if(i<5){
@@ -292,8 +296,8 @@
 						var arr={
 								id: i+1,
 								area: data[i][0],
-								piaoshu: data[i][1],
-								rateChange: data[i][2]
+								piaoshu: (data[i][1]/10000).toFixed(2),
+								rateChange: (data[i][2]/10000).toFixed(2)
 							};
 						that.tableDataAll1.push(arr);
 						if(i<5){
