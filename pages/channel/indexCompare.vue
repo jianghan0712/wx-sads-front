@@ -30,15 +30,12 @@
     </view>
 </template>
 <script>
-	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
 	import totalViewCompareC from "@/components/sads-components/totalView/totalViewCompareC.vue";
 	import levelViewCompareC from "@/components/sads-components/levelView/levelViewCompareC.vue";
 	import ticketViewCompareC from "@/components/sads-components/ticketView/ticketViewCompareC.vue";
 	import gameViewCompareC from "@/components/sads-components/gameView/gameViewCompareC.vue";
 	import matchViewCompareC from "@/components/sads-components/matchView/matchViewCompareC.vue";
-	import dateSelector from "@/components/sads-components/dateSelector.vue";
 	import dateUtils from '@/common/tools/dateUtils.js';
-	import multiSeTime from '@/components/sads-components/time.vue'
 	
 
     // 缓存每页最多
@@ -48,9 +45,8 @@
 
     export default {
         components: {
-            MxDatePicker,
 			totalViewCompareC, levelViewCompareC,
-			ticketViewCompareC, gameViewCompareC,dateSelector,matchViewCompareC,multiSeTime
+			ticketViewCompareC, gameViewCompareC,matchViewCompareC
         },
         data() {
             return {
@@ -235,7 +231,7 @@
 				// 单选就传递单选参数，复选就传递复选参数
 			    uni.setStorageSync("dateOption", this.goodDatePickerOption3);
 				uni.navigateTo({
-					url:"/pages/common/dateSelector"
+					url:"/pages/common/dateSelector?type=common&date=" + this.selfParam.businessDate.date.startDate
 				});
 			},
         }

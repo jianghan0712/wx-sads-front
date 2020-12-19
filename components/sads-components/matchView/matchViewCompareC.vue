@@ -153,11 +153,6 @@
 				console.log('picker发送选择改变，携带值为：' + e.detail.value)
 				this.index = e.detail.value
 			},
-			gotoLunBo(btnnum){
-				uni.navigateTo({	
-					url:"/pages/common/levelRingDetail?btnnum="+btnnum
-				});
-			},
 			returnFromDatePicker(){
 				const dateType = uni.getStorageSync("compareDateType")
 				const leftDate = JSON.parse(uni.getStorageSync("leftBusinessDate"))

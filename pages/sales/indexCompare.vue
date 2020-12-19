@@ -31,15 +31,12 @@
 </template>
 <script>
     import mediaItem from './news-item.nvue';
-	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
 	import totalViewCompare from "@/components/sads-components/totalView/totalViewCompare.vue";
 	import levelViewCompare from "@/components/sads-components/levelView/levelViewCompare.vue";
 	import ticketViewCompare from "@/components/sads-components/ticketView/ticketViewCompare.vue";
 	import gameView from "@/components/sads-components/gameView/gameView.vue";
 	import matchView from "@/components/sads-components/matchView/matchView.vue";
-	import dateSelector from "@/components/sads-components/dateSelector.vue";
 	import dateUtils from '@/common/tools/dateUtils.js';
-	import multiSeTime from '@/components/sads-components/time.vue'
 	
 
     // 缓存每页最多
@@ -49,9 +46,9 @@
 
     export default {
         components: {
-            mediaItem, MxDatePicker,
+            mediaItem,
 			totalViewCompare, levelViewCompare,
-			ticketViewCompare, gameView,dateSelector,matchView,multiSeTime
+			ticketViewCompare, gameView,matchView
         },
         data() {
             return {

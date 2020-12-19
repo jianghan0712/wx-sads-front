@@ -47,7 +47,6 @@
 
 <script>
 	import uniCalendar from '@/components/uni/uni-calendar/uni-calendar.vue';
-	import zzxCalendar from "@/components/zzx-calendar/zzx-calendar.vue";
 	import uniTag from "@/components/uni/uni-tag/uni-tag.vue"
 	import uniSection from "@/components/uni/uni-section/uni-section.vue"
 	import dateUtils from '@/common/tools/dateUtils.js';
@@ -86,7 +85,7 @@
 	
 	export default {	
 		components: {
-		    uniCalendar,zzxCalendar, uniTag, uniSection
+		    uniCalendar, uniTag, uniSection
 		},
 		data() {
 		    return {							

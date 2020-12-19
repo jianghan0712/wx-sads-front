@@ -50,13 +50,12 @@
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import vTable from "@/components/table/table.vue";
 	import uniSection from "@/components/uni/uni-section/uni-section.vue"	
-	import dateSelector from "@/components/sads-components/dateSelector.vue";
 	import urlAPI from '@/common/vmeitime-http/';
 	import commonFun from '@/common/tools/watcher.js';
 	
 	export default {
 			components:{
-				dateSelector,dataContainer, vTable,uniSection
+				dataContainer, vTable,uniSection
 			},
 			data() {
 				return {
@@ -304,9 +303,24 @@
 					const areaName = uni.getStorageSync("areaName")
 					console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 					this.selfParam.provinceCenterId=area
-					this.selfParam.provinceCenterName=areaName		
+					this.selfParam.provinceCenterName=areaName						
 					this.selfParam.token=uni.getStorageSync("token")
+					uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 				},
+				// returnFromDatePicker(){
+				// 	this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				// 	const dateType = uni.getStorageSync("dateType")
+				// 	const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				// 	this.selfParam.businessDate = bussinessDate;
+				// 	console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+							
+				// 	const area = uni.getStorageSync("area")
+				// 	const areaName = uni.getStorageSync("areaName")
+				// 	console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				// 	this.selfParam.provinceCenterId=area
+				// 	this.selfParam.provinceCenterName=areaName		
+				// 	uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
+				// },
 				goArea(){
 					uni.navigateTo({
 						url:"/pages/common/areaSelector?area="+this.selfParam.provinceCenterId
@@ -321,7 +335,7 @@
 				},
 				goDatePicker() {
 					uni.navigateTo({
-						url:"/pages/common/dateSelector"
+						url:"/pages/common/dateSelector?type=common&date=" + this.selfParam.businessDate.date.startDate
 					});
 				},
 				createParam(){

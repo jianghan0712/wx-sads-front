@@ -34,7 +34,6 @@
 
 <script>
 	import channelGameView from "@/components/sads-components/gameView/channelGameView.vue";	
-	import MxDatePicker from '@/components/mx-datepicker/mx-datepicker.vue';
 	import channelTotalView from "@/components/sads-components/totalView/channelTotalView.vue";
 	import channelLevelView from "@/components/sads-components/levelView/channelLevelView.vue";
 	import channelTicketView from "@/components/sads-components/ticketView/channelTicketView.vue";
@@ -274,7 +273,7 @@
 			},
 			goDatePicker() {
 				uni.navigateTo({
-					url:"/pages/common/dateSelector"
+					url:"/pages/common/dateSelector?type=common&date=" + this.selfParam.businessDate.date.startDate
 				});
 			}
 			

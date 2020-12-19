@@ -86,8 +86,8 @@
 					</view>
 					<view class="shop-item-content">
 						<view style="width: 40%;">{{shopData.shop.sum}}</view>
-						<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(shopData.shop.tongbi)}}</view>
-						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(shopData.shop.huanbi)}}</view>
+						<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{shopData.shop.tongbi}}+"%"</view>
+						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.huanbi}}+"%"</view>
 					</view>
 				</view>
 			</view>
@@ -101,8 +101,8 @@
 					
 					<view class="shop-item-content">
 						<view style="width: 40%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
-						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(shopData.rate.tongbi)}}</view>
-						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(shopData.rate.huanbi)}}</view>
+						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{shopData.rate.tongbi}}+"%"</view>
+						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.huanbi}}+"%"</view>
 					</view>
 				</view>
 			</view>
@@ -134,7 +134,7 @@
 							<view style="width: 25%;">环比</view>
 						</view>
 						<view class="shop-item-content">
-							<view style="width: 40%;">{{returnData.rate.sum}}</view>
+							<view style="width: 40%;">{{returnData.rate.sum}} +"%"</view>
 							<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(returnData.rate.tongbi)}}</view>
 							<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(returnData.rate.huanbi)}}</view>
 						</view>
@@ -176,7 +176,6 @@
 	import commonFun from '@/common/tools/watcher.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
 	import noData from '@/components/sads-components/noData.vue';
-	import imageSrc from "@/static/card.png"
 	
 	
 	export default {
@@ -197,7 +196,6 @@
 		},
 		data() {
 			return {	
-				imageSrc: imageSrc,
 				selfParam:{
 					token:'',
 					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
@@ -590,8 +588,8 @@
 						var json = {id:i+1, 
 									area:data[i][0], 
 									amount:data[i][1], 
-									tongbi:this.valueToPercent((data[i][2]/100).toFixed(4)),
-									huanbi:this.valueToPercent((data[i][3]/100).toFixed(4))}						
+									tongbi:data[i][2],
+									huanbi:data[i][3]}						
 						if(i<=4){
 							this.tableData[i] = json
 						}

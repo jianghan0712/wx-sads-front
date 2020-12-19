@@ -43,7 +43,6 @@
 </template>
 
 <script>
-	import MxDatePicker from '@/components/mx-datepicker/mx-datepicker.vue';
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import PieChart from '@/components/basic-chart/PieChart.vue';
 	import RingChart from '@/components/basic-chart/RingChart.vue';
@@ -54,7 +53,6 @@
 	
 	export default {
 			components:{
-				MxDatePicker,
 				LineChart,
 				PieChart,
 				RingChart,

@@ -37,9 +37,7 @@
 	import pondView from "@/components/sads-components/reportView/pondView.vue";
 	import salesView from "@/components/sads-components/reportView/salesView.vue";
 	import ticketView from "@/components/sads-components/ticketView/ticketView.vue";
-	import dateSelector from "@/components/sads-components/dateSelector.vue";
 	import dateUtils from '@/common/tools/dateUtils.js';
-	import multiSeTime from '@/components/sads-components/time.vue'	
 	import uniSection from "@/components/uni/uni-section/uni-section.vue"
 
     // 缓存每页最多
@@ -49,7 +47,7 @@
 
     export default {
         components: {
-           allView,matchView,areaView,channelView,pondView,salesView,multiSeTime,uniSection
+           allView,matchView,areaView,channelView,pondView,salesView,uniSection
         },
         data() {
             return {

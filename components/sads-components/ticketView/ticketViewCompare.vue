@@ -399,15 +399,15 @@
 			gotoLunBo(btnnum){
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
 					});
 				}else if(btnnum==1){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData1)
 					});
 				}else if(btnnum==2){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData2)
 					});
 				}
 			},

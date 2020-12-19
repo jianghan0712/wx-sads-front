@@ -365,11 +365,11 @@
 				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
 					});
 				}else{
 					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData1)
 					});
 				}
 			},

@@ -36,15 +36,12 @@
 </template>
 <script>
     import mediaItem from './news-item.nvue';
-	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
 	import totalView from "@/components/sads-components/totalView/totalView.vue";
 	import levelView from "@/components/sads-components/levelView/levelView.vue";
 	import ticketView from "@/components/sads-components/ticketView/ticketView.vue";
 	import gameView from "@/components/sads-components/gameView/gameView.vue";
 	import matchView from "@/components/sads-components/matchView/matchView.vue";
-	import dateSelector from "@/components/sads-components/dateSelector.vue";
 	import dateUtils from '@/common/tools/dateUtils.js';
-	import multiSeTime from '@/components/sads-components/time.vue'	
 	import uniSection from "@/components/uni/uni-section/uni-section.vue"
 
     // 缓存每页最多
@@ -54,9 +51,9 @@
 
     export default {
         components: {
-            mediaItem, MxDatePicker,
+            mediaItem,
 			totalView, levelView,
-			ticketView, gameView,dateSelector,matchView,multiSeTime,uniSection
+			ticketView, gameView,matchView,uniSection
         },
         data() {
             return {
