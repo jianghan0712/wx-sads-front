@@ -13,7 +13,7 @@
 				<view style="-webkit-flex: 1;flex: 1;">取消</view>		
 		</view>	 
 		<block v-if="tabIndex==0">
-			<totalViewCompare ref="totalViewCompare"></totalViewCompare>
+			<totalViewCompare ref="totalViewCompare" :model="selfParam"></totalViewCompare>
 		</block> 
 		<block v-if="tabIndex==1">
 			<gameView ref="gameView" :model="selfParam"></gameView>
@@ -116,6 +116,11 @@
         },
 		onShow() {//此处接受来自日期选择页面的参数
 			this.returnFromDatePicker()
+			if(this.$refs['totalViewCompare']!=null){
+				this.$refs['totalViewCompare'].refresh();
+			}else if (this.$refs['ticketViewCompare']!=null){
+				this.$refs['ticketViewCompare'].refresh();
+			}
 		},
 		onUnload() {
 			//页面销毁删除缓存日期数据
@@ -168,6 +173,7 @@
 					}
 				this.selfParam.compareDate=compareDate
 				console.log("compareDate:",compareDate)
+				
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
@@ -176,7 +182,10 @@
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName			
+				this.selfParam.provinceCenterName=areaName	
+				
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
+				
 			},
             getList(index) {
                 let activeTab = this.newsList[index];

@@ -113,15 +113,14 @@
 					<view>各地区销量排行</view>
 					<view class="rankTable-more" @click="goSaleRank(tableDataDetail,tableColumns)">全部>></view>
 				</view>
-				<block v-if="tableData.length==0">
+<!-- 				<block v-if="tableData.length==0">
 					<noData :message="nodataMessage"></noData>
-					<!--<image src="../../../static/noData.png" ></image> -->
 				</block>
-				<block v-if="tableData.length>0">
+				<block v-if="tableData.length>0"> -->
 					<view class="example">
 						<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 					</view>
-				</block>
+				<!-- </block> -->
 			</view>
 			
 			<block v-if="today!= selfParam.businessDate.view">
@@ -148,9 +147,14 @@
 						<view>各地区返奖情况</view>
 						<view class="rankTable-more" @click="goSaleRank(tableDataDetail2,tableColumns2)">全部>></view>
 					</view>
-					<view class="example">
-						<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
-					</view>
+<!-- 					<block v-if="tableData2.length==0">
+						<noData :message="nodataMessage"></noData>
+					</block>
+					<block v-if="tableData2.length>0"> -->
+						<view class="example">
+							<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
+						</view>
+					<!-- </block> -->
 				</view>
 			</block>
 
@@ -302,13 +306,14 @@
 			console.log("totalView onLoad:",this.selfParam)
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
+			this.showView();
 		},
 		created() {
 			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			console.log("totalView created:",this.selfParam)
 			this.getServerData();
-			this.showView();
+			// this.showView();
 		},
 		methods: {
 			createParam(){

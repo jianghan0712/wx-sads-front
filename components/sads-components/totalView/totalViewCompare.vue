@@ -81,7 +81,7 @@
 			dataContainerTwoCol,dataContainerTwoColTwo
 		},
 		props: {
-			param:{
+			model:{
 				//数据
 				type: Object,
 				default: () => ({})
@@ -204,16 +204,18 @@
 					],	
 			};
 		},
+		created() {
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.getServerData();
+			console.log("compare: created.model=",this.model)
+			console.log("compare: created.selfParam=",this.selfParam)
+			// this.showView();
+		},
 		onLoad() {
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
 			this.showView();
-		},
-		created() {		
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam")) 
-			//ajax调用
-			this.getServerData();	
 		},
 		methods: {
 			getServerData() {
@@ -278,7 +280,7 @@
 				var param = this.createParam()
 				
 				urlAPI.getRequest(url, param).then((res)=>{
-					setTimeout(() => { 
+					// setTimeout(() => { 
 						this.loading = false;
 							console.log('request success', res)
 							uni.showToast({
@@ -305,15 +307,10 @@
 							console.log('request topData', this.topData);
 							
 							this.res = '请求结果 : ' + JSON.stringify(res);
-						}).catch((err)=>{
-							this.loading = false;
-							uni.showToast({
-								title: err.errMsg,
-								duration: 5000
-							});
-							console.log('request fail', err);
-						})						
-					}, 10000);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
 			},
 			getLinesData(provinceCenterId, businessDate){
 				var url = 'mobile/sales/getSalesTodayByHour/' + provinceCenterId+'/' + businessDate;
@@ -421,7 +418,11 @@
 					console.log('request fail', err);
 				});
 			},
-
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.getServerData();
+				this.showView();
+			},
 			change(e) {
 			      this.btnnum = e
 			      console.log(this.btnnum)
@@ -460,12 +461,13 @@
 				return result + "%";
 			}
 		},
-		mounted(){
+		mounted(){			
 			this.showView();
 		},
 		watch: {
 			'$route':'showView'
-		}
+		},
+
 
 	}
 </script>

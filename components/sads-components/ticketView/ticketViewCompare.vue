@@ -427,8 +427,8 @@
 				}
 
 			},
-			refresh(selfParam){
-				this.selfParam.token = uni.getStorageSync("token")
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.getServerData();
 				this.showView();
 			},
@@ -440,7 +440,7 @@
 			'$route':'showView'
 		},
 		created() {
-			this.selfParam = this.model;
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.getServerData();
 			// this.showView();
 		},
