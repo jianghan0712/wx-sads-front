@@ -141,7 +141,7 @@
 		created() {
 			// this.selfParam=this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
+			// this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
 		},
@@ -165,9 +165,9 @@
 				console.log("ticket showView" ,this.pieData);
 				// commonFun.sleep(3000) 
 				//this.$refs['ticketData'].showDataContainer();		
-				this.$refs['ringChart0'].showCharts();
-				this.$refs['ringChart1'].showCharts();
-				this.$refs['ringChart2'].showCharts();
+				// this.$refs['ringChart0'].showCharts();
+				// this.$refs['ringChart1'].showCharts();
+				// this.$refs['ringChart2'].showCharts();
 			},
 			getServerData() {
 				this.getDataSet(this.selfParam.provinceCenterId,this.selfParam.businessDate,this.selfParam.cityCenterId);
@@ -179,7 +179,7 @@
 			change(e) {
 			    this.btnnum = e;
 				if(0==e){
-				this.getPieData('竞彩');
+					this.getPieData('竞彩');
 				}else if(1==e){
 					this.getPieData('足彩');
 				}else if(2==e){
@@ -341,9 +341,9 @@
 					for(var i=0;i<data.length;i++){
 						var jsonData = {id:i+1, 
 									    area:data[i][0], 
-										jingcai:data[i][1].toFixed(2)/format0.value, 
-										football:data[i][2].toFixed(2)/format0.value,
-										basketball:data[i][3].toFixed(2)/format0.value,
+										jingcai:data[i][1], 
+										football:data[i][2],
+										basketball:data[i][3],
 									   }
 						this.tableDataAll[i]=jsonData;						
 						if(i>4){
@@ -387,6 +387,7 @@
 		},
 		mounted(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.getServerData();
 			this.showView();
 		},
 		watch: {

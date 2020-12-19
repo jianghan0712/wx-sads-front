@@ -144,6 +144,7 @@
 		},
 		onLoad() {
 			_self = this;
+			this.showView();
 		},
 		created() {
 			this.selfParam=this.param

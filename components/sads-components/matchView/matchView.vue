@@ -218,7 +218,7 @@
 					});
 					var data = res.data.data;
 					var format0 = null;
-					if(data.length>0){
+					if(data!=null && data.length>0){
 						format0 = numberFun.formatCNumber(data[0][1]);							
 					}else{
 						return;
@@ -240,7 +240,7 @@
 					]
 					
 					for(var i=0;i<data.length;i++){
-						var jsonData = {id:i+1, matchType:data[i][0], amount:data[i][1]/format0.value}
+						var jsonData = {id:i+1, matchType:data[i][0], amount:(data[i][1]/format0.value).toFixed(2)}
 						this.matchTypeTableData[i]=jsonData;
 						if(i==4){
 							break;
@@ -268,14 +268,14 @@
 					});
 					var data = res.data.data;
 					var format0 = null;
-					if(data.length>0){
+					if(data!=null && data.length>0){
 						format0 = numberFun.formatCNumber(data[0][1]);							
 					}else{
 						return;
 					}					
 
 					for(var i=0;i<data.length;i++){
-						var jsonData = {id:i+1, matchName:data[i][0], amount:data[i][1]/format0.value}
+						var jsonData = {id:i+1, matchName:data[i][0], amount:(data[i][1]/format0.value).toFixed(2)}
 						this.matchEventTableData[i]=jsonData;
 						if(i==4){
 							break;

@@ -34,15 +34,12 @@
 			</view>
 		</view>
 		
-		<block v-if="'date'!= selfParam.businessDate.dateType">
+<!-- 		<block v-if="'date'!= selfParam.businessDate.dateType">
 			<view class="box-contaniner">
 				<view class="container-title">竞彩单票金额走势图</view>
 				<line-chart ref="ticketlineData" canvasId="ticket_line_1" :dataAs="lineData1" />
-<!-- 				<line-chart ref="ticketlineData" canvasId="ticket_line_1" :dataAs="lineData1" 	
-							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/> -->
 			</view>
-		</block>
+		</block> -->
 		<slot />
 	</view>	
 </template>
@@ -112,8 +109,8 @@
 			}
 		},
 		onLoad() {
-			this.returnFromDatePicker();
-			this.getServerData();
+			// this.returnFromDatePicker();
+			// this.getServerData();
 			this.showView();
 		},
 		onShow() {
@@ -130,14 +127,16 @@
 			showView(){
 				console.log("ticket showView" ,this.pieData);
 				// commonFun.sleep(3000)
-				this.$refs['ticketData'].showDataContainer();		
-				this.$refs['ringChart0'].showCharts();
-				this.$refs['ringChart1'].showCharts();
-				this.$refs['ringChart2'].showCharts();
-				this.$refs['progress_0'].showProgress(this.pieData);
-				this.$refs['progress_1'].showProgress(this.pieData1);
-				this.$refs['progress_2'].showProgress(this.pieData2);
-				this.$refs['ticketlineData'].showCharts();
+				this.$nextTick(() => {	
+					this.$refs['ticketData'].showDataContainer();
+					this.$refs['ringChart0'].showCharts();
+					this.$refs['ringChart1'].showCharts();
+					this.$refs['ringChart2'].showCharts();
+					this.$refs['progress_0'].showProgress(this.pieData);
+					this.$refs['progress_1'].showProgress(this.pieData1);
+					this.$refs['progress_2'].showProgress(this.pieData2);
+					// this.$refs['ticketlineData'].showCharts();
+				});	
 			},
 			returnFromDatePicker(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -159,21 +158,21 @@
 				this.getPieData('竞彩');
 				this.getPieData('足彩');
 				this.getPieData('篮彩');
-				this.getLineDate();
+				// this.getLineDate();
 				// this.$refs['ticketData'].showDataContainer();
 			},
 			change(e) {
 			    this.btnnum = e;
 				if(0==e){
-				this.getPieData('竞彩');
+					this.getPieData('竞彩');
 				}else if(1==e){
 					this.getPieData('足彩');
 				}else if(2==e){
 					this.getPieData('篮彩');
 				}
 			},
-			refresh(selfParam){
-				this.selfParam = JSON.parse(selfParam)
+			refresh(){
+				this.returnFromDatePicker()
 				this.selfParam.token = uni.getStorageSync("token")
 				this.getServerData();
 				this.showView();
@@ -249,7 +248,7 @@
 				}else if(type=='篮彩'){
 					param.gameFlag = 2
 				}
-				var that =this;
+				// var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -265,19 +264,19 @@
 						list[i]={name:data[i].proValueName,data:data[i].values[0]};
 					}
 					if(type=='竞彩'){
-						that.$set(that.pieData, 'series', list);
+						this.$set(this.pieData, 'series', list);
 						this.$refs['ringChart0'].showCharts();
-						
+						// this.$refs['progress_0'].showProgress(this.pieData);					
 					}else if(type=='足彩'){
-						that.$set(that.pieData1, 'series', list);
+						this.$set(this.pieData1, 'series', list);
 						this.$refs['ringChart1'].showCharts();
-						
+						// this.$refs['progress_1'].showProgress(this.pieData1);
 					}else if(type=='篮彩'){
-						that.$set(that.pieData2, 'series', list);
+						this.$set(this.pieData2, 'series', list);
 						this.$refs['ringChart2'].showCharts();
-						
+						// this.$refs['progress_2'].showProgress(this.pieData2);
 					}
-					that.res = '请求结果 : ' + JSON.stringify(res);
+					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);

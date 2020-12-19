@@ -7,11 +7,15 @@
 			</view>
 		</scroll-view>
 		<view class="content">
-			<view @click="goArea">{{selfParam.provinceCenterName}}</view>
-			<uni-section class="section" type="line"></uni-section>
-			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
-			<uni-section class="section" type="line"></uni-section>
-			<view @click="goCompare">对比</view>
+			<view class="blackClass">
+				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+			</view>
+			<view class="blackClass">
+				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+			</view>
+			<view class="blackClass">
+				<view @click="goCompare">对比</view>
+			</view>
 		</view>	
 		<block v-if="tabIndex==0">
 			<channelTotalView ref="totalView" :param="selfParam"></channelTotalView>
@@ -290,7 +294,9 @@
     }
 
     /* #endif */
-
+	.blackClass{
+		padding: 10px 10px;
+	}
     .tabs {
         flex: 1;
 		width: 100%;

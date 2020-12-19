@@ -1,9 +1,16 @@
 <template>
 	<view>
 		<view class="content">
-			<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+			<view class="blackClass">
+				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+			</view>
+			<view class="blackClass">
+				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+			</view>
+			
+<!-- 			<view @click="goArea">{{selfParam.provinceCenterName}}</view>
 			<uni-section class="section" type="line"></uni-section>
-			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view> -->
 		</view>	 
 		<view class="input">
 			<input id='num' class="uni-input" @input="onKeyInput" placeholder="请输入门店或终端编号" />
@@ -211,7 +218,7 @@
 						var data = res.data.data;	
 						var left2 = {'name':'周同比','value':data[1] + '%'};
 						var right2 = {'name':'环比','value':data[2] + '%'};
-						var big2 = {name:'在售率',value:data[0], left:left2, right:right2}
+						var big2 = {name:'在售率',value:data[0] +"%", left:left2, right:right2}
 						
 						that.$set(that.totalData, 'big2', big2);
 						that.$refs['dataContain'].showDataContainer();
@@ -456,5 +463,8 @@
 	}
 	.section{
 		background-color: #FFFFFF;
+	}
+	.blackClass{
+		padding: 10px 10px;
 	}
 </style>

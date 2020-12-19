@@ -13,7 +13,7 @@
 					</view>
 					<!-- <button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button> -->
 					<!-- 各地区销量排行-->
-					<view class="progress">
+					<view class="box-contaniner">
 						<progress ref="progress_0" :dataAs="pieData"></progress>
 					</view>
 				</view>
@@ -23,7 +23,7 @@
 						<ring-chart :dataAs="pieData1" ref="levelRingChart1" canvasId="index_ring_1"/>
 					</view>
 					<!-- <button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button> -->
-					<view class="progress">
+					<view class="box-contaniner">
 						<progress ref="progress_1" :dataAs="pieData1"></progress>
 					</view>
 					
@@ -122,18 +122,13 @@
 			};
 		},
 		onLoad() {
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
-			this.getServerData();
 			this.showView();
-			this.change(0);
 		},
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.change(0);
 		},
 		methods: {
 			showView(){				
@@ -339,7 +334,7 @@
 
 <style>
 	.box-contaniner{
-		width: 100%;
+		width: 90%;
 		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
 	
@@ -392,7 +387,9 @@
 		padding: 0 10rpx; */
 		text-align: right;
 	}
-		
+	.progress{
+		width: 90%;
+	}	
 	
 	.example {
 		/* line-height: 40px; */

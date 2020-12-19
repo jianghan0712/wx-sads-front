@@ -86,8 +86,8 @@
 					</view>
 					<view class="shop-item-content">
 						<view style="width: 40%;">{{shopData.shop.sum}}</view>
-						<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{shopData.shop.tongbi}}+"%"</view>
-						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.huanbi}}+"%"</view>
+						<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{shopData.shop.tongbi +"%"}}</view>
+						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.huanbi +"%"}}</view>
 					</view>
 				</view>
 			</view>
@@ -100,9 +100,9 @@
 					</view>
 					
 					<view class="shop-item-content">
-						<view style="width: 40%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
-						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{shopData.rate.tongbi}}+"%"</view>
-						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.huanbi}}+"%"</view>
+						<view style="width: 40%;">{{shopData.rate.sum +"%"}}</view>				
+						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{shopData.rate.tongbi +"%"}}</view>
+						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.huanbi +"%"}}</view>
 					</view>
 				</view>
 			</view>
@@ -134,9 +134,9 @@
 							<view style="width: 25%;">环比</view>
 						</view>
 						<view class="shop-item-content">
-							<view style="width: 40%;">{{returnData.rate.sum}} +"%"</view>
-							<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{valueToPercent(returnData.rate.tongbi)}}</view>
-							<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+							<view style="width: 40%;">{{returnData.rate.sum +"%"}}</view>
+							<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 30%;">{{returnData.rate.tongbi+"%"}}</view>
+							<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{returnData.rate.huanbi+"%"}}</view>
 						</view>
 					</view>
 				</view>
@@ -260,17 +260,16 @@
 						{
 							title: '销量',
 							key: 'amount',
-							$width:"80px"
+							$width:"90px"
 						},
 						{
 							title: '同比',
 							key: 'tongbi',
-							$width:"80px"
+							$width:"90px"
 						},
 						{
 							title: '环比',
-							key: 'huanbi',
-							$width:"80px"
+							key: 'huanbi'
 						}
 					],
 				tableColumns2: [{
@@ -286,17 +285,16 @@
 						{
 							title: '返奖率',
 							key: 'return',
-							$width:"80px"
+							$width:"90px"
 						},
 						{
 							title: '同比',
 							key: 'tongbi',
-							$width:"80px"
+							$width:"90px"
 						},
 						{
 							title: '环比',
-							key: 'huanbi',
-							$width:"80px"
+							key: 'huanbi'
 						}
 					],	
 			};
@@ -387,11 +385,11 @@
 						console.log("format0=",format0,"format1=",format1)
 						var left1 = {'name':'周同比','value':amount[1] + '%'};
 						var right1 = {'name':'环比','value':amount[2] + '%'};
-						var big1 = {'name':'销量（'+format0.name +'元）', 'value':amount[0]/format0.value, 'left': left1,'right':right1};
+						var big1 = {'name':'销量（'+format0.name +'元）', 'value':(amount[0]/format0.value).toFixed(2), 'left': left1,'right':right1};
 						
 						var left2 = {'name':'周同比','value':saleNumber[1] + '%'};
 						var right2 = {'name':'环比','value':saleNumber[2] + '%'};
-						var big2 = {'name':'票数（'+format1.name +'张）','value':saleNumber[0]/format1.value, 'left':left2,'right':right2};
+						var big2 = {'name':'票数（'+format1.name +'张）','value':(saleNumber[0]/format1.value).toFixed(2), 'left':left2,'right':right2};
 												
 						this.$set(this.totalData, 'big1', big1);
 						this.$set(this.totalData, 'big2', big2);
@@ -541,9 +539,9 @@
 					});
 					var data = res.data.data;	
 									
-					this.shopData.shop.sum=data[0].toFixed(0);
-					this.shopData.shop.tongbi=(data[1]/100).toFixed(4);
-					this.shopData.shop.huanbi=(data[2]/100).toFixed(4)
+					this.shopData.shop.sum=data[0];
+					this.shopData.shop.tongbi=data[1];
+					this.shopData.shop.huanbi=data[2]
 
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -563,9 +561,9 @@
 					});
 					var data = res.data.data;	
 
-					this.shopData.rate.sum=(data[0]/100).toFixed(4);
-					this.shopData.rate.tongbi=(data[1]/100).toFixed(4);
-					this.shopData.rate.huanbi=(data[2]/100).toFixed(4);
+					this.shopData.rate.sum=data[0];
+					this.shopData.rate.tongbi=data[1];
+					this.shopData.rate.huanbi=data[2];
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -584,17 +582,43 @@
 						mask: true
 					});
 					var data = res.data.data;	
+					var format0 = numberFun.formatCNumber(data[0][1]);		
 					for(var i=0;i<data.length;i++){
 						var json = {id:i+1, 
 									area:data[i][0], 
-									amount:data[i][1], 
-									tongbi:data[i][2],
-									huanbi:data[i][3]}						
+									amount:(data[i][1]/format0.value).toFixed(2), 
+									tongbi:data[i][2]+"%",
+									huanbi:data[i][3]+"%"}						
 						if(i<=4){
 							this.tableData[i] = json
 						}
 						this.tableDataDetail[i] = json
 					}
+					this.tableColumns=[{
+								title: "排名",
+								key: "id",
+								$width:"50px",
+							},
+							{
+								title: '省份',
+								key: 'area',
+								$width:"100px"
+							},
+							{
+								title: '销量（' + format0.name + '元）',
+								key: 'amount',
+								$width:"90px"
+							},
+							{
+								title: '同比',
+								key: 'tongbi',
+								$width:"90px"
+							},
+							{
+								title: '环比',
+								key: 'huanbi'
+							}
+						],
 			
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -637,9 +661,9 @@
 					});
 					var data = res.data.data;	
 									
-					this.returnData.rate.sum=data[0].toFixed(0);
-					this.returnData.rate.tongbi=(data[1]/100).toFixed(4);
-					this.returnData.rate.huanbi=(data[2]/100).toFixed(4)
+					this.returnData.rate.sum=data[0];
+					this.returnData.rate.tongbi=data[1];
+					this.returnData.rate.huanbi=data[2]
 				
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -663,8 +687,8 @@
 						var json = {id:i+1, 
 									area:data[i][0], 
 									return:data[i][1]+'%', 
-									tongbi:data[i][2],
-									huanbi:ata[i][3]}						
+									tongbi:data[i][2]+'%',
+									huanbi:data[i][3]+'%'}						
 						if(i<=4){
 							this.tableData2[i] = json
 						}
@@ -719,6 +743,12 @@
 					result = result + "%";
 				}
 				return result;
+			},
+			valueToPercent3(value) {
+				if(value==null){
+					return "0%"
+				}
+				return value+ "%"
 			},
 			valueToPercent2(value) {
 				let temp = value;

@@ -121,7 +121,7 @@
 						});
 						var data = res.data.data;
 						if(-1==data.provincialId){
-							data.provincialId==0;
+							data.provincialId=0;
 						}
 						this.selfParam.provinceCenterId = data.provincialId
 						this.selfParam.selfProvinceCenterId = data.provincialId

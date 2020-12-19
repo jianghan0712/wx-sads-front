@@ -144,11 +144,12 @@
 		},
 		onLoad() {
 			_self = this;
+			 this.showView();
 		},
 		created() {
 			this.selfParam=this.param
 			this.getServerData();
-			this.showView();
+			// this.showView();
 		},
 		methods: {
 			showView(){				
@@ -343,8 +344,8 @@
 		background: #FFFFFF;
     }
    .btna{
-		color: #FFFFFF;
-		background:rgba(47, 98, 248 ,0.5);	
+		color: #000000;
+		background:rgba(231, 237, 237  ,0.5);	
     }
     .dis{
         display: block;
