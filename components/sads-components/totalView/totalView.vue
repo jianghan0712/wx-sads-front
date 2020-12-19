@@ -34,7 +34,7 @@
 							<view style="width: 50%;">排名</view>				
 							<view style="width: 25%;">周同比</view>
 							<view style="-webkit-flex: 1;flex: 1;">环比</view>
-						</view>
+						</view> 
 						<view class="shop-item-content">
 							<view style="width: 50%;">{{rankData.sum}} 名</view>
 							<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;"> {{rankData.tongbi}}</view>
@@ -113,14 +113,14 @@
 					<view>各地区销量排行</view>
 					<view class="rankTable-more" @click="goSaleRank(tableDataDetail,tableColumns)">全部>></view>
 				</view>
-<!-- 				<block v-if="tableData.length==0">
+				<block v-if="tableData.length==0">
 					<noData :message="nodataMessage"></noData>
 				</block>
-				<block v-if="tableData.length>0"> -->
+				<block v-if="tableData.length>0">
 					<view class="example">
 						<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 					</view>
-				<!-- </block> -->
+				</block>
 			</view>
 			
 			<block v-if="today!= selfParam.businessDate.view">
@@ -147,14 +147,14 @@
 						<view>各地区返奖情况</view>
 						<view class="rankTable-more" @click="goSaleRank(tableDataDetail2,tableColumns2)">全部>></view>
 					</view>
-<!-- 					<block v-if="tableData2.length==0">
+					<block v-if="tableData2.length==0">
 						<noData :message="nodataMessage"></noData>
 					</block>
-					<block v-if="tableData2.length>0"> -->
+					<block v-if="tableData2.length>0">
 						<view class="example">
 							<v-table :columns="tableColumns2" :list="tableData2"  border-color="#FFFFFF"></v-table>
 						</view>
-					<!-- </block> -->
+					</block>
 				</view>
 			</block>
 
@@ -176,6 +176,7 @@
 	import commonFun from '@/common/tools/watcher.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
 	import noData from '@/components/sads-components/noData.vue';
+	import imageSrc from "@/static/card.png"
 	
 	
 	export default {
@@ -195,7 +196,8 @@
 			}
 		},
 		data() {
-			return {			
+			return {	
+				imageSrc: imageSrc,
 				selfParam:{
 					token:'',
 					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
@@ -490,7 +492,7 @@
 					}
 					
 					var format0 = numberFun.formatCNumber(tempObj[0]);
-					var amount0 = tempObj[0]/format0.value.toFixed(2) + format0.name +'元';
+					var amount0 = (tempObj[0]/format0.value).toFixed(2) + format0.name +'元';
 					left1.value = tempObj[1];
 					right1.value = tempObj[2];
 					big1.value = amount0;
@@ -754,24 +756,14 @@
 	}
 	
 	.shop-item-title{
-		/* width: 100%; */
 		display: flex;
-		/* margin: 0rpx 10rpx 0rpx 10rpx; */
-		/* padding: 0 10rpx 0 10rpx; */
 		flex-direction: row;
 		font-size: 30rpx;
-		
-		/* background:rgba(220, 241, 250 ,0.5); */
 	}
 	.shop-item-content{
-		/* width: 100%; */
 		display: flex;
-		/* margin: 0rpx 10rpx 0rpx 10rpx; */
-		/* padding: 0 10rpx 0rpx 10rpx; */
 		flex-direction: row;
 		font-size: 40rpx;
-		
-		/* background:rgba(220, 241, 250 ,0.5); */
 	}
 	
 	.rankTable{
@@ -870,8 +862,8 @@
 	}
 	.btna{
 		color: #FFFFFF;
-		background:rgba(47, 98, 248 ,0.5);	
-		padding:0px 30px 0px 30px;
+		background: #92AAAA;
+		padding:5rpx 30rpx 5rpx 30rpx;
 	}
 	.dis{
 		display: block;
@@ -880,7 +872,7 @@
 	.hide{
 		color: #000000;
 		background: #FFFFFF;
-		padding:0px 30px 0px 30px;
+		padding:5rpx 30rpx 5rpx 30rpx;
 	}
 	.small-text-green{
 		color: #00FF00;
@@ -897,7 +889,7 @@
 		padding:30px 10px;
 		display: flex;
 		flex-direction: column;
-		background:rgba(220, 241, 250 ,0.5);
+		background:rgba(240, 244, 245,0.5);
 		border-radius: 15px;
 	}
 </style>

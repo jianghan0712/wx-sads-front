@@ -7,11 +7,15 @@
             </view>
         </scroll-view>
 		<view class="content">
-			<view @click="goArea">{{selfParam.provinceCenterName}}</view>
-			<uni-section class="section" type="line"></uni-section>
-			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
-			<uni-section class="section" type="line"></uni-section>
-			<view @click="goCompare">对比</view>
+			<view class="blackClass">
+				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+			</view>
+			<view class="blackClass">
+				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+			</view>
+			<view class="blackClass">
+				<view @click="goCompare">对比</view>
+			</view>
 		</view>	 
 		<block v-if="tabIndex==0">
 			<totalView class="page-css" ref="totalView" :param="selfParam"></totalView>
@@ -356,5 +360,8 @@
 	}
 	.section{
 		background-color: #FFFFFF;
+	}
+	.blackClass{
+		padding: 10px 10px;
 	}
 	</style>

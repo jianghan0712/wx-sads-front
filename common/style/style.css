@@ -2,9 +2,9 @@
 
 	.btna{
 		color: #FFFFFF;
-		background:rgba(47, 98, 248 ,0.5);	
-		padding:5px 30px 5px 30px;
-		border-radius:50rpx 0rpx 0rpx 50rpx; 
+		background: #92AAAA;
+		padding:5rpx 30rpx 5rpx 30rpx;
+		border-radius:50rpx 0rpx 0rpx 50rpx
 	}
 	.dis{
 		display: block;	
@@ -13,7 +13,7 @@
 	.hide{
 		color: #000000;
 		background: #FFFFFF;
-		padding:5px 30px 5px 30px;
+		padding:5rpx 30rpx 5rpx 30rpx;
 		border-radius:0rpx 50rpx 50rpx 0rpx
 	}
 	

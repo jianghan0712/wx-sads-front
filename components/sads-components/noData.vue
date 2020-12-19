@@ -32,18 +32,15 @@
 </script>
 
 <style>
-	.mescroll-lazy-in,
-	.mescroll-fade-in {
-		-webkit-animation: mescrollFadeIn .3s linear forwards;
-		animation: mescrollFadeIn .3s linear forwards;
-	}
 	.picture{
 		/* height: 100px;
 		width: 100px; */
 	    /* display: flex; */
-	    display: -webkit-flex;
+		background-size: 100px 100px;
 	    align-items:center;
 	    justify-content:center;
+		display: flex;
+		flex-direction: row;
 	}
 
 	.title{

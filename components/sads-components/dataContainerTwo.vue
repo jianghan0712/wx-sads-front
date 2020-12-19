@@ -73,7 +73,7 @@
 		display: flex;
 		flex-direction: column;	
 		margin: 0rpx 0rpx 0rpx 5rpx;
-		background-image: url(../../static/card.png);
+		background: #FFFFFF;
 	}	
 	
 	.sale-row-2{
@@ -90,8 +90,8 @@
 	.column_box_2{	
 		display: flex;
 		flex-direction: column;
-		background:rgba(220, 241, 250 ,0.5);
-		background-image: url(../../static/card.png);
+		/* background:rgba(241, 250, 250 ,0.5); */
+		/* background-image: url(../../static/card.png); */
 		margin: 0rpx 0rpx 20rpx 0rpx;
 	}
 	
@@ -149,7 +149,7 @@
 		margin: 10rpx 10rpx;
 		display: flex;
 		flex-direction: column;
-		background:rgba(220, 241, 250 ,0.5);
+		/* background:rgba(220, 241, 250 ,0.5); */
 		border-radius: 15px;
 	}
 	
@@ -171,13 +171,13 @@
 	
 	.big-text{
 		text-align: left;
-		color: #777;
+		color: #000000;
 		font-size: 36rpx;
 	}
 	
 	.small-text{
 		text-align: left;
-		color: #777;
+		color: #000000;
 		font-size: 30rpx;
 	}
 	

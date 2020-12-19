@@ -110,7 +110,7 @@
 			},
 			getUserRight(){
 				var url = '/pentaho/user/getUserPower';
-				var param = {userId:1511/* this.userinfo.userId */, token:this.selfParam.token}
+				var param = {userId:1510/* this.userinfo.userId */, token:this.selfParam.token}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)

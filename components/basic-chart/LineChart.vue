@@ -92,7 +92,7 @@ export default {
 				canvasId: this.canvasId, //页面组件canvas-id，支付宝中为id
 				type: 'line', //图表类型，可选值为pie、line、column、area、ring、radar、arcbar、gauge、candle、bar、mix、rose、word
 				padding: [15, 15, 0, 15], //画布填充边距，顺序为上右下左，同css，但必须4位
-				colors: ['#facc14','#1890ff', '#2fc25b',  '#f04864', '#8543e0', '#90ed7d'], //图表配色方案，不传则使用系统默认配置
+				colors: ['#1890ff','#facc14', '#2fc25b',  '#f04864', '#8543e0', '#90ed7d'], //图表配色方案，不传则使用系统默认配置
 				rotate: false, //是否横屏展示
 				rotateLock: true, //	锁定横屏模式，如果在支付宝和百度小程序中使用横屏模式，请赋值true，否则每次都会旋转90度。跨端使用通过uni-app的条件编译来赋值
 				enableScroll: true, //是否开启图表可拖拽滚动 默认false 支持line, area, column, candle图表类型(需配合绑定@touchstart, @touchmove, @touchend方法)

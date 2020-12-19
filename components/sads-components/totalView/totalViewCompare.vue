@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="box-contaniner">
-			<dataContainerTwoCol ref="dataContain" :dataAs="topData"></dataContainerTwoCol>
+			<dataContainerTwoCol ref="dataContainTwo" :dataAs="topData"></dataContainerTwoCol>
 		</view>
 		
 		<!-- 折线图区域-->
@@ -14,14 +14,14 @@
 				</view>
 			</view>		
 			<view class="end-cont" :class="{dis:btnnum == 0}">		
-				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
+				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'百万元',fixed: 0}}"/>
+							:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
 				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
 							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
+							:yAxisAs="{formatter: {type: 'number', name:'张',fixed: 0}}"/>
 			</view>		
 		</view>
 		
@@ -202,13 +202,12 @@
 							$width:"80px"
 						}
 					],	
+				colorList: ['#1890ff','#facc14']
 			};
 		},
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.getServerData();
-			console.log("compare: created.model=",this.model)
-			console.log("compare: created.selfParam=",this.selfParam)
 			// this.showView();
 		},
 		onLoad() {
@@ -220,7 +219,7 @@
 		methods: {
 			getServerData() {
 				this.getDataSet();
-				// this.getLinesData(this.param.provinceCenterId,this.param.businessDate);
+				this.getLinesData();
 				// this.getDataContainerTwo('足球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
 				// this.getDataContainerTwo('篮球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
 			},
@@ -228,7 +227,7 @@
 				this.$nextTick(() => {				
 					// this.$refs['lineData2'].showCharts();
 					// this.$refs['lineData1'].showCharts();
-					this.$refs['dataContain'].showDataContainer();
+					// this.$refs['dataContainTwo'].showDataContainer();
 					// this.$refs['dataContain2'].showDataContainer();
 					// this.$refs['dataContain3'].showDataContainer();
 				});
@@ -305,16 +304,18 @@
 							this.$set(this.topData, 'left', left);
 							this.$set(this.topData, 'right', right);
 							console.log('request topData', this.topData);
-							
+							this.$refs['dataContainTwo'].showDataContainer();
 							this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 				})
 			},
-			getLinesData(provinceCenterId, businessDate){
-				var url = 'mobile/sales/getSalesTodayByHour/' + provinceCenterId+'/' + businessDate;
-				urlAPI.getRequest(url, null).then((res)=>{
+			getLinesData(){
+				var url = 'pentaho/salesContrast/getComSalesTrendChart'
+				var param = this.createParam()
+				
+				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
@@ -322,47 +323,63 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.concreteBean;					
+					var data = res.data.data;	
+					var sales = data.sales
+					var dates = data.dates
+					var votes = data.votes
+					var comSales = data.comSales
+					var comDates = data.comDates
+					var comVotes = data.comVotes
+					
 					var categories=[];
 					var series=[];
 					var amountData = [];
 					var volData = [];
-					var j=0,k = 0,tempAmount=0,tempVol=0;
 					
-					for(var i=0;i<data.length;i++){	
+					var categoriesComp=[];
+					var seriesComp=[];
+					var amountDataComp = [];
+					var volDataComp = [];
+					var j=0,k = 0,tempAmount=0,tempVol=0,tempAmountComp=0,tempVolComp=0;;
+					
+					for(var i=0;i<dates.length;i++){	
 						if(j==3){
-							categories[k] = data[i][0];
-							amountData[k] = data[i][1]/1000000;
-							volData[k] = data[i][2]/10000;
+							categories[k] = dates[i];
+							amountData[k] = sales[i];
+							volData[k] = votes[i];
+							categoriesComp[k] = comDates[i];
+							amountDataComp[k] = comSales[i];
+							volDataComp[k] = comVotes[i];
 							k++;
 							j=0;
 						}else{
-							tempAmount = tempAmount+data[i][1]/1000000;
-							tempVol = tempVol+data[i][2]/10000;
+							tempAmount = tempAmount+sales[i];
+							tempVol = tempVol+votes[i];
+							tempAmountComp = tempAmountComp + comSales[i];
+							tempVolComp = tempVolComp + comVotes[i];
 							j=j+1;
 						}
 					}
-					console.log('categories:', categories);
-					console.log('amountData:', amountData);
-					console.log('volData:', volData);
 					
-					var json = {'name':'销量','data':amountData};
-					var series = [];
-					series[0] = json;				
+					// var json1 = {'name':'销量','data':amountData};
+					// var json2 = {'name':'销量','data':amountDataComp};
+					var series = [ {'name':this.selfParam.compareDate.viewLeft +'销量','data':amountData}, {'name':this.selfParam.compareDate.viewRight +'销量','data':amountDataComp}];	
+					
 					this.$set(this.lineData2, 'categories', categories);
 					this.$set(this.lineData2, 'series', series);
 					
-					var json2 = {'name':'销量','data':volData};
-					var series2 = [];
-					series2[0] = json2;
+					// var json3 = {'name':'销量','data':volData};
+					var series2 = [{'name':this.selfParam.compareDate.viewLeft +'票数','data':volData},{'name':this.selfParam.compareDate.viewRight +'票数','data':volDataComp}];
+					// series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories);
 					this.$set(this.lineData1, 'series', series2);
-					
+					this.$refs['lineData2'].showCharts();
+					this.$refs['lineData1'].showCharts();
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-				});
+				})
 			},
 			getDataContainerTwo(type, provinceCenterId, businessDate, cityCenterId){
 				var url=''
@@ -597,8 +614,8 @@
 		background: #FFFFFF;
 	}
 	.btna{
-		color: #000000;
-		background: #ebebeb;
+		color: #FFFFFF;
+		background: #92AAAA;
 		padding:0px 30rpx 0px 30rpx;
 	}
 	.dis{
