@@ -125,8 +125,8 @@
 				this.$refs['totalView'].refresh();
 			}else if(this.$refs['levelView']!=null){
 				this.$refs['levelView'].refresh();
-			}else if(this.$refs['tickView']!=null){
-				this.$refs['tickView'].refresh();
+			}else if(this.$refs['ticketView']!=null){
+				this.$refs['ticketView'].refresh();
 			}else if(this.$refs['matchView']!=null){
 				this.$refs['matchView'].refresh();
 			}

@@ -126,24 +126,24 @@
 		},
 		onLoad() {		
 			_self = this;	
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
-			this.getServerData();
+			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			// this.returnFromDatePicker();
+			// this.getServerData();
 			this.showView()
 		},
 		onShow() {
 			_self = this;	
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView()
+			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			// this.returnFromDatePicker();
+			// this.getServerData();
+			// this.showView()
 		},
 		created() {
 			// this.selfParam=this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			// this.returnFromDatePicker();
 			this.getServerData();
-			this.showView()
+			// this.showView()
 		},
 		methods: {
 			returnFromDatePicker(){
@@ -164,10 +164,12 @@
 			showView(){
 				console.log("ticket showView" ,this.pieData);
 				// commonFun.sleep(3000) 
-				//this.$refs['ticketData'].showDataContainer();		
-				// this.$refs['ringChart0'].showCharts();
-				// this.$refs['ringChart1'].showCharts();
-				// this.$refs['ringChart2'].showCharts();
+				// this.$nextTick(() => {	
+				// 	this.$refs['ticketData'].showDataContainer();		
+				// 	this.$refs['ringChart0'].showCharts();
+				// 	this.$refs['ringChart1'].showCharts();
+				// 	this.$refs['ringChart2'].showCharts();
+				// });	
 			},
 			getServerData() {
 				this.getDataSet(this.selfParam.provinceCenterId,this.selfParam.businessDate,this.selfParam.cityCenterId);
@@ -273,6 +275,7 @@
 					});
 					
 					var data = res.data.data;
+					console.log(data)
 					var list=[];	
 					for(var i=0; i<data.length; i++){
 						list[i]={name:data[i].proValueName,data:data[i].values[0]};
@@ -287,8 +290,7 @@
 						
 					}else if(type=='篮彩'){
 						that.$set(that.pieData2, 'series', list);
-						this.$refs['ringChart2'].showCharts();
-						
+						this.$refs['ringChart2'].showCharts();						
 					}
 					that.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{

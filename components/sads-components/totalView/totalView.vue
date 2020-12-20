@@ -311,7 +311,12 @@
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			console.log("totalView created:",this.selfParam)
 			this.getServerData();
-			// this.showView();
+			this.showView();
+		},
+		onShow(){
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.getServerData();
+			this.showView();
 		},
 		methods: {
 			createParam(){
@@ -346,20 +351,23 @@
 				console.log("createParam end:",param)
 				return param
 			},
-			refresh(){
+			refresh(){			
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				console.log("刷新页面，日期为",this.selfParam)
 				this.getServerData();
 				this.showView();
 			},
 			showView(){
 				// commonFun.sleep(2000)
-				this.$refs['arcbar0'].showCharts();
-				this.$refs['arcbar1'].showCharts();
-				this.$refs['lineData2'].showCharts();
-				this.$refs['lineData1'].showCharts();
-				this.$refs['dataContain'].showDataContainer();
-				this.$refs['dataContain2'].showDataContainer();
-				this.$refs['dataContain3'].showDataContainer();
+				this.$nextTick(() => {	
+					this.$refs['arcbar0'].showCharts();
+					this.$refs['arcbar1'].showCharts();
+					this.$refs['lineData2'].showCharts();
+					this.$refs['lineData1'].showCharts();
+					this.$refs['dataContain'].showDataContainer();
+					this.$refs['dataContain2'].showDataContainer();
+					this.$refs['dataContain3'].showDataContainer();
+				});
 			},
 			// 获取最上层的两个tab
 			getDataSet(provinceCenterId, businessDate){
@@ -716,14 +724,14 @@
 			change(e) {
 			      this.btnnum = e
 			      console.log(this.btnnum)
-				  this.getServerData();
-				  this.showView();
+				  // this.getServerData();
+				  // this.showView();
 			},
 			changeArcbar(e){
 				this.arcbarNum = e
 				console.log(this.arcbarNum)
-				this.getServerData();
-				this.showView();
+				// this.getServerData();
+				// this.showView();
 			},
 			goSaleRank(tableData, tableColumns){
 				uni.navigateTo({
@@ -769,6 +777,7 @@
 		},
 		watch: {
 			'$route':'showView'
+			// '$route':'refresh'
 		},
 	}
 </script>
@@ -903,7 +912,7 @@
 		padding:5rpx 30rpx 5rpx 30rpx;
 	}
 	.small-text-green{
-		color: #00FF00;
+		color: #39FA09;
 		/* font-size: 30rpx; */
 	}
 	

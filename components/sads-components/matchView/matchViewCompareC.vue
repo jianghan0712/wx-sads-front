@@ -128,7 +128,7 @@
 			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
-			this.getServerData(getServerData);
+			this.getServerData(this.btnnum);
 		},
 		methods: {
 			refresh(selfParam){
