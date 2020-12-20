@@ -224,7 +224,8 @@
 				}
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName				
-				this.selfParam.token=uni.getStorageSync("token");
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -315,19 +316,21 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
-					
-					for(var i=0;i<data[i].length;i++){
-						var arr={ 
-								id: i+1,
-								area: data[i][0],
-								notnonecount: data[i][1],
-								nonecount: data[i][2]
-							};
-						that.tableDataAll2.push(arr);
-						if(i<5){
-							that.tableData2.push(arr);
+					if(data.length>0){
+						for(var i=0;i<data[i].length;i++){
+							var arr={ 
+									id: i+1,
+									area: data[i][0],
+									notnonecount: data[i][1],
+									nonecount: data[i][2]
+								};
+							that.tableDataAll2.push(arr);
+							if(i<5){
+								that.tableData2.push(arr);
+							}
 						}
 					}
+					
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
@@ -383,21 +386,32 @@
 				
 			},
 			toAll3(){
-				
 				var that =this;
 				console.log(this.tableDataAll3)
 				uni.navigateTo({
 					url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns3)+'&tableData='+JSON.stringify(that.tableDataAll3),
 				});
-			}
+			},
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.returnFromDatePicker();
+				this.loadData();
+			},
 		},
 		created() {
 			this.returnFromDatePicker();
 			this.loadData();
+			this.refresh();
 		},
 		onShow() {
 			this.returnFromDatePicker();
 			this.loadData();
+			this.refresh();
+		},
+		onLoad() {
+			this.returnFromDatePicker();
+			this.loadData();
+			this.refresh();
 		},
 		onPageScroll(e) {
 			this.backTop.scrollTop = e.scrollTop;

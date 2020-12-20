@@ -5,27 +5,31 @@
                 <text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
             </view>
         </scroll-view>
-        <view class="content">
-        	<view @click="goArea">{{selfParam.provinceCenterName}}</view>
-        	<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
-        </view>	
+		 <view class="content">
+			<view class="blackClass">
+				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+			</view>
+			<view class="blackClass">
+				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+			</view>
+		 </view>		
 		<block v-if="tabIndex==0">
-			<allView ref="allView"  :model="modelSet" ></allView>
+			<allView ref="allView"  :param="selfParam"></allView>
 		</block>
 		<block v-if="tabIndex==1">
-			<matchView :model="modelSet"></matchView>
+			<matchView  ref="matchView" :param="selfParam"></matchView>
 		</block>
 		<block v-if="tabIndex==2">
-			<salesView :model="modelSet"></salesView>
+			<salesView ref="salesView"  :param="selfParam"></salesView>
 		</block>
 		<block v-if="tabIndex==3">
-			<channelView :model="modelSet"></channelView>
+			<channelView ref="channelView" :param="selfParam"></channelView>
 		</block>
 		<block v-if="tabIndex==4">
-			<areaView :model="modelSet"></areaView>
+			<areaView  ref="areaView" :param="selfParam"></areaView>
 		</block>
 		<block v-if="tabIndex==5">
-			<pondView :model="modelSet"></pondView>
+			<pondView ref="pondView" :param="selfParam"></pondView>
 		</block>
     </view>
 </template>
@@ -122,19 +126,42 @@
         },
         onLoad() {
 			this.returnFromDatePicker();
-			this.$refs['allView'].showView();
+			this.refresh()
         },
+		onShow() {
+			this.returnFromDatePicker();
+			this.refresh()
+		},
         methods: {
+			refresh(){
+				if(this.tabIndex==0){
+					this.$refs['allView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.tabIndex==1){
+					this.$refs['matchView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.tabIndex==2){
+					this.$refs['salesView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.tabIndex==3){
+					this.$refs['channelView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.tabIndex==4){
+					this.$refs['areaView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.tabIndex==5){
+					this.$refs['pondView'].refresh(JSON.stringify(this.selfParam));
+				}
+			},
 			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName			
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token=getApp().globalData.token	
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))		
 			},
             getList(index) {
                 let activeTab = this.newsList[index];
@@ -271,7 +298,7 @@
 			},
 			goDatePicker() {
 				uni.navigateTo({
-					url:"/pages/common/dateSelector"
+					url:"/pages/common/dateSelector?type=common&date=" + this.selfParam.businessDate.date.startDate
 				});
 			}
         }
@@ -421,6 +448,9 @@
 	}
 	.section{
 		background-color: #FFFFFF;
+	}
+	.blackClass{
+		padding: 10px 10px;
 	}
 
 	</style>

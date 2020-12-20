@@ -127,7 +127,8 @@
 				}
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName		
-				this.selfParam.token=uni.getStorageSync("token");		
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))		
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -181,11 +182,11 @@
 					console.log('request fail', err);
 				});
 				//加载
-				
+				this.loadDetail('1');
+				this.loadDetail('2');
 			},
 			toFoot(){
 				var that =this;
-				this.loadDetail('1');
 				uni.navigateTo({
 					title:'足球赛事详情',
 					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData1)+
@@ -195,8 +196,7 @@
 			},
 			toBasket(){
 				var that =this;
-				this.loadDetail('2');
-				uni.navigateTo({
+				uni.navigateTo({ 
 					title:'篮球赛事详情',
 					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData2)+
 					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData22)
@@ -249,7 +249,12 @@
 					this.loading = false;
 					console.log('request fail', err);
 				});
-			}
+			},
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.returnFromDatePicker();
+				this.loadData();
+			},
 			
 		},
 		created() {
@@ -257,6 +262,10 @@
 			this.loadData();
 		},
 		onShow() {
+			this.returnFromDatePicker();
+			this.loadData();
+		},
+		onLoad() {
 			this.returnFromDatePicker();
 			this.loadData();
 		},

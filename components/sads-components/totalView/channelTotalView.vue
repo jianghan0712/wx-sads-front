@@ -52,7 +52,7 @@
 					<view class="shop-item-content">
 						<view style="width: 50%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
 						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.tongbi}}名</view>
-						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi}}名</view>
+						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi}}名</view>
 					</view>
 				</view>
 			</view>
@@ -60,7 +60,7 @@
 			<view class="box-contaniner">
 				<view class="clineChart-title">
 					<view style="font-size: 30rpx;font-weight: bold;">竞彩足篮球销量及占比</view>
-					<view class="arcbarChart-tab">
+					<view class="linechart-tab">
 						<view @tap="changeArcbar(0)" :class="arcbarNum == 0?'btna':'hide'" >足球</view>
 						<view @tap="changeArcbar(1)" :class="arcbarNum == 1?'btna':'hide'" >篮球</view>
 					</view>
@@ -237,8 +237,9 @@
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName	
-				this.selfParam.token=uni.getStorageSync("token")
-				this.selfParam.shopNo = uni.getStorageSync("shopNo");
+				this.selfParam.shopNo = uni.getStorageSync("shopNo")
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -438,6 +439,32 @@
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
+					var big11={name:"销量",value:0,
+										left:{name:"周同比",value:"--"},
+										right:{name:"环比",value:"--"},
+										};
+					var big22={name:"占比",value:0,
+										left:{name:"周同比",value:"--"},
+										right:{name:"环比",value:"--"},
+										};
+					if(type=='足球'){
+						this.$set(this.footballData, 'big1', big11);
+						this.$set(this.footballData, 'big2', big22);
+						this.$refs['dataContain2'].showDataContainer();
+						var json = [{name: '足球',data: 0}]
+						this.$set(this.arcbar0, 'series', json);
+						this.$refs['arcbar0'].showCharts();
+						console.log('request basketballData', this.footballData);
+					}else{
+						this.$set(this.basketballData, 'big1', big11);
+						this.$set(this.basketballData, 'big2', big22);
+						var json = [{name: '篮球',data: 0}]
+						this.$refs['dataContain3'].showDataContainer();
+						this.$set(this.arcbar1, 'series', json);
+						this.$refs['arcbar1'].showCharts();
+						console.log('request basketballData', this.basketballData);
+					}
+					
 				});
 			},
 			getShopData(){
@@ -460,6 +487,9 @@
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
+					this.shopData.shop.sum=0;
+					this.shopData.shop.tongbi=0;
+					this.shopData.shop.huabi=0;
 				});
 			},
 			getRankByProvince(){
@@ -479,11 +509,14 @@
 					
 					this.shopData.rate.sum=data[0];
 					this.shopData.rate.tongbi=data[1];
-					this.shopData.rate.sum=data[2];
+					this.shopData.rate.huanbi=data[2];
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
+					this.shopData.rate.sum=0;
+					this.shopData.rate.tongbi=0;
+					this.shopData.rate.huanbi=0;
 				});
 			},
 			getShowReturnRate(){
@@ -506,6 +539,9 @@
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
+					this.returnData.rate.sum=0;
+					this.returnData.rate.tongbi=0;
+					this.returnData.rate.huanbi=0
 				});
 			},
 			getServerData() {
@@ -613,7 +649,22 @@
 		font-weight: bold;
 		background-color: #FFFFFF;
 	}
-	
+	.btna{
+			color: #FFFFFF;
+			background:rgba(47, 98, 248 ,0.5);	
+	 }
+	.backWidth{
+		width: 50%;
+	}
+	.dis{
+		display: block;
+		/* padding:0px 30rpx 0px 30rpx; */
+	} 
+	.hide{
+		color: #000000;
+		background: #FFFFFF;
+		padding:0px 30rpx 0px 30rpx;
+	}
 	.rankTable-title{
 		width: 100%;
 		margin: 0rpx 5rpx;
@@ -643,7 +694,6 @@
 	}
 	.box-contaniner{
 		width: 100%;
-		margin: 20px 10px;
 	}
 	
 	.clineChart-title{
@@ -698,20 +748,7 @@
 		display: none;
 		background: #FFFFFF;
 	}
-	.btna{
-		color: #000000;
-		background: #ebebeb;
-		padding:0px 30px 0px 30px;
-	}
-	.dis{
-		display: block;
-		/* padding:0px 30rpx 0px 30rpx; */
-	} 
-	.hide{
-		color: #000000;
-		background: #FFFFFF;
-		padding:0px 30px 0px 30px;
-	}
+	
 	.small-text-green{
 		color: #00FF00;
 		/* font-size: 30rpx; */
@@ -726,6 +763,15 @@
 		display: flex;
 		flex-direction: row;	
 		/* margin: 20rpx 10rpx 20rpx 10rpx; */
+	}
+	/* 将三个内容view的display设置为none(隐藏) */
+	.linechart-tab{
+		padding:0rpx 5rpx 0rpx 5rpx;
+		flex-direction: row;
+		display: flex;
+		text-align: right;
+		justify-content:flex-end;
+		font-size: 30rpx;
 	}
 	
 	.row-box {
@@ -755,5 +801,15 @@
 		flex-direction: column;
 		background:rgba(220, 241, 250 ,0.5);
 		border-radius: 15px;
+	}
+	/* 将三个内容view的display设置为none(隐藏) */
+	.arcbarChart-tab{
+		margin: 20rpx 10rpx 20rpx 10rpx;
+		padding:0rpx 5rpx 0rpx 5rpx;
+		flex-direction: row;
+		display: flex;
+		text-align: right;
+		justify-content:flex-end;
+		font-size: 30rpx;
 	}
 </style>

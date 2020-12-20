@@ -25,14 +25,14 @@
 				</view>		
 				<ring-chart canvasId="arcbar1" ref="arcbar1" :dataAs="arcbar1" />				
 			</view>	
-			<view>
-				<gamebottom></gamebottom>
+			<view style="text-align: center;">
+				<button  @click="toRingAll()">查看全部</button>
 			</view>
 			
 			<view >
 				<view class="container-title">
 					<view>各地区{{arcbarNumTop}}销量及占比</view>
-					<view><button style="width: 200;height: 50upx;text-align: top;font-size: 10rpx;" @click="toAll()">全部>></button></view>
+					<view style="width: 200;height: 50upx;text-align: top;font-size: 30rpx;" @click="toAll()">全部>></view>
 				</view>
 				<view class="table">
 					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
@@ -46,7 +46,6 @@
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import PieChart from '@/components/basic-chart/PieChart.vue';
 	import RingChart from '@/components/basic-chart/RingChart.vue';
-	import gamebottom from './gameViewBottom.vue';
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
@@ -56,7 +55,7 @@
 				LineChart,
 				PieChart,
 				RingChart,
-				gamebottom,dataContainer,vTable
+				dataContainer,vTable
 			},
 			props: {
 				param:{
@@ -379,7 +378,8 @@
 					console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 					this.selfParam.provinceCenterId=area
 					this.selfParam.provinceCenterName=areaName
-					this.selfParam.token=uni.getStorageSync("token");
+					this.selfParam.token=getApp().globalData.token
+					uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 				},
 				loadMidData(ballType){
 					var url = '/pentaho/sales/getGameTrendChart';
@@ -481,6 +481,11 @@
 						this.loading = false;
 						console.log('request fail', err);
 					}); 
+				},
+				toRingAll() {
+					uni.navigateTo({
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.arcbar1)
+					});
 				},
 				toAll(){
 					var that =this;
@@ -741,6 +746,14 @@
 		font-weight: bold;
 		justify-content: space-between;
 		background-color: #FFFFFF;
+	}
+	button {
+		width: 75%;
+	    margin-top: 30rpx;
+	    margin-bottom: 30rpx;
+		font-size: 30rpx;
+		background-color: rgba(220, 241, 250,0.5);
+		color: #007AFF;
 	}
 	
 	

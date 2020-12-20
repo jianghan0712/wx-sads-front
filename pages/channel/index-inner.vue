@@ -17,20 +17,26 @@
 				<view @click="goCompare">对比</view>
 			</view>
 		</view>	
+		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
+			<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../static/left.png" mode="aspectFill">
+			{{selfParam.shopNo}}
+			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../static/right.png" mode="aspectFill">
+		</view>	
+		
 		<block v-if="tabIndex==0">
-			<channelTotalView ref="totalView" :param="selfParam"></channelTotalView>
+			<channelTotalView ref="channelTotalView" :param="selfParam"></channelTotalView>
 		</block>
 		<block v-if="tabIndex==1">
 			<channelGameView ref="channelGameView" :param="selfParam"></channelGameView>
 		</block>
 		<block v-if="tabIndex==2">
-			<channelLevelView ref="levelView" :param="selfParam"></channelLevelView>
+			<channelLevelView ref="channelLevelView" :param="selfParam"></channelLevelView>
 		</block>
 		<block v-if="tabIndex==3">
-			<channelTicketView ref="ticketView" :param="selfParam"></channelTicketView>
+			<channelTicketView ref="channelTicketView" :param="selfParam"></channelTicketView>
 		</block>
 		<block v-if="tabIndex==4">
-			<channelMatchView ref="matchView" :param="selfParam"></channelMatchView>
+			<channelMatchView ref="channelMatchView" :param="selfParam"></channelMatchView>
 		</block>
 	</view>
 	</view>
@@ -54,25 +60,24 @@
 			channelGameView,channelTotalView,channelLevelView,channelTicketView,channelMatchView,uniSection
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
-			this.modelSet.gateNo = option.number
-			this.selfParam.shopNo = uni.getStorageSync("shopNo")
+			this.selfParam.shopNo = option.number
 			this.returnFromDatePicker();
 		},
 		onShow() {//此处接受来自日期选择页面的参数
-			this.returnFromDatePicker()
+			this.returnFromDatePicker();
 			console.log("sales-self-onShow:",this.selfParam)
 			if(!this.isFirstLoad){
 				console.log("重新加载")
 				if(this.tabIndex==0){
-					this.$refs['totalView'].refresh(JSON.stringify(this.selfParam));
+					this.$refs['channelTotalView'].refresh(JSON.stringify(this.selfParam));
 				}else if(this.tabIndex==1){
-					this.$refs['gameView'].refresh(JSON.stringify(this.selfParam));
+					this.$refs['channelGameView'].refresh(JSON.stringify(this.selfParam));
 				}else if(this.tabIndex==2){
-					this.$refs['levelView'].refresh(JSON.stringify(this.selfParam));
+					this.$refs['channelLevelView'].refresh(JSON.stringify(this.selfParam));
 				}else if(this.tabIndex==3){
-					this.$refs['ticketView'].refresh(JSON.stringify(this.selfParam));
+					this.$refs['channelTicketView'].refresh(JSON.stringify(this.selfParam));
 				}else if(this.tabIndex==4){
-					this.$refs['matchView'].refresh(JSON.stringify(this.selfParam));
+					this.$refs['channelMatchView'].refresh(JSON.stringify(this.selfParam));
 				}
 				
 			}
@@ -130,7 +135,7 @@
 					name: '票面',
 					id: 'ticket'
 				}, {
-					name: '赛事',
+					name: '赛制',
 					id: 'match'
 				}],
 				navigateFlag: false,
@@ -149,6 +154,7 @@
 		},
 		methods: {
 			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
@@ -158,8 +164,9 @@
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
-				this.selfParam.tooken=getApp().globalData.token;	
+				this.selfParam.provinceCenterName=areaName		
+				this.selfParam.shopNo = uni.getStorageSync("shopNo")
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			getList(index) {
 				let activeTab = this.newsList[index];
@@ -294,9 +301,7 @@
     }
 
     /* #endif */
-	.blackClass{
-		padding: 10px 10px;
-	}
+
     .tabs {
         flex: 1;
 		width: 100%;
@@ -468,4 +473,8 @@
 		width: 100%;
 		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
+	.blackClass{
+		padding: 10px 10px;
+	}
+	
 </style>

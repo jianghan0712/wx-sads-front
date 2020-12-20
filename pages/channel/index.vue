@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="box-contaniner">
 		<view class="content">
 			<view class="blackClass">
 				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
@@ -7,10 +7,6 @@
 			<view class="blackClass">
 				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
 			</view>
-			
-<!-- 			<view @click="goArea">{{selfParam.provinceCenterName}}</view>
-			<uni-section class="section" type="line"></uni-section>
-			<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view> -->
 		</view>	 
 		<view class="input">
 			<input id='num' class="uni-input" @input="onKeyInput" placeholder="请输入门店或终端编号" />
@@ -21,7 +17,7 @@
 			<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
 		</view>
 		
-		<view class="box-contaniner">
+		<view class="box-contaniner" style="margin: 20rpx;">
 			<view class="container-title">				
 				<view>销售top100门店</view>
 				<view class="rankTable-more" @click="goShopDetail(amountTableDataDetail,amountTableColumns)">全部>></view>
@@ -218,7 +214,7 @@
 						var data = res.data.data;	
 						var left2 = {'name':'周同比','value':data[1] + '%'};
 						var right2 = {'name':'环比','value':data[2] + '%'};
-						var big2 = {name:'在售率',value:data[0] +"%", left:left2, right:right2}
+						var big2 = {name:'在售率',value:data[0], left:left2, right:right2}
 						
 						that.$set(that.totalData, 'big2', big2);
 						that.$refs['dataContain'].showDataContainer();
@@ -301,33 +297,19 @@
 				},
 				returnFromDatePicker(){
 					this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-					const dateType = uni.getStorageSync("dateType")
-					const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+					var dateType = uni.getStorageSync("dateType")
+					var bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 					this.selfParam.businessDate = bussinessDate;
 					console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 							
-					const area = uni.getStorageSync("area")
-					const areaName = uni.getStorageSync("areaName")
+				    var area = uni.getStorageSync("area")
+					var  areaName = uni.getStorageSync("areaName")
 					console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 					this.selfParam.provinceCenterId=area
-					this.selfParam.provinceCenterName=areaName						
-					this.selfParam.token=uni.getStorageSync("token")
-					uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
+					this.selfParam.provinceCenterName=areaName		
+					this.selfParam.token=getApp().globalData.token
+					uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 				},
-				// returnFromDatePicker(){
-				// 	this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-				// 	const dateType = uni.getStorageSync("dateType")
-				// 	const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
-				// 	this.selfParam.businessDate = bussinessDate;
-				// 	console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-							
-				// 	const area = uni.getStorageSync("area")
-				// 	const areaName = uni.getStorageSync("areaName")
-				// 	console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
-				// 	this.selfParam.provinceCenterId=area
-				// 	this.selfParam.provinceCenterName=areaName		
-				// 	uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
-				// },
 				goArea(){
 					uni.navigateTo({
 						url:"/pages/common/areaSelector?area="+this.selfParam.provinceCenterId
@@ -396,12 +378,37 @@
 					console.log(obj)
 				},
 				goLimitDetail(){
-					var areaId = 
-					this.areaMap  
 				},
 				resetData(){
 					//根据门店编号跳转
-					this.goDetail(this.num)
+					//校验门店是否存在
+					var url = '/pentaho/shows/searchShowByShowNumber';
+					var param = {
+						showNumber:this.num,
+						provincial:this.selfParam.provinceCenterId,
+						 token:this.selfParam.token
+					}
+					//修改为0
+					var flag=1;
+					urlAPI.getRequest(url, param).then((res)=>{
+						var data = res.data.data;
+						if(data.flag){
+							flag==1;
+						}
+					}).catch((err)=>{
+						
+					});
+					if(flag==0){
+						uni.showToast({
+							title: '门店不存在',
+							icon: 'loading',
+						});
+						console.log(11111)
+					}else {
+						this.goDetail(this.num)
+						console.log(2222)
+					}
+					
 				}
 			},
 			mounted(){

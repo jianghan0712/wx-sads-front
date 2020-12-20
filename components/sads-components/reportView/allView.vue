@@ -165,7 +165,8 @@
 				}
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName			
-				this.selfParam.token=uni.getStorageSync("token");
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -232,8 +233,8 @@
 							this.$set(that.pagedata,1,0);
 							this.$set(that.pagedatacompare,1,0);
 						}else{
-							this.$set(that.pagedata,1,data[1]);
-							this.$set(that.pagedatacompare,1,data[2]);
+							this.$set(that.pagedata,1,(data[0][1]/100000000).toFixed(2));
+							this.$set(that.pagedatacompare,1,data[0][2]);
 						}
 						
 					}).catch((err)=>{
@@ -589,7 +590,12 @@
 					
 				}
 				
-			}
+			},
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.returnFromDatePicker();
+				this.loadData();
+			},
 			
 		},
 		created() {
@@ -597,6 +603,10 @@
 			this.loadData();
 		},
 		onShow() {
+			this.returnFromDatePicker();
+			this.loadData();
+		},
+		onLoad() {
 			this.returnFromDatePicker();
 			this.loadData();
 		},

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="box-contaniner">
+		<view class="box-contaniner1">
 			<view class="tab-content">
 				<view class="end-title">
 				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">足球</view>
@@ -231,6 +231,7 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.refresh()
 		},
 		onShow() {
 			_self = this;
@@ -238,10 +239,20 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
+			this.refresh()
+		},
+		created() {
+			_self = this;
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView()
+			this.refresh()
 		},
 		methods: {
 			refresh(selfParam){
 				this.selfParam.token = uni.getStorageSync("token")
+				this.returnFromDatePicker();
 				this.getServerData();
 				this.showView();
 			},
@@ -287,19 +298,36 @@
 				return param
 			},
 			returnFromDatePicker(){
-			const dateType = uni.getStorageSync("compareDateType")
-			const leftDate = JSON.parse(uni.getStorageSync("leftBusinessDate"))
-			const rightDate = JSON.parse(uni.getStorageSync("rightBusinessDate"))
-			console.log("dateType:",dateType)
-			console.log("leftDate:",leftDate)
-			console.log("rightDate:",rightDate)
-			
-			if(leftDate==null || rightDate==null){
-				return
-			}
-			
-			if(leftDate.dateType!=dateType || rightDate.dateType!=dateType){
-				console.log("dateType不匹配:")
+				const dateType = uni.getStorageSync("compareDateType")
+				const leftDate = JSON.parse(uni.getStorageSync("leftBusinessDate"))
+				const rightDate = JSON.parse(uni.getStorageSync("rightBusinessDate"))
+				console.log("dateType:",dateType)
+				console.log("leftDate:",leftDate)
+				console.log("rightDate:",rightDate)
+				
+				if(leftDate==null || rightDate==null){
+					return
+				}
+				
+				if(leftDate.dateType!=dateType || rightDate.dateType!=dateType){
+					console.log("dateType不匹配:")
+					const compareDate={
+							dateType:dateType,
+							viewLeft:leftDate.view,//用于展示日期、年、月等
+							viewRight:rightDate.view,
+							dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
+							dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
+							weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
+							weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
+							monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
+							monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
+							yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
+							yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
+						}
+					this.selfParam.compareDate=compareDate
+					return
+				}
+				console.log("leftDate:",leftDate)
 				const compareDate={
 						dateType:dateType,
 						viewLeft:leftDate.view,//用于展示日期、年、月等
@@ -314,41 +342,25 @@
 						yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
 					}
 				this.selfParam.compareDate=compareDate
-				return
-			}
-			console.log("leftDate:",leftDate)
-			const compareDate={
-					dateType:dateType,
-					viewLeft:leftDate.view,//用于展示日期、年、月等
-					viewRight:rightDate.view,
-					dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
-					dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
-					weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
-					weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
-					monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
-					monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
-					yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
-					yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
-				}
-			this.selfParam.compareDate=compareDate
-			console.log("compareDate:",compareDate)
-			const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
-			this.selfParam.businessDate = bussinessDate;
-			console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-					
-			const area = uni.getStorageSync("area")
-			const areaName = uni.getStorageSync("areaName")
-			console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
-			this.selfParam.provinceCenterId=area
-			this.selfParam.provinceCenterName=areaName
+				console.log("compareDate:",compareDate)
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
 				this.selfParam.token=uni.getStorageSync("token")
 				this.selfParam.shopNo = uni.getStorageSync("shopNo");
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			showView(){
-				/* this.$refs['levelRingChart1'].showCharts();
+				this.$refs['levelRingChart1'].showCharts();
 				this.$refs['levelRingChart11'].showCharts();
 				this.$refs['levelRingChart2'].showCharts();
-				this.$refs['levelRingChart22'].showCharts(); */
+				this.$refs['levelRingChart22'].showCharts(); 
 			},
 			getServerData() {
 				this.getPieData();
@@ -356,6 +368,7 @@
 		    change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
+				this.refresh()
 		    },
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为：' + e.detail.value)
@@ -365,11 +378,11 @@
 				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
 					});
 				}else{
 					uni.navigateTo({
-						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData1)
+						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
 					});
 				}
 			},
@@ -463,9 +476,12 @@
 </script>
 
 <style>
+	.box-contaniner1{
+		width: 100%;
+		margin: 10px 10px 10px 10px;
+	}
 	.box-contaniner{
 		width: 100%;
-		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
 	
     /* 将三个内容view的display设置为none(隐藏) */

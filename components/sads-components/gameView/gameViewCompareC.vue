@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="box-contaniner">
+		<view class="box-contaniner1">
 			<view class="arcbarChart-tab">
 			    <view @tap="change(0)" :class="btnnum ==0?'btna':'hide'" style="width: 50%;" >足球</view>
 			    <view @tap="change(1)" :class="btnnum ==1?'btna':'hide'" style="width: 50%;" >篮球</view>
@@ -248,15 +248,24 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.refresh();
 		},
 		onShow() {
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.refresh();
+		},
+		created() {
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView();
+			this.refresh();
 		},
 		methods: {
 			refresh(selfParam){
 				this.selfParam.token = uni.getStorageSync("token")
+				this.returnFromDatePicker();
 				this.getServerData();
 				this.showView();
 			},
@@ -317,9 +326,11 @@
 				this.selfParam.provinceCenterName=areaName
 				this.selfParam.token=uni.getStorageSync("token")
 				this.selfParam.shopNo = uni.getStorageSync("shopNo");
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 			},
 			showView(){
-				/* if(this.btnnum==0){
+				if(this.btnnum==0){
 					this.$refs['arcbar11'].showCharts();
 					this.$refs['arcbar1'].showCharts();
 					this.$refs['dataContain'].showDataContainer();
@@ -327,7 +338,7 @@
 					this.$refs['arcbar2'].showCharts();
 					this.$refs['arcbar22'].showCharts();
 					this.$refs['dataContain1'].showDataContainer();
-				} */
+				} 
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -422,6 +433,16 @@
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
+					var leftFB = {'title1':'销量（元）', 'amount1':0, 'title2':'票数（张）', 'amount2':0};
+					var rightFB = {'title1':'销量（元）', 'amount1':0, 'title2':'票数（张）', 'amount2':0};
+					this.$set(this.topDataFB, 'left', leftFB);
+					this.$set(this.topDataFB, 'right', rightFB);
+					this.$refs['dataContain'].showDataContainer();
+					var leftBK = {'title1':'销量（元）', 'amount1':0, 'title2':'票数（张）', 'amount2':0};
+					var rightBK = {'title1':'销量（元）', 'amount1':0, 'title2':'票数（张）', 'amount2':0};
+					this.$set(this.topDataBK, 'left', leftBK);
+					this.$set(this.topDataBK, 'right', rightBK);
+					this.$refs['dataContain1'].showDataContainer();
 				})
 			},
 			getLinesData(){
@@ -436,7 +457,6 @@
 					
 					var games= data.games;
 					var comGanmes =data.comGames;
-					debugger
 					var series = [];
 					var categories =[];
 					for(var i=0;i<games.length;i++){
@@ -620,7 +640,10 @@
 	}
 	.box-contaniner{
 		width: 100%;
-		margin: 20rpx 10rpx 40rpx 10rpx;
+	}
+	.box-contaniner1{
+		width: 100%;
+		margin: 10px 10px 10px 10px;
 	}
 	
 	.clineChart-title{

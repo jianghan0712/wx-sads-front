@@ -11,9 +11,8 @@
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData" ref="levelRingChart0" canvasId="index_ring_0"/>
 					</view>
-					<!-- <button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button> -->
 					<!-- 各地区销量排行-->
-					<view class="box-contaniner">
+					<view class="progress">
 						<progress ref="progress_0" :dataAs="pieData"></progress>
 					</view>
 				</view>
@@ -22,8 +21,7 @@
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData1" ref="levelRingChart1" canvasId="index_ring_1"/>
 					</view>
-					<!-- <button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button> -->
-					<view class="box-contaniner">
+					<view class="progress">
 						<progress ref="progress_1" :dataAs="pieData1"></progress>
 					</view>
 					
@@ -122,13 +120,18 @@
 			};
 		},
 		onLoad() {
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
 			this.showView();
+			this.change(0);
 		},
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.change(0);
 		},
 		methods: {
 			showView(){				
@@ -196,7 +199,8 @@
 				this.selfParam.provinceCenterName=areaName	
 				this.selfParam.token = uni.getStorageSync("token")
 				this.selfParam.shopNo = uni.getStorageSync("shopNo");
-				this.selfParam.token = getApp().globalData.token;
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 				
 			},
 			createParam(type){

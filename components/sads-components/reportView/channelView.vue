@@ -81,22 +81,22 @@
 				 histogramChart1: {
 						categories: ['周一', '周二','周三', '周四', '周五', '周六','周日'],
 						series: [
-							{ name: '上周', data: [35, 8, 25, 37, 4, 20] },
-							{ name: '本周', data: [35, 8, 25, 37, 4, 20] }
+							{ name: '上周', data: [0, 0, 0, 0,0, 0] },
+							{ name: '本周', data: [0, 0, 0, 0,0, 0] }
 						],
 				 },
 				 histogramChart2: {
 				 						categories: ['周一', '周二','周三', '周四', '周五', '周六','周日'],
 				 						series: [
-				 							{ name: '上周', data: [35, 8, 25, 37, 4, 20] },
-				 							{ name: '本周', data: [35, 8, 25, 37, 4, 20] }
+				 							{ name: '上周', data: [0, 0, 0, 0,0, 0] },
+				 							{ name: '本周', data: [0, 0, 0, 0,0, 0] }
 				 						],
 				 },
 				 histogramChart3: {
 				 						categories: ['周一', '周二','周三', '周四', '周五', '周六','周日'],
 				 						series: [
-				 							{ name: '上周', data: [35, 8, 25, 37, 4, 20] },
-				 							{ name: '本周', data: [35, 8, 25, 37, 4, 20] }
+				 							{ name: '上周', data: [0, 0, 0, 0,0, 0] },
+				 							{ name: '本周', data: [0, 0, 0, 0,0, 0] }
 				 						],
 				 }
 			 }
@@ -117,7 +117,8 @@
 				}
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName				
-				this.selfParam.token=uni.getStorageSync("token");		
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))		
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -243,15 +244,41 @@
 					console.log('request fail', err);
 				});
 				
-			}
+			},
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.returnFromDatePicker();
+				this.loadData();
+			},
+			
 		},
 		mounted() {
 			this.returnFromDatePicker();
 			this.loadData();
+			this.refresh();
 		},
-		onShow() {
+		onLoad() {
+			_self = this;	
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
 			this.loadData();
+			this.refresh();
+		},
+		onShow() {
+			_self = this;	
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView()
+			this.refresh();
+		},
+		created() {
+			// this.selfParam=this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView()
+			this.refresh();
 		},
 		onPageScroll(e) {
 			this.backTop.scrollTop = e.scrollTop;

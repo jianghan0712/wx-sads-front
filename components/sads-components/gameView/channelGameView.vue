@@ -5,9 +5,9 @@
 			    <view @tap="changeTop('足球')" :class="arcbarNumTop =='足球'?'btna':'hide'" style="width: 50%;" >足球</view>
 			    <view @tap="changeTop('篮球')" :class="arcbarNumTop =='篮球'?'btna':'hide'" style="width: 50%;" >篮球</view>
 			</view>
-			
-			<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
-
+			<view class="box-container">
+				<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
+			</view>	
 			<view >
 				<view class="clineChart-title">
 					<view style="font-size: 30rpx;font-weight: bold;">{{arcbarNumTop}}销量及票数走势</view>
@@ -25,14 +25,14 @@
 				</view>		
 				<ring-chart canvasId="arcbar1" ref="arcbar1" :dataAs="arcbar1" />				
 			</view>	
-			<view>
-				<gamebottom></gamebottom>
+			<view style="text-align: center;">
+				<button  @click="toRingAll()">查看全部</button>
 			</view>
 			
-			<view >
+			<view style="margin: 20rpx;">
 				<view class="container-title">
-					<view>各地区{{arcbarNumTop}}销量及占比</view>
-					<view style="width: 200rpx;height: 50rpx;text-align: top;font-size: 30rpx;" @click="toAll()">全部>></view>
+					<view >各地区{{arcbarNumTop}}销量及占比</view>
+					<view style="width: 200rpx;height: 50rpx;font-size: 30rpx;" @click="toAll()">全部>></view>
 				</view>
 				<view class="table">
 					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
@@ -46,7 +46,6 @@
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import PieChart from '@/components/basic-chart/PieChart.vue';
 	import RingChart from '@/components/basic-chart/RingChart.vue';
-	import gamebottom from './gameViewBottom.vue';
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
@@ -56,7 +55,7 @@
 				LineChart,
 				PieChart,
 				RingChart,
-				gamebottom,dataContainer,vTable
+				dataContainer,vTable
 			},
 			props: {
 				param:{
@@ -230,22 +229,22 @@
 					tableColumns: [{
 								title: "排名",
 								key: "id",
-								$width:"90px",
+								$width:"50px",
 							},
 							{
 								title: '省份',
 								key: 'area',
-								$width:"80px"
+								$width:"90px"
 							},
 							{
 								title: '占比',
 								key: 'zhanbi',
-								$width:"80px"
+								$width:"90px"
 							},
 							{
 								title: '销量（元）',
 								key: 'count',
-								$width:"80px"
+								$width:"90px"
 							}
 						],	
 				};
@@ -376,6 +375,58 @@
 						//this.loading = false;
 						this.totalData=this.footballData;
 						console.log('request fail', err);
+						if(ballType=='足球'){
+							let index0={
+								name:ballType+'销量（万元）',
+								value:0,
+								left:{
+									name:'周同比',
+									value:'-100%'
+								},
+								right:{
+									name:'环比',
+									value:'-100%'
+								}}
+							this.$set(that.totalData,'big1',index0);
+							let index1={
+								name:ballType+'票数（万张）',
+								value:0,
+								left:{
+									name:'周同比',
+									value:'-100%'
+								},
+								right:{
+									name:'环比',
+									value:'-100%'
+								}}
+							this.$set(that.totalData,'big2',index1);
+						}else{
+							let index0={
+								name:ballType+'销量（百万元）',
+								value:0,
+								left:{
+									name:'周同比',
+									value:'-100%'
+								},
+								right:{
+									name:'环比',
+									value:'-100%'
+								}}
+							this.$set(that.totalData,'big1',index0);
+							let index1={
+								name:ballType+'票数（万张）',
+								value:0,
+								left:{
+									name:'周同比',
+									value:'-100%'
+								},
+								right:{
+									name:'环比',
+									value:'-100%'
+								}}
+							this.$set(that.totalData,'big2',index1);
+						}
+						this.$refs['dataContain'].showDataContainer();
 					});
 					
 				},
@@ -392,6 +443,8 @@
 					this.selfParam.provinceCenterName=areaName
 					this.selfParam.token=uni.getStorageSync("token")
 					this.selfParam.shopNo = uni.getStorageSync("shopNo");
+					this.selfParam.token=getApp().globalData.token
+					uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 				},
 				loadMidData(ballType){
 					var url = '/pentaho/shows/getShowGameTrendChart';
@@ -493,6 +546,11 @@
 						this.loading = false;
 						console.log('request fail', err);
 					}); 
+				},
+				toRingAll() {
+					uni.navigateTo({
+						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.arcbar1)
+					});
 				},
 				toAll(){
 					var that =this;
@@ -657,10 +715,9 @@
 	}
 	
 	.btna{
-		color: #000000;
-		background: #ebebeb;
-		padding:0px 30rpx 0px 30rpx;
-	}
+			color: #FFFFFF;
+			background:rgba(47, 98, 248 ,0.5);	
+	 }
 	.backWidth{
 		width: 50%;
 	}
@@ -755,8 +812,16 @@
 		background-color: #FFFFFF;
 	}
 	.box-contaniner{
-		width: 100%;
+		width: 90%;
 		margin: 20rpx 10rpx 40rpx 10rpx;
+	}
+	button {
+		width: 75%;
+	    margin-top: 30rpx;
+	    margin-bottom: 30rpx;
+		font-size: 30rpx;
+		background-color: rgba(220, 241, 250,0.5);
+		color: #007AFF;
 	}
 	
 </style>

@@ -109,8 +109,8 @@
 			}
 		},
 		onLoad() {
-			// this.returnFromDatePicker();
-			// this.getServerData();
+			this.returnFromDatePicker();
+			this.getServerData();
 			this.showView();
 		},
 		onShow() {
@@ -150,8 +150,9 @@
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName	
-				this.selfParam.token=uni.getStorageSync("token")
-				this.selfParam.shopNo = uni.getStorageSync("shopNo");
+				this.selfParam.shopNo = uni.getStorageSync("shopNo")
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			getServerData() {
 				this.getTicketData();
@@ -171,8 +172,8 @@
 					this.getPieData('篮彩');
 				}
 			},
-			refresh(){
-				this.returnFromDatePicker()
+			refresh(selfParam){
+				this.selfParam = JSON.parse(selfParam)
 				this.selfParam.token = uni.getStorageSync("token")
 				this.getServerData();
 				this.showView();
@@ -216,11 +217,6 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
 					var data = res.data.data;
 					var format0 = numberFun.formatCNumber(data[0]);
 					var big1 = {'name':'竞彩（'+format0.name +'元）', 'value':data[0].toFixed(2)/format0.value}
@@ -235,6 +231,12 @@
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
+					var big1 = {'name':'竞彩（百万元）', 'value':0}
+					var small1 = {'name':'足彩（百万元）', 'value':0}
+					var small2 = {'name':'篮彩（百万元）', 'value':0}
+					this.$set(this.ticketData, 'big1', big1);
+					this.$set(this.ticketData, 'small1', small1);
+					this.$set(this.ticketData, 'small2', small2);
 				})
 			},
 			getPieData(type){
@@ -292,11 +294,6 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
 					var data = res.data.data;
 					var dates = data.dates
 					var all = data.ALL

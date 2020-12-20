@@ -98,7 +98,7 @@
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"150px"
+						$width:"130px"
 					},{
 						title: '销量（百万元）',
 						key: 'amount',
@@ -113,7 +113,7 @@
 					},{
 						title: '赛制',
 						key: 'matchType',
-						$width:"150px"
+						$width:"130px"
 					},{
 						title: '销量（百万元）',
 						key: 'amount',
@@ -127,7 +127,15 @@
 			_self = this;
 			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.getServerData(getServerData);
+			this.returnFromDatePicker()
+			this.getServerData();
+		},
+		onShow() {
+			_self = this;
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker()
+			this.getServerData();
 		},
 		created() {
 			// this.selfParam=this.param
@@ -138,6 +146,12 @@
 			this.getServerData(this.btnnum);
 		},
 		methods: {
+			refresh(selfParam){
+				this.selfParam = JSON.parse(selfParam)
+				this.selfParam.token = uni.getStorageSync("token")
+				this.getServerData();
+				this.showView();
+			},
 			showView(){
 				this.$nextTick(() => {				
 				});
@@ -159,6 +173,24 @@
 				uni.navigateTo({	
 					url:"/pages/common/levelRingDetail?btnnum="+btnnum
 				});
+			},
+			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				var area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
+				if(-1==area){
+					area=0;
+				}
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName			
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 			},
 			createParam(btnnum){
 				console.log("createParam begin")
@@ -225,7 +257,7 @@
 						},{
 							title: '赛制',
 							key: 'matchType',
-							$width:"200px"
+							$width:"130px"
 						},{
 							title: '销量（'+format0.name + '元）',
 							key: 'amount',
@@ -285,7 +317,7 @@
 						},{
 							title: '赛事',
 							key: 'matchName',
-							$width:"200px"
+							$width:"130px"
 						},{
 							title: '销量（' + format0.name + '元）',
 							key: 'amount',

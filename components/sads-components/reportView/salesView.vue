@@ -142,6 +142,13 @@
 			 }
 		},
 		methods: {
+			showView(){
+				this.$refs['histogramChart1'].showCharts();
+				this.$refs['histogramChart2'].showCharts();
+				this.$refs['histogramChart3'].showCharts();
+				this.$refs['histogramChart4'].showCharts();
+				this.$refs['histogramChart5'].showCharts();
+			},
 			returnFromDatePicker(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				const dateType = uni.getStorageSync("dateType")
@@ -157,7 +164,8 @@
 				}
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName				
-				this.selfParam.token=uni.getStorageSync("token");		
+				this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -223,9 +231,10 @@
 							{ name: '上周', data: shangzhouPS},
 							{ name: '本周', data: benzhouPS }
 						];
-					that.$set(this.histogramChart1,'series',series1);
-					that.$set(this.histogramChart2,'series',series2);
-					
+					that.$set(that.histogramChart1,'series',series1);
+					that.$set(that.histogramChart2,'series',series2);
+					this.$refs['histogramChart1'].showCharts();
+					this.$refs['histogramChart2'].showCharts();
 					this.$refs['histogramChart1'].showCharts();
 					this.$refs['histogramChart2'].showCharts();
 					
@@ -256,7 +265,7 @@
 							{ name: '上周', data: shangzhouvotes },
 							{ name: '本周', data: benzhouvotes }
 						];
-					this.$set(this.histogramChart3,'series',series1);
+					this.$set(that.histogramChart3,'series',series1);
 					this.$refs['histogramChart3'].showCharts();
 					
 				}).catch((err)=>{
@@ -286,7 +295,7 @@
 							{ name: '上周', data: shangzhouvotes },
 							{ name: '本周', data: benzhouvotes }
 						];
-					this.$set(this.histogramChart4,'series',series1);
+					this.$set(that.histogramChart4,'series',series1);
 					this.$refs['histogramChart4'].showCharts();
 					
 				}).catch((err)=>{
@@ -294,12 +303,11 @@
 					console.log('request fail', err);
 				});
 				this.loadFJL('1');
-				
+				console.log(this.histogramChart1);
 			},
 			changeTop(e){
 				this.fjltype = e;
 				this.loadFJL(e);
-				
 			},
 			loadFJL(e){
 				var that =this;
@@ -333,22 +341,37 @@
 							{ name: '上周', data: shangzhouvotes },
 							{ name: '本周', data: benzhouvotes }
 						];
-					this.$set(this.histogramChart5,'series',series1);
+					this.$set(that.histogramChart5,'series',series1);
 					this.$refs['histogramChart5'].showCharts();
 					
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 				});
-			}
+			},refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.returnFromDatePicker();
+				this.loadData();
+			},
 		},
 		mounted() {
 			this.returnFromDatePicker();
 			this.loadData();
+			this.showView();
+			this.refresh();
+			
 		},
 		onShow() {
 			this.returnFromDatePicker();
 			this.loadData();
+			this.showView();
+			this.refresh();
+		},
+		onLoad() {
+			this.returnFromDatePicker();
+			this.loadData();
+			this.showView();
+			this.refresh();
 		},
 		onPageScroll(e) {
 			this.backTop.scrollTop = e.scrollTop;

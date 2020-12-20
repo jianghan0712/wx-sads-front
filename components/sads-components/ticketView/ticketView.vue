@@ -227,11 +227,6 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
 					var data = res.data.data;
 					var format0 = numberFun.formatCNumber(data[0]);
 					var big1 = {'name':'竞彩（'+format0.name +'元）', 'value':data[0].toFixed(2)/format0.value}
@@ -268,14 +263,8 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',	
-						mask: true
-					});
 					
 					var data = res.data.data;
-					console.log(data)
 					var list=[];	
 					for(var i=0; i<data.length; i++){
 						list[i]={name:data[i].proValueName,data:data[i].values[0]};
@@ -304,11 +293,6 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
 					var data = res.data.data;
 					var format0 = null;
 					if(data.length>0){
@@ -389,7 +373,6 @@
 		},
 		mounted(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.getServerData();
 			this.showView();
 		},
 		watch: {

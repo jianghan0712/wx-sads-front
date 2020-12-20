@@ -21,15 +21,21 @@
 					 </view>
 				 </table>
 	         </view>
-	    </view>
+			<view class="progress">
+				<progress ref="progress_0" :dataAs="pieData"></progress>
+			</view> 
+	</view>
+		
 </template>
 
 <script>
 	import vTable  from  '@/components/table/table.vue';
 	import urlAPI from '@/common/vmeitime-http/';
+	import progress from "@/components/sads-components/progress.vue";
+	
 	export default{
 		components:{
-			vTable
+			vTable,progress
 		},
 		props: {
 			model:{
@@ -40,6 +46,7 @@
 		},
 		data(){
 			return {
+				pieData:{},
 				uidata:{},
 				contents :[],
 				type:'all',
@@ -140,7 +147,6 @@
 						item[0]=data[i].gameName;
 						item[1]=data[i].values[0];
 						item[2]=parseInt(data[i].values[1]);
-						console.log(item)
 						dataFilter.push(item);
 					}
 					that.uidata = dataFilter;
@@ -157,8 +163,11 @@
 			uni.setNavigationBarTitle({
 				title :option.title
 			});
-			this.returnFromDatePicker();
-			this.loadData();
+			this.pieData = option.proData;
+			this.$refs['progress_0'].showProgress(this.pieData);
+			console.log(this.pieData)
+			/* this.returnFromDatePicker();
+			this.loadData(); */
 		}
 		
 	},

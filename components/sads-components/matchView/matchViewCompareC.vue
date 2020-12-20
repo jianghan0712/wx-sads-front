@@ -129,10 +129,31 @@
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
 			this.getServerData(this.btnnum);
+			this.showView();
+			this.refresh();
+		},
+		onShow() {
+			_self = this;
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData(this.btnnum);
+			this.showView();
+			this.refresh();
+		},
+		created() {
+			_self = this;
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData(this.btnnum);
+			this.showView();
+			this.refresh();
 		},
 		methods: {
 			refresh(selfParam){
 				this.selfParam.token = uni.getStorageSync("token")
+				this.returnFromDatePicker();
 				this.getServerData(this.btnnum);
 				this.showView();
 			},
@@ -147,11 +168,16 @@
 		    change(e) {
 			    this.btnnum = e;
 			    console.log(this.btnnum);
-				this.getServerData(this.btnnum);
+				this.refresh()
 		    },
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为：' + e.detail.value)
 				this.index = e.detail.value
+			},
+			gotoLunBo(btnnum){
+				uni.navigateTo({	
+					url:"/pages/common/levelRingDetail?btnnum="+btnnum
+				});
 			},
 			returnFromDatePicker(){
 				const dateType = uni.getStorageSync("compareDateType")
@@ -210,6 +236,7 @@
 				this.selfParam.provinceCenterName=areaName
 				this.selfParam.token=uni.getStorageSync("token")
 				this.selfParam.shopNo = uni.getStorageSync("shopNo");
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			createParam(btnnum){
 				console.log("createParam begin")
@@ -370,7 +397,10 @@
 <style>
 	.box-contaniner{
 		width: 100%;
-		margin: 20rpx 10rpx 40rpx 10rpx;
+	}
+	.box-contaniner1{
+		width: 100%;
+		margin: 10px 10px 10px 10px;
 	}
 	
     /* 将三个内容view的display设置为none(隐藏) */
