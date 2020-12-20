@@ -113,14 +113,14 @@
 	.big-text{
 		text-align: left;
 		margin: 15rpx 5rpx;
-		color: #777;
+		color: #FFFFFF;
 		font-size: 36rpx;
 	}
 	
 	.small-text{
 		text-align: left;
 		margin: 15rpx 5rpx;
-		color: #777;
+		color: #FFFFFF;
 		font-size: 30rpx;
 	}
 	

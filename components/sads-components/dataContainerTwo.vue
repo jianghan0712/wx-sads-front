@@ -125,15 +125,16 @@
 	
 	.small-text-green{
 		text-align: left;
-		color: #00FF00;
+		color: #1FCE58;
 		font-size: 30rpx;
 	}
 	
 	.small-text-red{
 		text-align: left;
-		color: #FF0000;
+		color: #E83838;
 		font-size: 30rpx;
 	}
+	
 	.sale-row-2{
 		display: flex;
 		flex-direction: row;	

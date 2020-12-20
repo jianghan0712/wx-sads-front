@@ -28,20 +28,20 @@
 		<!-- 竞彩足篮球销量及占比对比区域 -->
 		<view class="box-contaniner">
 			<view class="shop-title">竞彩足篮球销量及占比对比</view>
-			<dataContainerTwoColTwo></dataContainerTwoColTwo>
+			<dataContainerTwoColTwo ref="dataContainerTwoColTwo" :dataAs="ballAmount"></dataContainerTwoColTwo>
 		</view>		
 		
 		<!-- 门店在售情况-->
 		<view class="box-contaniner">
 			<view class="shop-title">门店在售情况对比</view>
-			<dataContainerTwoCol ref="dataContain" ></dataContainerTwoCol>
+			<dataContainerTwoCol ref="shopData" :dataAs="shopData"></dataContainerTwoCol>
 		</view>
 		
 		<!-- 各地区销量排行-->
 		<view class="box-contaniner">
 			<view class="rankTable-title">
 				<view>各地区销量排行榜对比</view>
-				<view class="rankTable-more" @click="goSaleRank(leftTableData,leftTableColumns)">全部>></view>
+				<view class="rankTable-more" @click="goSaleRank(leftTableDataDetail,leftTableColumns,rightTableDataDetail,rightTableColumns)">全部>></view>
 			</view>
 			<view class="example">
 				<view class="sale-row-2">
@@ -122,70 +122,37 @@
 					selfProvinceCenterId:''//存登录时候的id
 				},
 				topData:{	left:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0},
-							right:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0}},			
+							right:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0}},
+				shopData:{	left:{title1:'在售门店数',amount1:0,title2:'在售门店率',amount2:0},
+							right:{title1:'在售门店数',amount1:0,title2:'在售门店率',amount2:0}},
+				ballAmount:{
+					left:{
+						football:{name:"足球",amount:"销量0元",zhanbi:"0%"},
+						basketball:{name:"篮球",amount:"销量0元",zhanbi:"0%"}
+					},
+					right:{
+						football:{name:"足球",amount:"销量0元",zhanbi:"0%"},
+						basketball:{name:"篮球",amount:"销量0元",zhanbi:"0%"}
+					},
+				},						
 				footballData:{},	
 				basketballData:{},	
 				btnnum: 0,
 				lineData2: {},
 				lineData1: {},
-				leftTableData: [{
-							id: "1",
-							area: "北京市",
-							amount: "10233.5"
-						},
-						{
-							id: "2",
-							area: "上海市",
-							amount: "9965.5"
-						},
-						{
-							id: "3",
-							area: "广东省",
-							amount: "9754.5"
-						},
-						{
-							id: "4",
-							area: "重庆市",
-							amount: "6745.6"
-						},
-						{
-							id: "5",
-							area: "河北省",
-							amount: "6554"
-						}
-					],
-				rightTableData: [{
-							id: "1",
-							amount: "10233.5"
-						},
-						{
-							id: "2",
-							amount: "9965.5"
-						},
-						{
-							id: "3",
-							amount: "9754.5"
-						},
-						{
-							id: "4",
-							amount: "6745.6"
-						},
-						{
-							id: "5",
-							amount: "6554"
-						}
-					],
+				leftTableData: [],
+				rightTableData: [],
+				leftTableDataDetail: [],
+				rightTableDataDetail: [],
 				leftTableColumns: [{
-							title: "排名",
-							key: "id",
-							$width:"50px",
-						},
-						{
 							title: '省份',
 							key: 'area',
 							$width:"100px"
-						},
-						{
+						},{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
 							title: '销量',
 							key: 'amount',
 							$width:"100px"
@@ -220,6 +187,9 @@
 			getServerData() {
 				this.getDataSet();
 				this.getLinesData();
+				this.getBallAmount();
+				this.getShopData();
+				this.getRankTable();
 				// this.getDataContainerTwo('足球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
 				// this.getDataContainerTwo('篮球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
 			},
@@ -298,13 +268,70 @@
 							var format10 = numberFun.formatCNumber(amount2);
 							var format11 = numberFun.formatCNumber(saleNumber2);
 							
-							var left = {'title1':'销量（'+format00.name +'元）', 'amount1':amount1/format00.value, 'title2':'票数（'+format01.name +'张）', 'amount2':saleNumber1/format01.value};
-							var right = {'title1':'销量（'+format10.name +'元）', 'amount1':amount1/format10.value, 'title2':'票数（'+format11.name +'张）', 'amount2':saleNumber2/format11.value};
+							var left = {'title1':'销量（'+format00.name +'元）', 'amount1':(amount1/format00.value).toFixed(2), 'title2':'票数（'+format01.name +'张）', 'amount2':(saleNumber1/format01.value).toFixed(2)};
+							var right = {'title1':'销量（'+format10.name +'元）', 'amount1':(amount1/format10.value).toFixed(2), 'title2':'票数（'+format11.name +'张）', 'amount2':(saleNumber2/format11.value).toFixed(2)};
 						
 							this.$set(this.topData, 'left', left);
 							this.$set(this.topData, 'right', right);
 							console.log('request topData', this.topData);
 							this.$refs['dataContainTwo'].showDataContainer();
+							this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getShopData(){
+				var url = '/pentaho/salesContrast/getComStoreSituation';
+				var param = this.createParam()
+				
+				urlAPI.getRequest(url, param).then((res)=>{
+					// setTimeout(() => { 
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							if(data==null){
+								return;
+							}
+								
+							var amount1 = data[0]
+							var saleNumber1 = data[1]
+							
+							var left = {'title1':'在售门店数', 'amount1':amount1, 'title2':'在售门店率', 'amount2':"0%"};
+							var right = {'title1':'在售门店数', 'amount1':saleNumber1, 'title2':'在售门店率', 'amount2':"0%"};							
+							var json = this.getShopRatio(left,right);		
+					
+							this.shopData.left=left
+							this.shopData.right=right
+	
+							console.log('request topData', this.shopData);
+							this.$refs['shopData'].showDataContainer();
+							this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			
+			},
+			getShopRatio(left,right){
+				var url = '/pentaho/salesContrast/getComStoreSalesrate';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+					// setTimeout(() => { 
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							var ret = {left:left,right:right}
+							if(data==null){
+								return ret;
+							}
+								
+							var amount1 = data[0] +"%"
+							var saleNumber1 = data[1] +"%"
+							left.amount2=amount1;
+							right.amount2=saleNumber1;
+							ret = {left:left,right:right}
+							return ret;
 							this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -381,59 +408,96 @@
 					console.log('request fail', err);
 				})
 			},
-			getDataContainerTwo(type, provinceCenterId, businessDate, cityCenterId){
-				var url=''
-				if(type=='足球'){
-					url = '/exhibition/gameSales/queryGameSalesOfFb/' + businessDate + '/' + provinceCenterId + '/' + cityCenterId;
-				}else{
-					url = '/exhibition/gameSales/queryGameSalesOfBk/' + businessDate + '/' + provinceCenterId + '/' + cityCenterId;
-				}
-				var big1 = {'name':'销量'};
-				var left1 = {'name':'周同比'};
-				var right1 = {'name':'环比'};				
-				
-				var big2 = {'name':'占比'};
-				var left2 = {'name':'周同比'};
-				var right2 = {'name':'环比'};
-				urlAPI.getRequest(url, null).then((res)=>{
-					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
-					var data = res.data.concreteBean;
-					var format0 = numberFun.formatCNumber(data[0]);
-					var format1 = numberFun.formatCNumber(data[1]);
-					
-					var amount = data[0]/format0.value + format0.name +'元';
-					left1.value = (data[0]/data[1]-1).toFixed(4);
-					right1.value = -0.3111;
-					big1.value = amount;
-					big1.left = left1;
-					big1.right = right1;
-					
-					big2.value = 0.63;
-					left2.value = -0.0132;
-					right2.value = 0.1069;
-					big2.left = left2;
-					big2.right = right2;					
-					
-					if(type=='足球'){
-						this.$set(this.footballData, 'big1', big1);
-						this.$set(this.footballData, 'big2', big2);
-					}else{
-						this.$set(this.basketballData, 'big1', big1);
-						this.$set(this.basketballData, 'big2', big2);
-					}
-					
-					// console.log('request basketballData', this.basketballData);
-					this.res = '请求结果 : ' + JSON.stringify(res);
+			getBallAmount(){
+				var url="/pentaho/salesContrast/getContrastGameSales"
+				var param = this.createParam()		
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							if(data==null || data.length==0){
+								return;
+							}
+							var FB = data.FB
+							var BK = data.BK
+							var format00 = numberFun.formatCNumber(FB[0]);
+							var format01 = numberFun.formatCNumber(BK[0]);
+							var format10 = numberFun.formatCNumber(FB[2]);
+							var format11 = numberFun.formatCNumber(BK[2]);
+							var ballAmount={
+								left:{
+									football:{name:"足球",amount:"销量" +(FB[0]/format00.value).toFixed(2) + format00.name +"元",zhanbi:FB[1] +"%"},
+									basketball:{name:"篮球",amount:"销量" +(BK[0]/format01.value).toFixed(2) + format01.name +"元",zhanbi:BK[1] +"%"}
+								},
+								right:{
+									football:{name:"足球",amount:"销量" +(FB[2]/format10.value).toFixed(2) + format10.name +"元",zhanbi:FB[3] +"%"},
+									basketball:{name:"篮球",amount:"销量" +(BK[2]/format11.value).toFixed(2) + format11.name +"元",zhanbi:BK[3] +"%"}
+								}
+							}
+							this.ballAmount = ballAmount;
+
+							console.log('request ballAmount', this.ballAmount);
+							this.$refs['dataContainerTwoColTwo'].showDataContainer();
+							
+							this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-				});
+				})
+			},
+			getRankTable(){			
+				var url="/pentaho/salesContrast/getComSalesRankingList"
+				var param = this.createParam()		
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							if(data==null || data.length==0){
+								return;
+							}
+							var format0 = numberFun.formatCNumber(data[0][2]);	
+							var format1 = numberFun.formatCNumber(data[0][4]);	
+							this.leftTableColumns=[									{
+										title: '省份',
+										key: 'area',
+										$width:"100px"
+									},{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},{
+										title: '销量(' +format0.name +')元',
+										key: 'amount',
+										$width:"100px"
+									}
+								];
+							this.rightTableColumns=[{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},
+									{
+										title:  '销量(' +format1.name +')元',
+										key: 'amount',
+										$width:"80px"
+									}
+								];
+							for(var i=0;i<data.length;i++){
+								var jsonleft = {id:data[i][1], area:data[i][0], amount:(data[i][2]/format0.value).toFixed(2)}	
+								var jsonright = {id:data[i][3],amount:(data[i][4]/format1.value).toFixed(2)}								
+								if(i<=4){
+									this.leftTableData[i] = jsonleft
+									this.rightTableData[i] = jsonright
+								}
+								this.leftTableDataDetail[i] = jsonleft
+								this.rightTableDataDetail[i] = jsonright
+							}
+							
+							this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})		
 			},
 			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -448,9 +512,10 @@
 				this.arcbarNum = e
 				console.log(this.arcbarNum)
 			},
-			goSaleRank(tableData, tableColumns){
+			goSaleRank(tableData, tableColumns,righttableData, righttableColumns){
 				uni.navigateTo({
-					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(tableData) + '&tableColumns=' + JSON.stringify(tableColumns)
+					url:"/pages/common/tableDetail3?leftTableData= " + JSON.stringify(tableData) + '&leftTableColumns=' + JSON.stringify(tableColumns) 
+													+"&rightTableData= " + JSON.stringify(righttableData) + '&rightTableColumns=' + JSON.stringify(righttableColumns)
 				});
 			},
 			valueToPercent(value) {
@@ -628,12 +693,12 @@
 		padding:0px 30rpx 0px 30rpx;
 	}
 	.small-text-green{
-		color: #00FF00;
+		color: ##1FCE58;
 		/* font-size: 30rpx; */
 	}
 	
 	.small-text-red{
-		color: #FF0000;
+		color: #E83838;
 		/* font-size: 30rpx; */
 	}
 	.left-row-box {

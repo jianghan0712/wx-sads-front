@@ -350,7 +350,7 @@
 			getLinesData(){
 				var url = '/pentaho/showsContrast/showSalesVotesTrendCom'
 				var param = this.createParam()
-				
+				param.token=getApp().globalData.token;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -415,6 +415,24 @@
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
+					this.lineData1= {
+						//数字的图--折线图数据
+						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
+						series: [
+							{ name: this.selfParam.leftBusinessDate.date.enddate, data: [0, 0,0, 0, 0, 0] },
+							{ name: this.selfParam.rightBusinessDate.date.enddate, data: [0, 0, 0, 0, 0, 0] }
+						]
+					}
+					this.lineData2= {
+						//数字的图--折线图数据
+						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
+						series: [
+							{ name: this.selfParam.leftBusinessDate.date.enddate, data: [0, 0,0, 0, 0, 0] },
+							{ name: this.selfParam.rightBusinessDate.date.enddate, data: [0, 0, 0, 0, 0, 0] }
+						]
+					}
+					this.$refs['lineData2'].showCharts();
+					this.$refs['lineData1'].showCharts();
 				})
 			},
 			getMidData(){
@@ -443,6 +461,7 @@
 				url = '/pentaho/showsContrast/getShowRankingProCom';
 				param =this.createParam();
 				param.regionId= this.selfParam.provinceCenterId
+				param.token=getApp().globalData.token
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data = res.data.data;
@@ -719,12 +738,12 @@
 		padding:0px 30rpx 0px 30rpx;
 	}
 	.small-text-green{
-		color: #00FF00;
+		color: ##1FCE58;
 		/* font-size: 30rpx; */
 	}
 	
 	.small-text-red{
-		color: #FF0000;
+		color: #E83838;
 		/* font-size: 30rpx; */
 	}
 	.left-row-box {

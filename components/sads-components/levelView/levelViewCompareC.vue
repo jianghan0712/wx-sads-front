@@ -231,7 +231,7 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.refresh()
+			this.change(0)
 		},
 		onShow() {
 			_self = this;
@@ -239,7 +239,7 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
-			this.refresh()
+			this.change(0)
 		},
 		created() {
 			_self = this;
@@ -247,7 +247,7 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
-			this.refresh()
+			this.change(0)
 		},
 		methods: {
 			refresh(selfParam){

@@ -3,7 +3,7 @@
 		<view class="tab-content">
 			<view class="tab-title">
 				<view @tap="change2(0)" :class="btnnum == 0?'btna':'hide'">日</view>
-			　　<view @tap="change2(1)" :class="btnnum == 1?'btna':'hide'">周</view>
+			<!-- 　　<view @tap="change2(1)" :class="btnnum == 1?'btna':'hide'">周</view> -->
 			  　<view @tap="change2(2)" :class="btnnum == 2?'btna':'hide'">月</view>
 			    <view @tap="change2(3)" :class="btnnum == 3?'btna':'hide'">年</view>
 			</view>	
@@ -13,11 +13,11 @@
 					<uni-calendar class="uni-calendar--hook" :date="date" :selected="info.selected" :showMonth="true" @change="setDate" @monthSwitch="monthSwitch" />
 				</view>
 			</view>
-			<view class="end-cont" :class="{dis:btnnum == 1}">
+<!-- 			<view class="end-cont" :class="{dis:btnnum == 1}">
 				<view class ="content">
 					<uni-calendar class="uni-calendar--hook" :range="true" :selected="info.selected" :showMonth="true" @change="change" @monthSwitch="monthSwitch" />
 				</view>
-			</view>
+			</view> -->
 			<view class="end-cont" :class="{dis:btnnum == 2}">
 				<view v-for="eachYear in months">     <!--:key 保证组件和数据捆绑唯一 -->
 					<uni-section :title="eachYear.year" type="line"></uni-section>
@@ -127,6 +127,7 @@
 			var date = getDate(new Date())
 			var years = []
 			var j = 0
+			
 			for(var i =2016;i<date.year+2;i++){
 				var json = {index:j, name:i+"年", year:i, inverted:this.selectTrue}
 				this.years[j++]=json
@@ -143,8 +144,7 @@
 				var key = {year:this.years[i].year, value:monthsValue}
 				this.months[i]=key				
 			}	
-			
-			console.log(this.months)
+					
 		},
 		onReady() {
 			this.$nextTick(() => {
@@ -214,14 +214,14 @@
 					}
 				}
 				
-				this.dateInfo.dateType='month'
+				
 				var month =''
 				if(this.month.month<10){
 					month = '0'+this.month.month
 				}else{
 					month = this.month.month
 				}
-				
+				this.dateInfo.dateType='month'
 				this.dateInfo.view = this.month.year + '-' + month 
 				this.dateInfo.month.startDate = this.month.year + '-' +  month + '-01'
 				this.dateInfo.month.endDate = this.month.year + '-' +  month + '-' + getDaysInOneMonth(this.month.year,this.month.month)
@@ -273,6 +273,10 @@
 				console.log('monthSwitchs 返回:', e)
 			},
 			confirmDate(){	
+				if(this.dateInfo==null || this.dateInfo.view==''){
+					uni.navigateBack();
+					return 
+				}
 				if(this.type=='common'){
 					if(this.btnnum==0){
 						uni.setStorageSync("dateType", "date");
@@ -282,7 +286,7 @@
 						uni.setStorageSync("dateType", "month");
 					}else if(this.btnnum==3){
 						uni.setStorageSync("dateType", "year");
-					}				
+					}
 					uni.setStorageSync("businessDate", JSON.stringify(this.dateInfo));
 				}else if(this.type=='compare'){
 					if(this.btnnum==0){

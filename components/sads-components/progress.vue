@@ -34,7 +34,7 @@
 				title:'',
 				dataList:{},
 				pgList:[],
-				colors:["#F89A25","#91F825","#25B4F8","#BF25F8","#F82585","#EDF825","#F83725","#F1CF9B"],
+				colors: ['#F5A623', '#F8C61C','#BDD064', '#5BB35F', '#3FA4A4', '#398FEE', '#90ed7d'],
 			}
 		},
 		methods: {

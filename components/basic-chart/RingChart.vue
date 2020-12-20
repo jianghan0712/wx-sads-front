@@ -75,7 +75,7 @@ export default {
 				canvasId: this.canvasId, //页面组件canvas-id，支付宝中为id
 				type: 'ring', //图表类型，可选值为pie、line、column、area、ring、radar、arcbar、gauge、candle、bar、mix、rose、word
 				padding: [15, 15, 0, 15], //画布填充边距，顺序为上右下左，同css，但必须4位
-				colors: ["#F89A25","#91F825","#25B4F8","#BF25F8","#F82585","#EDF825","#F83725","#F1CF9B"], //图表配色方案，不传则使用系统默认配置
+				colors: ['#F5A623', '#F8C61C','#BDD064', '#5BB35F', '#3FA4A4', '#398FEE', '#90ed7d'], //图表配色方案，不传则使用系统默认配置
 				rotate: false, //是否横屏展示
 				rotateLock: true, //	锁定横屏模式，如果在支付宝和百度小程序中使用横屏模式，请赋值true，否则每次都会旋转90度。跨端使用通过uni-app的条件编译来赋值
 				animation: true, //是否动画展示

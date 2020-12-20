@@ -230,6 +230,7 @@
 			getPieDate(type){
 				var url = '/pentaho/sales/getCheckpointSalesProp';
 				var param = this.createParam()
+				param.token=getApp().globalData.token
 				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
@@ -269,6 +270,7 @@
 			getTableDate(btnnum, passName){
 				var url = '/pentaho/sales/checkpointSalesRanking';
 				var param = this.createParam()
+				param.token=getApp().globalData.token
 				var that =this;
 				param.passName=passName;
 				urlAPI.getRequest(url, param).then((res)=>{	

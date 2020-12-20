@@ -38,7 +38,6 @@
 		},
 		data() {
 			return {
-				hackReset : false,
 				dataList:{}
 			}
 		},
@@ -96,14 +95,14 @@
 	
 	.big-text{
 		text-align: left;
-		color: #777;
+		color: #FFFFFF;
 		font-size: 36rpx;
 	}
 	
 	.small-text{
 		text-align: left;
 		background-color: #ebebeb;
-		color: #777;
+		color: #FFFFFF;
 		font-size: 30rpx;
 	}
 	

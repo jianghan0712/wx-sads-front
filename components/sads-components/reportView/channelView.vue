@@ -227,10 +227,18 @@
 					var shangzhou=[];
 					var benzhou=[];
 					for(var i=0;i<storeCount.length/2;i++){
-						shangzhou.push((storeCount[i]/10000).toFixed(0));
-						benzhou.push((storeCount[i+7]/10000).toFixed(0));
+						if(0==storeCount[i]){
+							shangzhou.push(0);
+						}else{
+							shangzhou.push((storeCount[i]/10000).toFixed(0));
+						}
+						if(0==storeCount[i+7]){
+							benzhou.push(0);
+						}else{
+							benzhou.push((storeCount[i+7]/10000).toFixed(0));
+						}
 					};
-					
+					debugger
 					var series =[
 							{ name: '上周', data: shangzhou },
 							{ name: '本周', data: benzhou }

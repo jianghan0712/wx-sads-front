@@ -95,11 +95,11 @@ export default {
 				colors: ['#1890ff','#facc14', '#2fc25b',  '#f04864', '#8543e0', '#90ed7d'], //图表配色方案，不传则使用系统默认配置
 				rotate: false, //是否横屏展示
 				rotateLock: true, //	锁定横屏模式，如果在支付宝和百度小程序中使用横屏模式，请赋值true，否则每次都会旋转90度。跨端使用通过uni-app的条件编译来赋值
-				enableScroll: true, //是否开启图表可拖拽滚动 默认false 支持line, area, column, candle图表类型(需配合绑定@touchstart, @touchmove, @touchend方法)
+				enableScroll: false, //是否开启图表可拖拽滚动 默认false 支持line, area, column, candle图表类型(需配合绑定@touchstart, @touchmove, @touchend方法)
 				enableMarkLine: false, //是否显示辅助线 默认false 支持line, area, column, candle, mix图表类型
 				animation: true, //是否动画展示
-				dataLabel: true, //是否在图表中显示数据标签内容值
-				dataPointShape: true,
+				dataLabel: false, //是否在图表中显示数据标签内容值
+				dataPointShape: false,
 				duration: 1000, //动画展示时长单位毫秒
 				fontSize: 12, //全局默认字体大小（可选，单位为px，默认13px）高分屏不必乘像素比，自动根据pixelRatio计算
 				background: '#ffffff', //canvas背景颜色（如果页面背景颜色不是白色请设置为页面的背景颜色，默认#ffffff）无作用
@@ -116,9 +116,9 @@ export default {
 					//	X轴配置
 					type: 'grid',
 					rotateLabel: true, //X轴刻度（数值）标签是否旋转（仅在文案超过单屏宽度时有效）
-					itemCount: 10, //X轴可见区域数据数量（即X轴数据密度），配合拖拽滚动使用（即仅在启用enableScroll时有效）
-					// labelCount:Number,//X轴可见区域标签数量（即X轴数刻度标签单屏幕限制显示的数量）
-					scrollShow: true, //是否显示滚动条，配合拖拽滚动使用（即仅在启用enableScroll时有效）
+					// itemCount: 10, //X轴可见区域数据数量（即X轴数据密度），配合拖拽滚动使用（即仅在启用enableScroll时有效）
+					labelCount:5,//X轴可见区域标签数量（即X轴数刻度标签单屏幕限制显示的数量）
+					scrollShow: false, //是否显示滚动条，配合拖拽滚动使用（即仅在启用enableScroll时有效）
 					scrollAlign: 'left', //滚动条初始位置，left为数据整体左对齐，right为右对齐
 					scrollBackgroundColor: '#EFEBEF', //	X轴滚动条背景颜色，配合拖拽滚动使用（即仅在启用enableScroll时有效）
 					scrollColor: '#A6A6A6', //X轴滚动条颜色，配合拖拽滚动使用（即仅在启用enableScroll时有效）
@@ -127,20 +127,22 @@ export default {
 					calibration: true, //坐标轴刻度线是否显示 注v1.9.0有效
 					gridColor: '#cccccc', //X轴网格颜色 例如#7cb5ec
 					gridType: 'dash', //	X轴网格线型 'solid'为实线、'dash'为虚线`
-					gridEval: 1, //X轴网格线显示间隔，即假设为2时，是隔一个刻度显示间隔
+					// gridEval: 1, //X轴网格线显示间隔，即假设为2时，是隔一个刻度显示间隔
 					dashLength: 4, //X轴网格为虚线时，单段虚线长度
 					fontColor: '#666666', //X轴数据点颜色
 					boundaryGap: 'center', //折线图、区域图起画点结束点方法：center为单元格中间起画，justify为0点起画即两端对齐
 					axisLine: false, //坐标轴轴线是否显示
-					axisLineColor: '#cccccc' //坐标轴轴线颜色
+					axisLineColor: '#cccccc',//坐标轴轴线颜色,
+					fontSize: 10
 					// splitNumber:Number
 				},
 				yAxis: {
 					//如果是多坐标系则传数组型对象[{disabled:true},{disabled:false}]
 					itemCount: 3,
-					disabled: false, //不绘制Y轴
+					disabled: true, //不绘制Y轴
 					position: 'left', //Y轴位置，可选值左侧left右侧right(未起效果)
-					disableGrid: true, //不绘制X轴网格(即默认绘制网格)
+					disableGrid: false, //不绘制X轴网格(即默认绘制网格)
+					gridType:'dash',
 					format: val => {
 						let defaultSetting = { type: 'number', fixed: 0, name: '' };
 						let { type, fixed, name } = this.yAxisAs && this.yAxisAs.formatter ? Object.assign(defaultSetting, this.yAxisAs.formatter) : defaultSetting;
@@ -159,7 +161,7 @@ export default {
 
 				//图列配置 legendAs
 				legend: {
-					show: true, //是否显示各类别的图例标识
+					show: false, //是否显示各类别的图例标识
 					position: 'top',
 					float: 'left',
 					padding: 10,
@@ -176,7 +178,7 @@ export default {
 				//扩展配置 extraAs 详情请看 http://doc.ucharts.cn/1172130
 				extra: {
 					line: {
-						type: 'straight'
+						type: 'curve'
 					}
 				}
 			};

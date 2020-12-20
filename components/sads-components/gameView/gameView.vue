@@ -237,7 +237,7 @@
 							{
 								title: '占比',
 								key: 'zhanbi',
-								$width:"100px"
+								$width:"80px"
 							},
 							{
 								title: '销量（元）',
@@ -310,7 +310,7 @@
 						if(ballType=='足球'){
 							let index0={
 								name:ballType+'销量（万元）',
-								value:fb[0],
+								value:(fb[0]/10000).toFixed(2),
 								left:{
 									name:'周同比',
 									value:fb[1]
@@ -322,7 +322,7 @@
 							this.$set(that.totalData,'big1',index0);
 							let index1={
 								name:ballType+'票数（万张）',
-								value:fb[3],
+								value:(fb[3]/10000).toFixed(2),
 								left:{
 									name:'周同比',
 									value:fb[4]
@@ -335,7 +335,7 @@
 						}else{
 							let index0={
 								name:ballType+'销量（百万元）',
-								value:bk[0],
+								value:(bk[0]/10000).toFixed(2),
 								left:{
 									name:'周同比',
 									value:bk[1]
@@ -347,7 +347,7 @@
 							this.$set(that.totalData,'big1',index0);
 							let index1={
 								name:ballType+'票数（万张）',
-								value:bk[3],
+								value:(bk[3]/10000).toFixed(2),
 								left:{
 									name:'周同比',
 									value:bk[4]
@@ -364,6 +364,31 @@
 						//this.loading = false;
 						this.totalData=this.footballData;
 						console.log('request fail', err);
+						let index0={
+								name:ballType+'销量（百万元）',
+								value:0,
+								left:{
+									name:'周同比',
+									value:0
+								},
+								right:{
+									name:'环比',
+									value:0
+								}}
+						this.$set(that.totalData,'big1',index0);
+						let index1={
+							name:ballType+'票数（万张）',
+							value:0,
+							left:{
+								name:'周同比',
+								value:0
+							},
+							right:{
+								name:'环比',
+								value:0
+							}}
+						this.$set(that.totalData,'big2',index1);
+						this.$refs['dataContain'].showDataContainer()
 					});
 					
 				},
@@ -401,15 +426,16 @@
 						}
 						
 						if(that2.arcbarNumMid=='销量'){
-							var series=[{
-								name: '销量（万元）', 
-								data: sales
+							var series=[{name: '票数(张)',
+							data: votes
 							}];
 							that2.$set(that2.lineData1,'series',series);
 							
 						}else {
-							 var series=[{name: '票数(万张)',
-							 data: votes
+							
+							 var series=[{
+							 	name: '销量（元）', 
+							 	data: sales
 							 }];
 							 that2.$set(that2.lineData1,'series',series);
 						}

@@ -248,19 +248,19 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.refresh();
+			this.change(0);
 		},
 		onShow() {
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.refresh();
+			this.change(0);
 		},
 		created() {
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.refresh();
+			this.change(0);
 		},
 		methods: {
 			refresh(selfParam){
@@ -478,6 +478,8 @@
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
+					this.$refs['arcbar11'].showCharts();
+					this.$refs['arcbar1'].showCharts(); 
 					console.log('request fail', err);
 				});
 				
@@ -514,6 +516,9 @@
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
+					this.$set(that.arcbar2, 'series', series);
+					//this.$set(that.arcbar22, 'categories', categories2);
+					this.$set(that.arcbar22, 'series', series2);
 				});
 			},
 			
@@ -524,6 +529,7 @@
 			change(e) {
 			      this.btnnum = e
 			      console.log(this.btnnum)
+				  this.refresh();
 			},
 			changeArcbar(e){
 				this.arcbarNum = e

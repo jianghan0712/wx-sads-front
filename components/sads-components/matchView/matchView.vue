@@ -238,7 +238,7 @@
 							$width:"150px"
 						}
 					]
-					
+					this.matchTypeTableData=[]
 					for(var i=0;i<data.length;i++){
 						var jsonData = {id:i+1, matchType:data[i][0], amount:(data[i][1]/format0.value).toFixed(2)}
 						this.matchTypeTableData[i]=jsonData;
@@ -273,7 +273,7 @@
 					}else{
 						return;
 					}					
-
+					this.matchEventTableData=[]
 					for(var i=0;i<data.length;i++){
 						var jsonData = {id:i+1, matchName:data[i][0], amount:(data[i][1]/format0.value).toFixed(2)}
 						this.matchEventTableData[i]=jsonData;

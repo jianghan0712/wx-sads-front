@@ -33,6 +33,7 @@
 		},
 		onLoad(option) {
 			this.area = option.area; // 字符串转对象
+			this.areaName = option.areaName;
 			var list = JSON.parse(uni.getStorageSync("areaMap"))
 			console.log('areaSelect list:',list);
 			

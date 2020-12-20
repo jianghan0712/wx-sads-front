@@ -3,28 +3,28 @@
 		<view class="row-box">
 			<view class="left-column_box_2">
 				<view class="column-box">
-					<text class="big-text">足球</text>
-					<text class="small-text">销量24.44万元</text>
-					<text class="small-text">占比100%</text>
+					<text class="big-text">{{dataList.left.football.name}}</text>
+					<text class="small-text">{{dataList.left.football.amount}}</text>
+					<text class="small-text">{{"占比"+dataList.left.football.zhanbi}}</text>
 				</view>
 				<view class="column-box">
-					<text class="big-text">篮球</text>
-					<text class="small-text">销量0.00万元</text>
-					<text class="small-text">占比0.0%</text>
+					<text class="big-text">{{dataList.left.basketball.name}}</text>
+					<text class="small-text">{{dataList.left.basketball.amount}}</text>
+					<text class="small-text">{{"占比"+dataList.left.basketball.zhanbi}}</text>
 				</view>
 			</view>			
 		</view>
 		<view class="row-box">
 			<view class="right-column_box_2">
 				<view class="column-box">
-					<text class="big-text">足球</text>
-					<text class="small-text">销量250万元</text>
-					<text class="small-text">占比98.59%</text>
+					<text class="big-text">{{dataList.right.football.name}}</text>
+					<text class="small-text">{{dataList.right.football.amount}}</text>
+					<text class="small-text">{{"占比"+dataList.right.football.zhanbi}}</text>
 				</view>
 				<view class="column-box">
-					<text class="big-text">篮球</text>
-					<text class="small-text">销量3.58万元</text>
-					<text class="small-text">占比1.41%</text>
+					<text class="big-text">{{dataList.right.basketball.name}}</text>
+					<text class="small-text">{{dataList.right.basketball.amount}}</text>
+					<text class="small-text">{{"占比"+dataList.right.basketball.zhanbi}}</text>
 				</view>
 			</view>	
 			</view>			
@@ -43,7 +43,16 @@
 		},
 		data() {
 			return {
-				dataList:{}
+				dataList:{
+					left:{
+						football:{name:"足球",amount:"销量0元",zhanbi:"占比0%"},
+						basketball:{name:"篮球",amount:"销量0元",zhanbi:"占比0%"}
+					},
+					right:{
+						football:{name:"足球",amount:"销量0元",zhanbi:"0%"},
+						basketball:{name:"篮球",amount:"销量0元",zhanbi:"占比0%"}
+					},
+				}
 			}
 		},
 		methods: {
@@ -61,6 +70,7 @@
 		display: flex;
 		flex-direction: row;	
 		margin: 20rpx 10rpx;
+		text-align: center;
 	}
 	.row_box_2{
 		display: flex;
@@ -105,14 +115,14 @@
 	.big-text{
 		text-align: left;
 		margin: 15rpx 5rpx;
-		color: #777;
+		color: #FFFFFF;
 		font-size: 36rpx;
 	}
 	
 	.small-text{
 		text-align: left;
 		margin: 15rpx 5rpx;
-		color: #777;
+		color: #FFFFFF;
 		font-size: 30rpx;
 	}
 	

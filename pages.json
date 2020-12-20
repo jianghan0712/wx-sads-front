@@ -56,6 +56,9 @@
 		    "path" : "pages/common/tableDetail2",
 		    "style" : {}
 		},{
+		    "path" : "pages/common/tableDetail3",
+		    "style" : {}
+		},{
 		    "path" : "pages/common/tableShopDetail",
 		    "style" : {}
 		},{

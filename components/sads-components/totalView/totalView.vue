@@ -15,13 +15,13 @@
 					</view>
 				</view>		
 				<view class="end-cont" :class="{dis:btnnum == 0}">		
-					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
-								:xAxisAs="{scrollShow:false}" 
+					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2"  
+								:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}" 
 								:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">		　
 					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
-								:xAxisAs="{scrollShow:false}" 
+								:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}" 
 								:yAxisAs="{formatter: {type: 'number', name:'张',fixed: 0}}"/>
 				</view>		
 			</view>
@@ -129,7 +129,7 @@
 					<view class="shop-title">{{selfParam.provinceCenterName}}返奖情况</view>
 					<view class="line">
 						<view class="shop-item-title">
-							<view style="width: 40%;">返奖率</view>				
+							<view style="width: 40%; ">返奖率</view>				
 							<view style="width: 30%;">同比</view>
 							<view style="width: 25%;">环比</view>
 						</view>
@@ -255,21 +255,22 @@
 						{
 							title: '省份',
 							key: 'area',
-							$width:"100px"
+							$width:"80px"
 						},
 						{
 							title: '销量',
 							key: 'amount',
-							$width:"90px"
+							$width:"100px"
 						},
 						{
 							title: '同比',
 							key: 'tongbi',
-							$width:"90px"
+							$width:"80px"
 						},
 						{
 							title: '环比',
-							key: 'huanbi'
+							key: 'huanbi',
+							$width:"80px"
 						}
 					],
 				tableColumns2: [{
@@ -280,17 +281,17 @@
 						{
 							title: '省份',
 							key: 'area',
-							$width:"100px"
+							$width:"80px"
 						},
 						{
 							title: '返奖率',
 							key: 'return',
-							$width:"90px"
+							$width:"80px"
 						},
 						{
 							title: '同比',
 							key: 'tongbi',
-							$width:"90px"
+							$width:"80px"
 						},
 						{
 							title: '环比',
@@ -303,7 +304,7 @@
 			_self = this;			
 			console.log("totalView onLoad:",this.selfParam)
 			this.cWidth=uni.upx2px(750);
-			this.cHeight=uni.upx2px(500);
+			this.cHeight=uni.upx2px(550);
 			this.showView();
 		},
 		created() {
@@ -430,20 +431,19 @@
 					var series=[];
 					var amountData = [];
 					var volData = [];
-					var j=0,k = 0,tempAmount=0,tempVol=0;
+					var j=0,k = 0,tempAmount=0,tempVol=0;					
 					
 					for(var i=0;i<dates.length;i++){	
-						if(j==3){
-							categories[k] = dates[i];
-							amountData[k] = sales[i];
-							volData[k] = votes[i];
-							k++;
-							j=0;
-						}else{
-							tempAmount = tempAmount+sales[i];
-							tempVol = tempVol+votes[i];
-							j=j+1;
-						}
+						// if(j==3){
+							categories[i] = dates[i];
+							amountData[i] = sales[i];
+							volData[i] = votes[i];
+						// 	j=0;
+						// }else{
+						// 	tempAmount = tempAmount+sales[i];
+						// 	tempVol = tempVol+votes[i];
+						// 	j=j+1;
+						// }
 					}
 					console.log('categories:', categories);
 					console.log('amountData:', amountData);
@@ -596,12 +596,26 @@
 									area:data[i][0], 
 									amount:(data[i][1]/format0.value).toFixed(2), 
 									tongbi:data[i][2]+"%",
-									huanbi:data[i][3]+"%"}						
+									huanbi:data[i][3]+"%"}
+						var cellClassName={}
+						if(data[i][2]<0){
+							cellClassName.tongbi='small-text-green'
+						}else{
+							cellClassName.tongbi='small-text-red'
+						}		
+								
+						if(data[i][3]<0){
+							cellClassName.huanbi='small-text-green'
+						}else{
+							cellClassName.huanbi='small-text-red'
+						}	
+						json.cellClassName=cellClassName;								
 						if(i<=4){
 							this.tableData[i] = json
 						}
 						this.tableDataDetail[i] = json
 					}
+					console.log("this.tableData=",this.tableData)
 					this.tableColumns=[{
 								title: "排名",
 								key: "id",
@@ -610,21 +624,22 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"100px"
+								$width:"80px"
 							},
 							{
 								title: '销量（' + format0.name + '元）',
 								key: 'amount',
-								$width:"90px"
+								$width:"100px"
 							},
 							{
 								title: '同比',
 								key: 'tongbi',
-								$width:"90px"
+								$width:"80px"
 							},
 							{
 								title: '环比',
-								key: 'huanbi'
+								key: 'huanbi',
+								$width:"80px"
 							}
 						],
 			
@@ -696,7 +711,22 @@
 									area:data[i][0], 
 									return:data[i][1]+'%', 
 									tongbi:data[i][2]+'%',
-									huanbi:data[i][3]+'%'}						
+									huanbi:data[i][3]+'%'}	
+						var cellClassName={}
+							
+						if(data[i][2]<0){
+							cellClassName.tongbi='small-text-green'
+						}else{
+							cellClassName.tongbi='small-text-red'
+						}		
+								
+						if(data[i][3]<0){
+							cellClassName.huanbi='small-text-green'
+						}else{
+							cellClassName.huanbi='small-text-red'
+						}	
+						json.cellClassName=cellClassName;
+						
 						if(i<=4){
 							this.tableData2[i] = json
 						}
@@ -787,7 +817,7 @@
 	.shop-title{
 		width: 100%;
 		margin: 0rpx 5rpx;
-		padding: 0 10rpx;
+		padding: 10px 0px;
 		font-size: 30rpx;
 		font-weight: bold;
 	}
@@ -795,9 +825,11 @@
 	.shop-item-title{
 		display: flex;
 		flex-direction: row;
+		padding: 10px 0px;
 		font-size: 30rpx;
 	}
 	.shop-item-content{
+		padding: 10px 0px;
 		display: flex;
 		flex-direction: row;
 		font-size: 40rpx;
@@ -842,8 +874,9 @@
 		border-color:#FFFFFF;
 	}
 	.box-contaniner{
-		width: 100%;
-		margin: 0px 10px 10px 0px;
+		width: 95%;
+		padding: 5px 5px 5px 5px;
+		/* margin: 0px 10px 10px 0px; */
 	}
 	
 	.clineChart-title{
@@ -899,7 +932,7 @@
 	}
 	.btna{
 		color: #FFFFFF;
-		background: #92AAAA;
+		background: #B4C3D4;
 		padding:5rpx 30rpx 5rpx 30rpx;
 	}
 	.dis{
@@ -912,21 +945,22 @@
 		padding:5rpx 30rpx 5rpx 30rpx;
 	}
 	.small-text-green{
-		color: #39FA09;
+		color: #1FCE58;
 		/* font-size: 30rpx; */
 	}
 	
 	.small-text-red{
-		color: #FF0000;
+		color: #E83838;
 		/* font-size: 30rpx; */
 	}
 	
 	.line{
 		/* margin: 30px 10px; */
+		width: 100%;
 		padding:30px 10px;
 		display: flex;
 		flex-direction: column;
-		background:rgba(240, 244, 245,0.5);
+		background:rgba(128,139,150,0.1);
 		border-radius: 15px;
 	}
 </style>

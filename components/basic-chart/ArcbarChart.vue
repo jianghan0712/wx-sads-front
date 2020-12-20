@@ -69,7 +69,7 @@ export default {
 	},
 	methods: {
 		showCharts() {
-			let colors = ['#facc14', '#2fc25b', '#f04864', '#8543e0', '#90ed7d', '#ff7600'].sort(() => Math.random() - 0.5);
+			let colors = ['#FFB30C', '#2fc25b', '#f04864', '#8543e0', '#90ed7d', '#ff7600'].sort(() => Math.random() - 0.5);
 			let defaultOption = {
 				//通用基础项设置 basicAs
 				$this: this, //this实例组件内使用图表，必须传入this实例
@@ -95,7 +95,7 @@ export default {
 
 				//titleAs
 				title: {
-					name: (this.dataAs[this.valueKey][0].data * 100).toFixed(0) + '%',
+					name: (this.dataAs[this.valueKey][0].data * 100).toFixed(2) + '%',
 					color: this.basicAs.colors ? this.basicAs.colors[0] : colors[0]
 				},
 				subtitle: {
@@ -103,7 +103,11 @@ export default {
 				},
 
 				//扩展配置 extraAs 详情请看 http://doc.ucharts.cn/1172130
-				extra: {}
+				extra: {
+					arcbar:{
+						type: 'circle'
+					}				
+				}
 			};
 			let propsData = { ...this.basicAs, ...this.titleAs, ...this.legendAs, ...this.extraAs };
 			optionAs[this.canvasId] = Object.assign(defaultOption, propsData);

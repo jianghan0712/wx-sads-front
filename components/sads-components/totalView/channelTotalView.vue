@@ -178,8 +178,32 @@
 				arcbarNum: 0,
 				lineData2: {},
 				lineData1: {},
-				arcbar0: {},
-				arcbar1: {},
+				arcbar0: {
+					type: 'radar',
+					series:[
+							
+					],
+					extra: {
+						pie: {
+							lableWidth: 15,
+							ringWidth: 10, //圆环的宽度
+							offsetAngle: 0 //圆环的角度
+						}
+					}
+				},
+				arcbar1: {
+						type: 'radar',
+						series:[
+								
+						],
+						extra: {
+							pie: {
+								lableWidth: 15,
+								ringWidth: 10, //圆环的宽度
+								offsetAngle: 0 //圆环的角度
+							}
+						}
+				},
 				shopData: {shop:{sum:0,tongbi:0,huanbi:0},
 						   rate:{sum:0,tongbi:0,huanbi:0}},
 				returnData: {rate:{sum:0,tongbi:0,huanbi:0}},
@@ -750,12 +774,12 @@
 	}
 	
 	.small-text-green{
-		color: #00FF00;
+		color: ##1FCE58;
 		/* font-size: 30rpx; */
 	}
 	
 	.small-text-red{
-		color: #FF0000;
+		color: #E83838;
 		/* font-size: 30rpx; */
 	}
 	
