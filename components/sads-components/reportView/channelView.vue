@@ -9,17 +9,17 @@
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >有销量门店数七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
-				<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" />
+				<histogram-chart cWidth="2rpx" ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" :basicAs="{colors:['#E5E5E5','#6E8BFB']}"/>
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >"0"销量门店数七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
-				<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" />
+				<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" :basicAs="{colors:['#E5E5E5','#2BC5FE']}"/>
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >销量超限门店七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(个)</view>
-				<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" />
+				<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" :basicAs="{colors:['#E5E5E5','#FFCD23']}"/>
 			</view>
 			<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 		</view>
@@ -165,8 +165,8 @@
 					var shangzhou=[];
 					var benzhou=[];
 					for(var i=0;i<votes.length/2;i++){
-						shangzhou.push((votes[i]/10000).toFixed(0));
-						benzhou.push((votes[i+7]/10000).toFixed(0));
+						shangzhou.push((votes[i]/10000).toFixed(2));
+						benzhou.push((votes[i+7]/10000).toFixed(2));
 					};
 					
 					var series =[
@@ -196,8 +196,8 @@
 					var shangzhou=[];
 					var benzhou=[];
 					for(var i=0;i<storeCount.length/2;i++){
-						shangzhou.push((storeCount[i]/10000).toFixed(0));
-						benzhou.push((storeCount[i+7]/10000).toFixed(0));
+						shangzhou.push((storeCount[i]/10000).toFixed(2));
+						benzhou.push((storeCount[i+7]/10000).toFixed(2));
 					};
 					
 					var series =[
@@ -224,24 +224,15 @@
 					var storeCount=data.storeCount;
 					
 					var series =[];
-					var shangzhou=[];
-					var benzhou=[];
+					var shangzhou1=[];
+					var benzhou1=[];
 					for(var i=0;i<storeCount.length/2;i++){
-						if(0==storeCount[i]){
-							shangzhou.push(0);
-						}else{
-							shangzhou.push((storeCount[i]/10000).toFixed(0));
-						}
-						if(0==storeCount[i+7]){
-							benzhou.push(0);
-						}else{
-							benzhou.push((storeCount[i+7]/10000).toFixed(0));
-						}
+						shangzhou1.push(storeCount[i]);
+						benzhou1.push(storeCount[i+7]);
 					};
-					debugger
 					var series =[
-							{ name: '上周', data: shangzhou },
-							{ name: '本周', data: benzhou }
+							{ name: '上周', data: shangzhou1 },
+							{ name: '本周', data: benzhou1 }
 						];
 					
 					that.$set(that.histogramChart3,'series',series);
@@ -276,16 +267,14 @@
 			_self = this;	
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView()
+			this.loadData();
 			this.refresh();
 		},
 		created() {
 			// this.selfParam=this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView()
+			this.loadData();
 			this.refresh();
 		},
 		onPageScroll(e) {

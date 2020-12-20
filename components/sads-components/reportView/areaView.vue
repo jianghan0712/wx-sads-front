@@ -269,7 +269,8 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
-					
+					this.tableDataAll=[];
+					this.tableData=[];
 					for(var i=0;i<data[i].length;i++){
 						var arr={
 								id: i+1,
@@ -292,7 +293,8 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
-					
+					this.tableDataAll1=[];
+					this.tableData1=[];
 					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,
@@ -316,6 +318,8 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
+					this.tableDataAll2=[];
+					this.tableData2=[];
 					if(data.length>0){
 						for(var i=0;i<data[i].length;i++){
 							var arr={ 
@@ -342,7 +346,8 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
-					
+					this.tableDataAll3=[];
+					this.tableData3=[];
 					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,

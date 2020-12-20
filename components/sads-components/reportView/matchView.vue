@@ -219,6 +219,8 @@
 					var data1 =res.data.data;	
 					var finish =data1.finish;
 					var onSale = data1.onSale;
+					this.tableData1=[];
+					this.tableData2=[];
 					if(finish.length==0){
 						finish =[{'id':'无','area':0}];
 					}else {
@@ -232,6 +234,8 @@
 							}
 						};
 					}
+					this.tableData11=[];
+					this.tableData22=[];
 					if(onSale.length==0){
 						onSale =[{'id':'无','area':0}];
 					}else{

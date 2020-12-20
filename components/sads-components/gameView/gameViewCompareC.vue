@@ -388,6 +388,7 @@
 			getTopData(){
 				var url = '/pentaho/shows/gamesContrast/getComGamesContrastSales';
 				var param = this.createParam();
+				param.token =getApp().globalData.token;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -449,6 +450,7 @@
 				var url = '/pentaho/shows/gamesContrast/getShowGamesSalesPropCom';
 				var param = this.createParam();
 				param.gameFlag=0;
+				param.token =getApp().globalData.token;
 				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
@@ -473,8 +475,9 @@
 					}
 					this.$set(that.arcbar1, 'series', series);
 					this.$set(that.arcbar11, 'series', series2);
-					this.$refs['arcbar11'].showCharts();
 					this.$refs['arcbar1'].showCharts(); 
+					this.$refs['arcbar11'].showCharts();
+					
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;

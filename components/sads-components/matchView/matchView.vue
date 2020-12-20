@@ -9,29 +9,49 @@
 				<view class="end-cont" :class="{dis:btnnum == 0}">
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛制销量</view>
-						<view class="example">
-							<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
-						</view>
+						<block v-if="matchTypeTableData.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchTypeTableData.length>0">
+							<view class="example">
+								<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>				
 					</view>
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛事销量</view>
-						<view class="example">
-							<v-table :columns="matchEventTableColumns" :list="matchEventTableData"  border-color="#FFFFFF"></v-table>
-						</view>
+						<block v-if="matchEventTableData.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchEventTableData.length>0">
+							<view class="example">
+								<v-table :columns="matchEventTableColumns" :list="matchEventTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>
 					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛制销量</view>
-						<view class="example">
-							<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
-						</view>
+						<block v-if="matchTypeTableData.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchTypeTableData.length>0">
+							<view class="example">
+								<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>
 					</view>
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛事销量</view>
-						<view class="example">
-							<v-table :columns="matchEventTableColumns" :list="matchEventTableData"  border-color="#FFFFFF"></v-table>
-						</view>
+						<block v-if="matchEventTableData.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchEventTableData.length>0">
+							<view class="example">
+								<v-table :columns="matchEventTableColumns" :list="matchEventTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>
 					</view>
 				</view>
 			</view>		
@@ -46,11 +66,12 @@
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
+	import noData from '@/components/sads-components/noData.vue';
 	
 	export default {
 		components: {
 			RingChart,
-			vTable
+			vTable,noData
 		},
 		props: {
 			param:{
@@ -69,6 +90,7 @@
 					countyCenterId:'',	
 					compareType:'date',
 					compareFlag:false,
+					nodataMessage:'未找到今日赛事',
 					businessDate:{
 						dateType:'',// date/week/month/year
 						view:'',//用于展示日期、年、月等
@@ -176,28 +198,28 @@
 							 dateFlag:"1",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token,
-							 gameFlag:btnnum+1 }
+							 gameFlag:this.btnnum+1 }
 				}else if(dateType=='week'){
 					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
 							 dateTimeEnd: this.selfParam.businessDate.week.endDate,
 							 dateFlag:"2",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token,
-							 gameFlag:btnnum+1}
+							 gameFlag:this.btnnum+1}
 				}else if(dateType=='month'){
 					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
 							 dateTimeEnd: this.selfParam.businessDate.month.endDate,
 							 dateFlag:"3",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token,
-							 gameFlag:btnnum+1 }
+							 gameFlag:this.btnnum+1 }
 				}else if(dateType=='year'){
 					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
 							 dateTimeEnd: this.selfParam.businessDate.year.endDate,
 							 dateFlag:"4",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token,
-							 gameFlag:btnnum+1 }
+							 gameFlag:this.btnnum+1 }
 				}	
 
 				console.log("createParam end:",param)
@@ -207,7 +229,7 @@
 			getMatchTable(btnnum){
 				var url = '/pentaho/match/getTop5FormatSales';
 				var param = this.createParam(btnnum)
-				
+				this.matchTypeTableData=[]
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -238,7 +260,7 @@
 							$width:"150px"
 						}
 					]
-					this.matchTypeTableData=[]
+					
 					for(var i=0;i<data.length;i++){
 						var jsonData = {id:i+1, matchType:data[i][0], amount:(data[i][1]/format0.value).toFixed(2)}
 						this.matchTypeTableData[i]=jsonData;
@@ -257,7 +279,7 @@
 			getMatchEventTable(btnnum){
 				var param = this.createParam(btnnum)
 				var url = '/pentaho/match/getTop5MatchSales';
-
+				this.matchEventTableData=[]
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -273,7 +295,7 @@
 					}else{
 						return;
 					}					
-					this.matchEventTableData=[]
+					
 					for(var i=0;i<data.length;i++){
 						var jsonData = {id:i+1, matchName:data[i][0], amount:(data[i][1]/format0.value).toFixed(2)}
 						this.matchEventTableData[i]=jsonData;

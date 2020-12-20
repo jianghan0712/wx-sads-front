@@ -38,6 +38,15 @@
 					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 				</view>
 			</view>
+			<view >
+				<view class="container-title">
+					<view>各地区{{arcbarNumTop}}返奖率排行榜</view>
+					<view style="width: 200;height: 50upx;text-align: top;font-size: 30rpx;" @click="toAll1()">全部>></view>
+				</view>
+				<view class="table">
+					<v-table :columns="tableColumns1" :list="tableData1"  border-color="#FFFFFF"></v-table>
+				</view>
+			</view>
 		</view>		
 	</view>
 </template>
@@ -224,6 +233,7 @@
 								basketball: "19785.00"
 							} */
 						],
+						tableDataAll:[],
 					tableColumns: [{
 								title: "排名",
 								key: "id",
@@ -245,6 +255,35 @@
 								$width:"80px"
 							}
 						],	
+						tableData1: [
+							],
+						tableDataAll1:[],
+						tableColumns1: [{
+									title: "排名",
+									key: "id",
+									$width:"90px",
+								},
+								{
+									title: '省份',
+									key: 'area',
+									$width:"90px"
+								},
+								{
+									title: '返奖率',
+									key: 'returnRate',
+									$width:"80px"
+								},
+								{
+									title: '周同比',
+									key: 'tongbui',
+									$width:"80px"
+								},
+								{
+									title: '环比',
+									key: 'huanbi',
+									$width:"80px"
+								}
+							],	
 				};
 			},
 			onShow() {
@@ -313,11 +352,11 @@
 								value:(fb[0]/10000).toFixed(2),
 								left:{
 									name:'周同比',
-									value:fb[1]
+									value:fb[1]+"%"
 								},
 								right:{
 									name:'环比',
-									value:fb[2]
+									value:fb[2]+"%"
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
@@ -325,11 +364,11 @@
 								value:(fb[3]/10000).toFixed(2),
 								left:{
 									name:'周同比',
-									value:fb[4]
+									value:fb[4]+"%"
 								},
 								right:{
 									name:'环比',
-									value:fb[5]
+									value:fb[5]+"%"
 								}}
 							this.$set(that.totalData,'big2',index1);
 						}else{
@@ -338,11 +377,11 @@
 								value:(bk[0]/10000).toFixed(2),
 								left:{
 									name:'周同比',
-									value:bk[1]
+									value:bk[1]+"%"
 								},
 								right:{
 									name:'环比',
-									value:bk[2]
+									value:bk[2]+"%"
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
@@ -350,11 +389,11 @@
 								value:(bk[3]/10000).toFixed(2),
 								left:{
 									name:'周同比',
-									value:bk[4]
+									value:bk[4]+"%"
 								},
 								right:{
 									name:'环比',
-									value:bk[5]
+									value:bk[5]+"%"
 								}}
 							this.$set(that.totalData,'big2',index1);
 						}
@@ -426,18 +465,17 @@
 						}
 						
 						if(that2.arcbarNumMid=='销量'){
+							var series=[{
+								name: '销量（万元）', 
+								data: sales
+							}];
+							 that2.$set(that2.lineData1,'series',series);
+						}else {
 							var series=[{name: '票数(张)',
 							data: votes
 							}];
 							that2.$set(that2.lineData1,'series',series);
 							
-						}else {
-							
-							 var series=[{
-							 	name: '销量（元）', 
-							 	data: sales
-							 }];
-							 that2.$set(that2.lineData1,'series',series);
 						}
 						that2.$set(that2.lineData1,'categories',dates);
 						
@@ -500,7 +538,41 @@
 						
 						for(var i=0;i<data.length;i++){
 							var obj={id:i+1,area:data[i][0],zhanbi:data[i][1],count:data[i][2]};
-							that.tableData.push(obj);
+							if(i<5){
+								that.tableData.push(obj);
+							}else {
+								that.tableDataAll.push(obj);
+							}
+							
+						}
+						
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					}); 
+					
+					var url = '/pentaho/sales/gamesReturnRateRankingList';
+					var that =this;
+					var ballType =getApp().globalData.ballType;
+					var gameFlag;
+					if(ballType=='足球'){
+						gameFlag='1';
+					}else {
+						gameFlag='2';
+					}
+					var param =this.createParam();
+					this.$set(param,'gameFlag',gameFlag);
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						var data =res.data.data;	
+						
+						for(var i=0;i<data.length;i++){
+							var obj={id:i+1,area:data[i][0],returnRate:data[i][1],tongbi:data[i][2],huanbi:data[i][3]};
+							if(i<5){
+								that.tableData1.push(obj);
+							}else {
+								that.tableDataAll1.push(obj);
+							}
 						}
 						
 					}).catch((err)=>{
@@ -516,7 +588,15 @@
 				toAll(){
 					var that =this;
 					uni.navigateTo({
-						url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData),
+						url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableDataAll),
+						
+						
+					});
+				},
+				toAll1(){
+					var that =this;
+					uni.navigateTo({
+						url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns1)+'&tableData='+JSON.stringify(that.tableDataAll1),
 						
 						
 					});

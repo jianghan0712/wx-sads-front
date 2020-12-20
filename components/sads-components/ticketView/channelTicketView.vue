@@ -171,6 +171,7 @@
 				}else if(2==e){
 					this.getPieData('篮彩');
 				}
+				this.refresh();
 			},
 			refresh(selfParam){
 				this.selfParam = JSON.parse(selfParam)
@@ -220,8 +221,8 @@
 					var data = res.data.data;
 					var format0 = numberFun.formatCNumber(data[0]);
 					var big1 = {'name':'竞彩（'+format0.name +'元）', 'value':data[0].toFixed(2)/format0.value}
-					var small1 = {'name':'足彩（'+format0.name +'元）', 'value':data[1].toFixed(2)/format0.value}
-					var small2 = {'name':'篮彩（'+format0.name +'元）', 'value':data[2].toFixed(2)/format0.value}
+					var small1 = {'name':'足球（'+format0.name +'元）', 'value':data[1].toFixed(2)/format0.value}
+					var small2 = {'name':'篮球（'+format0.name +'元）', 'value':data[2].toFixed(2)/format0.value}
 					this.$set(this.ticketData, 'big1', big1);
 					this.$set(this.ticketData, 'small1', small1);
 					this.$set(this.ticketData, 'small2', small2);
@@ -232,8 +233,8 @@
 					this.loading = false;
 					console.log('request fail', err);
 					var big1 = {'name':'竞彩（百万元）', 'value':0}
-					var small1 = {'name':'足彩（百万元）', 'value':0}
-					var small2 = {'name':'篮彩（百万元）', 'value':0}
+					var small1 = {'name':'足球（百万元）', 'value':0}
+					var small2 = {'name':'篮球（百万元）', 'value':0}
 					this.$set(this.ticketData, 'big1', big1);
 					this.$set(this.ticketData, 'small1', small1);
 					this.$set(this.ticketData, 'small2', small2);
@@ -263,17 +264,17 @@
 					var data = res.data.data;
 					var list=[];	
 					for(var i=0; i<data.length; i++){
-						list[i]={name:data[i].proValueName,data:data[i].values[0]};
+						list[i]={name:data[i].proValueName,data:data[i].values[0],percent:data[i].values[1]};
 					}
 					if(type=='竞彩'){
 						this.$set(this.pieData, 'series', list);
 						this.$refs['ringChart0'].showCharts();
 						// this.$refs['progress_0'].showProgress(this.pieData);					
-					}else if(type=='足彩'){
+					}else if(type=='足球'){
 						this.$set(this.pieData1, 'series', list);
 						this.$refs['ringChart1'].showCharts();
 						// this.$refs['progress_1'].showProgress(this.pieData1);
-					}else if(type=='篮彩'){
+					}else if(type=='篮球'){
 						this.$set(this.pieData2, 'series', list);
 						this.$refs['ringChart2'].showCharts();
 						// this.$refs['progress_2'].showProgress(this.pieData2);

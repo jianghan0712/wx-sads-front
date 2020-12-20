@@ -265,7 +265,7 @@
 						var jsonData = {}
 						that.levelList = data[i].customsName						
 						jsonData.name=data[i].customsName;
-						jsonData.data=data[i].values[0];
+						jsonData.data=data[i].values[0]+"张";
 						series[i]=jsonData					
 					}
 					

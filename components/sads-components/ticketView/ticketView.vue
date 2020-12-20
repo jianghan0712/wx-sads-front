@@ -3,7 +3,16 @@
 		<view class="box-contaniner">
 			<view class="box-contaniner">
 				<view class="container-title">单票金额</view>
-				<ticketData ref="ticketData" :dataAs="ticketData"></ticketData>
+				<ticketData ref="ticketData2" :dataAs="ticketData"></ticketData>
+			</view>
+			
+			<block v-if="selfParam.businessDate.dateType!='date'">
+				<view class="box-contaniner">
+					<view class="container-title">单票金额走势</view>
+					<line-chart ref="lineData5" canvasId="index_line" :dataAs="lineData"
+								:xAxisAs="{scrollShow:false, gridEval:(lineData.categories.length / 4).toFixed(0)}" 
+								:yAxisAs="{formatter: {type: 'number', name:'单位:元',fixed: 0}}"/>
+				</view>
 			</view>
 			
 			<view class="box-contaniner">
@@ -54,10 +63,11 @@
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
 	import commonFun from '@/common/tools/watcher.js';
+	import LineChart from '@/components/basic-chart/LineChart.vue';
 	
 	export default {
 		components: {
-			ticketData,RingChart,vTable
+			ticketData,RingChart,vTable,LineChart
 		},
 		props: {
 			param:{
@@ -96,6 +106,8 @@
 					selfProvinceCenterId:''//存登录时候的id
 				},
 				btnnum: 0,
+				dateType: 'date',
+				lineData:{},
 				ticketData:{big1:{name:"",value:""},big2:{name:"",value:""}},
 				pieData: {series: []},
 				pieData1: {series: []},
@@ -126,52 +138,39 @@
 		},
 		onLoad() {		
 			_self = this;	
-			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			// this.returnFromDatePicker();
-			// this.getServerData();
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
 			this.showView()
 		},
 		onShow() {
 			_self = this;	
-			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			// this.returnFromDatePicker();
-			// this.getServerData();
-			// this.showView()
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView()
 		},
 		created() {
-			// this.selfParam=this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			// this.returnFromDatePicker();
+			this.returnFromDatePicker();
 			this.getServerData();
-			// this.showView()
+			this.showView()
 		},
 		methods: {
-			returnFromDatePicker(){
-				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-				const dateType = uni.getStorageSync("dateType")
-				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
-				this.selfParam.businessDate = bussinessDate;
-				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-						
-				const area = uni.getStorageSync("area")
-				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
-				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName	
-				this.selfParam.token=uni.getStorageSync("token")
-				this.selfParam.shopNo = uni.getStorageSync("shopNo");
-			},
 			showView(){
 				console.log("ticket showView" ,this.pieData);
 				// commonFun.sleep(3000) 
-				// this.$nextTick(() => {	
-				// 	this.$refs['ticketData'].showDataContainer();		
-				// 	this.$refs['ringChart0'].showCharts();
-				// 	this.$refs['ringChart1'].showCharts();
-				// 	this.$refs['ringChart2'].showCharts();
-				// });	
+				this.$nextTick(() => {	
+					this.$refs['ticketData2'].showDataContainer();		
+					this.$refs['ringChart0'].showCharts();
+					this.$refs['ringChart1'].showCharts();
+					this.$refs['ringChart2'].showCharts();
+				});	
 			},
 			getServerData() {
+				if(this.selfParam.businessDate.dateType!='date'){
+					this.getLineData();
+				}
 				this.getDataSet(this.selfParam.provinceCenterId,this.selfParam.businessDate,this.selfParam.cityCenterId);
 				this.getPieData('竞彩');
 				this.getPieData('足彩');
@@ -229,13 +228,14 @@
 					console.log('request success', res)
 					var data = res.data.data;
 					var format0 = numberFun.formatCNumber(data[0]);
-					var big1 = {'name':'竞彩（'+format0.name +'元）', 'value':data[0].toFixed(2)/format0.value}
-					var small1 = {'name':'足彩（'+format0.name +'元）', 'value':data[1].toFixed(2)/format0.value}
-					var small2 = {'name':'篮彩（'+format0.name +'元）', 'value':data[2].toFixed(2)/format0.value}
-					this.$set(this.ticketData, 'big1', big1);
-					this.$set(this.ticketData, 'small1', small1);
-					this.$set(this.ticketData, 'small2', small2);
-					this.$refs['ticketData'].showDataContainer();
+					var big1 = {'name':'竞彩（'+format0.name +'元）', 'value':(data[0]/format0.value).toFixed(2)}
+					var small1 = {'name':'足彩（'+format0.name +'元）', 'value':(data[1]/format0.value).toFixed(2)}
+					var small2 = {'name':'篮彩（'+format0.name +'元）', 'value':(data[2]/format0.value).toFixed(2)}
+					this.ticketData = {big1:big1,small1:small1,small2:small2}
+					// this.$set(this.ticketData, 'big1', big1);
+					// this.$set(this.ticketData, 'small1', small1);
+					// this.$set(this.ticketData, 'small2', small2);
+					this.$refs['ticketData2'].showDataContainer();
 
 					console.log('request ticketData', this.ticketData);				
 					this.res = '请求结果 : ' + JSON.stringify(res);
@@ -270,15 +270,18 @@
 						list[i]={name:data[i].proValueName,data:data[i].values[0]};
 					}
 					if(type=='竞彩'){
-						that.$set(that.pieData, 'series', list);
+						this.pieData.series=list
+						// that.$set(that.pieData, 'series', list);
 						this.$refs['ringChart0'].showCharts();
 						
 					}else if(type=='足彩'){
-						that.$set(that.pieData1, 'series', list);
+						// that.$set(that.pieData1, 'series', list);
+						this.pieData1.series=list
 						this.$refs['ringChart1'].showCharts();
 						
 					}else if(type=='篮彩'){
-						that.$set(that.pieData2, 'series', list);
+						// that.$set(that.pieData2, 'series', list);
+						this.pieData2.series=list
 						this.$refs['ringChart2'].showCharts();						
 					}
 					that.res = '请求结果 : ' + JSON.stringify(res);
@@ -365,14 +368,58 @@
 					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataAll) + '&tableColumns=' + JSON.stringify(this.tableColumns)
 				});
 			},
+			getLineData(){
+				var url = '/pentaho/proValue/getSingleVoteTrendChart';
+				var param = this.createParam();
+
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+
+					var data = res.data.data;	
+					
+					var dates = data.dates
+					var FB = data.FB
+					var ALL = data.ALL
+					var BK = data.BK						
+			
+					var series = [];
+					series[0] =  {'name':'竞彩','data':ALL};
+					series[1] =  {'name':'足球','data':FB};
+					series[2] =  {'name':'篮球','data':BK};
+									
+					this.$set(this.lineData, 'categories', dates);
+					this.$set(this.lineData, 'series', series);
+					
+					this.$refs['lineData5'].showCharts();
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
 			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.getServerData();
 				this.showView();
 			},
+			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName		
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
+			},
 		},
 		mounted(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.getServerData();
 			this.showView();
 		},
 		watch: {
@@ -395,7 +442,7 @@
 
 	.box-container{
 		width: 100%;
-		margin: 20rpx 10rpx 40rpx 10rpx;
+		padding: 5px 5px 5px 5px;
 		/* padding: 20rpx 10rpx 20rpx 10rpx; */
 	}
 	
@@ -421,17 +468,17 @@
 	}
 	.btna{
 		color: #FFFFFF;
-		background:rgba(47, 98, 248 ,0.5);		
-		padding:0px 30rpx 0px 30rpx;
+		background: #B4C3D4;
+		padding:5rpx 30rpx 5rpx 30rpx;
 	}
 	.dis{
-	    display: block;
+		display: block;
+		/* padding:0px 30rpx 0px 30rpx; */
 	} 
-	
 	.hide{
 		color: #000000;
 		background: #FFFFFF;
-		padding:0px 30rpx 0px 30rpx;
+		padding:5rpx 30rpx 5rpx 30rpx;
 	}
 	
 	.table {

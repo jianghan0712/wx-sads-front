@@ -21,7 +21,7 @@
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">		　
 					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
-								:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}" 
+								:xAxisAs="{scrollShow:false, gridEval:(lineData1.categories.length / 4).toFixed(0)}" 
 								:yAxisAs="{formatter: {type: 'number', name:'张',fixed: 0}}"/>
 				</view>		
 			</view>
@@ -957,7 +957,7 @@
 	.line{
 		/* margin: 30px 10px; */
 		width: 100%;
-		padding:30px 10px;
+		padding:20px 10px;
 		display: flex;
 		flex-direction: column;
 		background:rgba(128,139,150,0.1);

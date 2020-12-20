@@ -186,14 +186,14 @@
 					var benzhou4=[];
 					//先按7条记录
 					for(var i=0;i<fbCum.length/2;i++){
-						shangzhou1.push((fbCum[i]/100000000).toFixed(0));
-						shangzhou2.push((fbAdjust[i]/100000000).toFixed(0));
-						shangzhou3.push((bkCum[i]/100000000).toFixed(0));
-						shangzhou4.push((bkAdjust[i]/100000000).toFixed(0));
-						benzhou1.push((fbCum[i+7]/100000000).toFixed(0));
-						benzhou2.push((fbAdjust[i+7]/100000000).toFixed(0));
-						benzhou3.push((bkCum[i+7]/100000000).toFixed(0));
-						benzhou4.push((bkAdjust[i+7]/100000000).toFixed(0));
+						shangzhou1.push((fbCum[i]/100000000).toFixed(2));
+						shangzhou2.push((fbAdjust[i]/100000000).toFixed(2));
+						shangzhou3.push((bkCum[i]/100000000).toFixed(2));
+						shangzhou4.push((bkAdjust[i]/100000000).toFixed(2));
+						benzhou1.push((fbCum[i+7]/100000000).toFixed(2));
+						benzhou2.push((fbAdjust[i+7]/100000000).toFixed(2));
+						benzhou3.push((bkCum[i+7]/100000000).toFixed(2));
+						benzhou4.push((bkAdjust[i+7]/100000000).toFixed(2));
 					};
 					
 					var series1 =[

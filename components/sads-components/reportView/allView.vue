@@ -10,7 +10,17 @@
 			    <view @tap="changeTop('周同比')"  :class="arcbarNumTop =='周同比'?'btna':'hide'" style="width: 12%;border-radius:50rpx 0rpx 0rpx 50rpx;border:solid;border-right: 0;border-color: #C0C0C0;font-size: 30rpx;align-content: center;" >周同比</view>
 			    <view @tap="changeTop('环比')" :class="arcbarNumTop =='环比'?'btna':'hide'" style="width: 11%;border:solid; border-radius:0rpx 50rpx 50rpx 0rpx;border-color: #C0C0C0;font-size: 30rpx;align-content: center;" >环比</view>
 			</view>
-			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+			<view v-if="selfParam.provinceCenterId!=0" class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+				<view style="width: 450rpx;">
+					<view class="small-text">日销量(百万元)</view>
+					<view class="big-text">{{pagedata[0]}}</view>
+				</view>
+				<view >
+					<view class="small-text">{{arcbarNumTop}}</view>
+					<view class="big-text">{{(pagedatacompare[0]==0||pagedatacompare[0]=='--')?'--':((pagedata[0]-pagedatacompare[0])*100/pagedatacompare[0]).toFixed(2)}}%</view>
+				</view>
+			</view>
+			<view v-if="selfParam.provinceCenterId==0" class ="column-box viewborder" style="width: 700rpx; display: flex;" >
 				<view style="width: 450rpx;">
 					<view class="small-text">日销量(亿元)</view>
 					<view class="big-text">{{pagedata[0]}}</view>
@@ -19,8 +29,28 @@
 					<view class="small-text">{{arcbarNumTop}}</view>
 					<view class="big-text">{{(pagedatacompare[0]==0||pagedatacompare[0]=='--')?'--':((pagedata[0]-pagedatacompare[0])*100/pagedatacompare[0]).toFixed(2)}}%</view>
 				</view>
-			</view>	
-			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+			</view>
+			<view v-if="selfParam.provinceCenterId!=0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+				<view style="width: 450rpx;">
+					<view class="small-text">日销量排名</view>
+					<view class="big-text">{{pagedata[11]}}</view>
+				</view>
+				<view >
+					<view class="small-text">{{arcbarNumTop}}</view>
+					<view class="big-text">{{(pagedatacompare[11]==0||pagedatacompare[0]=='--')?'--':pagedata[11]-pagedatacompare[11]}}%</view>
+				</view>
+			</view>
+			<view  v-if="selfParam.provinceCenterId!=0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
+				<view style="width: 450rpx;">
+					<view class="small-text">日票数(万张)</view>
+					<view class="big-text">{{pagedata[1]}}</view>
+				</view>
+				<view >
+					<view class="small-text">{{arcbarNumTop}}</view>
+					<view class="big-text">{{(pagedatacompare[1]==0||pagedatacompare[1]=='--')?'--':((pagedata[1]-pagedatacompare[1])*100/pagedatacompare[1]).toFixed(2)}}%</view>
+				</view>
+			</view>
+			<view  v-if="selfParam.provinceCenterId==0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
 				<view style="width: 450rpx;">
 					<view class="small-text">日票数(百万张)</view>
 					<view class="big-text">{{pagedata[1]}}</view>
@@ -40,19 +70,43 @@
 					<view class="big-text">{{(pagedatacompare[2]==0||pagedatacompare[2]=='--')?'--':((pagedata[2]-pagedatacompare[2])*100/pagedatacompare[2]).toFixed(2)}}%</view>
 				</view>
 			</view>
-			<view class ="column-box" style="width: 100%; display: flex;" >
+			<view v-if="selfParam.provinceCenterId!=0"  class ="column-box" style="width: 100%; display: flex;" >
+				<view style="width: 350rpx;">
+					<view class="small-text">足球日销量(百万元)</view>
+					<view class="big-text">{{pagedata[3]}}</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[3]==0||pagedatacompare[3]=='--')?'--':((pagedata[3]-pagedatacompare[3])*100/pagedatacompare[3]).toFixed(2)}}%</view>
+				</view>
+				<view style="width: 350rpx;">
+					<view class="small-text">蓝球日销量(万元)</view>
+					<view class="big-text">{{pagedata[4]}}</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[4]==0||pagedatacompare[4]=='--')?'--':((pagedata[4]-pagedatacompare[4])*100/pagedatacompare[4]).toFixed(2)}}%</view>
+				</view>
+			</view>
+			<view v-if="selfParam.provinceCenterId==0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">足球日销量(亿元)</view>
 					<view class="big-text">{{pagedata[3]}}</view>
 					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[3]==0||pagedatacompare[3]=='--')?'--':((pagedata[3]-pagedatacompare[3])*100/pagedatacompare[3]).toFixed(2)}}%</view>
 				</view>
 				<view style="width: 350rpx;">
-					<view class="small-text">蓝球日销量(亿元)</view>
+					<view class="small-text">蓝球日销量(百万元)</view>
 					<view class="big-text">{{pagedata[4]}}</view>
 					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[4]==0||pagedatacompare[4]=='--')?'--':((pagedata[4]-pagedatacompare[4])*100/pagedatacompare[4]).toFixed(2)}}%</view>
 				</view>
 			</view>
-			<view class ="column-box" style="width: 100%; display: flex;" >
+			<view v-if="selfParam.provinceCenterId!=0"  class ="column-box" style="width: 100%; display: flex;" >
+				<view style="width: 350rpx;">
+					<view class="small-text">1-2关次销量(百万元)</view>
+					<view class="big-text">{{pagedata[5]}}</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[5]==0||pagedatacompare[5]=='--')?'--':((pagedata[5]-pagedatacompare[5])*100/pagedatacompare[5]).toFixed(2)}}%</view>
+				</view>
+				<view style="width: 350rpx;">
+					<view class="small-text">单票金额(元)</view>
+					<view class="big-text">{{pagedata[6]}}</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[6]==0||pagedatacompare[6]=='--')?'--':((pagedata[6]-pagedatacompare[6])*100/pagedatacompare[6]).toFixed(2)}}%</view>
+				</view>
+			</view>
+			<view v-if="selfParam.provinceCenterId==0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">1-2关次销量(亿元)</view>
 					<view class="big-text">{{pagedata[5]}}</view>
@@ -76,7 +130,7 @@
 					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[8]==0||pagedatacompare[8]=='--')?'--':((pagedata[8]-pagedatacompare[8])*100/pagedatacompare[8]).toFixed(2)}}%</view>
 				</view>
 			</view>
-			<view class ="column-box" style="width: 100%; display: flex;" >
+			<view v-if="selfParam.provinceCenterId==0" class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">本月累计销量(亿元)</view>
 					<view class="big-text">{{pagedata[9]}}</view>
@@ -88,8 +142,20 @@
 					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[10]==0||pagedatacompare[10]=='--')?'--':((pagedata[10]-pagedatacompare[10])*100/pagedatacompare[10]).toFixed(2)}}%</view>
 				</view>
 			</view>
+			<view v-if="selfParam.provinceCenterId!=0" class ="column-box" style="width: 100%; display: flex;" >
+				<view style="width: 350rpx;">
+					<view class="small-text">本月累计销量(百万元)</view>
+					<view class="big-text">{{pagedata[9]}}</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[9]==0||pagedatacompare[9]=='--')?'--':((pagedata[9]-pagedatacompare[9])*100/pagedatacompare[9]).toFixed(2)}}%</view>
+				</view>
+				<view style="width: 350rpx;">
+					<view class="small-text">本年累计销量(亿元)</view>
+					<view class="big-text">{{pagedata[10]}}</view>
+					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[10]==0||pagedatacompare[10]=='--')?'--':((pagedata[10]-pagedatacompare[10])*100/pagedatacompare[10]).toFixed(2)}}%</view>
+				</view>
+			</view>
 		</view>
-		<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
+		<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop" z-index=999></backTop>
 	</view>
 </template>
 
@@ -140,8 +206,8 @@
 				 btnnum: 0,
 				 index: 0,
 				 arcbarNumTop:'周同比',
-				 pagedata:[0,0,0,0,0,0,0,0,0,0,0],
-				 pagedatacompare:[0,0,0,0,0,0,0,0,0,0,0],
+				 pagedata:[0,0,0,0,0,0,0,0,0,0,0,0],
+				 pagedatacompare:[0,0,0,0,0,0,0,0,0,0,0,0],
 				 backTop: {
 				 	src: '../../static/top.png',
 				 	scrollTop: 0
@@ -172,27 +238,48 @@
 				console.log("createParam begin")
 				var dateType = this.selfParam.businessDate.dateType
 				var param = {}
-				if(dateType=='date'){
-					param = {dateTime: this.selfParam.businessDate.date.startDate,
-							 dateFlag:"1",
-							 regionId:this.selfParam.provinceCenterId,
-							 token:this.selfParam.token }
-				}else if(dateType=='week'){
-					param = {dateTime: this.selfParam.businessDate.week.startDate,
-							 dateFlag:"2",
-							 regionId:this.selfParam.provinceCenterId,
-							 token:this.selfParam.token }
-				}else if(dateType=='month'){
-					param = {dateTime: this.selfParam.businessDate.month.startDate,
-							 dateFlag:"3",
-							 regionId:this.selfParam.provinceCenterId,
-							 token:this.selfParam.token }
-				}else if(dateType=='year'){
-					param = {dateTime: this.selfParam.businessDate.year.startDate,
-							 dateFlag:"4",
-							 regionId:this.selfParam.provinceCenterId,
-							 token:this.selfParam.token }
-				}	
+				if(this.selfParam.provinceCenterId==0){
+					if(dateType=='date'){
+						param = {dateTime: this.selfParam.businessDate.date.startDate,
+								 dateFlag:"1",
+								 token:this.selfParam.token }
+					}else if(dateType=='week'){
+						param = {dateTime: this.selfParam.businessDate.week.startDate,
+								 dateFlag:"2",
+								 token:this.selfParam.token }
+					}else if(dateType=='month'){
+						param = {dateTime: this.selfParam.businessDate.month.startDate,
+								 dateFlag:"3",
+								 token:this.selfParam.token }
+					}else if(dateType=='year'){
+						param = {dateTime: this.selfParam.businessDate.year.startDate,
+								 dateFlag:"4",
+								 token:this.selfParam.token }
+					}	
+				}else {
+					if(dateType=='date'){
+						param = {dateTime: this.selfParam.businessDate.date.startDate,
+								 dateFlag:"1",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}else if(dateType=='week'){
+						param = {dateTime: this.selfParam.businessDate.week.startDate,
+								 dateFlag:"2",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}else if(dateType=='month'){
+						param = {dateTime: this.selfParam.businessDate.month.startDate,
+								 dateFlag:"3",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}else if(dateType=='year'){
+						param = {dateTime: this.selfParam.businessDate.year.startDate,
+								 dateFlag:"4",
+								 regionId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
+					}	
+				}
+				
 				console.log("createParam end:",param)
 				return param
 			},
@@ -215,7 +302,15 @@
 							this.$set(that.pagedata,0,0);
 							this.$set(that.pagedatacompare,0,0);
 						}else{
-							this.$set(that.pagedata,0,(data[0][1]/100000000).toFixed(2));
+							var all =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+							};
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,0,(all/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,0,(all/1000000).toFixed(2));
+							}
 							this.$set(that.pagedatacompare,0,data[0][2]);
 						}
 						
@@ -223,9 +318,36 @@
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
+					//销量排名 只有全国有
+					if(this.selfParam.provinceCenterId==0){
+						url = '/pentaho/dailyPaper/getSalesAndComRanking';
+						param=this.createParam();
+						urlAPI.getRequest(url, param).then((res)=>{
+							this.loading = false;
+							var data =res.data.data;
+							if(data.length==0){
+								this.$set(that.pagedata,11,0);
+								this.$set(that.pagedatacompare,11,0);
+							}else{
+								var all =[];
+								for(var i=0;i<data.length;i++){
+									all.push(data[0])
+								};
+								this.$set(that.pagedata,11,all);
+								this.$set(that.pagedatacompare,11,data[0][2]);
+							}
+							
+						}).catch((err)=>{
+							this.loading = false;
+							console.log('request fail', err);
+						});
+					}
+					
 					//日票数
 					url = '/pentaho/dailyPaper/getVotesAndComRanking';
 					param=this.createParam();
+					 param.regionId=this.selfParam.provinceCenterId,
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;
@@ -233,7 +355,16 @@
 							this.$set(that.pagedata,1,0);
 							this.$set(that.pagedatacompare,1,0);
 						}else{
-							this.$set(that.pagedata,1,(data[0][1]/100000000).toFixed(2));
+							var all =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+							};
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,1,(all/1000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,1,(all/10000).toFixed(2));
+							}
+							
 							this.$set(that.pagedatacompare,1,data[0][2]);
 						}
 						
@@ -254,9 +385,15 @@
 							this.$set(that.pagedata,8,0);
 							this.$set(that.pagedatacompare,8,0);
 						}else{
-							this.$set(that.pagedata,2,data[0][1]);
+							var all =0;
+							var all1 =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+								all1=all1+data[i][2]
+							};
+							this.$set(that.pagedata,2,all);
 							this.$set(that.pagedatacompare,2,0);
-							this.$set(that.pagedata,8,data[0][2]);
+							this.$set(that.pagedata,8,all1);
 							this.$set(that.pagedatacompare,8,0);
 						}		
 					}).catch((err)=>{
@@ -274,7 +411,16 @@
 							this.$set(that.pagedata,3,0);
 							this.$set(that.pagedatacompare,3,0);
 						}else{
-							this.$set(that.pagedata,3,(data[0][1]/200000000).toFixed(2));
+							var all =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+							};
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,3,(all/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,3,(all/1000000).toFixed(2));
+							}
+							
 							this.$set(that.pagedatacompare,3,data[0][2]);
 						}
 						
@@ -292,7 +438,15 @@
 							this.$set(that.pagedata,4,0);
 							this.$set(that.pagedatacompare,4,0);
 						}else{
-							this.$set(that.pagedata,4,(data[0][1]/200000000).toFixed(2));
+							var all =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+							};
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,4,(all/1000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,4,(all/10000).toFixed(2));
+							}
 							this.$set(that.pagedatacompare,4,data[0][2]);
 						}
 						
@@ -311,7 +465,12 @@
 							this.$set(that.pagedata,5,0);
 							this.$set(that.pagedatacompare,5,0);
 						}else{
-							this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2));
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,5,(data[0]/1000000).toFixed(2));
+							}
+							
 							this.$set(that.pagedatacompare,5,data[1]);
 						}
 						
@@ -367,7 +526,12 @@
 							this.$set(that.pagedata,9,0);
 							this.$set(that.pagedatacompare,9,0);
 						}else{
-							this.$set(that.pagedata,9,(data[0]/100000000).toFixed(2));
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,9,(data[0]/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,9,(data[0]/1000000).toFixed(2));
+							}
+							
 							this.$set(that.pagedatacompare,9,data[1]);
 						}
 						
@@ -385,7 +549,12 @@
 							this.$set(that.pagedata,10,0);
 							this.$set(that.pagedatacompare,10,0);
 						}else{
-							this.$set(that.pagedata,10,(data[0]/100000000).toFixed(2));
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,10,(data[0]/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,10,(data[0]/100000000).toFixed(2));
+							}
+							
 							this.$set(that.pagedatacompare,10,data[1]);
 						}
 					}).catch((err)=>{
@@ -407,7 +576,15 @@
 							this.$set(that.pagedata,0,0);
 							this.$set(that.pagedatacompare,0,0);
 						}else{
-							this.$set(that.pagedata,0,(data[0][1]/100000000).toFixed(2));
+							var all =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+							};
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,0,(all/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,0,(all/1000000).toFixed(2));
+							}
 							this.$set(that.pagedatacompare,0,data[0][2]);
 						}
 						
@@ -415,6 +592,30 @@
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					//销量排名 只有全国有
+					if(this.selfParam.provinceCenterId==0){
+						url = '/pentaho/dailyPaper/getSalesAndComRanking';
+						param=this.createParam();
+						urlAPI.getRequest(url, param).then((res)=>{
+							this.loading = false;
+							var data =res.data.data;
+							if(data.length==0){
+								this.$set(that.pagedata,11,0);
+								this.$set(that.pagedatacompare,11,0);
+							}else{
+								var all =[];
+								for(var i=0;i<data.length;i++){
+									all.push(data[0])
+								};
+								this.$set(that.pagedata,11,all);
+								this.$set(that.pagedatacompare,11,data[0][2]);
+							}
+							
+						}).catch((err)=>{
+							this.loading = false;
+							console.log('request fail', err);
+						});
+					}
 					//日票数
 					url = '/pentaho/dailyPaper/getVotesAndComRanking';
 					param=this.createParam();
@@ -425,7 +626,15 @@
 							this.$set(that.pagedata,1,0);
 							this.$set(that.pagedatacompare,1,0);
 						}else{
-							this.$set(that.pagedata,1,(data[0][1]/100000000).toFixed(2));
+							var all =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+							};
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,0,(all/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,0,(all/1000000).toFixed(2));
+							}
 							this.$set(that.pagedatacompare,1,data[0][2]);
 						}
 					}).catch((err)=>{
@@ -445,9 +654,15 @@
 							this.$set(that.pagedata,8,0);
 							this.$set(that.pagedatacompare,8,0);
 						}else{
-							this.$set(that.pagedata,2,data[0][1]);
+							var all =0;
+							var all1 =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+								all1=all1+data[i][2]
+							};
+							this.$set(that.pagedata,2,all);
 							this.$set(that.pagedatacompare,2,0);
-							this.$set(that.pagedata,8,data[0][2]);
+							this.$set(that.pagedata,8,all1);
 							this.$set(that.pagedatacompare,8,0);
 						}
 							
@@ -467,7 +682,15 @@
 							this.$set(that.pagedata,3,0);
 							this.$set(that.pagedatacompare,3,0);
 						}else{
-							this.$set(that.pagedata,3,(data[0][1]/200000000).toFixed(2));
+							var all =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+							};
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,3,(all/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,3,(all/1000000).toFixed(2));
+							}
 							this.$set(that.pagedatacompare,3,data[0][2]);
 						}
 						
@@ -485,7 +708,15 @@
 							this.$set(that.pagedata,4,0);
 							this.$set(that.pagedatacompare,4,0);
 						}else{
-							this.$set(that.pagedata,4,(data[0][1]/200000000).toFixed(2));
+							var all =0;
+							for(var i=0;i<data.length;i++){
+								all=all+data[i][1]
+							};
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,4,(all/1000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,4,(all/10000).toFixed(2));
+							}
 							this.$set(that.pagedatacompare,4,data[0][2]);
 						}
 						
@@ -504,7 +735,11 @@
 							this.$set(that.pagedata,5,0);
 							this.$set(that.pagedatacompare,5,0);
 						}else{
-							this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2));
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,5,(data[0]/1000000).toFixed(2));
+							}
 							this.$set(that.pagedatacompare,5,data[2]);
 						}
 						
@@ -559,7 +794,11 @@
 							this.$set(that.pagedata,9,0);
 							this.$set(that.pagedatacompare,9,0);
 						}else{
-							this.$set(that.pagedata,9,(data[0]/100000000).toFixed(2));
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,9,(data[0]/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,9,(data[0]/1000000).toFixed(2));
+							}
 							this.$set(that.pagedatacompare,9,data[2]);
 						}
 						

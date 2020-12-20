@@ -8,9 +8,6 @@
 		</scroll-view>
 		<view class="content">
 			<view class="blackClass">
-				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
-			</view>
-			<view class="blackClass">
 				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
 			</view>
 			<view class="blackClass">
@@ -22,7 +19,9 @@
 			{{selfParam.shopNo}}
 			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../static/right.png" mode="aspectFill">
 		</view>	
-		
+		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color:#6D6D72;">
+			<image src="../../static/address.png" style="height: 2rpx; width: 2rpx;background-color:#000000;"></image>{{showPro}}
+		</view>	
 		<block v-if="tabIndex==0">
 			<channelTotalView ref="channelTotalView" :param="selfParam"></channelTotalView>
 		</block>
@@ -49,6 +48,7 @@
 	import channelTicketView from "@/components/sads-components/ticketView/channelTicketView.vue";
 	import channelMatchView from "@/components/sads-components/matchView/channelMatchView.vue";
 	import uniSection from "@/components/uni/uni-section/uni-section.vue"
+	import urlAPI from '@/common/vmeitime-http/';
 	
 	// 缓存每页最多
     const MAX_CACHE_DATA = 100;
@@ -57,15 +57,17 @@
 
 	export default {
 		components: {
-			channelGameView,channelTotalView,channelLevelView,channelTicketView,channelMatchView,uniSection
+			channelGameView,channelTotalView,channelLevelView,channelTicketView,channelMatchView,uniSection 
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.selfParam.shopNo = option.number
 			this.returnFromDatePicker();
+			this.loadMainData();
 		},
 		onShow() {//此处接受来自日期选择页面的参数
 			this.returnFromDatePicker();
 			console.log("sales-self-onShow:",this.selfParam)
+			this.loadMainData();
 			if(!this.isFirstLoad){
 				console.log("重新加载")
 				if(this.tabIndex==0){
@@ -120,8 +122,9 @@
 				},
 				newsList: [],
 				cacheTab: [],
-				tabIndex: 1,
+				tabIndex: 0,
 				scrollInto: "",
+				showPro:"",//展示省市
 				tabBars: [{
 					name: '总览',
 					id: 'totalView'
@@ -178,7 +181,20 @@
 				}
 				activeTab.data = activeTab.data.concat(list);
 			},
-			
+			loadMainData(){
+				var url = '/pentaho/shows/getProvincialCityName';
+				var param = {}
+				param.showNumber =uni.getStorageSync("shopNo");
+				param.token=this.selfParam.token
+				//修改为0
+				urlAPI.getRequest(url, param).then((res)=>{
+					var data = res.data.data;
+					this.showPro=data.provincial+data.city
+				}).catch((err)=>{
+					
+				});
+				
+			},
 			loadMore(e) {
 				setTimeout(() => {
 					this.getList(this.tabIndex);

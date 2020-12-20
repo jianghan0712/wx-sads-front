@@ -4,7 +4,7 @@
 			:canvasId="canvasId"
 			id="canvasId"
 			disable-scroll="true"
-			:style="{ width: cWidth + 'px', height: cHeight + 'px' }"
+			:style="{ width: cWidth+'px', height: cHeight + 'px' }"
 			@touchstart="touchstart"
 			@touchmove="touchmove"
 			@touchend="touchend"
@@ -99,7 +99,7 @@ export default {
 				enableScroll: true, //是否开启图表可拖拽滚动 默认false 支持line, area, column, candle图表类型(需配合绑定@touchstart, @touchmove, @touchend方法)
 				enableMarkLine: false, //是否显示辅助线 默认false 支持line, area, column, candle, mix图表类型
 				animation: true, //是否动画展示
-				dataLabel: true, //是否在图表中显示数据标签内容值
+				dataLabel: false, //是否在图表中显示数据标签内容值
 				duration: 1000, //动画展示时长单位毫秒
 				fontSize: 12, //全局默认字体大小（可选，单位为px，默认13px）高分屏不必乘像素比，自动根据pixelRatio计算
 				background: '#fff', //canvas背景颜色（如果页面背景颜色不是白色请设置为页面的背景颜色，默认#ffffff）无作用
@@ -116,7 +116,7 @@ export default {
 					//	X轴配置
 					type: 'grid',
 					rotateLabel: true, //X轴刻度（数值）标签是否旋转（仅在文案超过单屏宽度时有效）
-					itemCount: 5, //X轴可见区域数据数量（即X轴数据密度），配合拖拽滚动使用（即仅在启用enableScroll时有效）
+					itemCount: 7, //X轴可见区域数据数量（即X轴数据密度），配合拖拽滚动使用（即仅在启用enableScroll时有效）
 					// labelCount:Number,//X轴可见区域标签数量（即X轴数刻度标签单屏幕限制显示的数量）
 					scrollShow: true, //是否显示滚动条，配合拖拽滚动使用（即仅在启用enableScroll时有效）
 					scrollAlign: 'left', //滚动条初始位置，left为数据整体左对齐，right为右对齐
@@ -152,10 +152,11 @@ export default {
 				legend: {
 					show: true, //是否显示各类别的图例标识
 					position: 'top',
-					float: 'right',
-					padding: 15,
+					float: 'mid',
+					padding: 5,
+					itemGap:5,
 					margin: 0
-					// itemGap:10,//各个item之间的间隔，单位px，默认为10，横向布局时为水平间隔，纵向布局时为纵向间隔
+					//各个item之间的间隔，单位px，默认为10，横向布局时为水平间隔，纵向布局时为纵向间隔
 					// fontColor:'666666',
 					// lineHeight:17,//默认opts.fontSize+5
 					// fontSize:12,//默认opts.fontSize
@@ -169,7 +170,7 @@ export default {
 					column: {
 						//参考官网配置
 						type: 'group',
-						width: (this.cWidth * 0.45) / this.dataAs[this.labelKey].length
+						width: (this.cWidth * 0.3) / this.dataAs[this.labelKey].length
 					}
 				}
 			};
@@ -183,7 +184,8 @@ export default {
 			histogramuCharts[this.canvasId].showToolTip(e, {
 				//修改点击事弹出文字
 				format: function(item, category) {
-					let defaultSetting = { type: 'number', fixed: 0, name: '' };
+					
+					let defaultSetting = { type: 'xxx', name: '' };
 					let newName;
 					let { type, fixed, name } = that.yAxisAs && that.yAxisAs.formatter ? Object.assign(defaultSetting, that.yAxisAs.formatter) : defaultSetting;
 					if (typeof item.data === 'object') {
@@ -200,7 +202,7 @@ export default {
 							return `${category} ${item.name}:${item.data.toFixed(fixed)}${name}`;
 						} else if (type == 'percent') {
 							newName = name || '%';
-							return `${category} ${item.name}:${(item.data * 100).toFixed(fixed)}${newName}`;
+							return `${category} ${item.name}:${item.data}${newName}`;
 						} else {
 							return `${category} ${item.name}:${item.data}`;
 						}

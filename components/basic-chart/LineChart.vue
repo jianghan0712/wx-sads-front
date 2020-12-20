@@ -161,7 +161,7 @@ export default {
 
 				//图列配置 legendAs
 				legend: {
-					show: false, //是否显示各类别的图例标识
+					show: true, //是否显示各类别的图例标识
 					position: 'top',
 					float: 'left',
 					padding: 10,

@@ -10,11 +10,11 @@
 					<view class="row_box_2">
 						<view class="row-box">
 							<text class="small-text">{{dataList.big1.left.name}}</text>
-							<text class="small-text">{{dataList.big1.left.value}}</text>
+							<text class="small-text">{{valueToPercent(dataList.big1.left.value)}}</text>
 						</view>
 						<view class="row-box">
 							<text class="small-text">{{dataList.big1.right.name}}</text>
-							<text class="small-text">{{dataList.big1.right.value}}</text>
+							<text class="small-text">{{valueToPercent(dataList.big1.right.value)}}</text>
 						</view>
 					</view>
 				</view>
@@ -30,11 +30,11 @@
 					<view class="row_box_2">
 						<view class="row-box">
 							<text class="small-text">{{dataList.big2.left.name}}</text>
-							<text class="small-text">{{dataList.big2.left.value}}</text>
+							<text class="small-text">{{valueToPercent(dataList.big2.left.value)}}</text>
 						</view>
 						<view class="row-box">
 							<text class="small-text">{{dataList.big2.right.name}}</text>
-							<text class="small-text">{{dataList.big2.right.value}}</text>
+							<text class="small-text">{{valueToPercent(dataList.big2.right.value)}}</text>
 						</view>
 					</view>
 				</view>
@@ -62,6 +62,16 @@
 				this.dataList = this.dataAs;
 				// var str = JSON.stringify(this.dataAs);
 				console.log("showDataContainer:", this.dataAs);
+			},
+			valueToPercent(value) {
+				let temp = value.replace('%','');
+				if(temp<0){
+					console.log("valueToPercent temp<0,",value)
+					return value;
+				}else{
+					console.log("valueToPercent temp<0,", "+",temp)
+					return "+" +value;
+				}
 			},
 		},
 	}

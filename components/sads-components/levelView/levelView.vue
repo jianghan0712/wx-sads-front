@@ -119,6 +119,7 @@
 					series: [],
 				},
 				tableData: [],
+				tableDataDetail: [],
 				tableColumns: [{
 						title: "排名",
 						key: "id",
@@ -280,18 +281,43 @@
 						mask: true
 					});
 					var data = res.data.data;
-
+					if(data==null ||data.length==0){
+						return;
+					}
+					var format0 = numberFun.formatCNumber(data[0][2]); 
 					var series = []
 					for(var i=0;i<data.length;i++){	
 						var jsonData = {}
 						jsonData.id=i+1
 						jsonData.area=data[i][0];
 						jsonData.zhanbi=data[i][1]+'%';
-						jsonData.amount=data[i][2];
-						series[i]=jsonData					
+						jsonData.amount=(data[i][2]/format0.value).toFixed(2);
+						if (i<=4){
+							series[i]=jsonData	
+						}
+						this.tableDataDetail[i] = jsonData				
 					}
 					that.tableData = series
-					
+					this.tableColumns=[{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},
+						{
+							title: '占比',
+							key: 'zhanbi',
+							$width:"130px"
+						},
+						{
+							title: '销量（' + format0.name + '元）',
+							key: 'amount'
+						}
+					],	
 					console.log('request checkpointSalesRanking', that.tableData);				
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -301,7 +327,7 @@
 			},
 			gotoTableDetail(btnnum){
 				uni.navigateTo({
-					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableData) + '&tableColumns=' + JSON.stringify(this.tableColumns)
+					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableDataDetail) + '&tableColumns=' + JSON.stringify(this.tableColumns)
 				});
 			},
 			refresh(){

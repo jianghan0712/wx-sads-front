@@ -10,28 +10,28 @@
 				<view style="font-size: 30rpx;padding-left: 20rpx; " >竞猜销量七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
 				<view >
-					<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" />
+					<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" :basicAs="{colors:['#E5E5E5','#4A94FF']}"/>
 				</view>
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >竞猜票数七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(百万张)</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(百万张)</view> 
 				<view >
-					<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" />
+					<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" :basicAs="{colors:['#E5E5E5','#FFAD26']}"/>
 				</view >
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >1-2关七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
 				<view >	
-					<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" />
+					<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" :basicAs="{colors:['#E5E5E5','#FE7123']}"/>
 				</view >
 			</view>
 			<view class="padding"> 
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >竞猜单票金额七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(元)</view>
 				<view >
-					<histogram-chart ref="histogramChart4" canvasId="histogramChart4" :dataAs="histogramChart4" />
+					<histogram-chart ref="histogramChart4" canvasId="histogramChart4" :dataAs="histogramChart4" :basicAs="{colors:['#E5E5E5','#C8E154']}"/>
 				</view >
 			</view>
 			<view class="padding">
@@ -43,7 +43,7 @@
 					<view @tap="changeTop('3')" :class="fjltype =='3'?'btna':'hide'" >篮球</view>
 				</view>
 				<view >
-					<histogram-chart ref="histogramChart5" canvasId="histogramChart5" :dataAs="histogramChart5" />
+					<histogram-chart ref="histogramChart5" canvasId="histogramChart5" :dataAs="histogramChart5" :basicAs="{colors:['#E5E5E5','#62C466']}"/>
 				</view >	
 			</view>
 			<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
@@ -216,10 +216,10 @@
 					var shangzhouPS=[];
 					var benzhouPS=[];
 					for(var i=0;i<xiaoliangAll.length/2;i++){
-						shangzhouXL.push((xiaoliangAll[i]/100000000).toFixed(0));
-						benzhouXL.push((xiaoliangAll[i+7]/100000000).toFixed(0));
-						shangzhouPS.push((piaoshuAll[i]/1000000).toFixed(0));
-						benzhouPS.push((piaoshuAll[i+7]/1000000).toFixed(0));
+						shangzhouXL.push((xiaoliangAll[i]/100000000).toFixed(2));
+						benzhouXL.push((xiaoliangAll[i+7]/100000000).toFixed(2));
+						shangzhouPS.push((piaoshuAll[i]/1000000).toFixed(2));
+						benzhouPS.push((piaoshuAll[i+7]/1000000).toFixed(2));
 					};
 					
 					var series1 =[
@@ -257,8 +257,8 @@
 					var shangzhouvotes=[];
 					var benzhouvotes=[];
 					for(var i=0;i<votes.length/2;i++){
-						shangzhouvotes.push((votes[i]/100000000).toFixed(0));
-						benzhouvotes.push((votes[i+7]/100000000).toFixed(0));
+						shangzhouvotes.push((votes[i]/100000000).toFixed(2));
+						benzhouvotes.push((votes[i+7]/100000000).toFixed(2));
 					};
 					
 					var series1 =[

@@ -9,8 +9,8 @@
 			</view>
 		</view>	 
 		<view class="input">
-			<input id='num' class="uni-input" @input="onKeyInput" placeholder="请输入门店或终端编号" />
-			<view style="color: #007AFF" @click="resetData()">搜索</view>
+			<input id='num'  style="background-color: #D8D8D8;border:1px solid gray;" @input="onKeyInput" placeholder="请输入门店或终端编号" />
+			<view style="color: #007AFF;padding-left: 5rpx;" @click="resetData()">搜索</view>
 		</view>
 		
 		<view class="box-contaniner">
@@ -20,7 +20,7 @@
 		<view class="box-contaniner" style="margin: 20rpx;">
 			<view class="container-title">				
 				<view>销售top100门店</view>
-				<view class="rankTable-more" @click="goShopDetail(amountTableDataDetail,amountTableColumns)">全部>></view>
+				<view class="rankTable-more" style="padding-right: 30rpx;" @click="goShopDetail(amountTableDataDetail,amountTableColumns)">全部>></view>
 			</view>
 			<view class="table">
 				<v-table :columns="amountTableColumns" :list="amountTableData"  selection="single"  :slot-cols="['number']" border-color="#FFFFFF">
@@ -34,13 +34,13 @@
 		<view class="box-contaniner">
 			<view class="container-title">				
 				<view>各地区超限门店</view>
-				<view class="rankTable-more" @click="goLimitShopDetail(beyondLimitTableDataDetail,beyondLimitTableColumns)">全部>></view>
+				<view class="rankTable-more" style="padding-right: 30rpx;" @click="goLimitShopDetail(beyondLimitTableDataDetail,beyondLimitTableColumns)">全部>></view>
 			</view>
 			<view v-if="update2">
 				<view class="table">
 					<v-table :columns="beyondLimitTableColumns" :list="beyondLimitTableData"   :slot-cols="['area']"  border-color="#FFFFFF">
 						<template v-slot="{ row }">
-							<view style="font-weight: blod;color:blue;" @click="goLimitDetail(row.area)">{{ row.area }}</view>
+							<view style="font-weight: blod;color:blue;" @click="goLimitDetail(row.areaIdStr)">{{ row.area }}</view>
 						</template>
 					</v-table>
 				</view>
@@ -118,10 +118,31 @@
 							$width:"150px"
 						},
 						{
-							title: '销量',
+							title: '销量(万元)',
 							key: 'amount'
 						}
-					],	
+					],
+				amountTableDataWithPro: [],
+				amountTableColumnsWithPro: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '地市',
+							key: 'area',
+							$width:"80px"
+						},
+						{
+							title: '门店编号',
+							key: 'number',
+							$width:"130px"
+						},
+						{
+							title: '销量(万元)',
+							key: 'amount'
+						}
+					],		
 				beyondLimitTableData: [],
 				beyondLimitTableDataDetail:[],
 				beyondLimitTableColumns: [{
@@ -130,14 +151,19 @@
 							$width:"50px",
 						},
 						{
+							title: '地区编号',
+							key: 'areaIdStr',
+							$width:"50px",
+						},
+						{
 							title: '省份/地市',
 							key: 'area',
-							$width:"100px"
+							$width:"80px"
 						},
 						{
 							title: '门店数量',
 							key: 'count',
-							$width:"150px"
+							$width:"50px"
 						},
 						{
 							title: '环比变化值',
@@ -165,6 +191,7 @@
 				this.returnFromDatePicker();
 				this.getServerData();
 				this.showView();
+				this.showView();
 				console.log("sales-self-onShow:",this.selfParam)
 			},
 			methods:{
@@ -183,47 +210,37 @@
 					urlAPI.getRequest(url, param).then((res)=>{
 						that.loading = false;
 						console.log('request success', res)
-						uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						});
 						var data = res.data.data;	
 						var left1 = {'name':'周同比','value':data[1] + '%'};
 						var right1 = {'name':'环比','value':data[2] + '%'};
 						var big1 = {name:'在售门店数',value:data[0], left:left1, right:right1}
-						that.$set(that.totalData, 'big1', big1);
-						that.$refs['dataContain'].showDataContainer();
+						this.$set(this.totalData, 'big1', big1);
+						this.$refs['dataContain'].showDataContainer();
 						
-						that.res = '请求结果 : ' + JSON.stringify(res);
+						this.res = '请求结果 : ' + JSON.stringify(res);
 					}).catch((err)=>{
-						that.loading = false;
+						this.loading = false;
 						console.log('request fail', err);
 					});
 					
 					var url = '/pentaho/sales/getStoreSalesrate';
-					var param = that.createParam()
+					var param = this.createParam()
 					urlAPI.getRequest(url, param).then((res)=>{
-						that.loading = false;
+						this.loading = false;
 						console.log('request success', res)
-						uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						});
 						var data = res.data.data;	
 						var left2 = {'name':'周同比','value':data[1] + '%'};
 						var right2 = {'name':'环比','value':data[2] + '%'};
 						var big2 = {name:'在售率',value:data[0], left:left2, right:right2}
 						
-						that.$set(that.totalData, 'big2', big2);
-						that.$refs['dataContain'].showDataContainer();
+						this.$set(this.totalData, 'big2', big2);
+						this.$refs['dataContain'].showDataContainer();
 						
 					}).catch((err)=>{
-						that.loading = false;
+						this.loading = false;
 						console.log('request fail', err);
 					});
-					that.res = 'channel请求结果 : ' + JSON.stringify(that.totalData);
+					this.res = 'channel请求结果 : ' + JSON.stringify(this.totalData);
 				},
 				getTopHundredShows(){
 					var url = '/pentaho/channel/getTopHundredShows';
@@ -232,27 +249,22 @@
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						console.log('request success', res)
-						uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						});
 						var data = res.data.data;	
 						for(var i=0;i<data.length;i++){
 							var json = {id:i+1, 
 										area:data[i][1], 
 										number:data[i][2], 
-										amount:data[i][3]}						
+										amount:(data[i][3]/10000).toFixed(2)}						
 							if(i<=4){
-								that.amountTableData[i] = json
+								this.amountTableData[i] = json
 							}
-							that.amountTableDataDetail[i] = json
+							this.amountTableDataDetail[i] = json
 						}
 								
-						that.res = '请求结果 : ' + JSON.stringify(res);
-						console.log(that.amountTableData)
+						this.res = '请求结果 : ' + JSON.stringify(res);
+						console.log(this.amountTableData)
 					}).catch((err)=>{
-						that.loading = false;
+						this.loading = false;
 						console.log('request fail', err);
 					});
 				},
@@ -262,35 +274,31 @@
 					var that =this ;
 					this.update2=false;
 					urlAPI.getRequest(url, param).then((res)=>{
-						that.loading = false;
+						this.loading = false;
 						console.log('request success', res)
-						uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						});
 						var data = res.data.data;	
 						for(var i=0;i<data.length;i++){
-							var json = {id:i+1, 
+							var json = {id:i+1,
+										areaIdStr:data[i][0],
 										area:data[i][1], 
 										count:data[i][2], 
 										change:data[i][3]}	
 							var areaId={id:data[i][0],name:data[i][1]}
 							if(i<=4){
-								this.$set(that.beyondLimitTableDataDetail,i,json);	
-								that.beyondLimitTableData[i] = json
+								this.$set(this.beyondLimitTableDataDetail,i,json);	
+								this.beyondLimitTableData[i] = json
 							}
-							that.beyondLimitTableDataDetail[i] = json
-							this.$set(that.beyondLimitTableDataDetail,i,json);	
-							that.areaIdList[i]=areaId
-							this.$set(that.areaIdList,i,areaId);
+							this.beyondLimitTableDataDetail[i] = json
+							this.$set(this.beyondLimitTableDataDetail,i,json);	
+							this.areaIdList[i]=areaId
+							this.$set(this.areaIdList,i,areaId);
 							
 						}
 							
-						that.res = '请求结果 : ' + JSON.stringify(res);
-						console.log(that.beyondLimitTableData)
+						this.res = '请求结果 : ' + JSON.stringify(res);
+						console.log(this.beyondLimitTableData)
 					}).catch((err)=>{
-						that.loading = false;
+						this.loading = false;
 						console.log('request fail', err);
 					});
 					this.update2=true;
@@ -377,7 +385,30 @@
 					console.log("对比前后，选中的变化")
 					console.log(obj)
 				},
-				goLimitDetail(){
+				goLimitDetail(areaId){
+					//跳转到当前地区所有门店
+					var url = '/pentaho/channel/getTransfiniteShowsList';
+					var param = this.createParam();
+					param.provincialId =areaId
+					urlAPI.getRequest(url, param).then((res)=>{
+						var data =res.data.data;
+						for(var i=0;i<data.length;i++){
+							
+							var json = {id:i+1, 
+										area:data[i][0], 
+										number:data[i][1], 
+										amount:data[i][2]}	
+							this.$set(this.amountTableDataWithPro,i,json);	
+						}
+					}).catch((err)=>{
+						console.log(err)
+					});
+					console.log(this.amountTableDataWithPro)
+					console.log(this.amountTableColumnsWithPro)
+					uni.navigateTo({
+						url:"/pages/common/tableLimitShopDetail?tableData= " + JSON.stringify(this.amountTableDataWithPro) + '&tableColumns=' + JSON.stringify(this.amountTableColumnsWithPro)
+					});
+					
 				},
 				resetData(){
 					//根据门店编号跳转
@@ -389,7 +420,7 @@
 						 token:this.selfParam.token
 					}
 					//修改为0
-					var flag=1;
+					var flag=0;
 					urlAPI.getRequest(url, param).then((res)=>{
 						var data = res.data.data;
 						if(data.flag){
@@ -457,6 +488,7 @@
 	
 	.table {
 		/* line-height: 40px; */
+		width: 100%;
 		font-weight: bold;
 		border-color:#FFFFFF;
 	}

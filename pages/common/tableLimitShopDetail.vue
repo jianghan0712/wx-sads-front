@@ -1,8 +1,8 @@
 <template>
 	<view class="example">
-		<v-table :columns="tableColumns" :list="tableData"  selection="single"  :slot-cols="['area']" on-selection-change="onSelectionChange" border-color="#FFFFFF">
+		<v-table :columns="tableColumns" :list="tableData"  selection="single"  :slot-cols="['number']" on-selection-change="onSelectionChange" border-color="#FFFFFF">
 			<template v-slot="{ row }">
-				<view style="font-weight: blod;color:blue;"  @click="goDetail(row.area)">{{ row.area }}</view>
+				<view style="font-weight: blod;color:blue;"  @click="goDetail(row.number)">{{ row.number }}</view>
 			</template>
 		</v-table>
 	</view>

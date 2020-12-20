@@ -42,7 +42,9 @@
 		<!-- 竞彩足篮球销量及占比对比 -->
 		<view class="box-contaniner">
 			<view class="shop-title">竞彩足篮球销量及占比对比</view>
+			<view class="shop-title">{{selfParam.compareDate.viewLeft.leftDate.view}}</view>
 			<dataContainerTwo ref="dataContain3" :dataAs="compareData"></dataContainerTwo>
+			<view class="shop-title">{{selfParam.compareDate.viewRight.rightDate.view}}</view>
 			<dataContainerTwo ref="dataContain4" :dataAs="compareDataCompare"></dataContainerTwo>
 		</view>	
 		<slot />
@@ -419,16 +421,16 @@
 						//数字的图--折线图数据
 						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
 						series: [
-							{ name: this.selfParam.leftBusinessDate.date.enddate, data: [0, 0,0, 0, 0, 0] },
-							{ name: this.selfParam.rightBusinessDate.date.enddate, data: [0, 0, 0, 0, 0, 0] }
+							{ name: this.selfParam.compareDate.viewLeft, data: [0, 0,0, 0, 0, 0] },
+							{ name: this.selfParam.compareDate.viewRight, data: [0, 0, 0, 0, 0, 0] }
 						]
 					}
 					this.lineData2= {
 						//数字的图--折线图数据
 						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
 						series: [
-							{ name: this.selfParam.leftBusinessDate.date.enddate, data: [0, 0,0, 0, 0, 0] },
-							{ name: this.selfParam.rightBusinessDate.date.enddate, data: [0, 0, 0, 0, 0, 0] }
+							{ name: this.selfParam.compareDate.viewLeft, data: [0, 0,0, 0, 0, 0] },
+							{ name: this.selfParam.compareDate.viewRight, data: [0, 0, 0, 0, 0, 0] }
 						]
 					}
 					this.$refs['lineData2'].showCharts();

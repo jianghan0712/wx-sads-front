@@ -33,14 +33,12 @@
 
 <style>
 	.picture{
-		/* height: 100px;
-		width: 100px; */
-	    /* display: flex; */
-		background-size: 100px 100px;
+	    display: flex;
+		background-size: 50upx 50upx;
 	    align-items:center;
 	    justify-content:center;
 		display: flex;
-		flex-direction: row;
+		flex-direction: row;	
 	}
 
 	.title{

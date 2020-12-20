@@ -81,7 +81,16 @@ $div-table-border-width: 1upx;
     .table_box {
       overflow: hidden;
       position: absolute;
+	  .small-text-green{
+	  	color: #1FCE58;
+	  	/* font-size: 30rpx; */
+	  }
+	  .small-text-red{
+	  	color: #E83838;
+	  	/* font-size: 30rpx; */
+	  }
     }
+
 
     .table_tbody_box {
       // height: 300px;

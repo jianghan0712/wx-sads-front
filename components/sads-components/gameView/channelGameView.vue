@@ -16,7 +16,13 @@
 						<view @tap="changeMid('票数')" :class="arcbarNumMid =='票数'?'btna':'hide'" >票数</view>
 					</view>
 				</view>		
-				<line-chart ref="lineData1" canvasId="lineData1" :dataAs="lineData1" />
+				<view v-if="arcbarNumMid == '销量'">
+					<line-chart ref="lineData1" canvasId="lineData1" :dataAs="lineData1" />
+				</view>
+				<view v-if="arcbarNumMid == '票数'">		　
+					<line-chart ref="lineData2" canvasId="lineData2" :dataAs="lineData2" />
+				</view>
+				
 			</view>	
 
 			<view >
@@ -169,10 +175,16 @@
 					value: '',
 					lineData1: {
 						//数字的图--折线图数据
-						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
+						categories: [],
 						series: [
-							{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
-							{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
+							
+						]
+					},
+					lineData2: {
+						//数字的图--折线图数据
+						categories: [],
+						series: [
+							
 						]
 					},
 					arcbar1: {
@@ -226,6 +238,7 @@
 								basketball: "19785.00"
 							} */
 						],
+						tableDataAll:[],
 					tableColumns: [{
 								title: "排名",
 								key: "id",
@@ -324,11 +337,11 @@
 								value:(fb[0]/10000).toFixed(2),
 								left:{
 									name:'周同比',
-									value:fb[1]
+									value:fb[1]+"%"
 								},
 								right:{
 									name:'环比',
-									value:fb[2]
+									value:fb[2]+"%"
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
@@ -336,11 +349,11 @@
 								value:(fb[3]/10000).toFixed(2),
 								left:{
 									name:'周同比',
-									value:fb[4]
+									value:fb[4]+"%"
 								},
 								right:{
 									name:'环比',
-									value:fb[5]
+									value:fb[5]+"%"
 								}}
 							this.$set(that.totalData,'big2',index1);
 						}else{
@@ -349,11 +362,11 @@
 								value:(bk[0]/10000).toFixed(2),
 								left:{
 									name:'周同比',
-									value:bk[1]
+									value:bk[1]+"%"
 								},
 								right:{
 									name:'环比',
-									value:bk[2]
+									value:bk[2]+"%"
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
@@ -361,11 +374,11 @@
 								value:(bk[3]/10000).toFixed(2),
 								left:{
 									name:'周同比',
-									value:bk[4]
+									value:bk[4]+"%"
 								},
 								right:{
 									name:'环比',
-									value:bk[5]
+									value:bk[5]+"%"
 								}}
 							this.$set(that.totalData,'big2',index1);
 						}
@@ -449,7 +462,6 @@
 				loadMidData(ballType){
 					var url = '/pentaho/shows/getShowGameTrendChart';
 					var param  =this.createParam();
-					var that2 =this;
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var dates;
@@ -465,23 +477,24 @@
 							votes = res.data.data.bk.votes;
 						}
 						
-						if(that2.arcbarNumMid=='销量'){
-							
-							var series=[{name: '票数(万张)',
-							data: votes
-							}];
-							that2.$set(that2.lineData1,'series',series);
-						}else {
+						if(this.arcbarNumMid=='销量'){
 							var series=[{
 								name: '销量（万元）', 
 								data: sales
 							}];
-							that2.$set(that2.lineData1,'series',series);
+							
+							this.$set(this.lineData1,'series',series);
+							this.$set(this.lineData1,'categories',dates);
+							this.$refs['lineData1'].showCharts();
+						}else {
+							var series=[{name: '票数(张)',
+							data: votes
+							}];
+							this.$set(this.lineData2,'series',series);
+							this.$set(this.lineData2,'categories',dates);
+							this.$refs['lineData2'].showCharts();
 							
 						}
-						that2.$set(that2.lineData1,'categories',dates);
-						
-						that2.$refs['lineData1'].showCharts();
 						
 					}).catch((err)=>{
 						this.loading = false;
@@ -502,12 +515,13 @@
 						var datas =res.data.data;
 						var series =[];
 						for(var i=0;i<datas.length;i++){
-							var obj={name:datas[i].gameName,data: parseInt(datas[i].values[0])};
+							var obj={};
+							obj={name:datas[i].gameName,data: parseInt(datas[i].values[0])};
 							series.push(obj);
 							
 						}
-						that2.$set(that2.arcbar1,'series',series);
-						that2.$refs['arcbar1'].showCharts();
+						this.$set(this.arcbar1,'series',series);
+						this.$refs['arcbar1'].showCharts();
 						
 					}).catch((err)=>{
 						this.loading = false;
@@ -537,10 +551,13 @@
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;	
-						
+						that.tableData =[];
 						for(var i=0;i<data.length;i++){
-							var obj={id:i+1,area:data[i][0],zhanbi:data[i][1],count:data[i][2]};
-							that.tableData.push(obj);
+							var obj={id:i+1,area:data[i][0],zhanbi:data[i][1]+"%",count:data[i][2]};
+							if(i<5){
+								that.tableData.push(obj);
+							}
+							that.tableDataAll.push(obj);
 						}
 						
 					}).catch((err)=>{
@@ -556,7 +573,7 @@
 				toAll(){
 					var that =this;
 					uni.navigateTo({
-						url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData),
+						url:'/pages/common/tableDetail?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableDataAll),
 						
 						
 					});

@@ -17,4 +17,13 @@
 		border-radius:0rpx 50rpx 50rpx 0rpx
 	}
 	
+	.small-text-red{
+		color: #E83838;
+		/* font-size: 30rpx; */
+	}
+	
+	.small-text-green{
+		color: #1FCE58;
+		/* font-size: 30rpx; */
+	}
 	
