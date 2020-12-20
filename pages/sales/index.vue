@@ -123,6 +123,8 @@
 			console.log("sales-self-onShow:",this.selfParam)
 			if(this.$refs['totalView']!=null){
 				this.$refs['totalView'].refresh();
+			}else if(this.$refs['gameView']!=null){
+				this.$refs['gameView'].refresh();
 			}else if(this.$refs['levelView']!=null){
 				this.$refs['levelView'].refresh();
 			}else if(this.$refs['ticketView']!=null){

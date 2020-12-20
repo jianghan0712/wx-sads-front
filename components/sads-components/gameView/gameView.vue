@@ -38,15 +38,18 @@
 					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 				</view>
 			</view>
-			<view >
-				<view class="container-title">
-					<view>各地区{{arcbarNumTop}}返奖率排行榜</view>
-					<view style="width: 200;height: 50upx;text-align: top;font-size: 30rpx;" @click="toAll1()">全部>></view>
+			
+			<block v-if="selfParam.businessDate.view!=today"></block>
+				<view >
+					<view class="container-title">
+						<view>各地区{{arcbarNumTop}}返奖率排行榜</view>
+						<view style="width: 200;height: 50upx;text-align: top;font-size: 30rpx;" @click="toAll1()">全部>></view>
+					</view>
+					<view class="table">
+						<v-table :columns="tableColumns1" :list="tableData1"  border-color="#FFFFFF"></v-table>
+					</view>
 				</view>
-				<view class="table">
-					<v-table :columns="tableColumns1" :list="tableData1"  border-color="#FFFFFF"></v-table>
-				</view>
-			</view>
+			</block>
 		</view>		
 	</view>
 </template>
@@ -58,6 +61,8 @@
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
+	import dateUtils from '@/common/tools/dateUtils.js';
+	import numberFun from '@/common/tools/number.js';
 	
 	export default {
 			components:{
@@ -97,6 +102,7 @@
 			},
 			data() {
 				return {
+					today:dateUtils.getToday(),
 					selfParam:{
 						token:'',
 						provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
@@ -132,12 +138,12 @@
 					dataCompare:{},
 					dataCount:{},
 					footballData:{
-						big1:{name:'足球销量（百万元）',value:37.82, left:{name:'周同比',value:-0.6209},right:{name:'环比',value:0.0145}},
-						big2:{name:'足球票数（万张）',value:45.64, left:{name:'周同比',value:-0.0132},right:{name:'环比',value:0.1069}},
+						big1:{name:'足球销量（百万元）',value:0, left:{name:'周同比',value:0.00},right:{name:'环比',value:0.00}},
+						big2:{name:'足球票数（万张）',value:0, left:{name:'周同比',value:0.00},right:{name:'环比',value:0.00}},
 					},	
 					basketballData:{
-						big1:{name:'篮球销量（万元）',value:36.94, left:{name:'周同比',value:-0.5275},right:{name:'环比',value:-0.61}},
-						big2:{name:'篮球票数（张）',value:4818.00, left:{name:'周同比',value:0.2306},right:{name:'环比',value:-0.9523}},
+						big1:{name:'篮球销量（万元）',value:0, left:{name:'周同比',value:0.00},right:{name:'环比',value:0.00}},
+						big2:{name:'篮球票数（张）',value:0, left:{name:'周同比',value:0.00},right:{name:'环比',value:0.00}},
 					},
 					arcbarNumTop: '足球',
 					arcbarNumMid: '销量',
@@ -162,25 +168,10 @@
 							default: false
 						}
 					],
-					showTips: false,
-					navigateFlag: false,
-					pulling: false,
-					refreshIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAB5QTFRFcHBw3Nzct7e39vb2ycnJioqK7e3tpqam29vb////D8oK7wAAAAp0Uk5T////////////ALLMLM8AAABxSURBVHja7JVBDoAgDASrjqj//7CJBi90iyYeOHTPMwmFZrHjYyyFYYUy1bwUZqtJIYVxhf1a6u0R7iUvWsCcrEtwJHp8MwMdvh2amHduiZD3rpWId9+BgPd7Cc2LIkPyqvlQvKxKBJ//Qwq/CacAAwDUv0a0YuKhzgAAAABJRU5ErkJggg==",
-					showPicker: false,
-					date: '2019/01/01',
-					time: '15:00:12',
-					datetime: '2019/01/01 15:00:12',
-					range: ['2019/01/01','2019/01/06'],
-					rangetime: ['2019/01/08 14:00','2019/01/16 13:59'],
-					type: 'rangetime',
-					value: '',
 					lineData1: {
 						//数字的图--折线图数据
-						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
-						series: [
-							{ name: '成交量A', data: [35, 8, 25, 37, 4, 20] },
-							{ name: '成交量B', data: [70, 40, 65, 100, 44, 68] }
-						]
+						categories: [],
+						series: []
 					},
 					arcbar1: {
 							type: 'radar',
@@ -197,43 +188,8 @@
 								}
 							}
 					},
-					tableData: [/* {
-								id: "1",
-								area: "北京市",
-								jingcai: "10233.5",
-								football: "146784.00",
-								basketball: "29785.00"
-							},
-							{
-								id: "2",
-								area: "上海市",
-								jingcai: "9965.5",
-								football: "100054.00",
-								basketball: "3785.00"
-							},
-							{
-								id: "3",
-								area: "广东省",
-								jingcai: "9754.5",
-								football: "9785.00",
-								basketball: "6585.00"
-							},
-							{
-								id: "4",
-								area: "重庆市",
-								jingcai: "6745.6",
-								football: "9685.00",
-								basketball: "9725.00"
-							},
-							{
-								id: "5",
-								area: "河北省",
-								jingcai: "6554",
-								football: "8785.00",
-								basketball: "19785.00"
-							} */
-						],
-						tableDataAll:[],
+					tableData: [],
+					tableDataAll:[],
 					tableColumns: [{
 								title: "排名",
 								key: "id",
@@ -252,11 +208,9 @@
 							{
 								title: '销量（元）',
 								key: 'count',
-								$width:"80px"
 							}
 						],	
-						tableData1: [
-							],
+						tableData1: [],
 						tableDataAll1:[],
 						tableColumns1: [{
 									title: "排名",
@@ -347,9 +301,10 @@
 						var bk=alldata.bk;
 						var fb= alldata.fb;
 						if(ballType=='足球'){
+							var format0 = numberFun.formatCNumber(fb[0]); 
 							let index0={
-								name:ballType+'销量（万元）',
-								value:(fb[0]/10000).toFixed(2),
+								name:ballType+'销量（' + format0.name + '元）',
+								value:(fb[0]/format0.value).toFixed(2),
 								left:{
 									name:'周同比',
 									value:fb[1]+"%"
@@ -359,9 +314,10 @@
 									value:fb[2]+"%"
 								}}
 							this.$set(that.totalData,'big1',index0);
+							var format1 = numberFun.formatCNumber(fb[3]); 
 							let index1={
-								name:ballType+'票数（万张）',
-								value:(fb[3]/10000).toFixed(2),
+								name:'票数（ ' + format1.name + '张）',
+								value:(fb[3]/format1.value).toFixed(2),
 								left:{
 									name:'周同比',
 									value:fb[4]+"%"
@@ -372,9 +328,10 @@
 								}}
 							this.$set(that.totalData,'big2',index1);
 						}else{
+							var format0 = numberFun.formatCNumber(bk[0]);
 							let index0={
-								name:ballType+'销量（百万元）',
-								value:(bk[0]/10000).toFixed(2),
+								name:ballType+'销量（'+format0.name + '元）',
+								value:(bk[0]/format0.value).toFixed(2),
 								left:{
 									name:'周同比',
 									value:bk[1]+"%"
@@ -384,9 +341,10 @@
 									value:bk[2]+"%"
 								}}
 							this.$set(that.totalData,'big1',index0);
+							var format1 = numberFun.formatCNumber(bk[3]);
 							let index1={
-								name:ballType+'票数（万张）',
-								value:(bk[3]/10000).toFixed(2),
+								name:'票数（'+format1.name + ' 张）',
+								value:(bk[3]/format1.value).toFixed(2),
 								left:{
 									name:'周同比',
 									value:bk[4]+"%"
@@ -517,8 +475,7 @@
 					var ballType = getApp().globalData.ballType;
 					this.loadTopData(ballType);
 					this.loadMidData(ballType);
-					this.loadLastData();
-					
+					this.loadLastData();				
 				},
 				loadLastData(){
 					var url = '/pentaho/sales/getGameSalesRankingList';
@@ -535,50 +492,73 @@
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;	
-						
-						for(var i=0;i<data.length;i++){
-							var obj={id:i+1,area:data[i][0],zhanbi:data[i][1],count:data[i][2]};
-							if(i<5){
-								that.tableData.push(obj);
-							}else {
-								that.tableDataAll.push(obj);
-							}
-							
+						if(data==null || data.length==0){
+							return 
 						}
+						var format0 = numberFun.formatCNumber(data[0][2]); 
+						for(var i=0;i<data.length;i++){
+							var obj={id:i+1,area:data[i][0],zhanbi:data[i][1]+"%",count:(data[i][2]/format0.value).toFixed(2)};
+							if(i<5){
+								that.tableData[i] = obj;
+							}
+							that.tableDataAll[i] = obj;		
+						}
+						this.tableColumns=[{
+									title: "排名",
+									key: "id",
+									$width:"90px",
+								},
+								{
+									title: '省份',
+									key: 'area',
+									$width:"100px"
+								},
+								{
+									title: '占比',
+									key: 'zhanbi',
+									$width:"100px"
+								},
+								{
+									title: '销量（' + format0.name + '元）',
+									key: 'count',
+								}
+							]
 						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					}); 
 					
-					var url = '/pentaho/sales/gamesReturnRateRankingList';
-					var that =this;
-					var ballType =getApp().globalData.ballType;
-					var gameFlag;
-					if(ballType=='足球'){
-						gameFlag='1';
-					}else {
-						gameFlag='2';
-					}
-					var param =this.createParam();
-					this.$set(param,'gameFlag',gameFlag);
-					urlAPI.getRequest(url, param).then((res)=>{
-						this.loading = false;
-						var data =res.data.data;	
-						
-						for(var i=0;i<data.length;i++){
-							var obj={id:i+1,area:data[i][0],returnRate:data[i][1],tongbi:data[i][2],huanbi:data[i][3]};
-							if(i<5){
-								that.tableData1.push(obj);
-							}else {
-								that.tableDataAll1.push(obj);
-							}
+					if(that.selfParam.businessDate.view!=today){
+						var url = '/pentaho/sales/gamesReturnRateRankingList';
+						var that =this;
+						var ballType =getApp().globalData.ballType;
+						var gameFlag;
+						if(ballType=='足球'){
+							gameFlag='1';
+						}else {
+							gameFlag='2';
 						}
-						
-					}).catch((err)=>{
-						this.loading = false;
-						console.log('request fail', err);
-					}); 
+						var param =this.createParam();
+						this.$set(param,'gameFlag',gameFlag);
+						urlAPI.getRequest(url, param).then((res)=>{
+							this.loading = false;
+							var data =res.data.data;	
+							
+							for(var i=0;i<data.length;i++){
+								var obj={id:i+1,area:data[i][0],returnRate:data[i][1],tongbi:data[i][2],huanbi:data[i][3]};
+								if(i<5){
+									that.tableData1[i] = obj;
+								}
+								that.tableDataAll1[i] = obj;							
+							}
+							
+						}).catch((err)=>{
+							this.loading = false;
+							console.log('request fail', err);
+						}); 
+					}
+
 				},
 				toRingAll() {
 					uni.navigateTo({

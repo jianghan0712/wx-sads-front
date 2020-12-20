@@ -270,7 +270,7 @@
 						{
 							title: '环比',
 							key: 'huanbi',
-							$width:"80px"
+							// $width:"80px"
 						}
 					],
 				tableColumns2: [{
@@ -639,7 +639,7 @@
 							{
 								title: '环比',
 								key: 'huanbi',
-								$width:"80px"
+								// $width:"80px"
 							}
 						],
 			

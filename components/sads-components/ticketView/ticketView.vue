@@ -13,7 +13,7 @@
 								:xAxisAs="{scrollShow:false, gridEval:(lineData.categories.length / 4).toFixed(0)}" 
 								:yAxisAs="{formatter: {type: 'number', name:'单位:元',fixed: 0}}"/>
 				</view>
-			</view>
+			</block>
 			
 			<view class="box-contaniner">
 				<view class="container-title">各票面区间的票数及占比</view>
