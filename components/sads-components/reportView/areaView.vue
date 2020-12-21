@@ -145,12 +145,12 @@
 								$width:"60px"
 							},
 							{
-								title: '票数(张)',
+								title: '票数(万张)',
 								key: 'piaoshu',
 								$width:"90px"
 							},
 							{
-								title: '周同比变化(张)',
+								title: '周同比变化(万张)',
 								key: 'rateChange',
 								$width:"130px"
 							}
@@ -188,7 +188,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"80px"
+								$width:"70px"
 							},
 							{
 								title: '竞彩',
@@ -198,12 +198,12 @@
 							{
 								title: '足球',
 								key: 'football',
-								$width:"50px"
+								$width:"80px"
 							},
 							{
 								title: '篮球',
 								key: 'basketball',
-								$width:"120px"
+								$width:"80px"
 							},
 						],
 				 }
@@ -278,6 +278,14 @@
 								xiaoliang: (data[i][1]/1000000).toFixed(2),
 								rateChange: (data[i][2]/1000000).toFixed(2)
 							};
+						var cellClassName={}
+								
+						if(data[i][2]<0){
+							cellClassName.huanbi='small-text-green'
+						}else{
+							cellClassName.huanbi='small-text-red'
+						}	
+						arr.cellClassName=cellClassName;		
 						that.tableDataAll.push(arr);
 						if(i<5){
 							that.tableData.push(arr);
@@ -289,7 +297,9 @@
 				});
 				//地区日票数及周同比
 				url = '/pentaho/dailyPaper/getVotesAndComRanking';
-				param=this.createParam();
+				param = {dateTime: this.selfParam.businessDate.date.startDate,
+						 regionId:this.selfParam.provinceCenterId,
+						 token:this.selfParam.token }
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
@@ -302,6 +312,14 @@
 								piaoshu: (data[i][1]/10000).toFixed(2),
 								rateChange: (data[i][2]/10000).toFixed(2)
 							};
+						var cellClassName={}
+						if(data[i][2]<0){
+							cellClassName.huanbi='small-text-green'
+						}else{
+							cellClassName.huanbi='small-text-red'
+						}	
+						arr.cellClassName=cellClassName;		
+						that.tableDataAll.push(arr);	
 						that.tableDataAll1.push(arr);
 						if(i<5){
 							that.tableData1.push(arr);
@@ -352,10 +370,13 @@
 						var arr={
 								id: i+1,
 								area: data[i][0],
-								jingcai: data[i][1],
-								football: data[i][2],
-								basketball: data[i][3]
+								jingcai: data[i][1]+"%",
+								football: data[i][2]+"%",
+								basketball: data[i][3]+"%"
 							};
+						var cellClassName={}
+						cellClassName.huanbi='small-text-blue'
+						arr.cellClassName =cellClassName;
 						that.tableDataAll3.push(arr);
 						if(i<5){
 							that.tableData3.push(arr);
@@ -443,5 +464,18 @@
 	.box-contaniner{
 		width: 100%;
 		margin: 20rpx 10rpx 40rpx 10rpx;
+	}
+	.small-text-green{
+			color: #1FCE58;
+			/* font-size: 30rpx; */
+		}
+		
+	.small-text-red{
+		color: #E83838;
+		/* font-size: 30rpx; */
+	}
+	.small-text-blue{
+		color: #007AFF;
+		/* font-size: 30rpx; */
 	}
 </style>

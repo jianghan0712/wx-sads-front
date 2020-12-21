@@ -17,7 +17,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{(pagedatacompare[0]==0||pagedatacompare[0]=='--')?'--':((pagedata[0]-pagedatacompare[0])*100/pagedatacompare[0]).toFixed(2)}}%</view>
+					<view class="big-text">{{pagedatacompare[0]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId==0" class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -27,7 +27,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{(pagedatacompare[0]==0||pagedatacompare[0]=='--')?'--':((pagedata[0]-pagedatacompare[0])*100/pagedatacompare[0]).toFixed(2)}}%</view>
+					<view class="big-text">{{pagedatacompare[0]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId!=0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -37,7 +37,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{(pagedatacompare[11]==0||pagedatacompare[0]=='--')?'--':pagedata[11]-pagedatacompare[11]}}%</view>
+					<view class="big-text">{{pagedatacompare[11]}}%</view>
 				</view>
 			</view>
 			<view  v-if="selfParam.provinceCenterId!=0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -47,7 +47,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{(pagedatacompare[1]==0||pagedatacompare[1]=='--')?'--':((pagedata[1]-pagedatacompare[1])*100/pagedatacompare[1]).toFixed(2)}}%</view>
+					<view class="big-text">{{pagedatacompare[1]}}%</view>
 				</view>
 			</view>
 			<view  v-if="selfParam.provinceCenterId==0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -57,7 +57,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{(pagedatacompare[1]==0||pagedatacompare[1]=='--')?'--':((pagedata[1]-pagedatacompare[1])*100/pagedatacompare[1]).toFixed(2)}}%</view>
+					<view class="big-text">{{pagedatacompare[1]}}%</view>
 				</view>
 			</view>
 			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -67,91 +67,91 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{(pagedatacompare[2]==0||pagedatacompare[2]=='--')?'--':((pagedata[2]-pagedatacompare[2])*100/pagedatacompare[2]).toFixed(2)}}%</view>
+					<view class="big-text">{{pagedatacompare[2]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId!=0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">足球日销量(百万元)</view>
 					<view class="big-text">{{pagedata[3]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[3]==0||pagedatacompare[3]=='--')?'--':((pagedata[3]-pagedatacompare[3])*100/pagedatacompare[3]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[3]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">蓝球日销量(万元)</view>
 					<view class="big-text">{{pagedata[4]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[4]==0||pagedatacompare[4]=='--')?'--':((pagedata[4]-pagedatacompare[4])*100/pagedatacompare[4]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[4]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId==0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">足球日销量(亿元)</view>
 					<view class="big-text">{{pagedata[3]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[3]==0||pagedatacompare[3]=='--')?'--':((pagedata[3]-pagedatacompare[3])*100/pagedatacompare[3]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[3]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">蓝球日销量(百万元)</view>
 					<view class="big-text">{{pagedata[4]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[4]==0||pagedatacompare[4]=='--')?'--':((pagedata[4]-pagedatacompare[4])*100/pagedatacompare[4]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[4]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId!=0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">1-2关次销量(百万元)</view>
 					<view class="big-text">{{pagedata[5]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[5]==0||pagedatacompare[5]=='--')?'--':((pagedata[5]-pagedatacompare[5])*100/pagedatacompare[5]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[5]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">单票金额(元)</view>
 					<view class="big-text">{{pagedata[6]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[6]==0||pagedatacompare[6]=='--')?'--':((pagedata[6]-pagedatacompare[6])*100/pagedatacompare[6]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[6]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId==0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">1-2关次销量(亿元)</view>
 					<view class="big-text">{{pagedata[5]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[5]==0||pagedatacompare[5]=='--')?'--':((pagedata[5]-pagedatacompare[5])*100/pagedatacompare[5]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[5]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">单票金额(元)</view>
 					<view class="big-text">{{pagedata[6]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[6]==0||pagedatacompare[6]=='--')?'--':((pagedata[6]-pagedatacompare[6])*100/pagedatacompare[6]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[6]}}%</view>
 				</view>
 			</view>
 			<view class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">返奖率</view>
 					<view class="big-text">{{pagedata[7]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[7]==0||pagedatacompare[7]=='--')?'--':((pagedata[7]-pagedatacompare[7])*100/pagedatacompare[7]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[7]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">"0"销量门店数</view>
 					<view class="big-text">{{pagedata[8]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[8]==0||pagedatacompare[8]=='--')?'--':((pagedata[8]-pagedatacompare[8])*100/pagedatacompare[8]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[8]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId==0" class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">本月累计销量(亿元)</view>
 					<view class="big-text">{{pagedata[9]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[9]==0||pagedatacompare[9]=='--')?'--':((pagedata[9]-pagedatacompare[9])*100/pagedatacompare[9]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[9]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">本年累计销量(亿元)</view>
 					<view class="big-text">{{pagedata[10]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[10]==0||pagedatacompare[10]=='--')?'--':((pagedata[10]-pagedatacompare[10])*100/pagedatacompare[10]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[10]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId!=0" class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">本月累计销量(百万元)</view>
 					<view class="big-text">{{pagedata[9]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[9]==0||pagedatacompare[9]=='--')?'--':((pagedata[9]-pagedatacompare[9])*100/pagedatacompare[9]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[9]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">本年累计销量(亿元)</view>
 					<view class="big-text">{{pagedata[10]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{(pagedatacompare[10]==0||pagedatacompare[10]=='--')?'--':((pagedata[10]-pagedatacompare[10])*100/pagedatacompare[10]).toFixed(2)}}%</view>
+					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[10]}}%</view>
 				</view>
 			</view>
 		</view>
@@ -292,37 +292,18 @@
 				var token=getApp().globalData.token;
 				if('周同比'==this.arcbarNumTop){
 					var that=this;
-					//日销量 
-					var url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					var param=this.createParam();
-					urlAPI.getRequest(url, param).then((res)=>{
-						this.loading = false;
-						var data =res.data.data;
-						if(data.length==0){
-							this.$set(that.pagedata,0,0);
-							this.$set(that.pagedatacompare,0,0);
-						}else{
-							var all =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-							};
-							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,0,(all/100000000).toFixed(2));
-							}else {
-								this.$set(that.pagedata,0,(all/1000000).toFixed(2));
-							}
-							this.$set(that.pagedatacompare,0,data[0][2]);
-						}
-						
-					}).catch((err)=>{
-						this.loading = false;
-						console.log('request fail', err);
-					});
+					//日销量 pentaho/sales/getSalesOverview
+					var url = '';
+					var param={}
 					
 					//销量排名 只有全国有
-					if(this.selfParam.provinceCenterId==0){
-						url = '/pentaho/dailyPaper/getSalesAndComRanking';
-						param=this.createParam();
+					if(this.selfParam.provinceCenterId!=0){
+						url = '/pentaho/sales/getProSalesRanking';
+						param= {dateTimeStart: this.selfParam.businessDate.date.startDate,
+								dateTimeEnd:this.selfParam.businessDate.date.startDate,
+								 dateFlag:"1",
+								 provincialId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
 						urlAPI.getRequest(url, param).then((res)=>{
 							this.loading = false;
 							var data =res.data.data;
@@ -335,7 +316,7 @@
 									all.push(data[0])
 								};
 								this.$set(that.pagedata,11,all);
-								this.$set(that.pagedatacompare,11,data[0][2]);
+								this.$set(that.pagedatacompare,11,data[0][1]);
 							}
 							
 						}).catch((err)=>{
@@ -345,27 +326,35 @@
 					}
 					
 					//日票数
-					url = '/pentaho/dailyPaper/getVotesAndComRanking';
-					param=this.createParam();
-					 param.regionId=this.selfParam.provinceCenterId,
+					url = '/pentaho/sales/getSalesOverview';
+					param= {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+					param.regionId=this.selfParam.provinceCenterId,
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;
 						if(data.length==0){
+							this.$set(that.pagedata,0,0);
+							this.$set(that.pagedatacompare,0,0);
 							this.$set(that.pagedata,1,0);
 							this.$set(that.pagedatacompare,1,0);
 						}else{
-							var all =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-							};
 							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,1,(all/1000000).toFixed(2));
+								this.$set(that.pagedata,1,(data[1][0]/1000000).toFixed(2));
 							}else {
-								this.$set(that.pagedata,1,(all/10000).toFixed(2));
+								this.$set(that.pagedata,1,(data[1][0]/10000).toFixed(2));
 							}
 							
-							this.$set(that.pagedatacompare,1,data[0][2]);
+							this.$set(that.pagedatacompare,1,data[1][1]);
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,0,(data[0][0]/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,0,(data[0][0]/1000000).toFixed(2));
+							}
+							this.$set(that.pagedatacompare,0,data[0][1]);
 						}
 						
 					}).catch((err)=>{
@@ -402,58 +391,44 @@
 					});
 					
 					//足球日销量
-					url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					param=this.createParam();
+					url = '/pentaho/sales/getGameSales';
+					param= {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;
 						if(data.length==0){
 							this.$set(that.pagedata,3,0);
 							this.$set(that.pagedatacompare,3,0);
-						}else{
-							var all =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-							};
-							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,3,(all/100000000).toFixed(2));
-							}else {
-								this.$set(that.pagedata,3,(all/1000000).toFixed(2));
-							}
-							
-							this.$set(that.pagedatacompare,3,data[0][2]);
-						}
-						
-					}).catch((err)=>{
-						this.loading = false;
-						console.log('request fail', err);
-					});
-					//篮球日销量
-					url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					param=this.createParam();
-					urlAPI.getRequest(url, param).then((res)=>{
-						this.loading = false;
-						var data =res.data.data;
-						if(data.length==0){
 							this.$set(that.pagedata,4,0);
 							this.$set(that.pagedatacompare,4,0);
 						}else{
-							var all =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-							};
+							var bk=data.basketball;
+							var fb=data.football;
 							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,4,(all/1000000).toFixed(2));
+								this.$set(that.pagedata,3,(fb[0]/100000000).toFixed(2));
 							}else {
-								this.$set(that.pagedata,4,(all/10000).toFixed(2));
+								this.$set(that.pagedata,3,(fb[0]/1000000).toFixed(2));
 							}
-							this.$set(that.pagedatacompare,4,data[0][2]);
+							
+							this.$set(that.pagedatacompare,3,fb[1]);
+							
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,4,(bk[0]/1000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,4,(bk[0]/10000).toFixed(2));
+							}
+							this.$set(that.pagedatacompare,4,bk[1]);
 						}
 						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					
 					
 					//1-2关次销量
 					url = '/pentaho/dailyPaper/getTwoPassSales';
@@ -498,8 +473,12 @@
 						console.log('request fail', err);
 					});
 					//返奖率
-					url = '/pentaho/dailyPaper/getReturnRateRanking';
-					param=this.createParam();
+					url = '/pentaho/sales/getReturnRateState';
+					param= {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;
@@ -507,8 +486,8 @@
 							this.$set(that.pagedata,7,0);
 							this.$set(that.pagedatacompare,7,0);
 						}else{
-							this.$set(that.pagedata,7,data[0][1]);
-							this.$set(that.pagedatacompare,7,0);
+							this.$set(that.pagedata,7,data[0]);
+							this.$set(that.pagedatacompare,7,data[1]);
 						}
 						
 					}).catch((err)=>{
@@ -567,35 +546,16 @@
 					//环比
 					var that=this;
 					//日销量 
-					var url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					var param=this.createParam();
-					urlAPI.getRequest(url, param).then((res)=>{
-						this.loading = false;
-						var data =res.data.data;	
-						if(data.length==0){
-							this.$set(that.pagedata,0,0);
-							this.$set(that.pagedatacompare,0,0);
-						}else{
-							var all =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-							};
-							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,0,(all/100000000).toFixed(2));
-							}else {
-								this.$set(that.pagedata,0,(all/1000000).toFixed(2));
-							}
-							this.$set(that.pagedatacompare,0,data[0][2]);
-						}
-						
-					}).catch((err)=>{
-						this.loading = false;
-						console.log('request fail', err);
-					});
-					//销量排名 只有全国有
-					if(this.selfParam.provinceCenterId==0){
-						url = '/pentaho/dailyPaper/getSalesAndComRanking';
-						param=this.createParam();
+					var url = '';
+					var param={};
+					//销量排名 只有非全国有
+					if(this.selfParam.provinceCenterId!=0){
+						url = '/pentaho/sales/getProSalesRanking';
+						param= {dateTimeStart: this.selfParam.businessDate.date.startDate,
+								dateTimeEnd:this.selfParam.businessDate.date.startDate,
+								 dateFlag:"1",
+								 provincialId:this.selfParam.provinceCenterId,
+								 token:this.selfParam.token }
 						urlAPI.getRequest(url, param).then((res)=>{
 							this.loading = false;
 							var data =res.data.data;
@@ -617,26 +577,37 @@
 						});
 					}
 					//日票数
-					url = '/pentaho/dailyPaper/getVotesAndComRanking';
-					param=this.createParam();
+					url = '/pentaho/sales/getSalesOverview';
+					param= {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+					param.regionId=this.selfParam.provinceCenterId,
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;
 						if(data.length==0){
+							this.$set(that.pagedata,0,0);
+							this.$set(that.pagedatacompare,0,0);
 							this.$set(that.pagedata,1,0);
 							this.$set(that.pagedatacompare,1,0);
 						}else{
-							var all =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-							};
 							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,0,(all/100000000).toFixed(2));
+								this.$set(that.pagedata,1,(data[1][0]/1000000).toFixed(2));
 							}else {
-								this.$set(that.pagedata,0,(all/1000000).toFixed(2));
+								this.$set(that.pagedata,1,(data[1][0]/10000).toFixed(2));
 							}
-							this.$set(that.pagedatacompare,1,data[0][2]);
+							
+							this.$set(that.pagedatacompare,1,data[1][2]);
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,0,(data[0][0]/100000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,0,(data[0][0]/1000000).toFixed(2));
+							}
+							this.$set(that.pagedatacompare,0,data[0][2]);
 						}
+						
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
@@ -673,51 +644,37 @@
 					});
 					
 					//足球日销量
-					url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					param=this.createParam();
+					url = '/pentaho/sales/getGameSales';
+					param= {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;
 						if(data.length==0){
 							this.$set(that.pagedata,3,0);
 							this.$set(that.pagedatacompare,3,0);
-						}else{
-							var all =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-							};
-							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,3,(all/100000000).toFixed(2));
-							}else {
-								this.$set(that.pagedata,3,(all/1000000).toFixed(2));
-							}
-							this.$set(that.pagedatacompare,3,data[0][2]);
-						}
-						
-					}).catch((err)=>{
-						this.loading = false;
-						console.log('request fail', err);
-					});
-					//篮球日销量
-					url = '/pentaho/dailyPaper/getSalesAndComRanking';
-					param=this.createParam();
-					urlAPI.getRequest(url, param).then((res)=>{
-						this.loading = false;
-						var data =res.data.data;
-						if(data.length==0){
 							this.$set(that.pagedata,4,0);
 							this.$set(that.pagedatacompare,4,0);
-						}else{
-							var all =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-							};
+						}else{ 
+							var bk=data.basketball;
+							var fb=data.football;
 							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,4,(all/1000000).toFixed(2));
+								this.$set(that.pagedata,3,(fb[0]/100000000).toFixed(2));
 							}else {
-								this.$set(that.pagedata,4,(all/10000).toFixed(2));
+								this.$set(that.pagedata,3,(fb[0]/1000000).toFixed(2));
 							}
-							this.$set(that.pagedatacompare,4,data[0][2]);
+							
+							this.$set(that.pagedatacompare,3,fb[2]);
+							
+							if(this.selfParam.provinceCenterId==0){
+								this.$set(that.pagedata,4,(fb[0]/1000000).toFixed(2));
+							}else {
+								this.$set(that.pagedata,4,(fb[0]/10000).toFixed(2));
+							}
+							this.$set(that.pagedatacompare,4,fb[2]);
 						}
 						
 					}).catch((err)=>{
@@ -766,8 +723,12 @@
 						console.log('request fail', err);
 					});
 					//返奖率
-					url = '/pentaho/dailyPaper/getReturnRateRanking';
-					param=this.createParam();
+					url = '/pentaho/sales/getReturnRateState';
+					param= {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;
@@ -775,10 +736,9 @@
 							this.$set(that.pagedata,7,0);
 							this.$set(that.pagedatacompare,7,0);
 						}else{
-							this.$set(that.pagedata,7,0);
-							this.$set(that.pagedatacompare,7,0);
+							this.$set(that.pagedata,7,data[0]);
+							this.$set(that.pagedatacompare,7,data[2]);
 						}
-							
 						
 					}).catch((err)=>{
 						this.loading = false;

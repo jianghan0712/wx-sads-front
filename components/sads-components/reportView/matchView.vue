@@ -162,7 +162,9 @@
 				var token =getApp().globalData.token;
 				var that=this;
 				var url = '/pentaho/dailyPaper/getMatchSceneCount';
-				var param=this.createParam();
+				var param={dateTime: this.selfParam.businessDate.date.startDate,
+						 regionId:this.selfParam.provinceCenterId,
+						 token:this.selfParam.token}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;
@@ -172,10 +174,10 @@
 						this.$set(that.pagedata,2,0);
 						this.$set(that.pagedata,3,0);
 					}else {
-						this.$set(that.pagedata,0,data[0]);
-						this.$set(that.pagedata,1,data[1]);
-						this.$set(that.pagedata,2,data[2]);
-						this.$set(that.pagedata,3,data[3]);
+						this.$set(that.pagedata,0,data[16]);
+						this.$set(that.pagedata,1,data[17]);
+						this.$set(that.pagedata,2,data[19]);
+						this.$set(that.pagedata,3,data[18]);
 					}
 				}).catch((err)=>{
 					this.loading = false;

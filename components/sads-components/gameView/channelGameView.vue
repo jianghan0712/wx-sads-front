@@ -8,7 +8,7 @@
 			<view class="box-container">
 				<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
 			</view>	
-			<view >
+			<!-- <view >
 				<view class="clineChart-title">
 					<view style="font-size: 30rpx;font-weight: bold;">{{arcbarNumTop}}销量及票数走势</view>
 					<view class="linechart-tab">
@@ -23,7 +23,7 @@
 					<line-chart ref="lineData2" canvasId="lineData2" :dataAs="lineData2" />
 				</view>
 				
-			</view>	
+			</view>	 -->
 
 			<view >
 				<view class="clineChart-title">
@@ -173,20 +173,6 @@
 					rangetime: ['2019/01/08 14:00','2019/01/16 13:59'],
 					type: 'rangetime',
 					value: '',
-					lineData1: {
-						//数字的图--折线图数据
-						categories: [],
-						series: [
-							
-						]
-					},
-					lineData2: {
-						//数字的图--折线图数据
-						categories: [],
-						series: [
-							
-						]
-					},
 					arcbar1: {
 							type: 'radar',
 							series:[
@@ -459,7 +445,7 @@
 					this.selfParam.token=getApp().globalData.token
 					uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 				},
-				loadMidData(ballType){
+				/* loadMidData(ballType){
 					var url = '/pentaho/shows/getShowGameTrendChart';
 					var param  =this.createParam();
 					urlAPI.getRequest(url, param).then((res)=>{
@@ -528,11 +514,10 @@
 						console.log('request fail', err);
 					});
 					
-				},
+				}, */
 				loadData(){
 					var ballType = getApp().globalData.ballType;
 					this.loadTopData(ballType);
-					this.loadMidData(ballType);
 					this.loadLastData();
 					
 				},

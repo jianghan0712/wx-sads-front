@@ -115,6 +115,7 @@
 					selfProvinceCenterId:'',//存登录时候的id
 					shopNo:''
 				},
+				gateInfo:{},
 				areaMap:{},
 				isFirstLoad:true,
 				modelSet:{
@@ -190,6 +191,10 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					var data = res.data.data;
 					this.showPro=data.provincial+data.city
+					this.gateInfo = {
+						showName:data.showName,provincial:data.provincial,city:data.city,provincialId:data.provincialId,cityId:data.cityId
+					}
+					uni.setStorageSync("gateInfo",JSON.stringify(this.gateInfo))
 				}).catch((err)=>{
 					
 				});

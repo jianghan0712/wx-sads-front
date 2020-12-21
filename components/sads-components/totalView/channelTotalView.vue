@@ -14,12 +14,12 @@
 					  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
 					</view>
 				</view>		
-				<view class="end-cont" :class="{dis:btnnum == 0}">		
+				<view v-if="btnnum == 0">		
 					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
 								:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}"
 								:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
 				</view>
-				<view class="end-cont" :class="{dis:btnnum == 1}">		　
+				<view v-if="btnnum == 1">		　
 					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
 								:xAxisAs="{scrollShow:false, gridEval:(lineData1.categories.length / 4).toFixed(0)}"
 								:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
@@ -50,7 +50,7 @@
 						<view style="-webkit-flex: 1;flex: 1;">环比</view>
 					</view>
 					<view class="shop-item-content">
-						<view style="width: 50%;">{{valueToPercent2(shopData.rate.sum)}}</view>				
+						<view style="width: 50%;">{{shopData.rate.sum}}</view>				
 						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.tongbi}}名</view>
 						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi}}名</view>
 					</view>
@@ -65,7 +65,7 @@
 						<view @tap="changeArcbar(1)" :class="arcbarNum == 1?'btna':'hide'" >篮球</view>
 					</view>
 				</view>	
-				<view class="end-cont" :class="{dis:arcbarNum == 0}" >
+				<view v-if="arcbarNum == 0" >
 					<view class="arcbarChart-content">
 						<view class="arcbar" style="width: 50%;">
 							<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
@@ -75,7 +75,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="end-cont" :class="{dis:arcbarNum == 1}">		　						 
+				<view v-if="arcbarNum == 1" >		　						 
 					<view class="arcbarChart-content">
 						<view class="arcbar" style="width: 50%;">
 							<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
@@ -92,13 +92,13 @@
 					<view class="row-box">
 						<view class="lineTwo">
 							<view class="row_box_2">全国足球销量占比</view>
-							<view class="row_box_2">{{allData.footRate}}</view>				
+							<view class="row_box_2">{{allData.footRate+"%"}}</view>				
 						</view>
 					</view>
 					<view class="row-box">
 						<view class="lineTwo">
 							<view class="row_box_2">全省足球销量占比</view>
-							<view class="row_box_2">{{allData.baskRate}}</view>
+							<view class="row_box_2">{{allData.baskRate+"%"}}</view>
 						</view>
 					</view>
 				</view>
@@ -106,7 +106,7 @@
 		
 			<block v-if="today!= selfParam.businessDate.view">	 
 				<view class="box-contaniner">
-					<view class="shop-title">{{selfParam.provinceCenterName}}返奖情况</view>
+					<view class="shop-title">返奖情况</view>
 					<view class="line">
 						<view class="shop-item-title">
 							<view style="width: 40%;">返奖率</view>				
@@ -263,6 +263,7 @@
 				this.selfParam.provinceCenterName=areaName	
 				this.selfParam.shopNo = uni.getStorageSync("shopNo")
 				this.selfParam.token=getApp().globalData.token
+				this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			createParam(){
@@ -360,35 +361,30 @@
 					var j=0,k = 0,tempAmount=0,tempVol=0;
 					
 					for(var i=0;i<dates.length;i++){	
-						if(j==3){
-							categories[k] = dates[i];
-							amountData[k] = sales[i];
-							volData[k] = votes[i];
-							k++;
-							j=0;
-						}else{
-							tempAmount = tempAmount+sales[i];
-							tempVol = tempVol+votes[i];
-							j=j+1;
-						}
+						categories[i] = dates[i];
+						amountData[i] = sales[i];
+						volData[i] = votes[i];
 					}
-					console.log('categories:', categories);
-					console.log('amountData:', amountData);
-					console.log('volData:', volData);
 					
 					var json = {'name':'销量','data':amountData};
 					var series = [];
-					series[0] = json;				
+					series[0] = json;	
+					
 					this.$set(this.lineData2, 'categories', categories);
 					this.$set(this.lineData2, 'series', series);
-					this.$refs['lineData2'].showCharts();
 					
-					var json2 = {'name':'销量','data':volData};
+					
+					var json2 = {'name':'票数','data':volData};
 					var series2 = [];
 					series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories); 
 					this.$set(this.lineData1, 'series', series2);
-					this.$refs['lineData1'].showCharts();
+					
+					if(this.btnnum==0){
+						this.$refs['lineData2'].showCharts();
+					}else{
+						this.$refs['lineData1'].showCharts();
+					}
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -416,13 +412,15 @@
 						mask: true
 					});
 					var data = res.data.data;
-					this.$set(that.allData,'footRate',data.football[3]);
-					this.$set(that.allData,'baskRate',data.basketball[3]);
+					
+					
 					var tempObj;
 					if(type=='足球'){
 						tempObj = data.football
+						this.$set(that.allData,'footRate',data.football[3]);
 					}else{
 						tempObj = data.basketball
+						this.$set(that.allData,'baskRate',data.basketball[3]);
 					}
 					
 					var format0 = numberFun.formatCNumber(tempObj[0]);
@@ -503,7 +501,9 @@
 						mask: true
 					});
 					var data = res.data.data;	
-					
+					if(data==null || data.length==0){
+						return;
+					}
 					this.shopData.shop.sum=data[0];
 					this.shopData.shop.tongbi=data[1];
 					this.shopData.shop.huabi=data[2];
@@ -519,8 +519,7 @@
 			getRankByProvince(){
 				var url = '/pentaho/shows/getShowRankingPro';
 				var param = this.createParam()
-				param.provincialId = this.selfParam.provincialId
-				
+				param.provincialId = this.gateInfo.provincialId
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -530,15 +529,18 @@
 						mask: true
 					});
 					var data = res.data.data;	
-					
-					this.shopData.rate.sum=data[0];
+					if(null==data[0]){
+						this.shopData.rate.sum=0;
+					}else{
+						this.shopData.rate.sum=data[0];
+					}
 					this.shopData.rate.tongbi=data[1];
 					this.shopData.rate.huanbi=data[2];
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-					this.shopData.rate.sum=0;
+					this.shopData.rate.sum=1;
 					this.shopData.rate.tongbi=0;
 					this.shopData.rate.huanbi=0;
 				});
@@ -555,8 +557,13 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.data;	
-					this.returnData.rate.sum=data[0];
+					var data = res.data.data;
+					if(null==data[0]){
+						this.returnData.rate.sum=0;
+					}else{
+						this.returnData.rate.sum=data[0];
+					}
+					
 					this.returnData.rate.tongbi=data[1];
 					this.returnData.rate.huanbi=data[2]
 					this.res = '请求结果 : ' + JSON.stringify(res);

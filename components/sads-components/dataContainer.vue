@@ -85,7 +85,6 @@
 		background-size: 400px 250px;
 		/* margin: 20rpx 10rpx 20rpx 10rpx; */
 		padding: 20rpx 10rpx 20rpx 10rpx;	
-		border-radius:50rpx 50rpx 50rpx 50rpx
 	}
 	.row_box_2{
 		display: flex;

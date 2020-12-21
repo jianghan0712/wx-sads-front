@@ -9,22 +9,22 @@
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >足球奖池七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
-				<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" />
+				<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" :basicAs="{colors:['#E5E5E5','#2BC5FE']}" />
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >足球调节基金七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
-				<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" />
+				<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" :basicAs="{colors:['#E5E5E5','#2BC5FE']}" />
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >篮球奖池七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
-				<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" />
+				<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3"  :basicAs="{colors:['#E5E5E5','#2BC5FE']}"/>
 			</view>
 			<view class="padding"> 
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >篮球调节基金七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
-				<histogram-chart ref="histogramChart4" canvasId="histogramChart4" :dataAs="histogramChart4" />
+				<histogram-chart ref="histogramChart4" canvasId="histogramChart4" :dataAs="histogramChart4" :basicAs="{colors:['#E5E5E5','#2BC5FE']}" />
 			</view>
 			<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 		</view>

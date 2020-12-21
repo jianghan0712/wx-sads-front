@@ -271,7 +271,7 @@
 
     .scroll-h {
         width: 100%;
-        height: 60rpx;
+        height: 80rpx;
         flex-direction: row;
         /* #ifndef APP-PLUS */
         white-space: nowrap;

@@ -624,7 +624,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"80px"
+								$width:"70px"
 							},
 							{
 								title: '销量（' + format0.name + '元）',
@@ -634,12 +634,12 @@
 							{
 								title: '同比',
 								key: 'tongbi',
-								$width:"80px"
+								$width:"75px"
 							},
 							{
 								title: '环比',
 								key: 'huanbi',
-								// $width:"80px"
+								$width:"70px"
 							}
 						],
 			
