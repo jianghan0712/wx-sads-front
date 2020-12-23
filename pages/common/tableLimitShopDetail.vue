@@ -23,7 +23,7 @@
 		},
 		methods: {
 			goDetail(number){
-				console.log(number)
+				uni.setStorageSync("shopNo",number)
 				uni.navigateTo({
 					url:"/pages/channel/index-inner?number="+number
 				});

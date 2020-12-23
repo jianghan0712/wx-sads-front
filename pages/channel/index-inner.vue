@@ -60,13 +60,14 @@
 			channelGameView,channelTotalView,channelLevelView,channelTicketView,channelMatchView,uniSection 
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
-			this.selfParam.shopNo = option.number
+			this.selfParam.shopNo = uni.getStorageSync("shopNo")
 			this.returnFromDatePicker();
 			this.loadMainData();
 		},
 		onShow() {//此处接受来自日期选择页面的参数
 			this.returnFromDatePicker();
 			console.log("sales-self-onShow:",this.selfParam)
+			this.selfParam.shopNo = uni.getStorageSync("shopNo")
 			this.loadMainData();
 			if(!this.isFirstLoad){
 				console.log("重新加载")
@@ -84,6 +85,11 @@
 				
 			}
 			this.isFirstLoad=false
+		},
+		created() {
+			this.selfParam.shopNo = uni.getStorageSync("shopNo")
+			this.returnFromDatePicker();
+			this.loadMainData();
 		},
 		data() {
 			return {
