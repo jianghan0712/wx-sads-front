@@ -9,6 +9,16 @@ export const getToday = () => {
 	var timer = year + '-' + month + '-' + day;
 	return timer;
 }
+export const getYesterday = () => {
+	var date = new Date(),
+	year = date.getFullYear(),
+	month = date.getMonth() + 1,
+	day = date.getDate()-1;
+	month >= 1 && month <= 9 ? (month = "0" + month) : "";
+	day >= 0 && day <= 9 ? (day = "0" + day) : "";
+	var timer = year + '-' + month + '-' + day;
+	return timer;
+}
 export const getTime = () => {
 	var date = new Date(),
 	year = date.getFullYear(),
@@ -64,5 +74,5 @@ export const getYear = () => {
 
 
 export default {
-	getToday, getTime,getDate,getYear,getMonth
+	getToday, getTime,getDate,getYear,getMonth,getYesterday
 }

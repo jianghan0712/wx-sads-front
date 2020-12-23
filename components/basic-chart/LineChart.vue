@@ -91,7 +91,7 @@ export default {
 				$this: this, //this实例组件内使用图表，必须传入this实例
 				canvasId: this.canvasId, //页面组件canvas-id，支付宝中为id
 				type: 'line', //图表类型，可选值为pie、line、column、area、ring、radar、arcbar、gauge、candle、bar、mix、rose、word
-				padding: [15, 15, 0, 15], //画布填充边距，顺序为上右下左，同css，但必须4位
+				padding: [10, 20, 0, 20], //画布填充边距，顺序为上右下左，同css，但必须4位
 				colors: ['#1890ff','#facc14', '#2fc25b',  '#f04864', '#8543e0', '#90ed7d'], //图表配色方案，不传则使用系统默认配置
 				rotate: false, //是否横屏展示
 				rotateLock: true, //	锁定横屏模式，如果在支付宝和百度小程序中使用横屏模式，请赋值true，否则每次都会旋转90度。跨端使用通过uni-app的条件编译来赋值
@@ -139,10 +139,12 @@ export default {
 				yAxis: {
 					//如果是多坐标系则传数组型对象[{disabled:true},{disabled:false}]
 					itemCount: 3,
-					disabled: true, //不绘制Y轴
+					disabled: false, //不绘制Y轴
 					position: 'left', //Y轴位置，可选值左侧left右侧right(未起效果)
 					disableGrid: false, //不绘制X轴网格(即默认绘制网格)
 					gridType:'dash',
+					calibration: true,
+					axisLine:false,
 					format: val => {
 						let defaultSetting = { type: 'number', fixed: 0, name: '' };
 						let { type, fixed, name } = this.yAxisAs && this.yAxisAs.formatter ? Object.assign(defaultSetting, this.yAxisAs.formatter) : defaultSetting;
@@ -154,8 +156,8 @@ export default {
 						} else {
 							return val.toFixed(0);
 						}
-					}
-					// title:'Y轴标题',//Y轴标题
+					},
+					title:'Y轴标题',//Y轴标题
 					// titleFontSize:basic.fontSize titleFontColor==>#666666 fontColor==>666666 Y轴数据点颜色 fontSizeY轴数据标签字体大小 等详见http://doc.ucharts.cn/1172128
 				},
 

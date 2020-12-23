@@ -17,12 +17,12 @@
 				<view class="end-cont" :class="{dis:btnnum == 0}">		
 					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2"  
 								:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}" 
-								:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
+								:yAxisAs="{formatter: {type: 'number', name:amountFormat.name +'元',fixed: 0}}"/>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">		　
 					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
 								:xAxisAs="{scrollShow:false, gridEval:(lineData1.categories.length / 4).toFixed(0)}" 
-								:yAxisAs="{formatter: {type: 'number', name:'张',fixed: 0}}"/>
+								:yAxisAs="{formatter: {type: 'number', name:voteFormat.name +'张',fixed: 0}}"/>
 				</view>		
 			</view>
 			
@@ -233,6 +233,8 @@
 				totalData:{},	
 				footballData:{},	
 				basketballData:{},	
+				amountFormat:{"name":"","value":1},
+				voteFormat:{"name":"","value":1},
 				btnnum: 0,
 				arcbarNum: 0,
 				lineData2: {},
@@ -439,19 +441,26 @@
 					var amountData = [];
 					var volData = [];
 					var j=0,k = 0,tempAmount=0,tempVol=0;					
-					
+					var maxAmount = 0;
+					var maxVote = 0;
 					for(var i=0;i<dates.length;i++){	
-						// if(j==3){
-							categories[i] = dates[i];
-							amountData[i] = sales[i];
-							volData[i] = votes[i];
-						// 	j=0;
-						// }else{
-						// 	tempAmount = tempAmount+sales[i];
-						// 	tempVol = tempVol+votes[i];
-						// 	j=j+1;
-						// }
+						if(maxAmount<sales[i]){
+							maxAmount = sales[i]
+						}
+						if(maxVote<sales[i]){
+							maxVote = votes[i]
+						}
 					}
+					this.amountFormat = numberFun.formatCNumber(maxAmount);
+					this.voteFormat= numberFun.formatCNumber(maxVote);
+					console.log(this.amountFormat)
+					console.log(this.voteFormat)
+					for(var i=0;i<dates.length;i++){
+						categories[i] = dates[i];
+						amountData[i] = (sales[i]/this.amountFormat.value).toFixed(2);
+						volData[i] = (votes[i]/this.voteFormat.value).toFixed(2);
+					}
+					
 					console.log('categories:', categories);
 					console.log('amountData:', amountData);
 					console.log('volData:', volData);
