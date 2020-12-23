@@ -486,6 +486,7 @@
 	
 	.table {
 		/* line-height: 40px; */
+		display: flex;
 		font-weight: bold;
 		border-color:#FFFFFF;
 	}

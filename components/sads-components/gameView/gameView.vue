@@ -206,12 +206,12 @@
 						tableColumns1: [{
 									title: "排名",
 									key: "id",
-									$width:"90px",
+									$width:"50px",
 								},
 								{
 									title: '省份',
 									key: 'area',
-									$width:"90px"
+									$width:"80px"
 								},
 								{
 									title: '返奖率',
@@ -849,6 +849,13 @@
 		justify-content: space-between;
 		background-color: #FFFFFF;
 	}
+	.table {
+		/* line-height: 40px; */
+		/* font-weight: bold; */
+		display: flex;
+		border-color:#FFFFFF;
+	}
+	
 	button {
 		width: 75%;
 	    margin-top: 30rpx;

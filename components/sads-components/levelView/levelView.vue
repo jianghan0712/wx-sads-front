@@ -446,6 +446,7 @@
 	.example {
 		/* line-height: 40px; */
 		/* font-weight: bold; */
+		display: flex;
 		border-color:#FFFFFF;
 	}
 	

@@ -80,7 +80,7 @@
         methods: {
 			getUserInfo(){
 				var url = '/pentaho/user/getUserInfo';
-				var param = {userName:'Test001'/* this.loginInfo.userame */,token:this.selfParam.token}
+				var param = {userName:this.loginInfo.userame,token:this.selfParam.token}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)
@@ -110,7 +110,7 @@
 			},
 			getUserRight(){
 				var url = '/pentaho/user/getUserPower';
-				var param = {userId:1510 /* this.userinfo.userId */, token:this.selfParam.token}
+				var param = {userId:this.userinfo.userId, token:this.selfParam.token}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)
@@ -210,15 +210,15 @@
 				console.log(this.form)
 				var url = '/pentaho/user/logIn';
 				//,this.loginInfo.password
-				var password = loginUtil.encrypt('0000zxcv.','');
-				var param={userName:'Test001', userPwd:password}
+				var password = loginUtil.encrypt(this.loginInfo.password,'');
+				//var param={userName:'Test001', userPwd:password}
 				//'dRZ9LYoPExQPDWhTBFWRNw==   0000zxcv.'
-				//var param={userName:this.loginInfo.username, userPwd:password}
+				var param={userName:this.loginInfo.username, userPwd:password}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
 					uni.showToast({
-						title: '请求成功',
+						title: '登录成功',
 						icon: 'success',
 						mask: true
 					});

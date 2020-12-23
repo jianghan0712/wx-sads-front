@@ -283,9 +283,9 @@
 									$width:"50px",
 								},
 								{
-									title: '地区编号',
+									title: ' ',
 									key: 'areaIdStr',
-									$width:"80px",
+									$width:"0px",
 								},
 								{
 									title: '省份',
