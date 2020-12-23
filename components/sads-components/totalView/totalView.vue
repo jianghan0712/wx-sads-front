@@ -16,13 +16,11 @@
 				</view>		
 				<view class="end-cont" :class="{dis:btnnum == 0}">		
 					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2"  
-								:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}" 
-								:yAxisAs="{formatter: {type: 'number', name:amountFormat.name +'元',fixed: 0}}"/>
+								:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}"/>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">		　
 					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
-								:xAxisAs="{scrollShow:false, gridEval:(lineData1.categories.length / 4).toFixed(0)}" 
-								:yAxisAs="{formatter: {type: 'number', name:voteFormat.name +'张',fixed: 0}}"/>
+								:xAxisAs="{scrollShow:false, gridEval:(lineData1.categories.length / 4).toFixed(0)}" />
 				</view>		
 			</view>
 			
@@ -157,7 +155,7 @@
 					</block>
 				</view>
 			</block>
-
+			
 			
 			<slot />
 		</view>
@@ -272,7 +270,7 @@
 						{
 							title: '环比',
 							key: 'huanbi',
-							// $width:"80px"
+							$width:"80px"
 						}
 					],
 				tableColumns2: [{
@@ -307,7 +305,7 @@
 			console.log("totalView onLoad:",this.selfParam)
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(550);
-			this.returnFromDatePicker();
+			// this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
 			this.refresh();
@@ -316,14 +314,14 @@
 			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			console.log("totalView created:",this.selfParam)
-			this.returnFromDatePicker();
+			// this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
 			this.refresh();
 		},
 		onShow(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
+			// this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
 			this.refresh();
@@ -453,8 +451,6 @@
 					}
 					this.amountFormat = numberFun.formatCNumber(maxAmount);
 					this.voteFormat= numberFun.formatCNumber(maxVote);
-					console.log(this.amountFormat)
-					console.log(this.voteFormat)
 					for(var i=0;i<dates.length;i++){
 						categories[i] = dates[i];
 						amountData[i] = (sales[i]/this.amountFormat.value).toFixed(2);
@@ -465,17 +461,18 @@
 					console.log('amountData:', amountData);
 					console.log('volData:', volData);
 					
-					var json = {'name':'销量','data':amountData};
+					var json = {'name':'销量('+this.amountFormat.name +'）元' ,'data':amountData};
 					var series = [];
 					series[0] = json;				
 					this.$set(this.lineData2, 'categories', categories);
 					this.$set(this.lineData2, 'series', series);
 					
-					var json2 = {'name':'票数','data':volData};
+					var json2 = {'name':'票数('+this.voteFormat.name +'）张','data':volData};
 					var series2 = [];
 					series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories);
 					this.$set(this.lineData1, 'series', series2);
+					
 					this.$refs['lineData2'].showCharts();
 					this.$refs['lineData1'].showCharts();
 					this.res = '请求结果 : ' + JSON.stringify(res);
@@ -650,12 +647,12 @@
 							{
 								title: '同比',
 								key: 'tongbi',
-								$width:"75px"
+								$width:"80px"
 							},
 							{
 								title: '环比',
 								key: 'huanbi',
-								$width:"70px"
+								$width:"80px"
 							}
 						],
 			
@@ -676,7 +673,10 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.data;	
+					var data = res.data.data;
+					if(data==null){
+						return
+					}
 					this.rankData.sum = data[0]
 					this.rankData.tongbi = data[1]
 					this.rankData.huanbi = data[2]
@@ -880,6 +880,7 @@
 	.example {
 		/* line-height: 40px; */
 		width: 100%;
+		display: flex;
 		font-weight: bold;
 		border-color:#FFFFFF;
 	}

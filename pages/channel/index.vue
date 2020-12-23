@@ -115,7 +115,7 @@
 						{
 							title: '门店编号',
 							key: 'number',
-							$width:"150px"
+							$width:"130px"
 						},
 						{
 							title: '销量(万元)',
@@ -153,12 +153,12 @@
 						{
 							title: '地区编号',
 							key: 'areaIdStr',
-							$width:"50px",
+							$width:"80px",
 						},
 						{
 							title: '省份/地市',
 							key: 'area',
-							$width:"80px"
+							$width:"100px"
 						},
 						{
 							title: '门店数量',
@@ -254,7 +254,9 @@
 							var json = {id:i+1, 
 										area:data[i][1], 
 										number:data[i][2], 
-										amount:(data[i][3]/10000).toFixed(2)}						
+										amount:data[i][3]}
+							//不变红				
+															
 							if(i<=4){
 								this.amountTableData[i] = json
 							}
@@ -283,7 +285,7 @@
 								{
 									title: '地区编号',
 									key: 'areaIdStr',
-									$width:"50px",
+									$width:"80px",
 								},
 								{
 									title: '省份',
@@ -293,7 +295,7 @@
 								{
 									title: '门店数量',
 									key: 'count',
-									$width:"50px"
+									$width:"80px"
 								},
 								{
 									title: '环比变化值',
@@ -310,7 +312,7 @@
 								{
 									title: '地区编号',
 									key: 'areaIdStr',
-									$width:"50px",
+									$width:"80px",
 								},
 								{
 									title: '地市',
@@ -320,7 +322,7 @@
 								{
 									title: '门店数量',
 									key: 'count',
-									$width:"50px"
+									$width:"80px"
 								},
 								{
 									title: '环比变化值',
@@ -338,13 +340,19 @@
 										areaIdStr:data[i][0],
 										area:data[i][1], 
 										count:data[i][2], 
-										change:data[i][3]}	
+										change:(data[i][3]>0?("+"+data[i][3]):data[i][3])
+										}	
+							var cellClassName ={};
+							if(data[i][3]<0){
+								cellClassName.change='small-text-green'
+							}else{
+								cellClassName.change='small-text-red'
+							}	
+							json.cellClassName=cellClassName;			
 							var areaId={id:data[i][0],name:data[i][1]}
 							if(i<=4){
-								this.$set(this.beyondLimitTableDataDetail,i,json);	
-								this.beyondLimitTableData[i] = json
+								this.beyondLimitTableData[i]=json;	
 							}
-							this.beyondLimitTableDataDetail[i] = json
 							this.$set(this.beyondLimitTableDataDetail,i,json);	
 							this.areaIdList[i]=areaId
 							this.$set(this.areaIdList,i,areaId);
@@ -453,7 +461,14 @@
 							var json = {id:i+1, 
 										area:data[i][1], 
 										number:data[i][2], 
-										amount:(data[i][3]/10000).toFixed(2)}	
+										amount:data[i][3]>0?"+"+(data[i][3]/10000).toFixed(2):(data[i][3]/10000).toFixed(2)}
+							var cellClassName ={};				
+							if(data[i][3]<0){
+								cellClassName.amount='small-text-green'
+							}else{
+								cellClassName.amount='small-text-red'
+							}	
+							json.cellClassName=cellClassName
 							this.$set(this.amountTableDataWithPro,i,json);	
 						}
 					}).catch((err)=>{

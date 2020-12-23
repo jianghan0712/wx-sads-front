@@ -39,7 +39,7 @@
 				</view>
 			</view>
 			
-			<block v-if="selfParam.businessDate.view!=today"></block>
+			<block v-if="selfParam.businessDate.view!=today">
 				<view >
 					<view class="container-title">
 						<view>各地区{{arcbarNumTop}}返奖情况</view>
@@ -519,7 +519,7 @@
 						this.loading = false;
 						console.log('request fail', err);
 					}); 
-					
+					console.log("today=",this.today,"selfparam=",this.selfParam)
 					if(that.selfParam.businessDate.view!=this.today){
 						var url = '/pentaho/sales/gamesReturnRateRankingList';
 						var that =this;

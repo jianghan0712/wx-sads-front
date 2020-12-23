@@ -14,7 +14,7 @@
 			</view>
 		</view>
 		<view class="column_box_2">
-			<view class="big-text">{{dataList.big2.name}} {{valueToPercent(dataList.big2.value)}}</view>
+			<view class="big-text">{{dataList.big2.name}} {{dataList.big2.value+"%"}}</view>
 			<view class="sale-row-2">
 				<view class="row-box">
 					<view class="small-text">{{dataList.big2.left.name}}</view>

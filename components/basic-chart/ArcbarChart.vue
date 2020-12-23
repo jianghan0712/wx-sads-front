@@ -95,7 +95,7 @@ export default {
 
 				//titleAs
 				title: {
-					name: (this.dataAs[this.valueKey][0].data * 100).toFixed(2) + '%',
+				//	name: (this.dataAs[this.valueKey][0].data * 100).toFixed(2) + '%',
 					color: this.basicAs.colors ? this.basicAs.colors[0] : colors[0]
 				},
 				subtitle: {

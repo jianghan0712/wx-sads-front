@@ -10,7 +10,7 @@
 				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
 			</view>
 			<view class="blackClass">
-				<view @click="goDatePicker" class="list">{{today}}</view>
+				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
 			</view>
 		 </view>		
 		<block v-if="tabIndex==0">
@@ -127,10 +127,26 @@
         },
         onLoad() {
 			this.returnFromDatePicker();
+			if(this.selfParam.businessDate.date.startDate==dateUtils.getToday()){
+				this.selfParam.businessDate.view =dateUtils.getYesterday();
+				this.selfParam.businessDate.date.startDate =dateUtils.getYesterday();
+			}
 			this.refresh()
         },
 		onShow() {
 			this.returnFromDatePicker();
+			if(this.selfParam.businessDate.date.startDate==dateUtils.getToday()){
+				this.selfParam.businessDate.view =dateUtils.getYesterday();
+				this.selfParam.businessDate.date.startDate =dateUtils.getYesterday();
+			}
+			this.refresh()
+		},
+		created() {
+			this.returnFromDatePicker();
+			if(this.selfParam.businessDate.date.startDate==dateUtils.getToday()){
+				this.selfParam.businessDate.view =dateUtils.getYesterday();
+				this.selfParam.businessDate.date.startDate =dateUtils.getYesterday();
+			}
 			this.refresh()
 		},
         methods: {
