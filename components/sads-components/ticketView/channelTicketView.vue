@@ -13,7 +13,7 @@
 				　　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">足球</view>
 				  　<view @tap="change(2)" :class="btnnum == 2?'btna':'hide'">篮球</view>
 				</view>	
-				<view class="end-cont" :class="{dis:btnnum == 0}">	
+				<view class="end-cont" :class="{dis:btnnum == 0}">
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData" ref="ringChart0" canvasId="index_ring_0"/>
 					</view>
@@ -112,31 +112,42 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.refresh();
+			this.change(1);
+			this.$refs['progress_0'].showProgress(this.pieData);
 		},
 		onShow() {
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.refresh();
+			this.change(1);
+			this.$refs['progress_0'].showProgress(this.pieData);
 		},
 		created() {
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.refresh();
+			this.change(1);
+			this.$refs['progress_0'].showProgress(this.pieData);
 		},
 		methods: {
 			showView(){
 				console.log("ticket showView" ,this.pieData);
 				// commonFun.sleep(3000)
-				this.$nextTick(() => {	
-					this.$refs['ticketData'].showDataContainer();
+				this.$refs['ticketData'].showDataContainer();
+				if(this.btnnum==0){
 					this.$refs['ringChart0'].showCharts();
-					this.$refs['ringChart1'].showCharts();
-					this.$refs['ringChart2'].showCharts();
 					this.$refs['progress_0'].showProgress(this.pieData);
+				}else if(this.btnnum==1){
+					this.$refs['ringChart1'].showCharts();
 					this.$refs['progress_1'].showProgress(this.pieData1);
+				}else if(this.btnnum==2){
+					this.$refs['ringChart2'].showCharts();
 					this.$refs['progress_2'].showProgress(this.pieData2);
+				}
 					// this.$refs['ticketlineData'].showCharts();
-				});	
 			},
 			returnFromDatePicker(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -157,24 +168,23 @@
 			getServerData() {
 				this.getTicketData();
 				this.getPieData('竞彩');
-				this.getPieData('足彩');
-				this.getPieData('篮彩');
+				this.getPieData('足球');
+				this.getPieData('篮球');
 				// this.getLineDate();
 				// this.$refs['ticketData'].showDataContainer();
 			},
 			change(e) {
-			    this.btnnum = e;
-				if(0==e){
-					this.getPieData('竞彩');
-				}else if(1==e){
-					this.getPieData('足彩');
-				}else if(2==e){
-					this.getPieData('篮彩');
-				}
+			   this.btnnum = e;
+			   if(0==e){
+				this.getPieData('竞彩');
+			   }else if(1==e){
+				this.getPieData('足球');
+			   }else if(2==e){
+				this.getPieData('篮球');
+			   }
 				this.refresh();
 			},
 			refresh(selfParam){
-				this.selfParam = JSON.parse(selfParam)
 				this.selfParam.token = uni.getStorageSync("token")
 				this.getServerData();
 				this.showView();
@@ -246,9 +256,9 @@
 				
 				if(type=='竞彩'){
 					param.gameFlag = 0
-				}else if(type=='足彩'){
+				}else if(type=='足球'){
 					param.gameFlag = 1
-				}else if(type=='篮彩'){
+				}else if(type=='篮球'){
 					param.gameFlag = 2
 				}
 				// var that =this;
@@ -269,15 +279,15 @@
 					if(type=='竞彩'){
 						this.$set(this.pieData, 'series', list);
 						this.$refs['ringChart0'].showCharts();
-						// this.$refs['progress_0'].showProgress(this.pieData);					
+						this.$refs['progress_0'].showProgress(this.pieData);					
 					}else if(type=='足球'){
 						this.$set(this.pieData1, 'series', list);
 						this.$refs['ringChart1'].showCharts();
-						// this.$refs['progress_1'].showProgress(this.pieData1);
+						 this.$refs['progress_1'].showProgress(this.pieData1);
 					}else if(type=='篮球'){
 						this.$set(this.pieData2, 'series', list);
 						this.$refs['ringChart2'].showCharts();
-						// this.$refs['progress_2'].showProgress(this.pieData2);
+						this.$refs['progress_2'].showProgress(this.pieData2);
 					}
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -327,8 +337,8 @@
 					
 					series[0] = json;
 					var json = {'name':'竞彩','data':allData};								
-					var json2 = {'name':'足彩','data':fbData};
-					var json3 = {'name':'篮彩','data':bkData};
+					var json2 = {'name':'足球','data':fbData};
+					var json3 = {'name':'篮球','data':bkData};
 					series[0] = json;
 					series[1] = json2;
 					series[2] = json3;

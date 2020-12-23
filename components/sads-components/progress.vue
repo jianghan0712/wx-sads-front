@@ -54,9 +54,13 @@
 				console.log("total=" + total);
 				i=0
 				for(i= 0; i < len; i++) {
+					var xx=(series[i].data/total*100).toFixed(2);
+					if(xx=="NaN"){
+						xx=0;
+					}
 					var jsonObj = {"name": series[i].name,
 					               "data" : series[i].data,
-								   "percent":(series[i].data/total*100).toFixed(2),
+								   "percent":xx,
 									"color":this.colors[i]};			
 					this.pgList[i]=jsonObj;
 				}

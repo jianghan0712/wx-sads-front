@@ -7,14 +7,14 @@
 				<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
 			</view>
 			<view class="padding" >
-				<view style="font-size: 30rpx;padding-left: 20rpx; " >竞猜销量七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx; " >竞彩销量七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
 				<view >
 					<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" :basicAs="{colors:['#E5E5E5','#4A94FF']}"/>
 				</view>
 			</view>
 			<view class="padding">
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >竞猜票数七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >竞彩票数七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(百万张)</view> 
 				<view >
 					<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" :basicAs="{colors:['#E5E5E5','#FFAD26']}"/>
@@ -28,7 +28,7 @@
 				</view >
 			</view>
 			<view class="padding"> 
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >竞猜单票金额七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >竞彩单票金额七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(元)</view>
 				<view >
 					<histogram-chart ref="histogramChart4" canvasId="histogramChart4" :dataAs="histogramChart4" :basicAs="{colors:['#E5E5E5','#C8E154']}"/>
@@ -38,7 +38,7 @@
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >返奖率七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(%)</view>
 				<view style="text-align: right;">
-					<view @tap="changeTop('1')"  :class="fjltype =='1'?'btna':'hide'" >竞猜</view>
+					<view @tap="changeTop('1')"  :class="fjltype =='1'?'btna':'hide'" >竞彩</view>
 					<view @tap="changeTop('2')" :class="fjltype =='2'?'btna':'hide'" >足球</view>
 					<view @tap="changeTop('3')" :class="fjltype =='3'?'btna':'hide'" >篮球</view>
 				</view>
@@ -101,7 +101,7 @@
 										src: '../../static/top.png',
 										scrollTop: 0
 				},
-				//返奖率类型 1竞猜 2足球 3篮球
+				//返奖率类型 1竞彩 2足球 3篮球
 				fjltype:'1',
 				scrollTop: 0,
 				 histogramChart1: {
@@ -307,6 +307,7 @@
 			},
 			changeTop(e){
 				this.fjltype = e;
+				this.loadFJL(e);
 				this.loadFJL(e);
 			},
 			loadFJL(e){

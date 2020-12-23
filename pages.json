@@ -65,6 +65,13 @@
 		    "path" : "pages/common/tableLimitShopDetail",
 		    "style" : {}
 		},{
+		    "path" : "pages/common/tableLimitShopDetail2",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/common/dateSelectorReport",
+		    "style" : {}
+		},{
 		    "path" : "pages/common/dateSelector",
 		    "style" : {}
 		},{

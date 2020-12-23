@@ -276,14 +276,14 @@
 								id: i+1,
 								area: data[i][0],
 								xiaoliang: (data[i][1]/1000000).toFixed(2),
-								rateChange: (data[i][2]/1000000).toFixed(2)
+								rateChange: ((data[i][2]/1000000).toFixed(2))>0?"+"+(data[i][2]/1000000).toFixed(2):(data[i][2]/1000000).toFixed(2)
 							};
 						var cellClassName={}
 								
 						if(data[i][2]<0){
-							cellClassName.huanbi='small-text-green'
+							cellClassName.rateChange='small-text-green'
 						}else{
-							cellClassName.huanbi='small-text-red'
+							cellClassName.rateChange='small-text-red'
 						}	
 						arr.cellClassName=cellClassName;		
 						that.tableDataAll.push(arr);
@@ -310,13 +310,13 @@
 								id: i+1,
 								area: data[i][0],
 								piaoshu: (data[i][1]/10000).toFixed(2),
-								rateChange: (data[i][2]/10000).toFixed(2)
+								rateChange:((data[i][2]/1000000).toFixed(2))>0?"+"+(data[i][2]/1000000).toFixed(2):(data[i][2]/1000000).toFixed(2)
 							};
 						var cellClassName={}
 						if(data[i][2]<0){
-							cellClassName.huanbi='small-text-green'
+							cellClassName.rateChange='small-text-green'
 						}else{
-							cellClassName.huanbi='small-text-red'
+							cellClassName.rateChange='small-text-red'
 						}	
 						arr.cellClassName=cellClassName;		
 						that.tableDataAll.push(arr);	

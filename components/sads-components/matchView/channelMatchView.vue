@@ -13,24 +13,12 @@
 							<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
 						</view>
 					</view>
-					<view class="box-contaniner">
-						<view style="font-size: 30rpx;font-weight: bold;">top5 赛事销量</view>
-						<view class="example">
-							<v-table :columns="matchEventTableColumns" :list="matchEventTableData"  border-color="#FFFFFF"></v-table>
-						</view>
-					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛制销量</view>
 						<view class="example">
 							<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
-						</view>
-					</view>
-					<view class="box-contaniner">
-						<view style="font-size: 30rpx;font-weight: bold;">top5 赛事销量</view>
-						<view class="example">
-							<v-table :columns="matchEventTableColumns" :list="matchEventTableData"  border-color="#FFFFFF"></v-table>
 						</view>
 					</view>
 				</view>
@@ -105,21 +93,6 @@
 						$width:"150px"
 					}
 				],	
-				matchEventTableData: [],
-				matchEventTableColumns: [{
-						title: "排名",
-						key: "id",
-						$width:"50px",
-					},{
-						title: '赛制',
-						key: 'matchType',
-						$width:"130px"
-					},{
-						title: '销量（百万元）',
-						key: 'amount',
-						$width:"150px"
-					}
-				],	
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
 			};
 		},
@@ -128,14 +101,16 @@
 			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker()
-			this.getServerData();
+			this.getServerData(this.btnnum);
+			this.refresh();
 		},
 		onShow() {
 			_self = this;
 			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker()
-			this.getServerData();
+			this.getServerData(this.btnnum);
+			this.refresh();
 		},
 		created() {
 			// this.selfParam=this.param
@@ -144,6 +119,7 @@
 			this.selfParam.token = uni.getStorageSync("token")
 			//ajax调用
 			this.getServerData(this.btnnum);
+			this.refresh();
 		},
 		methods: {
 			refresh(selfParam){
@@ -158,7 +134,7 @@
 			},
 			getServerData(btnnum) {
 				this.getMatchTable(btnnum);
-				this.getMatchEventTable(btnnum);
+				/* this.getMatchEventTable(btnnum); */
 			},
 		    change(e) {
 			    this.btnnum = e;
@@ -281,7 +257,7 @@
 					console.log('request fail', err);
 				})
 			},
-			getMatchEventTable(btnnum){
+			/* getMatchEventTable(btnnum){
 				var param = this.createParam(btnnum)
 				var url = '/pentaho/match/getTop5MatchSales';
 
@@ -331,7 +307,7 @@
 					this.loading = false;
 					console.log('request fail', err);
 				})
-			},
+			}, */
 		},
 
 		mounted(){

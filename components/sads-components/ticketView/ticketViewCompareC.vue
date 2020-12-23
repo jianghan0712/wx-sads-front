@@ -141,7 +141,7 @@
 							key: 'area',
 							$width:"100px"
 						},{
-							title: '足彩（元）',
+							title: '足球（元）',
 							key: 'leftAmount',
 							$width:"80px"
 						},{
@@ -149,7 +149,7 @@
 							key: 'rightRank',
 							$width:"100px"
 						},{
-							title: '足彩（元）',
+							title: '足球（元）',
 							key: 'rightAmount',
 							$width:"80px"
 						}],	
@@ -224,7 +224,7 @@
 			getServerData() {
 				// this.getPieData(this.selfParam.provinceCenterId,this.selfParam.businessDate);
 				this.getRankTable('竞彩');
-				this.getRankTable('足彩');
+				this.getRankTable('足球');
 				this.getRankTable('篮彩');
 				this.getAmountCompare()
 			},
@@ -374,7 +374,7 @@
 				
 				if(type=='竞彩'){
 					param.gameFlag = 0
-				}else if(type=='足彩'){
+				}else if(type=='足球'){
 					param.gameFlag = 1
 				}else if(type=='篮彩'){
 					param.gameFlag = 2
@@ -398,7 +398,7 @@
 						that.$set(that.pieData, 'series', list);
 						this.$refs['ringChart0'].showCharts();
 						
-					}else if(type=='足彩'){
+					}else if(type=='足球'){
 						that.$set(that.pieData1, 'series', list);
 						this.$refs['ringChart1'].showCharts();
 						
@@ -420,7 +420,7 @@
 				var tableAll = []
 				if(type=='竞彩'){
 					param.gameFlag=0
-				}else if (type=='足彩'){
+				}else if (type=='足球'){
 					param.gameFlag=1
 				}else if (type=='篮彩'){
 					param.gameFlag=2
@@ -456,7 +456,7 @@
 					if(type=='竞彩'){
 						this.tableData=table
 						this.tableDataAll=tableAll
-					}else if (type=='足彩'){
+					}else if (type=='足球'){
 						this.tableDataFB=table
 						this.tableDataAllFB=tableAll
 					}else if (type=='篮彩'){

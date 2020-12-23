@@ -83,7 +83,7 @@ export default {
 				enableMarkLine: false, //是否显示辅助线 默认false 支持line, area, column, candle, mix图表类型
 				animation: true, //是否动画展示
 				duration: 1000, //动画展示时长单位毫秒
-				dataLabel: true, //是否在图表中显示数据标签内容值
+				dataLabel: false, //是否在图表中显示数据标签内容值
 				fontSize: 12, //全局默认字体大小（可选，单位为px，默认13px）高分屏不必乘像素比，自动根据pixelRatio计算
 				background: '#ffffff', //canvas背景颜色（如果页面背景颜色不是白色请设置为页面的背景颜色，默认#ffffff）无作用
 				pixelRatio: 1, //像素比，默认为1，仅支付宝小程序需要大于1，其他平台必须为1

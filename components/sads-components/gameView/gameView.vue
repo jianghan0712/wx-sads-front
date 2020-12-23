@@ -42,7 +42,7 @@
 			<block v-if="selfParam.businessDate.view!=today"></block>
 				<view >
 					<view class="container-title">
-						<view>各地区{{arcbarNumTop}}返奖率排行榜</view>
+						<view>各地区{{arcbarNumTop}}返奖情况</view>
 						<view style="width: 200;height: 50upx;text-align: top;font-size: 30rpx;" @click="toAll1()">全部>></view>
 					</view>
 					<view class="table">
@@ -88,17 +88,13 @@
 					this.totalData = this.basketballData;
 				}
 				this.returnFromDatePicker();
-				this.$nextTick(()=>{
-					this.loadData();
-				});
-				setTimeout(() => {
-					this.loadData();
-					this.changeTop("足球")
-				}, 1);
+				this.loadData();
+				this.refresh();
 			},
 			onShow() {
 				this.returnFromDatePicker();
 				this.loadData();
+				this.refresh();
 			},
 			data() {
 				return {
@@ -229,7 +225,7 @@
 								},
 								{
 									title: '周同比',
-									key: 'tongbui',
+									key: 'tongbi',
 									$width:"80px"
 								},
 								{
@@ -239,10 +235,6 @@
 								}
 							],	
 				};
-			},
-			onShow() {
-				this.returnFromDatePicker();
-				this.loadData();
 			},
 			methods: {
 				refresh() {
@@ -284,7 +276,6 @@
 				changeTop(e){
 					this.arcbarNumTop = e;;
 					getApp().globalData.ballType=e; 
-					
 					this.loadData();
 					
 				},
@@ -529,7 +520,7 @@
 						console.log('request fail', err);
 					}); 
 					
-					if(that.selfParam.businessDate.view!=today){
+					if(that.selfParam.businessDate.view!=this.today){
 						var url = '/pentaho/sales/gamesReturnRateRankingList';
 						var that =this;
 						var ballType =getApp().globalData.ballType;
@@ -546,7 +537,19 @@
 							var data =res.data.data;	
 							
 							for(var i=0;i<data.length;i++){
-								var obj={id:i+1,area:data[i][0],returnRate:data[i][1],tongbi:data[i][2],huanbi:data[i][3]};
+								var obj={id:i+1,area:data[i][0],returnRate:data[i][1]+"%",tongbi:data[i][2]>0?"+"+data[i][2]+"%":data[i][2]>0+"%",huanbi:data[i][3]>0?"+"+data[i][3]+"%":data[i][3]>0+"%"};
+								var cellClassName={};
+								if(data[i][2]<0){
+									cellClassName.tongbi='small-text-green'
+								}else{
+									cellClassName.tongbi='small-text-red'
+								}
+								if(data[i][3]<0){
+									cellClassName.huanbi='small-text-green'
+								}else{
+									cellClassName.huanbi='small-text-red'
+								}
+								obj.cellClassName=cellClassName;	
 								if(i<5){
 									that.tableData1[i] = obj;
 								}

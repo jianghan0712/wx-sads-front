@@ -37,8 +37,8 @@
 					</view>
 					<view class="shop-item-content">
 						<view style="width: 50%;">{{shopData.shop.sum}}</view>
-						<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.tongbi}}名</view>
-						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.shop.huanbi}}名</view>
+						<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.tongbi>0?"↑"+shopData.shop.tongbi:"↓"+shopData.shop.tongbi}}名</view>
+						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.shop.huanbi>0?"↑"+shopData.shop.huanbi:"↓"+shopData.shop.huanbi}}名</view>
 					</view>
 				</view>
 			</view>		
@@ -51,8 +51,8 @@
 					</view>
 					<view class="shop-item-content">
 						<view style="width: 50%;">{{shopData.rate.sum}}</view>				
-						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.tongbi}}名</view>
-						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi}}名</view>
+						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.tongbi>0?"↑"+shopData.rate.tongbi:"↓"+shopData.rate.tongbi}}名</view>
+						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi>0?"↑"+shopData.rate.huanbi:"↓"+shopData.rate.huanbi}}名</view>
 					</view>
 				</view>
 			</view>
@@ -97,7 +97,7 @@
 					</view>
 					<view class="row-box">
 						<view class="lineTwo">
-							<view class="row_box_2">全省足球销量占比</view>
+							<view class="row_box_2">全省篮球销量占比</view>
 							<view class="row_box_2">{{allData.baskRate+"%"}}</view>
 						</view>
 					</view>
@@ -115,8 +115,8 @@
 						</view>
 						<view class="shop-item-content">
 							<view style="width: 40%;">{{returnData.rate.sum}}</view>
-							<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 35%;">{{valueToPercent(returnData.rate.tongbi)}}</view>
-							<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 20%;">{{valueToPercent(returnData.rate.huanbi)}}</view>
+							<view :class="returnData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 35%;">{{returnData.rate.tongbi>0?"+"+returnData.rate.tongbi:returnData.rate.tongbi}}</view>
+							<view :class="returnData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 20%;">{{returnData.rate.huanbi>0?"+"+returnData.rate.huanbi:returnData.rate.huanbi}}</view>
 						</view>
 					</view>
 				</view>			
@@ -176,6 +176,8 @@
 												}},	
 				btnnum: 0,
 				arcbarNum: 0,
+				gateInfo:"",
+				ballType:'足球',
 				lineData2: {},
 				lineData1: {},
 				arcbar0: {
@@ -305,11 +307,6 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						console.log('request success', res)
-						uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						});
 						var data = res.data.data;
 						var amount = data[0]
 						var saleNumber = data[1]
@@ -320,12 +317,12 @@
 						console.log("format0=",format0,"format1=",format1)
 						var left1 = {'name':'周同比','value':amount[1] + '%'};
 						var right1 = {'name':'环比','value':amount[2] + '%'};
-						var big1 = {'name':'销量（'+format0.name +'元）', 'value':amount[0]/format0.value, 'left': left1,'right':right1};
+						var big1 = {'name':'销量（'+format0.name +'元）', 'value':(amount[0]/format0.value).toFixed(2), 'left': left1,'right':right1};
 						
 						var left2 = {'name':'周同比','value':saleNumber[1] + '%'};
 						var right2 = {'name':'环比','value':saleNumber[2] + '%'};
 						var big2 = {'name':'票数（'+format1.name +'张）','value':saleNumber[0]/format1.value, 'left':left2,'right':right2};
-												
+									 			
 						this.$set(this.totalData, 'big1', big1);
 						this.$set(this.totalData, 'big2', big2);
 						this.$refs['dataContain'].showDataContainer();
@@ -415,13 +412,10 @@
 					
 					
 					var tempObj;
-					if(type=='足球'){
-						tempObj = data.football
-						this.$set(that.allData,'footRate',data.football[3]);
-					}else{
-						tempObj = data.basketball
-						this.$set(that.allData,'baskRate',data.basketball[3]);
-					}
+					tempObj = data.football
+					this.$set(that.allData,'footRate',data.football[3]);
+					tempObj = data.basketball
+					this.$set(that.allData,'baskRate',data.basketball[3]);
 					
 					var format0 = numberFun.formatCNumber(tempObj[0]);
 					var amount0 = tempObj[0]/format0.value.toFixed(2) + format0.name +'元';
@@ -506,20 +500,20 @@
 					}
 					this.shopData.shop.sum=data[0];
 					this.shopData.shop.tongbi=data[1];
-					this.shopData.shop.huabi=data[2];
+					this.shopData.shop.huanbi=data[2];
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
 					this.shopData.shop.sum=0;
 					this.shopData.shop.tongbi=0;
-					this.shopData.shop.huabi=0;
+					this.shopData.shop.huanbi=0;
 				});
 			},
 			getRankByProvince(){
 				var url = '/pentaho/shows/getShowRankingPro';
 				var param = this.createParam()
-				param.provincialId = this.gateInfo.provincialId
+				param.provincialId = this.gateInfo.cityId
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -549,6 +543,7 @@
 				var url = '/pentaho/sales/getReturnRateState';
 				var param = this.createParam()
 				param.token =getApp().globalData.token;
+				param.regionId = this.gateInfo.cityId
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -597,7 +592,13 @@
 				  this.showView()
 			},
 			changeArcbar(e){
+				//pentaho/sales/getGameSales
 				this.arcbarNum = e
+				if(e==0){
+					this.ballType='足球'
+				}else {
+					this.ballType='篮球'
+				}
 				console.log(this.arcbarNum)
 				this.returnFromDatePicker();
 				this.getServerData();

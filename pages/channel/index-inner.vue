@@ -10,9 +10,9 @@
 			<view class="blackClass">
 				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
 			</view>
-			<view class="blackClass">
+			<!-- <view class="blackClass">
 				<view @click="goCompare">对比</view>
-			</view>
+			</view> -->
 		</view>	
 		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
 			<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../static/left.png" mode="aspectFill">

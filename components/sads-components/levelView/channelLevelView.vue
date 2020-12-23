@@ -124,24 +124,32 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.change(0);
+			this.refresh()
+		},
+		onShow() {
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView();
+			this.refresh()
 		},
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.change(0);
+			this.refresh()
 		},
 		methods: {
 			showView(){				
-				this.$nextTick(() => {	
+				if(this.btnnum==0){
 					this.$refs['levelRingChart0'].showCharts();
-					this.$refs['levelRingChart1'].showCharts();
 					this.$refs['progress_0'].showProgress(this.pieData);
+				}else {
+					this.$refs['levelRingChart1'].showCharts();
 					this.$refs['progress_1'].showProgress(this.pieData1);
-					console.log("init ringChart0:" ,this.pieData);
-				});
+				}
+				console.log("init ringChart0:" ,this.pieData);
 			},
 			getServerData() {
 				this.getPieData('足球')
@@ -265,7 +273,7 @@
 						var jsonData = {}
 						that.levelList = data[i].customsName						
 						jsonData.name=data[i].customsName;
-						jsonData.data=data[i].values[0]+"张";
+						jsonData.data=data[i].values[0];
 						series[i]=jsonData					
 					}
 					

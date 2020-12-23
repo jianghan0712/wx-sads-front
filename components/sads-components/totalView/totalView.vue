@@ -305,19 +305,26 @@
 			console.log("totalView onLoad:",this.selfParam)
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(550);
+			this.returnFromDatePicker();
+			this.getServerData();
 			this.showView();
+			this.refresh();
 		},
 		created() {
 			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			console.log("totalView created:",this.selfParam)
+			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.refresh();
 		},
 		onShow(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
+			this.refresh();
 		},
 		methods: {
 			createParam(){
@@ -455,7 +462,7 @@
 					this.$set(this.lineData2, 'categories', categories);
 					this.$set(this.lineData2, 'series', series);
 					
-					var json2 = {'name':'销量','data':volData};
+					var json2 = {'name':'票数','data':volData};
 					var series2 = [];
 					series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories);
@@ -548,8 +555,8 @@
 					var data = res.data.data;	
 									
 					this.shopData.shop.sum=data[0];
-					this.shopData.shop.tongbi=data[1];
-					this.shopData.shop.huanbi=data[2]
+					this.shopData.shop.tongbi=data[1]>0?"+"+data[1]:data[1];
+					this.shopData.shop.huanbi=data[2]>0?"+"+data[2]:data[2]
 
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -570,8 +577,8 @@
 					var data = res.data.data;	
 
 					this.shopData.rate.sum=data[0];
-					this.shopData.rate.tongbi=data[1];
-					this.shopData.rate.huanbi=data[2];
+					this.shopData.rate.tongbi=data[1]>0?"+"+data[1]:data[1];
+					this.shopData.rate.huanbi=data[2]>0?"+"+data[2]:data[2];
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -595,8 +602,8 @@
 						var json = {id:i+1, 
 									area:data[i][0], 
 									amount:(data[i][1]/format0.value).toFixed(2), 
-									tongbi:data[i][2]+"%",
-									huanbi:data[i][3]+"%"}
+									tongbi:data[i][2]>0?"+"+data[i][2]+"%":data[i][2]+"%",
+									huanbi:data[i][3]>0?"+"+data[i][3]+"%":data[i][3]+"%"}
 						var cellClassName={}
 						if(data[i][2]<0){
 							cellClassName.tongbi='small-text-green'
@@ -685,8 +692,8 @@
 					var data = res.data.data;	
 									
 					this.returnData.rate.sum=data[0];
-					this.returnData.rate.tongbi=data[1];
-					this.returnData.rate.huanbi=data[2]
+					this.returnData.rate.tongbi=data[1]>0?"+"+data[1]:data[1];
+					this.returnData.rate.huanbi=data[2]>0?"+"+data[2]:data[2]
 				
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -710,8 +717,8 @@
 						var json = {id:i+1, 
 									area:data[i][0], 
 									return:data[i][1]+'%', 
-									tongbi:data[i][2]+'%',
-									huanbi:data[i][3]+'%'}	
+									tongbi:data[i][2]>0?"+"+data[i][2]+'%':data[i][2]+'%',
+									huanbi:data[i][3]>0?"+"+data[i][2]+'%':data[i][2]+'%'}	
 						var cellClassName={}
 							
 						if(data[i][2]<0){

@@ -150,7 +150,24 @@
 			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
-			this.getServerData(getServerData);
+			this.getServerData(this.btnnum);
+			this.refresh();
+		},
+		onShow() {
+			_self = this;
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData(this.btnnum);
+			this.refresh();
+		},
+		created() {
+			_self = this;
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData(this.btnnum);
+			this.refresh();
 		},
 		methods: {
 			showView(){
@@ -159,7 +176,7 @@
 			},
 			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-				this.getServerData();
+				this.getServerData(this.btnnum);
 				this.showView();
 			},
 			getServerData(btnnum) {

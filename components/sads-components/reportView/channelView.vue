@@ -17,7 +17,7 @@
 				<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" :basicAs="{colors:['#E5E5E5','#2BC5FE']}"/>
 			</view>
 			<view class="padding">
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >销量超限门店七天走势</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >日销量超限门店七天走势</view>
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(个)</view>
 				<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" :basicAs="{colors:['#E5E5E5','#FFCD23']}"/>
 			</view>

@@ -168,7 +168,7 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;
-					if(data.length==0){
+					if(data.length==0||data.length==4){
 						this.$set(that.pagedata,0,0);
 						this.$set(that.pagedata,1,0);
 						this.$set(that.pagedata,2,0);

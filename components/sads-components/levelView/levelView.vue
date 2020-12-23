@@ -145,12 +145,21 @@
 		},
 		onLoad() {
 			_self = this;
-			 this.showView();
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView();
 		},
 		created() {
 			this.selfParam=this.param
+			this.returnFromDatePicker();
 			this.getServerData();
-			// this.showView();
+			this.showView();
+		},
+		onShow() {
+			this.selfParam=this.param
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView();
 		},
 		methods: {
 			showView(){				
@@ -266,6 +275,19 @@
 					this.loading = false;
 					console.log('request fail', err);
 				})
+			},
+			returnFromDatePicker(){
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token=uni.getStorageSync("token");
 			},
 			getTableDate(btnnum, passName){
 				var url = '/pentaho/sales/checkpointSalesRanking';

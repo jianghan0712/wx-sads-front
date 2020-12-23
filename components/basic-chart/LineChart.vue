@@ -115,7 +115,7 @@ export default {
 				xAxis: {
 					//	X轴配置
 					type: 'grid',
-					rotateLabel: true, //X轴刻度（数值）标签是否旋转（仅在文案超过单屏宽度时有效）
+					rotateLabel: false, //X轴刻度（数值）标签是否旋转（仅在文案超过单屏宽度时有效）
 					// itemCount: 10, //X轴可见区域数据数量（即X轴数据密度），配合拖拽滚动使用（即仅在启用enableScroll时有效）
 					labelCount:5,//X轴可见区域标签数量（即X轴数刻度标签单屏幕限制显示的数量）
 					scrollShow: false, //是否显示滚动条，配合拖拽滚动使用（即仅在启用enableScroll时有效）

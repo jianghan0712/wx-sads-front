@@ -8,23 +8,6 @@
 			<view class="box-container">
 				<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
 			</view>	
-			<!-- <view >
-				<view class="clineChart-title">
-					<view style="font-size: 30rpx;font-weight: bold;">{{arcbarNumTop}}销量及票数走势</view>
-					<view class="linechart-tab">
-					　　<view @tap="changeMid('销量')" :class="arcbarNumMid =='销量'?'btna':'hide'" >销量</view>
-						<view @tap="changeMid('票数')" :class="arcbarNumMid =='票数'?'btna':'hide'" >票数</view>
-					</view>
-				</view>		
-				<view v-if="arcbarNumMid == '销量'">
-					<line-chart ref="lineData1" canvasId="lineData1" :dataAs="lineData1" />
-				</view>
-				<view v-if="arcbarNumMid == '票数'">		　
-					<line-chart ref="lineData2" canvasId="lineData2" :dataAs="lineData2" />
-				</view>
-				
-			</view>	 -->
-
 			<view >
 				<view class="clineChart-title">
 					<view style="font-size: 30rpx;font-weight: bold;">{{arcbarNumTop}}游戏销量占比</view>
@@ -35,7 +18,7 @@
 				<button  @click="toRingAll()">查看全部</button>
 			</view>
 			
-			<view style="margin: 20rpx;">
+			<!-- <view style="margin: 20rpx;">
 				<view class="container-title">
 					<view >各地区{{arcbarNumTop}}销量及占比</view>
 					<view style="width: 200rpx;height: 50rpx;font-size: 30rpx;" @click="toAll()">全部>></view>
@@ -43,7 +26,7 @@
 				<view class="table">
 					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
 				</view>
-			</view>
+			</view> -->
 		</view>		
 	</view>
 </template>
@@ -90,6 +73,11 @@
 				}, 1);
 			},
 			onShow() {
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.returnFromDatePicker();
+				this.loadData();
+			},
+			onLoad() {
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.returnFromDatePicker();
 				this.loadData();
@@ -251,6 +239,19 @@
 			onShow() {
 				this.returnFromDatePicker();
 				this.loadData();
+				this.refresh();
+				this.$refs['arcbar1'].showCharts();
+			},
+			onLoad() {
+				this.returnFromDatePicker();
+				this.loadData();
+				this.refresh();
+			},
+			created() {
+				this.returnFromDatePicker();
+				this.loadData();
+				this.refresh();
+				this.$refs['arcbar1'].showCharts();
 			},
 			methods: {
 				refresh() {
@@ -319,7 +320,7 @@
 						var fb= alldata.fb;
 						if(ballType=='足球'){
 							let index0={
-								name:ballType+'销量（万元）',
+								name:'销量（万元）',
 								value:(fb[0]/10000).toFixed(2),
 								left:{
 									name:'周同比',
@@ -331,7 +332,7 @@
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
-								name:ballType+'票数（万张）',
+								name:'票数（万张）',
 								value:(fb[3]/10000).toFixed(2),
 								left:{
 									name:'周同比',
@@ -344,7 +345,7 @@
 							this.$set(that.totalData,'big2',index1);
 						}else{
 							let index0={
-								name:ballType+'销量（百万元）',
+								name:'销量（百万元）',
 								value:(bk[0]/10000).toFixed(2),
 								left:{
 									name:'周同比',
@@ -356,7 +357,7 @@
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
-								name:ballType+'票数（万张）',
+								name:'票数（万张）',
 								value:(bk[3]/10000).toFixed(2),
 								left:{
 									name:'周同比',
@@ -376,7 +377,7 @@
 						console.log('request fail', err);
 						if(ballType=='足球'){
 							let index0={
-								name:ballType+'销量（万元）',
+								name:'销量（万元）',
 								value:0,
 								left:{
 									name:'周同比',
@@ -388,7 +389,7 @@
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
-								name:ballType+'票数（万张）',
+								name:'票数（万张）',
 								value:0,
 								left:{
 									name:'周同比',
@@ -401,7 +402,7 @@
 							this.$set(that.totalData,'big2',index1);
 						}else{
 							let index0={
-								name:ballType+'销量（百万元）',
+								name:'销量（百万元）',
 								value:0,
 								left:{
 									name:'周同比',
@@ -413,7 +414,7 @@
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
-								name:ballType+'票数（万张）',
+								name:'票数（万张）',
 								value:0,
 								left:{
 									name:'周同比',
@@ -445,56 +446,15 @@
 					this.selfParam.token=getApp().globalData.token
 					uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 				},
-				/* loadMidData(ballType){
-					var url = '/pentaho/shows/getShowGameTrendChart';
-					var param  =this.createParam();
-					urlAPI.getRequest(url, param).then((res)=>{
-						this.loading = false;
-						var dates;
-						var sales;
-						var votes;
-						if(ballType=='足球'){
-							dates=res.data.data.fb.dates;
-							sales =res.data.data.fb.sales;
-							votes = res.data.data.fb.votes;
-						}else {
-							dates=res.data.data.bk.dates;
-							sales =res.data.data.bk.sales;
-							votes = res.data.data.bk.votes;
-						}
-						
-						if(this.arcbarNumMid=='销量'){
-							var series=[{
-								name: '销量（万元）', 
-								data: sales
-							}];
-							
-							this.$set(this.lineData1,'series',series);
-							this.$set(this.lineData1,'categories',dates);
-							this.$refs['lineData1'].showCharts();
-						}else {
-							var series=[{name: '票数(张)',
-							data: votes
-							}];
-							this.$set(this.lineData2,'series',series);
-							this.$set(this.lineData2,'categories',dates);
-							this.$refs['lineData2'].showCharts();
-							
-						}
-						
-					}).catch((err)=>{
-						this.loading = false;
-						console.log('request fail', err);
-					});
-					
-					url = '/pentaho/shows/getShowGameSalesProp';
+				 loadMidData(ballType){
+					var url = '/pentaho/shows/getShowGameSalesProp';
 					var gameFlag;
 					if(ballType=='足球'){
 						gameFlag='1';
 					}else {
 						gameFlag='2';
 					}
-					param =this.createParam();
+					var param =this.createParam();
 					this.$set(param,'gameFlag',gameFlag);
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
@@ -502,7 +462,7 @@
 						var series =[];
 						for(var i=0;i<datas.length;i++){
 							var obj={};
-							obj={name:datas[i].gameName,data: parseInt(datas[i].values[0])};
+							obj={name:datas[i].gameName,data: datas[i].values[0]};
 							series.push(obj);
 							
 						}
@@ -514,10 +474,12 @@
 						console.log('request fail', err);
 					});
 					
-				}, */
+					
+				}, 
 				loadData(){
 					var ballType = getApp().globalData.ballType;
 					this.loadTopData(ballType);
+					this.loadMidData(ballType);
 					this.loadLastData();
 					
 				},

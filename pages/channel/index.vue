@@ -231,7 +231,7 @@
 						var data = res.data.data;	
 						var left2 = {'name':'周同比','value':data[1] + '%'};
 						var right2 = {'name':'环比','value':data[2] + '%'};
-						var big2 = {name:'在售率',value:data[0], left:left2, right:right2}
+						var big2 = {name:'在售率',value:data[0]+"%", left:left2, right:right2}
 						
 						this.$set(this.totalData, 'big2', big2);
 						this.$refs['dataContain'].showDataContainer();
@@ -273,6 +273,62 @@
 					var param = this.createParam()
 					var that =this ;
 					this.update2=false;
+					
+					if(this.selfParam.provinceCenterId==0){
+						this.beyondLimitTableColumns=[{
+									title: "排名",
+									key: "id",
+									$width:"50px",
+								},
+								{
+									title: '地区编号',
+									key: 'areaIdStr',
+									$width:"50px",
+								},
+								{
+									title: '省份',
+									key: 'area',
+									$width:"80px"
+								},
+								{
+									title: '门店数量',
+									key: 'count',
+									$width:"50px"
+								},
+								{
+									title: '环比变化值',
+									key: 'change'
+								}
+							]
+								
+					}else {
+						this.beyondLimitTableColumns=[{
+									title: "排名",
+									key: "id",
+									$width:"50px",
+								},
+								{
+									title: '地区编号',
+									key: 'areaIdStr',
+									$width:"50px",
+								},
+								{
+									title: '地市',
+									key: 'area',
+									$width:"80px"
+								},
+								{
+									title: '门店数量',
+									key: 'count',
+									$width:"50px"
+								},
+								{
+									title: '环比变化值',
+									key: 'change'
+								}
+							]
+					}
+					
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						console.log('request success', res)
@@ -373,7 +429,7 @@
 				},
 				goLimitShopDetail(tableData, tableColumns){
 					uni.navigateTo({
-						url:"/pages/common/tableLimitShopDetail?tableData= " + JSON.stringify(tableData) + '&tableColumns=' + JSON.stringify(tableColumns)
+						url:"/pages/common/tableLimitShopDetail2?tableData= " + JSON.stringify(tableData) + '&tableColumns=' + JSON.stringify(tableColumns)
 					});
 				},
 				goShopDetail(tableData, tableColumns){
@@ -395,9 +451,9 @@
 						for(var i=0;i<data.length;i++){
 							
 							var json = {id:i+1, 
-										area:data[i][0], 
-										number:data[i][1], 
-										amount:data[i][2]}	
+										area:data[i][1], 
+										number:data[i][2], 
+										amount:(data[i][3]/10000).toFixed(2)}	
 							this.$set(this.amountTableDataWithPro,i,json);	
 						}
 					}).catch((err)=>{

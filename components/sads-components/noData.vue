@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view  class="picture" >
-			<image src="../../static/noData.png"></image>
+			<image src="../../static/noData.png" style="height: 240rpx;width: 300rpx;"></image>
 		</view>
 		<view class="title">{{title}}</view>
 	</view>

@@ -142,6 +142,7 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
+			this.refresh();
 		},
 		onShow() {
 			_self = this;	
@@ -149,12 +150,14 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
+			this.refresh();
 		},
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
+			this.refresh();
 		},
 		methods: {
 			showView(){
@@ -173,18 +176,18 @@
 				}
 				this.getDataSet(this.selfParam.provinceCenterId,this.selfParam.businessDate,this.selfParam.cityCenterId);
 				this.getPieData('竞彩');
-				this.getPieData('足彩');
-				this.getPieData('篮彩');
+				this.getPieData('足球');
+				this.getPieData('篮球');
 				this.getRankTable(this.selfParam.provinceCenterId,this.selfParam.businessDate);
 			},
 			change(e) {
 			    this.btnnum = e;
-				if(0==e){
+				if(0==e){ 
 					this.getPieData('竞彩');
 				}else if(1==e){
-					this.getPieData('足彩');
+					this.getPieData('足球');
 				}else if(2==e){
-					this.getPieData('篮彩');
+					this.getPieData('篮球');
 				}
 			},
 			createParam(){
@@ -229,8 +232,8 @@
 					var data = res.data.data;
 					var format0 = numberFun.formatCNumber(data[0]);
 					var big1 = {'name':'竞彩（'+format0.name +'元）', 'value':(data[0]/format0.value).toFixed(2)}
-					var small1 = {'name':'足彩（'+format0.name +'元）', 'value':(data[1]/format0.value).toFixed(2)}
-					var small2 = {'name':'篮彩（'+format0.name +'元）', 'value':(data[2]/format0.value).toFixed(2)}
+					var small1 = {'name':'足球（'+format0.name +'元）', 'value':(data[1]/format0.value).toFixed(2)}
+					var small2 = {'name':'篮球（'+format0.name +'元）', 'value':(data[2]/format0.value).toFixed(2)}
 					this.ticketData = {big1:big1,small1:small1,small2:small2}
 					// this.$set(this.ticketData, 'big1', big1);
 					// this.$set(this.ticketData, 'small1', small1);
@@ -254,9 +257,9 @@
 				
 				if(type=='竞彩'){
 					param.gameFlag = 0
-				}else if(type=='足彩'){
+				}else if(type=='足球'){
 					param.gameFlag = 1
-				}else if(type=='篮彩'){
+				}else if(type=='篮球'){
 					param.gameFlag = 2
 				}
 				var that =this;
@@ -274,12 +277,12 @@
 						// that.$set(that.pieData, 'series', list);
 						this.$refs['ringChart0'].showCharts();
 						
-					}else if(type=='足彩'){
+					}else if(type=='足球'){
 						// that.$set(that.pieData1, 'series', list);
 						this.pieData1.series=list
 						this.$refs['ringChart1'].showCharts();
 						
-					}else if(type=='篮彩'){
+					}else if(type=='篮球'){
 						// that.$set(that.pieData2, 'series', list);
 						this.pieData2.series=list
 						this.$refs['ringChart2'].showCharts();						

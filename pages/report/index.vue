@@ -10,7 +10,7 @@
 				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
 			</view>
 			<view class="blackClass">
-				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+				<view @click="goDatePicker" class="list">{{today}}</view>
 			</view>
 		 </view>		
 		<block v-if="tabIndex==0">
@@ -55,6 +55,7 @@
         },
         data() {
             return {
+				today:dateUtils.getYesterday(),
 				selfParam:{
 					token:'',
 					provinceCenterId:'0',//当前查看的省份，如果之前是全国，这里可能会变动
@@ -297,8 +298,9 @@
 				});
 			},
 			goDatePicker() {
+				console.log(111111);
 				uni.navigateTo({
-					url:"/pages/common/dateSelector?type=common&date=" + this.selfParam.businessDate.date.startDate
+					url:"/pages/common/dateSelectorReport?type=common&date=" + this.selfParam.businessDate.date.startDate
 				});
 			}
         }

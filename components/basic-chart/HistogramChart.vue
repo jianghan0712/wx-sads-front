@@ -58,7 +58,7 @@ export default {
 		height: {
 			//图标高度
 			type: Number,
-			default: 500
+			default: 600
 		},
 		labelKey: {
 			type: String,

@@ -13,21 +13,21 @@
 			<view v-if="selfParam.provinceCenterId!=0" class ="column-box viewborder" style="width: 700rpx; display: flex;" >
 				<view style="width: 450rpx;">
 					<view class="small-text">日销量(百万元)</view>
-					<view class="big-text">{{pagedata[0]}}</view>
+					<view class="big-text" >{{pagedata[0]}}</view>
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{pagedatacompare[0]}}%</view>
+					<view class="big-text" :class=" pagedatacompare[0]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[0]>0?"+"+pagedatacompare[0]:pagedatacompare[0]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId==0" class ="column-box viewborder" style="width: 700rpx; display: flex;" >
 				<view style="width: 450rpx;">
 					<view class="small-text">日销量(亿元)</view>
-					<view class="big-text">{{pagedata[0]}}</view>
+					<view class="big-text" >{{pagedata[0]}}</view>
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{pagedatacompare[0]}}%</view>
+					<view class="big-text" :class=" pagedatacompare[0]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[0]>0?"+"+pagedatacompare[0]:pagedatacompare[0]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId!=0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -37,7 +37,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{pagedatacompare[11]}}%</view>
+					<view class="big-text" :class=" pagedatacompare[11]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[11]>0?"+"+pagedatacompare[11]:pagedatacompare[11]}}%</view>
 				</view>
 			</view>
 			<view  v-if="selfParam.provinceCenterId!=0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -47,7 +47,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{pagedatacompare[1]}}%</view>
+					<view class="big-text" :class=" pagedatacompare[1]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[1]>0?"+"+pagedatacompare[1]:pagedatacompare[1]}}%</view>
 				</view>
 			</view>
 			<view  v-if="selfParam.provinceCenterId==0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -57,7 +57,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{pagedatacompare[1]}}%</view>
+					<view class="big-text" :class=" pagedatacompare[1]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[1]>0?"+"+pagedatacompare[1]:pagedatacompare[1]}}%</view>
 				</view>
 			</view>
 			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -67,91 +67,103 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text">{{pagedatacompare[2]}}%</view>
+					<view class="big-text" :class=" pagedatacompare[2]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[2]>0?"+"+pagedatacompare[2]:pagedatacompare[2]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId!=0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">足球日销量(百万元)</view>
 					<view class="big-text">{{pagedata[3]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[3]}}%</view>
+					<view class="small-text">{{arcbarNumTop}}</view><view class="small-text" :class=" pagedatacompare[3]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[3]>0?"+"+pagedatacompare[3]:pagedatacompare[3]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">蓝球日销量(万元)</view>
 					<view class="big-text">{{pagedata[4]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[4]}}%</view>
+					<view class="small-text">{{arcbarNumTop}}</view><view class="small-text" :class=" pagedatacompare[4]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[4]>0?"+"+pagedatacompare[4]:pagedatacompare[4]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId==0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">足球日销量(亿元)</view>
 					<view class="big-text">{{pagedata[3]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[3]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[3]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[3]>0?"+"+pagedatacompare[3]:pagedatacompare[3]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">蓝球日销量(百万元)</view>
 					<view class="big-text">{{pagedata[4]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[4]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[4]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[4]>0?"+"+pagedatacompare[4]:pagedatacompare[4]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId!=0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">1-2关次销量(百万元)</view>
 					<view class="big-text">{{pagedata[5]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[5]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[5]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[5]>0?"+"+pagedatacompare[5]:pagedatacompare[5]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">单票金额(元)</view>
 					<view class="big-text">{{pagedata[6]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[6]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[6]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[6]>0?"+"+pagedatacompare[6]:pagedatacompare[6]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId==0"  class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">1-2关次销量(亿元)</view>
 					<view class="big-text">{{pagedata[5]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[5]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[5]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[5]>0?"+"+pagedatacompare[5]:pagedatacompare[5]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">单票金额(元)</view>
 					<view class="big-text">{{pagedata[6]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[6]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;"  :class=" pagedatacompare[6]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[6]>0?"+"+pagedatacompare[6]:pagedatacompare[6]}}%</view>
 				</view>
 			</view>
 			<view class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">返奖率</view>
 					<view class="big-text">{{pagedata[7]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[7]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[7]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[7]>0?"+"+pagedatacompare[7]:pagedatacompare[7]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">"0"销量门店数</view>
 					<view class="big-text">{{pagedata[8]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[8]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[8]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[8]>0?"+"+pagedatacompare[8]:pagedatacompare[8]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId==0" class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">本月累计销量(亿元)</view>
 					<view class="big-text">{{pagedata[9]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[9]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;"  :class=" pagedatacompare[9]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[9]>0?"+"+pagedatacompare[9]:pagedatacompare[9]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
 					<view class="small-text">本年累计销量(亿元)</view>
 					<view class="big-text">{{pagedata[10]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[10]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;"  :class=" pagedatacompare[10]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[10]>0?"+"+pagedatacompare[9]:pagedatacompare[10]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId!=0" class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">本月累计销量(百万元)</view>
 					<view class="big-text">{{pagedata[9]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[9]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[9]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[9]>0?"+"+pagedatacompare[9]:pagedatacompare[9]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
-					<view class="small-text">本年累计销量(亿元)</view>
+					<view class="small-text">本年累计销量(亿元)</view>  	
 					<view class="big-text">{{pagedata[10]}}</view>
-					<view class="small-text">{{arcbarNumTop}} {{pagedatacompare[10]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[10]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[10]>0?"+"+pagedatacompare[9]:pagedatacompare[10]}}%</view>
 				</view>
 			</view>
 		</view>
@@ -363,27 +375,42 @@
 					});
 					
 					//有销量门店
-					url = '/pentaho/dailyPaper/getShowCountRanking';
-					param=this.createParam();
+					url = '/pentaho/sales/getStoreSituation';
+					param={dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token };
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						var data =res.data.data;
 						if(data.length==0){
 							this.$set(that.pagedata,2,0);
 							this.$set(that.pagedatacompare,2,0);
+						}else{
+							this.$set(that.pagedata,2,data[0]);
+							this.$set(that.pagedatacompare,2,data[1]);
+						}		
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+					//0销量门店
+					url = '/pentaho/channel/getZeroShowCount';
+					param={dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token };
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						var data =res.data.data;
+						if(data.length==0){
 							this.$set(that.pagedata,8,0);
 							this.$set(that.pagedatacompare,8,0);
 						}else{
-							var all =0;
-							var all1 =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-								all1=all1+data[i][2]
-							};
-							this.$set(that.pagedata,2,all);
-							this.$set(that.pagedatacompare,2,0);
-							this.$set(that.pagedata,8,all1);
-							this.$set(that.pagedatacompare,8,0);
+							this.$set(that.pagedata,8,data[0]);
+							this.$set(that.pagedatacompare,8,data[1]);
 						}		
 					}).catch((err)=>{
 						this.loading = false;
@@ -441,9 +468,9 @@
 							this.$set(that.pagedatacompare,5,0);
 						}else{
 							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2));
+								this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2)=='NaN'?0:(data[0]/100000000).toFixed(2));
 							}else {
-								this.$set(that.pagedata,5,(data[0]/1000000).toFixed(2));
+								this.$set(that.pagedata,5,(data[0]/1000000).toFixed(2)=='NaN'?0:(data[0]/1000000).toFixed(2));
 							}
 							
 							this.$set(that.pagedatacompare,5,data[1]);
@@ -452,6 +479,8 @@
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
+						this.$set(that.pagedata,5,0);
+						this.$set(that.pagedatacompare,5,0);
 					});
 					
 					//单票金额
@@ -614,34 +643,48 @@
 					});
 					
 					//有销量门店
-					url = '/pentaho/dailyPaper/getShowCountRanking';
-					param=this.createParam();
+					url = '/pentaho/sales/getStoreSituation';
+					param={dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token };
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
-						var data =res.data.data;	
+						var data =res.data.data;
 						if(data.length==0){
 							this.$set(that.pagedata,2,0);
 							this.$set(that.pagedatacompare,2,0);
-							this.$set(that.pagedata,8,0);
-							this.$set(that.pagedatacompare,8,0);
 						}else{
-							var all =0;
-							var all1 =0;
-							for(var i=0;i<data.length;i++){
-								all=all+data[i][1]
-								all1=all1+data[i][2]
-							};
-							this.$set(that.pagedata,2,all);
-							this.$set(that.pagedatacompare,2,0);
-							this.$set(that.pagedata,8,all1);
-							this.$set(that.pagedatacompare,8,0);
-						}
-							
-						
+							this.$set(that.pagedata,2,data[0]);
+							this.$set(that.pagedatacompare,2,data[2]);
+						}		
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
+					//0销量门店
+					url = '/pentaho/channel/getZeroShowCount';
+					param={dateTimeStart: this.selfParam.businessDate.date.startDate,
+							dateTimeEnd:this.selfParam.businessDate.date.startDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token };
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						var data =res.data.data;
+						if(data.length==0){
+							this.$set(that.pagedata,8,0);
+							this.$set(that.pagedatacompare,8,0);
+						}else{
+							this.$set(that.pagedata,8,data[0]);
+							this.$set(that.pagedatacompare,8,data[2]);
+						}		
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+					
 					
 					//足球日销量
 					url = '/pentaho/sales/getGameSales';
@@ -670,11 +713,11 @@
 							this.$set(that.pagedatacompare,3,fb[2]);
 							
 							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,4,(fb[0]/1000000).toFixed(2));
+								this.$set(that.pagedata,4,(bk[0]/1000000).toFixed(2));
 							}else {
-								this.$set(that.pagedata,4,(fb[0]/10000).toFixed(2));
+								this.$set(that.pagedata,4,(bk[0]/10000).toFixed(2));
 							}
-							this.$set(that.pagedatacompare,4,fb[2]);
+							this.$set(that.pagedatacompare,4,bk[2]);
 						}
 						
 					}).catch((err)=>{
@@ -693,9 +736,9 @@
 							this.$set(that.pagedatacompare,5,0);
 						}else{
 							if(this.selfParam.provinceCenterId==0){
-								this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2));
+								this.$set(that.pagedata,5,(data[0]/100000000).toFixed(2)=='NaN'?0:(data[0]/100000000).toFixed(2)=='NaN');
 							}else {
-								this.$set(that.pagedata,5,(data[0]/1000000).toFixed(2));
+								this.$set(that.pagedata,5,(data[0]/1000000).toFixed(2)=='NaN'?0:(data[0]/1000000).toFixed(2)=='NaN');
 							}
 							this.$set(that.pagedatacompare,5,data[2]);
 						}
@@ -703,6 +746,8 @@
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
+						this.$set(that.pagedata,5,0);
+						this.$set(that.pagedatacompare,5,0);
 					});
 					//单票金额
 					url = '/pentaho/dailyPaper/getSingleVoteAmount';
@@ -715,7 +760,7 @@
 							this.$set(that.pagedatacompare,6,0);
 						}else{
 							this.$set(that.pagedata,6,data[0]);
-							this.$set(that.pagedatacompare,6,data[1]);
+							this.$set(that.pagedatacompare,6,data[2]);
 						}
 						
 					}).catch((err)=>{
@@ -850,7 +895,7 @@
 	}
 	
 	.column-box{
-		margin: 25rpx 20rpx;
+		margin: 25rpx 10rpx;
 	}
 	
 	.big-text{
@@ -863,7 +908,7 @@
 	.small-text{
 		color: #777;
 		font-size: 27rpx;
-		margin: 20rpx 50rpx 0rpx 50rpx;
+		margin: 20rpx 30rpx 0rpx 30rpx;
 	}
 	.viewborder{
 		border: 3rpx solid #faca82;
@@ -876,4 +921,14 @@
 		width: 100%;
 		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
+	.small-text-green{
+		color: #1FCE58;
+		/* font-size: 30rpx; */
+	}
+	
+	.small-text-red{
+		color: #E83838;
+		/* font-size: 30rpx; */
+	}
+	
 </style>
