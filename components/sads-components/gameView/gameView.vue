@@ -80,18 +80,13 @@
 			},
 			created() {
 				// this.showModel = this.model;
-				this.showModel = JSON.parse(uni.getStorageSync("selfParam"))
-				console.log(this.showModel)
-				if(this.arcbarNumTop=='足球'){
-					this.totalData = this.footballData;
-				}else{
-					this.totalData = this.basketballData;
-				}
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.returnFromDatePicker();
 				this.loadData();
 				this.refresh();
 			},
 			onShow() {
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.returnFromDatePicker();
 				this.loadData();
 				this.refresh();
@@ -276,12 +271,12 @@
 				changeTop(e){
 					this.arcbarNumTop = e;;
 					getApp().globalData.ballType=e; 
-					this.loadData();
+					this.loadTopData()();
 					
 				},
 				changeMid(e){
 					this.arcbarNumMid = e;
-					this.loadData();
+					this.loadMidData();
 				},
 				loadTopData(ballType){
 					var url = '/pentaho/sales/getGameSalesAndVotes';
@@ -413,14 +408,32 @@
 							votes = res.data.data.bk.votes;
 						}
 						
+						var maxAmount = 0;
+						  var maxVote = 0;
+						  for(var i=0;i<dates.length;i++){ 
+						   if(maxAmount<sales[i]){
+							maxAmount = sales[i]
+						   }
+						   if(maxVote<votes[i]){
+							maxVote = votes[i]
+						   }
+						  }
+						  var amountFormat = numberFun.formatCNumber(maxAmount);
+						  var voteFormat= numberFun.formatCNumber(maxVote);
+						  
+						  for(var i=0;i<sales.length;i++){
+						   sales[i] =(sales[i]/amountFormat.value).toFixed(2);;
+						   votes[i] = (votes[i]/voteFormat.value).toFixed(2);
+						  }
+						
 						if(that2.arcbarNumMid=='销量'){
 							var series=[{
-								name: '销量（万元）', 
+								name: '销量（'+amountFormat.name+'）', 
 								data: sales
 							}];
 							 that2.$set(that2.lineData1,'series',series);
 						}else {
-							var series=[{name: '票数(张)',
+							var series=[{name: '票数('+voteFormat.name+')',
 							data: votes
 							}];
 							that2.$set(that2.lineData1,'series',series);

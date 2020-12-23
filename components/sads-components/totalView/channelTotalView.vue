@@ -360,7 +360,7 @@
 						if(maxAmount<sales[i]){
 							maxAmount = sales[i]
 						}
-						if(maxVote<sales[i]){
+						if(maxVote<votes[i]){
 							maxVote = votes[i]
 						}
 					}
@@ -368,11 +368,11 @@
 					var voteFormat= numberFun.formatCNumber(maxVote);
 					for(var i=0;i<dates.length;i++){	
 						categories[i] = dates[i];
-						amountData[i] = (sales[i]/this.amountFormat.value).toFixed(2);
-						volData[i] = (votes[i]/this.voteFormat.value).toFixed(2);
+						amountData[i] = (sales[i]/amountFormat.value).toFixed(2);
+						volData[i] = (votes[i]/voteFormat.value).toFixed(2);
 					}
 					
-					var json = {'name':'销量('+this.amountFormat.name +'）元' ,'data':amountData};
+					var json = {'name':'销量('+amountFormat.name +'）元' ,'data':amountData};
 					var series = [];
 					series[0] = json;	
 					
@@ -380,7 +380,7 @@
 					this.$set(this.lineData2, 'series', series);
 					
 					
-					var json2 = {'name':'票数('+this.voteFormat.name +'）张','data':volData};
+					var json2 = {'name':'票数('+voteFormat.name +'）张','data':volData};
 					var series2 = [];
 					series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories); 

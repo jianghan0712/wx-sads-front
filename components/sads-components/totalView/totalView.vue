@@ -445,7 +445,7 @@
 						if(maxAmount<sales[i]){
 							maxAmount = sales[i]
 						}
-						if(maxVote<sales[i]){
+						if(maxVote<votes[i]){
 							maxVote = votes[i]
 						}
 					}
@@ -456,10 +456,6 @@
 						amountData[i] = (sales[i]/this.amountFormat.value).toFixed(2);
 						volData[i] = (votes[i]/this.voteFormat.value).toFixed(2);
 					}
-					
-					console.log('categories:', categories);
-					console.log('amountData:', amountData);
-					console.log('volData:', volData);
 					
 					var json = {'name':'销量('+this.amountFormat.name +'）元' ,'data':amountData};
 					var series = [];

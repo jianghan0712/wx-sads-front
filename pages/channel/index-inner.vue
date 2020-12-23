@@ -20,7 +20,7 @@
 			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../static/right.png" mode="aspectFill">
 		</view>	
 		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color:#6D6D72;">
-			<image src="../../static/address.png" style="height: 2rpx; width: 2rpx;background-color:#000000;"></image>{{showPro}}
+			{{showPro}}
 		</view>	
 		<block v-if="tabIndex==0">
 			<channelTotalView ref="channelTotalView" :param="selfParam"></channelTotalView>

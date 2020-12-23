@@ -16,6 +16,18 @@
 					<view class="rankTable">
 						<view class="rankTable-title">
 							<view  style="font-weight: bold;">各地区足球关次销量及占比</view>
+			<!-- 				<view style="width: 80%; margin: auto; margin-bottom: 20px;">
+								<xfl-select 
+								:list="levelList"
+								:initValue="'单关'"
+								:showItemNum="4" 
+								:isCanInput="false"  
+								:style_Container="listBoxStyle"
+								:placeholder = "'placeholder'"
+								@visible-change = 'visibleChange'
+								>
+								</xfl-select>
+							</view> -->
 							<view class="rankTable-more">
 								<picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
 									当前选择：{{array[index].name}}
@@ -61,12 +73,13 @@
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
+	import xflSelect from '@/components/xfl-select/xfl-select.vue';
 
 	
 	export default {
 		components: {
 			RingChart,
-			vTable
+			vTable,xflSelect
 		},
 		props: {
 			param:{
@@ -185,6 +198,9 @@
 				console.log(this.selfParam)
 				this.index = e.detail.value
 				this.getTableDate(this.btnnum, this.array[e.detail.value].name)
+			},
+			change({newVal, oldVal, index, orignItem}){ 
+				console.log(newVal, oldVal, index, orignItem);
 			},
 			gotoLunBo(btnnum){
 				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));				
