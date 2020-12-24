@@ -305,26 +305,60 @@
 			console.log("totalView onLoad:",this.selfParam)
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(550);
-			// this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
-			this.refresh();
+			 
+			try{
+				this.getServerData();
+				this.showView();
+				this.refresh();
+			} catch (e) {
+				console.log('request fail', err);
+				try{
+					this.showView();
+				} catch (e) {
+					console.log('request fail', err);
+					this.showView();
+				};
+				
+			};
+			
 		},
 		created() {
 			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			console.log("totalView created:",this.selfParam)
-			// this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
-			this.refresh();
+			
+			try{
+				this.getServerData();
+				this.showView();
+				this.refresh();
+			} catch (e) {
+				console.log('request fail', err);
+				try{
+					this.showView();
+				} catch (e) {
+					console.log('request fail', err);
+					this.showView();
+				};
+				
+			};
 		},
 		onShow(){
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			// this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
-			this.refresh();
+			
+			try{
+				this.getServerData();
+				this.showView();
+				this.refresh();
+			} catch (e) {
+				console.log('request fail', err);
+				try{
+					this.showView();
+				} catch (e) {
+					console.log('request fail', err);
+					this.showView();
+				};
+				
+			};
 		},
 		methods: {
 			createParam(){
@@ -364,6 +398,8 @@
 				console.log("刷新页面，日期为",this.selfParam)
 				this.getServerData();
 				this.showView();
+				this.getServerData();
+				this.showView();
 			},
 			showView(){
 				// commonFun.sleep(2000)
@@ -392,6 +428,10 @@
 							mask: true
 						});
 						var data = res.data.data;
+						if(data==null || data.length==0){
+							return;
+						}
+						this.totalData={}
 						var amount = data[0]
 						var saleNumber = data[1]
 						
@@ -429,7 +469,10 @@
 						icon: 'success',
 						mask: true
 					});
-					var data = res.data.data;	
+					var data = res.data.data;
+					if(data==null || data.length==0){
+						return;
+					}
 					var sales = data.sales
 					var dates = data.dates
 					var votes = data.votes
@@ -457,13 +500,13 @@
 						volData[i] = (votes[i]/this.voteFormat.value).toFixed(2);
 					}
 					
-					var json = {'name':'销量('+this.amountFormat.name +'）元' ,'data':amountData};
+					var json = {'name':'销量('+this.amountFormat.name +'元）' ,'data':amountData};
 					var series = [];
 					series[0] = json;				
 					this.$set(this.lineData2, 'categories', categories);
 					this.$set(this.lineData2, 'series', series);
 					
-					var json2 = {'name':'票数('+this.voteFormat.name +'）张','data':volData};
+					var json2 = {'name':'票数('+this.voteFormat.name +'张）','data':volData};
 					var series2 = [];
 					series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories);
@@ -471,6 +514,7 @@
 					
 					this.$refs['lineData2'].showCharts();
 					this.$refs['lineData1'].showCharts();
+					console.log("lineData1: ",this.lineData1)
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -497,6 +541,9 @@
 						mask: true
 					});
 					var data = res.data.data;	
+					if(data==null){
+						return;
+					}
 					var tempObj;
 					if(type=='足球'){
 						tempObj = data.football
@@ -548,14 +595,10 @@
 				var param = this.createParam()
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
 					var data = res.data.data;	
-									
+					if(data==null || data.length==0){
+						return;
+					}		
 					this.shopData.shop.sum=data[0];
 					this.shopData.shop.tongbi=data[1]>0?"+"+data[1]:data[1];
 					this.shopData.shop.huanbi=data[2]>0?"+"+data[2]:data[2]
@@ -577,7 +620,9 @@
 						mask: true
 					});
 					var data = res.data.data;	
-
+					if(data==null || data.length==0){
+						return;
+					}
 					this.shopData.rate.sum=data[0];
 					this.shopData.rate.tongbi=data[1]>0?"+"+data[1]:data[1];
 					this.shopData.rate.huanbi=data[2]>0?"+"+data[2]:data[2];
@@ -592,13 +637,11 @@
 				var param = this.createParam()
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+
 					var data = res.data.data;	
+					if(data==null || data.length==0){
+						return;
+					}
 					var format0 = numberFun.formatCNumber(data[0][1]);		
 					for(var i=0;i<data.length;i++){
 						var json = {id:i+1, 
@@ -663,12 +706,7 @@
 				var param = this.createParam()
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+
 					var data = res.data.data;
 					if(data==null){
 						return
@@ -711,13 +749,10 @@
 				var param = this.createParam()
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
 					var data = res.data.data;	
+					if(data==null || data.length==0){
+						return;
+					}
 					for(var i=0;i<data.length;i++){
 						var json = {id:i+1, 
 									area:data[i][0], 

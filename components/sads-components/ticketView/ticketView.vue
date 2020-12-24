@@ -404,6 +404,8 @@
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.getServerData();
 				this.showView();
+				this.getServerData();
+				this.showView();
 			},
 			returnFromDatePicker(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))

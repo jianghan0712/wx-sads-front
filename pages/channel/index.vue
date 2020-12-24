@@ -22,7 +22,7 @@
 				<view>销售top100门店</view>
 				<view class="rankTable-more" style="padding-right: 30rpx;" @click="goShopDetail(amountTableDataDetail,amountTableColumns)">全部>></view>
 			</view>
-			<view class="table">
+			<view class="example">
 				<v-table :columns="amountTableColumns" :list="amountTableData"  selection="single"  :slot-cols="['number']" border-color="#FFFFFF">
 					<template v-slot="{ row }">
 						<view style="font-weight: blod;color:blue;" @click="goDetail(row.number)">{{ row.number }}</view>
@@ -37,10 +37,10 @@
 				<view class="rankTable-more" style="padding-right: 30rpx;" @click="goLimitShopDetail(beyondLimitTableDataDetail,beyondLimitTableColumns)">全部>></view>
 			</view>
 			<view v-if="update2">
-				<view class="table">
+				<view class="example">
 					<v-table :columns="beyondLimitTableColumns" :list="beyondLimitTableData"   :slot-cols="['area']"  border-color="#FFFFFF">
 						<template v-slot="{ row }">
-							<view style="font-weight: blod;color:blue;" @click="goLimitDetail(row.areaIdStr)">{{ row.area }}</view>
+							<view style="font-weight: blod;color:blue;" @click="goLimitDetail(row.area)">{{ row.area }}</view>
 						</template>
 					</v-table>
 				</view>
@@ -131,7 +131,7 @@
 						{
 							title: '地市',
 							key: 'area',
-							$width:"80px"
+							$width:"100px"
 						},
 						{
 							title: '门店编号',
@@ -151,11 +151,6 @@
 							$width:"50px",
 						},
 						{
-							title: '地区编号',
-							key: 'areaIdStr',
-							$width:"80px",
-						},
-						{
 							title: '省份/地市',
 							key: 'area',
 							$width:"100px"
@@ -163,7 +158,7 @@
 						{
 							title: '门店数量',
 							key: 'count',
-							$width:"50px"
+							$width:"130px"
 						},
 						{
 							title: '环比变化值',
@@ -283,19 +278,14 @@
 									$width:"50px",
 								},
 								{
-									title: ' ',
-									key: 'areaIdStr',
-									$width:"0px",
-								},
-								{
 									title: '省份',
 									key: 'area',
-									$width:"80px"
+									$width:"100px"
 								},
 								{
 									title: '门店数量',
 									key: 'count',
-									$width:"80px"
+									$width:"130px"
 								},
 								{
 									title: '环比变化值',
@@ -310,19 +300,14 @@
 									$width:"50px",
 								},
 								{
-									title: '地区编号',
-									key: 'areaIdStr',
-									$width:"80px",
-								},
-								{
 									title: '地市',
 									key: 'area',
-									$width:"80px"
+									$width:"100px"
 								},
 								{
 									title: '门店数量',
 									key: 'count',
-									$width:"80px"
+									$width:"130px"
 								},
 								{
 									title: '环比变化值',
@@ -337,7 +322,6 @@
 						var data = res.data.data;	
 						for(var i=0;i<data.length;i++){
 							var json = {id:i+1,
-										areaIdStr:data[i][0],
 										area:data[i][1], 
 										count:data[i][2], 
 										change:(data[i][3]>0?("+"+data[i][3]):data[i][3])
@@ -449,11 +433,20 @@
 					console.log("对比前后，选中的变化")
 					console.log(obj)
 				},
-				goLimitDetail(areaId){
+				goLimitDetail(area){
 					//跳转到当前地区所有门店
 					var url = '/pentaho/channel/getTransfiniteShowsList';
 					var param = this.createParam();
-					param.provincialId =areaId
+					var list = JSON.parse(uni.getStorageSync("areaMap"))
+					console.log(list)
+					var areaIdStr="";
+					for(var i = 0;i<list.length;i++){    //遍历json对象的每个key/value对,p为key
+						if(list[i].name==area){
+							areaIdStr=list[i].id;
+						}
+					}
+					console.log(areaIdStr)
+					param.provincialId =areaIdStr
 					urlAPI.getRequest(url, param).then((res)=>{
 						var data =res.data.data;
 						for(var i=0;i<data.length;i++){
@@ -576,5 +569,12 @@
 	}
 	.blackClass{
 		padding: 10px 10px;
+	}
+	.example {
+		/* line-height: 40px; */
+		width: 100%;
+		display: flex;
+		font-weight: bold;
+		border-color:#FFFFFF;
 	}
 </style>

@@ -102,7 +102,7 @@
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker()
 			this.getServerData(this.btnnum);
-			this.refresh();
+			this.refresh(this.selfParam);
 		},
 		onShow() {
 			_self = this;
@@ -110,7 +110,7 @@
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker()
 			this.getServerData(this.btnnum);
-			this.refresh();
+			this.refresh(this.selfParam);
 		},
 		created() {
 			// this.selfParam=this.param
@@ -119,12 +119,14 @@
 			this.selfParam.token = uni.getStorageSync("token")
 			//ajax调用
 			this.getServerData(this.btnnum);
-			this.refresh();
+			this.refresh(this.selfParam);
 		},
 		methods: {
 			refresh(selfParam){
 				this.selfParam = JSON.parse(selfParam)
 				this.selfParam.token = uni.getStorageSync("token")
+				this.getServerData();
+				this.showView();
 				this.getServerData();
 				this.showView();
 			},

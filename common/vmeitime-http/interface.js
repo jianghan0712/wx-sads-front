@@ -32,8 +32,9 @@ http.delete('user/1').then((res)=>{
 export default {
 	config: {
 		// baseUrl: "http://192.168.1.105:8901/",
-		baseUrl :'https://m.csljc.com:8443/',
-		// baseUrl: "https://192.168.54.110:8088/",
+		baseUrl :'m.lottery-sports.com：8443',
+		baseUrl :'https://m.lottery-sports.com:8443',
+		// baseUrl: "https://m.csljc.com:8443/",
 		header: {
 			'Content-Type':'application/json;charset=UTF-8',
 			'Content-Type':'application/x-www-form-urlencoded'

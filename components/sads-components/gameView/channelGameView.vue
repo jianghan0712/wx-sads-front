@@ -257,6 +257,7 @@
 				refresh() {
 					this.returnFromDatePicker();
 					this.loadData();
+					this.loadData();
 				},
 				createParam(type){
 					console.log("createParam begin")
@@ -332,8 +333,8 @@
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
-								name:'票数（万张）',
-								value:(fb[3]/10000).toFixed(2),
+								name:'票数（张）',
+								value:(fb[3]).toFixed(2),
 								left:{
 									name:'周同比',
 									value:fb[4]+"%"
@@ -357,8 +358,8 @@
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
-								name:'票数（万张）',
-								value:(bk[3]/10000).toFixed(2),
+								name:'票数（张）',
+								value:(bk[3]).toFixed(2),
 								left:{
 									name:'周同比',
 									value:bk[4]+"%"
@@ -389,7 +390,7 @@
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
-								name:'票数（万张）',
+								name:'票数（张）',
 								value:0,
 								left:{
 									name:'周同比',
@@ -414,7 +415,7 @@
 								}}
 							this.$set(that.totalData,'big1',index0);
 							let index1={
-								name:'票数（万张）',
+								name:'票数（张）',
 								value:0,
 								left:{
 									name:'周同比',

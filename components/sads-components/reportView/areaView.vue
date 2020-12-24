@@ -119,7 +119,7 @@
 				 		{
 				 			title: '省份',
 				 			key: 'area',
-				 			$width:"60px"
+				 			$width:"80px"
 				 		},
 				 		{
 				 			title: '销量(百万元)',
@@ -142,7 +142,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"60px"
+								$width:"80px"
 							},
 							{
 								title: '票数(万张)',
@@ -165,7 +165,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"60px"
+								$width:"80px"
 							},
 							{
 								title: '有销量门店数',
@@ -188,12 +188,12 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"70px"
+								$width:"80px"
 							},
 							{
 								title: '竞彩',
 								key: 'jingcai',
-								$width:"60px"
+								$width:"80px"
 							},
 							{
 								title: '足球',

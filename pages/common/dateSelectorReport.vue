@@ -36,7 +36,7 @@
 					</view>
 				</view>
 			</view>
-			<button @click="confirmDate()">确定</button>
+			<button class="button" @click="confirmDate()">确定</button>
 		</view>
 		
 	</view>	 
@@ -405,6 +405,12 @@
 	/* #endif */
 	.example {
 		padding: 0 15px;
+	}
+	.button{
+		margin-top: 150rpx;
+		justify-content: center;
+		background-color: #007AFF;
+		color: #FFFFFF;
 	}
 	
 	.example-info {

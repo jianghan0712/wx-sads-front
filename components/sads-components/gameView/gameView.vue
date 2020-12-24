@@ -216,7 +216,7 @@
 								{
 									title: '返奖率',
 									key: 'returnRate',
-									$width:"80px"
+									$width:"100px"
 								},
 								{
 									title: '周同比',
@@ -234,6 +234,7 @@
 			methods: {
 				refresh() {
 					this.returnFromDatePicker();
+					this.loadData();
 					this.loadData();
 				},
 				createParam(){
@@ -271,7 +272,7 @@
 				changeTop(e){
 					this.arcbarNumTop = e;;
 					getApp().globalData.ballType=e; 
-					this.loadTopData()();
+					this.loadTopData();
 					
 				},
 				changeMid(e){
@@ -428,12 +429,12 @@
 						
 						if(that2.arcbarNumMid=='销量'){
 							var series=[{
-								name: '销量（'+amountFormat.name+'）', 
+								name: '销量（'+amountFormat.name+'元）', 
 								data: sales
 							}];
 							 that2.$set(that2.lineData1,'series',series);
 						}else {
-							var series=[{name: '票数('+voteFormat.name+')',
+							var series=[{name: '票数('+voteFormat.name+'张)',
 							data: votes
 							}];
 							that2.$set(that2.lineData1,'series',series);
@@ -550,7 +551,6 @@
 							var data =res.data.data;	
 							
 							for(var i=0;i<data.length;i++){
-								var obj={id:i+1,area:data[i][0],returnRate:data[i][1]+"%",tongbi:data[i][2]>0?"+"+data[i][2]+"%":data[i][2]>0+"%",huanbi:data[i][3]>0?"+"+data[i][3]+"%":data[i][3]>0+"%"};
 								var cellClassName={};
 								if(data[i][2]<0){
 									cellClassName.tongbi='small-text-green'
@@ -562,6 +562,11 @@
 								}else{
 									cellClassName.huanbi='small-text-red'
 								}
+								var obj={id:i+1,
+										area:data[i][0],
+										returnRate:data[i][1]+"%",
+										tongbi:data[i][2]>0?"+"+data[i][2]+"%":data[i][2]+"%",
+										huanbi:data[i][3]>0?"+"+data[i][3]+"%":data[i][3]+"%"};								
 								obj.cellClassName=cellClassName;	
 								if(i<5){
 									that.tableData1[i] = obj;

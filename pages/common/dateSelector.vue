@@ -39,7 +39,7 @@
 					</view>
 				</view>
 			</view>
-			<button @click="confirmDate()">确定</button>
+			<button class="button" @click="confirmDate()">确定</button>
 		</view>
 		
 	</view>	 
@@ -334,9 +334,9 @@
 		background: #FFFFFF;
 	}
 	.btna{
-		color: #000000;
-		background: #ebebeb;
-		padding:0px 30rpx 0px 30rpx;
+		color: #FFFFFF;
+		background: #2F7AFF;
+		padding:5rpx 50rpx 5rpx 50rpx;
 	}
 	.dis{
 		display: block;
@@ -345,7 +345,7 @@
 	.hide{
 		color: #000000;
 		background: #FFFFFF;
-		padding:0px 30rpx 0px 30rpx;
+		padding:5rpx 50rpx 5rpx 50rpx;
 	}
 	
 	.content{
@@ -454,6 +454,12 @@
 	
 	.word-btn--hover {
 		background-color: #4ca2ff;
+	}
+	.button{
+		margin-top: 150rpx;
+		justify-content: center;
+		background-color: #007AFF;
+		color: #FFFFFF;
 	}
 	
 	.example-body {

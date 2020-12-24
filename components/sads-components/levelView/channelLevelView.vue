@@ -191,6 +191,8 @@
 				this.selfParam.token = getApp().globalData.token;
 				this.getServerData();
 				this.showView();
+				this.getServerData();
+				this.showView();
 				this.change(0);
 			},
 			returnFromDatePicker(){

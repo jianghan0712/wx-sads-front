@@ -188,6 +188,8 @@
 				this.selfParam.token = uni.getStorageSync("token")
 				this.getServerData();
 				this.showView();
+				this.getServerData();
+				this.showView();
 			},
 			createParam(){
 				console.log("createParam begin")

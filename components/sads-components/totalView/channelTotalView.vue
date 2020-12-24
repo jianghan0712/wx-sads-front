@@ -218,28 +218,21 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.change(0)
-			this.changeArcbar(0)
 		},
 		onShow() {
 			_self = this;
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
-			this.change(0)
-			this.changeArcbar(0)
 		},
 		created() {
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
-			this.change(0)
-			this.changeArcbar(0)
 			console.log(this.selfParam)
 		},
 		methods: {
 			showView(){
-				this.$nextTick(() => {				
 					this.$refs['arcbar0'].showCharts();
 					this.$refs['arcbar1'].showCharts();
 					this.$refs['lineData2'].showCharts();
@@ -247,7 +240,6 @@
 					this.$refs['dataContain'].showDataContainer();
 					this.$refs['dataContain2'].showDataContainer();
 					this.$refs['dataContain3'].showDataContainer();
-				});
 			},
 			returnFromDatePicker(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -372,7 +364,7 @@
 						volData[i] = (votes[i]/voteFormat.value).toFixed(2);
 					}
 					
-					var json = {'name':'销量('+amountFormat.name +'）元' ,'data':amountData};
+					var json = {'name':'销量('+amountFormat.name +'元）' ,'data':amountData};
 					var series = [];
 					series[0] = json;	
 					
@@ -380,7 +372,7 @@
 					this.$set(this.lineData2, 'series', series);
 					
 					
-					var json2 = {'name':'票数('+voteFormat.name +'）张','data':volData};
+					var json2 = {'name':'票数('+voteFormat.name +'张）','data':volData};
 					var series2 = [];
 					series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories); 
@@ -592,11 +584,12 @@
 				this.selfParam = JSON.parse(selfParam)
 				this.getServerData();
 				this.showView();
+				this.getServerData();
+				this.showView();
 			},
 			change(e) {
 			      this.btnnum = e
 			      console.log(this.btnnum)
-				  this.returnFromDatePicker();
 				  this.getServerData();
 				  this.showView()
 			},
@@ -608,8 +601,6 @@
 				}else {
 					this.ballType='篮球'
 				}
-				console.log(this.arcbarNum)
-				this.returnFromDatePicker();
 				this.getServerData();
 				this.showView()
 			},
