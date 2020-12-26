@@ -67,7 +67,8 @@
 					lastLoginTime:''
 				},
 				area:'',
-				token:''
+				token:'',
+				areaName:''
 			}
 		},
 		created() {

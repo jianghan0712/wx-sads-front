@@ -145,6 +145,7 @@ export default {
 					gridType:'dash',
 					calibration: true,
 					axisLine:false,
+					splitNumber:2,
 					format: val => {
 						let defaultSetting = { type: 'number', fixed: 0, name: '' };
 						let { type, fixed, name } = this.yAxisAs && this.yAxisAs.formatter ? Object.assign(defaultSetting, this.yAxisAs.formatter) : defaultSetting;
@@ -199,7 +200,7 @@ export default {
 					let { type, fixed, name } = that.yAxisAs && that.yAxisAs.formatter ? Object.assign(defaultSetting, that.yAxisAs.formatter) : defaultSetting;
 					if (typeof item.data === 'object') {
 						if (type == 'number') {
-							return `${category} ${item.name}:${item.data.value.toFixed(fixed)}${name}`;
+							return `${category} ${item.name}:${item.data.value.toFixed(fixed)}${name}`;						
 						} else if (type == 'percent') {
 							newName = name || '%';
 							return `${category} ${item.name}:${(item.data.value * 100).toFixed(fixed)}${newName}`;
@@ -208,7 +209,8 @@ export default {
 						}
 					} else {
 						if (type == 'number') {
-							return `${category} ${item.name}:${item.data.toFixed(fixed)}${name}`;
+							// return `${category} ${item.name}:${item.data.toFixed(fixed)}${name}`;
+							return `${category} ${item.name}:${item.data}${name}`;
 						} else if (type == 'percent') {
 							newName = name || '%';
 							return `${category} ${item.name}:${(item.data * 100).toFixed(fixed)}${newName}`;

@@ -176,8 +176,12 @@
 				arcbarNum: 0,
 				gateInfo:"",
 				ballType:'足球',
-				lineData2: {},
-				lineData1: {},
+				lineData2: {series:[
+							
+					],},
+				lineData1: {series:[
+							
+					],},
 				arcbar0: {
 					type: 'radar',
 					series:[
@@ -215,21 +219,35 @@
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
+			try{
+				this.returnFromDatePicker();
+				this.getServerData();
+				this.showView();
+				this.refresh();
+			} catch (e) {
+				this.changeArcbar(0)
+			};
+			
+			
+			this.changeArcbar(0)
 		},
 		onShow() {
 			_self = this;
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
+			this.refresh();
 		},
 		created() {
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView()
-			console.log(this.selfParam)
+			try{
+				this.returnFromDatePicker();
+				this.getServerData();
+				this.showView();
+				this.refresh();
+			} catch (e) {
+				this.changeArcbar(0)
+			};
+			
 		},
 		methods: {
 			showView(){

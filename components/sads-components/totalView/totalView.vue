@@ -121,6 +121,7 @@
 				</block>
 			</view>
 			
+
 			<block v-if="today!= selfParam.businessDate.view">
 				<!-- 全国返奖情况-->
 				<view class="box-contaniner">
@@ -138,6 +139,15 @@
 						</view>
 					</view>
 				</view>
+				<!-- 返奖率走势-->
+				<block v-if="selfParam.businessDate.dateType!='date'">
+					<view class="shop-title">返奖率走势</view>
+					<view class="box-contaniner" >
+						<line-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3"  
+									:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}"
+									:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
+					</view>
+				</block>
 				
 				<!-- 各地区返奖情况-->
 				<view class="box-contaniner">
@@ -237,6 +247,7 @@
 				arcbarNum: 0,
 				lineData2: {},
 				lineData1: {},
+				lineData3:{},
 				arcbar0: {},
 				arcbar1: {},
 				shopData: {shop:{sum:0,tongbi:0,huanbi:0},
@@ -301,64 +312,32 @@
 			};
 		},
 		onLoad() {
-			_self = this;			
-			console.log("totalView onLoad:",this.selfParam)
-			this.cWidth=uni.upx2px(750);
-			this.cHeight=uni.upx2px(550);
-			 
-			try{
-				this.getServerData();
-				this.showView();
-				this.refresh();
-			} catch (e) {
-				console.log('request fail', err);
-				try{
-					this.showView();
-				} catch (e) {
-					console.log('request fail', err);
-					this.showView();
-				};
-				
-			};
 			
 		},
 		created() {
-			// this.selfParam = this.param
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			console.log("totalView created:",this.selfParam)
+			this.getServerData();
 			
-			try{
-				this.getServerData();
-				this.showView();
-				this.refresh();
-			} catch (e) {
-				console.log('request fail', err);
-				try{
-					this.showView();
-				} catch (e) {
-					console.log('request fail', err);
-					this.showView();
-				};
-				
-			};
+			// this.showView();
 		},
 		onShow(){
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			
-			try{
-				this.getServerData();
-				this.showView();
-				this.refresh();
-			} catch (e) {
-				console.log('request fail', err);
-				try{
-					this.showView();
-				} catch (e) {
-					console.log('request fail', err);
-					this.showView();
-				};
+			// try{
+			// 	this.getServerData();
+			// 	this.showView();
+			// 	this.refresh();
+			// } catch (e) {
+			// 	console.log('request fail', err);
+			// 	try{
+			// 		this.showView();
+			// 	} catch (e) {
+			// 		console.log('request fail', err);
+			// 		this.showView();
+			// 	};
 				
-			};
+			// };
 		},
 		methods: {
 			createParam(){
@@ -403,15 +382,15 @@
 			},
 			showView(){
 				// commonFun.sleep(2000)
-				this.$nextTick(() => {	
-					this.$refs['arcbar0'].showCharts();
-					this.$refs['arcbar1'].showCharts();
-					this.$refs['lineData2'].showCharts();
-					this.$refs['lineData1'].showCharts();
-					this.$refs['dataContain'].showDataContainer();
-					this.$refs['dataContain2'].showDataContainer();
-					this.$refs['dataContain3'].showDataContainer();
-				});
+				// this.$nextTick(() => {	
+				// 	this.$refs['arcbar0'].showCharts();
+				// 	this.$refs['arcbar1'].showCharts();
+				// 	this.$refs['lineData2'].showCharts();
+				// 	this.$refs['lineData1'].showCharts();
+				// 	this.$refs['dataContain'].showDataContainer();
+				// 	this.$refs['dataContain2'].showDataContainer();
+				// 	this.$refs['dataContain3'].showDataContainer();
+				// });
 			},
 			// 获取最上层的两个tab
 			getDataSet(provinceCenterId, businessDate){
@@ -786,6 +765,44 @@
 					console.log('request fail', err);
 				});
 			},
+			getReturnRateLine(){
+				var url = '/pentaho/sales/getReturnRateTrendChart';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					var data = res.data.data;
+					if(data==null || data.length==0){
+						return;
+					}
+					var dates = data.dates
+					var ALL = data.ALL
+					var FB = data.FB
+					var BK=data.BK
+					for(var i=0;i<dates.length;i++){
+						ALL[i] = (data.ALL[i]/100).toFixed(2)
+						FB[i] = (data.FB[i]/100).toFixed(2)
+						BK[i] = (data.BK[i]/100).toFixed(2)
+					}
+					
+					var categories=[];
+					var series=[];
+					
+					var json = {'name':'竞彩返奖率' ,'data':ALL};
+					var json1 = {'name':'足球返奖率' ,'data':FB};
+					var json2 = {'name':'篮球返奖率' ,'data':BK};
+					var series = [json,json1,json2];		
+					this.$set(this.lineData3, 'categories', dates);
+					this.$set(this.lineData3, 'series', series);
+					
+					this.$refs['lineData3'].showCharts();
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
+
 			getServerData() {				
 				console.log("getServerData data=",this.param.provinceCenterId)
 				this.getDataSet(this.param.provinceCenterId, this.param.businessDate);
@@ -796,7 +813,8 @@
 				this.getSalesRankingList(this.param.provinceCenterId, this.param.cityCenterId, this.param.businessDate);
 				this.getProSalesRanking(this.param.provinceCenterId, this.param.cityCenterId, this.param.businessDate);
 				this.getReturnRateState();
-				this.getReturnRateRankingList();				
+				this.getReturnRateRankingList();
+				this.getReturnRateLine()
 			},
 			change(e) {
 			      this.btnnum = e
@@ -848,9 +866,9 @@
 
 		},
 		mounted(){
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.getServerData();
-			this.showView();
+			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			// this.getServerData();
+			// this.showView();
 		},
 		watch: {
 			'$route':'showView'

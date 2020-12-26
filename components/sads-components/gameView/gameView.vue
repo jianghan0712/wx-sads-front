@@ -234,8 +234,8 @@
 			methods: {
 				refresh() {
 					this.returnFromDatePicker();
-					this.loadData();
-					this.loadData();
+					this.loadData(this.ballType);
+					this.loadData(this.ballType);
 				},
 				createParam(){
 					console.log("createParam begin")
@@ -272,12 +272,12 @@
 				changeTop(e){
 					this.arcbarNumTop = e;;
 					getApp().globalData.ballType=e; 
-					this.loadTopData();
+					this.refresh();
 					
 				},
 				changeMid(e){
 					this.arcbarNumMid = e;
-					this.loadMidData();
+					this.refresh();
 				},
 				loadTopData(ballType){
 					var url = '/pentaho/sales/getGameSalesAndVotes';
@@ -290,7 +290,7 @@
 						if(ballType=='足球'){
 							var format0 = numberFun.formatCNumber(fb[0]); 
 							let index0={
-								name:ballType+'销量（' + format0.name + '元）',
+								name:'销量（' + format0.name + '元）',
 								value:(fb[0]/format0.value).toFixed(2),
 								left:{
 									name:'周同比',
@@ -317,7 +317,7 @@
 						}else{
 							var format0 = numberFun.formatCNumber(bk[0]);
 							let index0={
-								name:ballType+'销量（'+format0.name + '元）',
+								name:'销量（'+format0.name + '元）',
 								value:(bk[0]/format0.value).toFixed(2),
 								left:{
 									name:'周同比',
@@ -349,7 +349,7 @@
 						this.totalData=this.footballData;
 						console.log('request fail', err);
 						let index0={
-								name:ballType+'销量（百万元）',
+								name:'销量（百万元）',
 								value:0,
 								left:{
 									name:'周同比',
@@ -361,7 +361,7 @@
 								}}
 						this.$set(that.totalData,'big1',index0);
 						let index1={
-							name:ballType+'票数（万张）',
+							name:'票数（万张）',
 							value:0,
 							left:{
 								name:'周同比',
