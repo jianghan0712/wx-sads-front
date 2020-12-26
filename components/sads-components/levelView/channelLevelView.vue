@@ -120,36 +120,44 @@
 			};
 		},
 		onLoad() {
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
-			this.refresh()
+			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			// this.returnFromDatePicker();
+			// this.getServerData();
+			// this.showView();
+			// this.refresh()
 		},
 		onShow() {
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
-			this.refresh()
+			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			// this.returnFromDatePicker();
+			// this.getServerData();
+			// this.showView();
+			// this.refresh()
 		},
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.refresh()
+			this.change(0);
+			// this.refresh()
 		},
 		methods: {
-			showView(){				
-				if(this.btnnum==0){
+			showView(){	
+				this.$nextTick(() => {
 					this.$refs['levelRingChart0'].showCharts();
 					this.$refs['progress_0'].showProgress(this.pieData);
-				}else {
 					this.$refs['levelRingChart1'].showCharts();
 					this.$refs['progress_1'].showProgress(this.pieData1);
-				}
-				console.log("init ringChart0:" ,this.pieData);
+				})
+				
+				// if(this.btnnum==0){
+				// 	this.$refs['levelRingChart0'].showCharts();
+				// 	this.$refs['progress_0'].showProgress(this.pieData);
+				// }else {
+				// 	this.$refs['levelRingChart1'].showCharts();
+				// 	this.$refs['progress_1'].showProgress(this.pieData1);
+				// }
+				// console.log("init ringChart0:" ,this.pieData);
 			},
 			getServerData() {
 				this.getPieData('足球')
@@ -171,11 +179,6 @@
 			},
 			gotoLunBo(btnnum){
 				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
-				// if(btnnum==0){
-				// 	uni.navigateTo({
-				// 		url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
-				// 	});
-				// }
 				if(btnnum==0){
 					uni.navigateTo({
 						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
@@ -186,8 +189,8 @@
 					});
 				}
 			},
-			refresh(selfParam){
-				this.selfParam = JSON.parse(selfParam)
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.selfParam.token = getApp().globalData.token;
 				this.getServerData();
 				this.showView();
@@ -336,9 +339,9 @@
 			}
 		},
 		mounted(){
-			this.selfParam=this.param
-			this.getServerData();
-			this.showView();
+			// this.selfParam=this.param
+			// this.getServerData();
+			// this.showView();
 		},
 		watch: {
 			'$route':'showView'
@@ -402,7 +405,7 @@
 		text-align: right;
 	}
 	.progress{
-		width: 90%;
+		width: 100%;
 	}	
 	
 	.example {

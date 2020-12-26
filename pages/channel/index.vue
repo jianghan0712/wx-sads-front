@@ -9,7 +9,7 @@
 			</view>
 		</view>	 
 		<view class="input">
-			<input id='num'  style="background-color: #D8D8D8;border:1px solid gray;" @input="onKeyInput" placeholder="请输入门店或终端编号" />
+			<input id='num'  style="background-color: rgba(128,139,150,0.1);border:1px solid gray;width: 60%;" @input="onKeyInput" placeholder="请输入门店或终端编号" />
 			<view style="color: #007AFF;padding-left: 5rpx;" @click="resetData()">搜索</view>
 		</view>
 		
@@ -252,7 +252,7 @@
 										amount:data[i][3]}
 							//不变红				
 															
-							if(i<=4){
+							if(i<=9){
 								this.amountTableData[i] = json
 							}
 							this.amountTableDataDetail[i] = json

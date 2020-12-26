@@ -66,24 +66,24 @@
 		},
 		onShow() {//此处接受来自日期选择页面的参数
 			this.returnFromDatePicker();
-			console.log("sales-self-onShow:",this.selfParam)
+			console.log("index-inner:",this.selfParam)
 			this.selfParam.shopNo = uni.getStorageSync("shopNo")
 			this.loadMainData();
-			if(!this.isFirstLoad){
+			// if(!this.isFirstLoad){
 				console.log("重新加载")
-				if(this.tabIndex==0){
-					this.$refs['channelTotalView'].refresh(JSON.stringify(this.selfParam));
+				if(this.$refs['channelTotalView']!=null){
+					this.$refs['channelTotalView'].refresh();
 				}else if(this.tabIndex==1){
 					this.$refs['channelGameView'].refresh(JSON.stringify(this.selfParam));
-				}else if(this.tabIndex==2){
-					this.$refs['channelLevelView'].refresh(JSON.stringify(this.selfParam));
-				}else if(this.tabIndex==3){
-					this.$refs['channelTicketView'].refresh(JSON.stringify(this.selfParam));
-				}else if(this.tabIndex==4){
-					this.$refs['channelMatchView'].refresh(JSON.stringify(this.selfParam));
+				}else if(this.$refs['channelLevelView']!=null){
+					this.$refs['channelLevelView'].refresh();
+				}else if(this.$refs['channelTicketView']!=null){
+					this.$refs['channelTicketView'].refresh();
+				}else if(this.$refs['channelMatchView']!=null){
+					this.$refs['channelMatchView'].refresh();
 				}
 				
-			}
+			// }
 			this.isFirstLoad=false
 		},
 		created() {
@@ -238,7 +238,9 @@
 				this.newsList[e].data.length = 0;
 				this.newsList[e].loadingText = "加载更多...";
 			},
-			refreshData() {},
+			refresh(){
+				
+			},
 			onrefresh(e) {
 				var tab = this.newsList[this.tabIndex];
 				if (!tab.refreshFlag) {

@@ -18,6 +18,8 @@
 
 <script>
 	import uniIcons from '@/components/uni/uni-icons/uni-icons.vue'
+	import numberFun from '@/common/tools/number.js';
+	
 	export default {
 		props: {
 			dataAs: {
@@ -38,7 +40,7 @@
 			}
 		},
 		methods: {
-			showProgress( pieData) {
+			showProgress(pieData) {
 				// this.dataList = this.dataAs;
 				this.dataList=pieData
 				let series = this.dataList.series;
@@ -47,6 +49,15 @@
 				let total = 0;
 				let i = 0;
 				let len = 0;
+				
+				var max = 0
+				for(i = 0,len=series.length; i < len; i++) {
+					if(max<series[i].data){
+						max = series[i].data
+					}
+				}
+				var format0 = numberFun.formatCNumber(max);
+				
 				for(i = 0,len=series.length; i < len; i++) {
 					total = total + series[i].data;
 					console.log("i=" + i+",name="+series[i].name+",value="+series[i].data);
@@ -59,9 +70,9 @@
 						xx=0;
 					}
 					var jsonObj = {"name": series[i].name,
-					               "data" : series[i].data,
+					               "data" : (series[i].data/format0.value) + format0.name,
 								   "percent":xx,
-									"color":this.colors[i]};			
+								   "color":this.colors[i]};			
 					this.pgList[i]=jsonObj;
 				}
 				console.log("pgList=" + this.pgList);

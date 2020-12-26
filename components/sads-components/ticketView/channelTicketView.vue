@@ -17,19 +17,25 @@
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData" ref="ringChart0" canvasId="index_ring_0"/>
 					</view>
-					<progress ref="progress_0" :dataAs="pieData"></progress>
+					<view class="progress">
+						<progress ref="progress_0" :dataAs="pieData"></progress>
+					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData1" ref="ringChart1" canvasId="index_ring_1"/>
 					</view>
-					<progress ref="progress_1" :dataAs="pieData1"></progress>
+					<view class="progress">
+						<progress ref="progress_1" :dataAs="pieData1"></progress>
+					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 2}">
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData2" ref="ringChart2" canvasId="index_ring_2"/>
 					</view>	
-					<progress ref="progress_2" :dataAs="pieData2"></progress>
+					<view class="progress">
+						<progress ref="progress_2" :dataAs="pieData2"></progress>
+					</view>				
 				</view>
 			</view>
 		</view>
@@ -109,44 +115,47 @@
 			}
 		},
 		onLoad() {
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
-			this.refresh();
-			this.change(1);
-			this.$refs['progress_0'].showProgress(this.pieData);
+			// this.returnFromDatePicker();
+			// this.getServerData();
+			// this.showView();
+			// this.refresh();
+			// this.change(1);
+			// this.$refs['progress_0'].showProgress(this.pieData);
 		},
 		onShow() {
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
-			this.refresh();
-			this.change(1);
-			this.$refs['progress_0'].showProgress(this.pieData);
+			// this.returnFromDatePicker();
+			// this.getServerData();
+			// this.showView();
+			// this.refresh();
+			// this.change(1);
+			// this.$refs['progress_0'].showProgress(this.pieData);
 		},
 		created() {
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			this.refresh();
-			this.change(1);
-			this.$refs['progress_0'].showProgress(this.pieData);
+			// this.refresh();
+			// this.change(1);
+			// this.$refs['progress_0'].showProgress(this.pieData);
 		},
 		methods: {
 			showView(){
 				console.log("ticket showView" ,this.pieData);
 				// commonFun.sleep(3000)
-				this.$refs['ticketData'].showDataContainer();
-				if(this.btnnum==0){
-					this.$refs['ringChart0'].showCharts();
-					this.$refs['progress_0'].showProgress(this.pieData);
-				}else if(this.btnnum==1){
-					this.$refs['ringChart1'].showCharts();
-					this.$refs['progress_1'].showProgress(this.pieData1);
-				}else if(this.btnnum==2){
-					this.$refs['ringChart2'].showCharts();
-					this.$refs['progress_2'].showProgress(this.pieData2);
-				}
+				this.$nextTick(() => {	
+					this.$refs['ticketData'].showDataContainer();
+					if(this.btnnum==0){
+						this.$refs['ringChart0'].showCharts();
+						this.$refs['progress_0'].showProgress(this.pieData);
+					}else if(this.btnnum==1){
+						this.$refs['ringChart1'].showCharts();
+						this.$refs['progress_1'].showProgress(this.pieData1);
+					}else if(this.btnnum==2){
+						this.$refs['ringChart2'].showCharts();
+						this.$refs['progress_2'].showProgress(this.pieData2);
+					}
+				})
+
 					// this.$refs['ticketlineData'].showCharts();
 			},
 			returnFromDatePicker(){
@@ -185,6 +194,7 @@
 				this.refresh();
 			},
 			refresh(selfParam){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.selfParam.token = uni.getStorageSync("token")
 				this.getServerData();
 				this.showView();
@@ -403,8 +413,8 @@
 	}
 
 	.box-container{
-		width: 90%;
-		margin: 20rpx 10rpx 40rpx 10rpx;
+		width: 100%;
+		padding: 5px 5px 5px 5px;
 		/* padding: 20rpx 10rpx 20rpx 10rpx; */
 	}
 	
@@ -449,6 +459,11 @@
 		background: #FFFFFF;
 		padding:0px 30rpx 0px 30rpx;
 	}
+	.progress{
+		/* display: flex; */
+		/* justify-content:center; */
+		width: 90%;
+	}	
 	
 	button {
 		width: 75%;

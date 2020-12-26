@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="box-contaniner">
+		<!-- <view class="box-contaniner"> -->
 			<view class="box-contaniner">
 				<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
 			</view>
@@ -144,7 +144,7 @@
 					<view class="shop-title">返奖率走势</view>
 					<view class="box-contaniner" >
 						<line-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3"  
-									:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}"
+									:xAxisAs="{scrollShow:false, gridEval:(lineData3.categories.length / 4).toFixed(0)}"
 									:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
 					</view>
 				</block>
@@ -164,11 +164,9 @@
 						</view>
 					</block>
 				</view>
-			</block>
-			
-			
+			</block>	
 			<slot />
-		</view>
+		<!-- </view> -->
 	</view>
 </template>
 
@@ -572,6 +570,7 @@
 			getShopData(provinceCenterId, cityCenterId, businessDate){
 				var url = '/pentaho/sales/getStoreSituation';
 				var param = this.createParam()
+				
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data = res.data.data;	
@@ -683,10 +682,13 @@
 			getProSalesRanking(provinceCenterId, cityCenterId, businessDate){
 				var url = '/pentaho/sales/getProSalesRanking';
 				var param = this.createParam()
+				delete param.regionId
+				param.provincialId = this.selfParam.provinceCenterId
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 
 					var data = res.data.data;
+					console.log("getProSalesRanking rankData=",data)
 					if(data==null){
 						return
 					}
