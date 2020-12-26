@@ -70,7 +70,7 @@
 						xx=0;
 					}
 					var jsonObj = {"name": series[i].name,
-					               "data" : (series[i].data/format0.value) + format0.name,
+					               "data" : (series[i].data/format0.value).toFixed(2) + format0.name,
 								   "percent":xx,
 								   "color":this.colors[i]};			
 					this.pgList[i]=jsonObj;

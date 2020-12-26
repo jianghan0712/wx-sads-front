@@ -11,7 +11,7 @@
 					<view class="container-title">单票金额走势</view>
 					<line-chart ref="lineData5" canvasId="index_line" :dataAs="lineData"
 								:xAxisAs="{scrollShow:false, gridEval:(lineData.categories.length / 4).toFixed(0)}" 
-								:yAxisAs="{formatter: {type: 'number', name:'单位:元',fixed: 0}}"/>
+								:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
 				</view>
 			</block>
 			
@@ -137,27 +137,27 @@
 			}
 		},
 		onLoad() {		
-			_self = this;	
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView()
-			this.refresh();
+			// _self = this;	
+			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			// this.returnFromDatePicker();
+			// this.getServerData();
+			// this.showView()
+			// this.refresh();
 		},
 		onShow() {
-			_self = this;	
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView()
-			this.refresh();
+			// _self = this;	
+			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			// this.returnFromDatePicker();
+			// this.getServerData();
+			// this.showView()
+			// this.refresh();
 		},
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
+			// this.returnFromDatePicker();
 			this.getServerData();
 			this.showView()
-			this.refresh();
+			// this.refresh();
 		},
 		methods: {
 			showView(){
@@ -301,7 +301,7 @@
 					console.log('request success', res)
 					var data = res.data.data;
 					var format0 = null;
-					if(data.length>0){
+					if(data!=null && data.length>0){
 						format0 = numberFun.formatCNumber(data[0][1]);							
 					}else{
 						return;

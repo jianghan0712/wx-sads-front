@@ -154,13 +154,14 @@
 					}
 				],	
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
+				
 			};
 		},
 		onLoad() {
-			_self = this;
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
+			// _self = this;
+			// this.returnFromDatePicker();
+			// this.getServerData();
+			// this.showView();
 		},
 		created() {
 			this.selfParam=this.param
@@ -169,10 +170,10 @@
 			this.showView();
 		},
 		onShow() {
-			this.selfParam=this.param
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView();
+			// this.selfParam=this.param
+			// this.returnFromDatePicker();
+			// this.getServerData();
+			// this.showView();
 		},
 		methods: {
 			showView(){				
@@ -185,7 +186,7 @@
 			getServerData() {
 				this.getPieDate('足球')
 				this.getPieDate('篮球')
-				this.getTableDate(this.btnnum, '单关')
+				this.getTableDate(this.btnnum, this.array[this.index].name)
 			},
 		    change(e) {
 			    this.btnnum = e;
@@ -199,9 +200,9 @@
 				this.index = e.detail.value
 				this.getTableDate(this.btnnum, this.array[e.detail.value].name)
 			},
-			change({newVal, oldVal, index, orignItem}){ 
-				console.log(newVal, oldVal, index, orignItem);
-			},
+			// change({newVal, oldVal, index, orignItem}){ 
+			// 	console.log(newVal, oldVal, index, orignItem);
+			// },
 			gotoLunBo(btnnum){
 				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));				
 				if(btnnum==0){
@@ -336,13 +337,17 @@
 						this.tableDataDetail[i] = jsonData				
 					}
 					that.tableData = series
+					var t = '地市'
+					if(this.selfParam.provinceCenterId==0){
+						t ='省份'
+					}
 					this.tableColumns=[{
 							title: "排名",
 							key: "id",
 							$width:"50px",
 						},
 						{
-							title: '省份',
+							title: t,
 							key: 'area',
 							$width:"100px"
 						},

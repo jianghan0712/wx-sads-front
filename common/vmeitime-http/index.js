@@ -16,8 +16,8 @@ export const getRequest = (url,data) => {
     return http.request({
 		// baseUrl: 'http://192.168.1.105:8901/',
 		// baseUrl: 'http://192.168.54.110:8088/',
-		 // baseUrl :'https://m.csljc.com:8443/',
-		  baseUrl :'https://m.lottery-sports.com:8443',
+		 baseUrl :'https://m.csljc.com:8443/',
+		  // baseUrl :'https://m.lottery-sports.com:8443',
 		
 		// baseUrl: 'https://www.jianghan0712.com/',
         url,

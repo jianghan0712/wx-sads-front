@@ -177,22 +177,28 @@
 				selfParam:{},
 				today:dateUtils.getToday(),
 				totalData:{},	
-				footballData:{big1:{name:"销量",value:"--",
-									left:{name:"周同比",value:"--"},
-									right:{name:"环比",value:"--"},
-									},
-							 big2:{name:"占比",value:"--",
-												left:{name:"周同比",value:"--"},
-												right:{name:"环比",value:"--"},
-												}},		
-				basketballData:{big1:{name:"销量",value:"--",
-									left:{name:"周同比",value:"--"},
-									right:{name:"环比",value:"--"},
-									},
-							 big2:{name:"占比",value:"--",
-												left:{name:"周同比",value:"--"},
-												right:{name:"环比",value:"--"},
-												}},	
+				footballData:{
+					// big1:{
+					// 			name:"销量",
+					// 			value:"--",
+					// 			left:{name:"周同比",value:"--"},
+					// 			right:{name:"环比",value:"--"},
+					// 				},
+					// 		  big2:{name:"占比",value:"--",
+					// 			left:{name:"周同比",value:"--"},
+					// 			right:{name:"环比",value:"--"},
+					// 		},
+							},		
+				basketballData:{
+					// big1:{name:"销量",value:"--",
+					// 				left:{name:"周同比",value:"--"},
+					// 				right:{name:"环比",value:"--"},
+					// 				},
+					// 		 big2:{name:"占比",value:"--",
+					// 							left:{name:"周同比",value:"--"},
+					// 							right:{name:"环比",value:"--"},
+					// 							},
+				},	
 				btnnum: 0,
 				arcbarNum: 0,
 				gateInfo:"",
@@ -204,18 +210,8 @@
 							
 					],},
 				lineData3:{},
-				arcbar0: {
-					type: 'radar',
-					series:[
-							
-					],
-				},
-				arcbar1: {
-						type: 'radar',
-						series:[
-								
-						],
-				},
+				arcbar0: {},
+				arcbar1: {},
 				shopData: {shop:{sum:0,tongbi:0,huanbi:0},
 						   rate:{sum:0,tongbi:0,huanbi:0}},
 				returnData: {rate:{sum:0,tongbi:0,huanbi:0}},
@@ -259,13 +255,15 @@
 		},
 		methods: {
 			showView(){
-				// this.$refs['arcbar0'].showCharts();
-				// this.$refs['arcbar1'].showCharts();
-				// this.$refs['lineData2'].showCharts();
-				// this.$refs['lineData1'].showCharts();
-				// this.$refs['dataContain'].showDataContainer();
-				// this.$refs['dataContain2'].showDataContainer();
-				// this.$refs['dataContain3'].showDataContainer();
+				this.$nextTick(() => {
+					this.$refs['arcbar0'].showCharts();
+					this.$refs['arcbar1'].showCharts();
+					this.$refs['lineData2'].showCharts();
+					this.$refs['lineData1'].showCharts();
+					this.$refs['dataContain'].showDataContainer();
+					this.$refs['dataContain2'].showDataContainer();
+					this.$refs['dataContain3'].showDataContainer();
+				})
 			},
 			returnFromDatePicker(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -418,17 +416,17 @@
 			getDataContainerTwo(type){
 				var url='/pentaho/shows/getShowsGameSales'
 				var param = this.createParam()
-				var big1 = {'name':'销量'};
-				var left1 = {'name':'周同比'};
-				var right1 = {'name':'环比'};				
-				
-				var big2 = {'name':'占比'};
-				var left2 = {'name':'周同比'};
-				var right2 = {'name':'环比'};
+				var big1 = {'name':'销量',value:"--"};
+				var left1 = {'name':'周同比',value:"--"};
+				var right1 = {'name':'环比',value:"--"};				
+
+				var big2 = {'name':'占比',value:"--"};
+				var left2 = {'name':'周同比',value:"--"};
+				var right2 = {'name':'环比',value:"--"};
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data = res.data.data;	
-					console.log("getShowsGameSales :",data)
+					console.log("getShowsGameSales :",data) 
 					if(data==null){
 						return;
 					}
@@ -458,7 +456,9 @@
 						this.$set(this.footballData, 'big1', big1);
 						this.$set(this.footballData, 'big2', big2);
 						var json = [{name: '足球',data: (tempObj[3]/100).toFixed(2)}]
-						this.$set(this.arcbar0, 'series', json);
+						this.arcbar0.series = json
+						console.log("this.arcbar0=",this.arcbar0)
+						// this.$set(this.arcbar0, 'series', json);
 						this.$refs['arcbar0'].showCharts();
 						this.$refs['dataContain2'].showDataContainer();
 						console.log('request basketballData', this.footballData);
@@ -466,8 +466,9 @@
 						this.$set(this.basketballData, 'big1', big1);
 						this.$set(this.basketballData, 'big2', big2);
 						var json = [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
-						// this.arcbar1.series= [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
-						this.$set(this.arcbar1, 'series', json);
+						this.arcbar1.series= [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
+						console.log("this.arcbar1=",this.arcbar1)
+						// this.$set(this.arcbar1, 'series', json);
 						this.$refs['arcbar1'].showCharts();
 						this.$refs['dataContain3'].showDataContainer();
 						console.log('request basketballData', this.basketballData);
@@ -577,7 +578,9 @@
 				this.getShowReturnRate();
 				this.getGameSalesByAll()
 				this.getGameSalesByProvince()
-				this.getReturnRateLine()
+				if(this.selfParam.businessDate.dateType!='date'){
+					this.getReturnRateLine()
+				}				
 			},
 			getGameSalesByAll(){
 				var url='/pentaho/sales/getGameSales'

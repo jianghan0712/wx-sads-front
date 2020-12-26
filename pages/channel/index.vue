@@ -55,6 +55,7 @@
 	import uniSection from "@/components/uni/uni-section/uni-section.vue"	
 	import urlAPI from '@/common/vmeitime-http/';
 	import commonFun from '@/common/tools/watcher.js';
+	import numberFun from '@/common/tools/number.js';
 	
 	export default {
 			components:{
@@ -241,22 +242,51 @@
 					var url = '/pentaho/channel/getTopHundredShows';
 					var param = this.createParam()
 					var that =this;
+					
 					urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						console.log('request success', res)
 						var data = res.data.data;	
+						if(data==null || data.length==0){
+							return;
+						}
+						var format0 = numberFun.formatCNumber(data[0][3]);		
 						for(var i=0;i<data.length;i++){
 							var json = {id:i+1, 
 										area:data[i][1], 
 										number:data[i][2], 
-										amount:data[i][3]}
-							//不变红				
-															
+										// amount:data[i][3]}
+										amount:(data[i][3]/format0.value).toFixed(2)}
+							//不变红																		
 							if(i<=9){
 								this.amountTableData[i] = json
 							}
 							this.amountTableDataDetail[i] = json
 						}
+						var t = '省份'
+						if(this.selfParam.provinceCenterId!=0){
+							t='地市'
+						}
+						this.amountTableColumns=[{
+									title: "排名",
+									key: "id",
+									$width:"50px",
+								},
+								{
+									title: t,
+									key: 'area',
+									$width:"100px"
+								},
+								{
+									title: '门店编号',
+									key: 'number',
+									$width:"130px"
+								},
+								{
+									title: '销量(' + format0.name + '元)',
+									key: 'amount'
+								}
+							],
 								
 						this.res = '请求结果 : ' + JSON.stringify(res);
 						console.log(this.amountTableData)
