@@ -11,7 +11,15 @@
 				<view @click="goDatePickerLeft" style="width: 400rpx;">{{selfParam.compareDate.viewLeft}}</view>
 				<view @click="goDatePickerRight" style="width: 280rpx;">{{selfParam.compareDate.viewRight}}</view>
 				<view style="-webkit-flex: 1;flex: 1;" @click="returnBack()">取消</view>		
-		</view>	 
+		</view>	
+		 <view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
+		 	<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../static/left.png" mode="aspectFill">
+		 	{{selfParam.shopNo}}
+		 	<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../static/right.png" mode="aspectFill">
+		 </view>	
+		 <view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color:#6D6D72;">
+		 	{{showPro}}
+		 </view>	
 		<block v-if="tabIndex==0">
 			<totalViewCompareC ref="totalViewCompareC" :model="selfParam"></totalViewCompareC>
 		</block>
@@ -36,7 +44,7 @@
 	import gameViewCompareC from "@/components/sads-components/gameView/gameViewCompareC.vue";
 	import matchViewCompareC from "@/components/sads-components/matchView/matchViewCompareC.vue";
 	import dateUtils from '@/common/tools/dateUtils.js';
-	
+	import urlAPI from '@/common/vmeitime-http/';
 
     // 缓存每页最多
     const MAX_CACHE_DATA = 100;
@@ -84,6 +92,8 @@
 				},
 				goodDatePickerOption3:'compare',
                 newsList: [],
+				shopNo:'',
+				showPro:'',
                 cacheTab: [],
                 tabIndex: 0,
                 tabBars: [{name: '总览',id: 'totalViewCompareC'
@@ -103,16 +113,14 @@
 			// const _dateObj=uni.getStorageSync("dateObj")
 			this.tabIndex = option.tabIndex
 			this.selfParam.businessDate = dateUtils.getToday();
-			
-			/* this.$refs['totalViewCompareC'].showView();
-			this.$refs['gameViewCompareC'].showView();
-			this.$refs['matchViewCompareC'].showView();
-			this.$refs['levelViewCompareC'].showView();
-			this.$refs['ticketViewCompareC'].showView(); */
+			this.selfParam.shopNo = uni.getStorageSync("shopNo")
+			this.returnFromDatePicker();
+			this.loadMainData();
         },
 		onShow() {//此处接受来自日期选择页面的参数
-		   this.returnFromDatePicker();
-			const _dateObj=uni.getStorageSync("dateObj");			
+		    this.returnFromDatePicker();
+			const _dateObj=uni.getStorageSync("dateObj");	
+			this.loadMainData();
 			if(_dateObj){
 				this.selfParam.businessDate = _dateObj.date; 
 			}
@@ -189,6 +197,7 @@
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName	
+				this.selfParam.token=getApp().globalData.token
 				
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 				
@@ -203,6 +212,25 @@
                 }
                 activeTab.data = activeTab.data.concat(list);
             },
+			loadMainData(){
+				var url = '/pentaho/shows/getProvincialCityName';
+				var param = {}
+				param.showNumber =uni.getStorageSync("shopNo");
+				param.token=getApp().globalData.token
+				//修改为0
+				urlAPI.getRequest(url, param).then((res)=>{
+					var data = res.data.data;
+					debugger
+					this.showPro=data.provincial+data.city
+					this.gateInfo = {
+						showName:data.showName,provincial:data.provincial,city:data.city,provincialId:data.provincialId,cityId:data.cityId
+					}
+					uni.setStorageSync("gateInfo",JSON.stringify(this.gateInfo))
+				}).catch((err)=>{
+					
+				});
+				
+			},
             ontabtap(e) {
                 let index = e.target.dataset.current || e.currentTarget.dataset.current;
                 this.switchTab(index);

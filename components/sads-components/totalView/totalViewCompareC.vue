@@ -1,16 +1,12 @@
 <template>
 	<view>
 		<view class="box-contaniner">
-			<view class="arcbarChart-tab">
-			    <view @tap="change(0)" :class="btnnum ==0?'btna':'hide'" style="width: 50%;" >足球</view>
-			    <view @tap="change(1)" :class="btnnum ==1?'btna':'hide'" style="width: 50%;" >篮球</view>
-			</view>
-			<view class="end-cont" :class="{dis:btnnum == 0}">
-				<dataContainerTwoCol ref="dataContain" :dataAs="topDataFB"></dataContainerTwoCol>
-			</view>
-			<view class="end-cont" :class="{dis:btnnum == 1}">		　
-				<dataContainerTwoCol ref="dataContain1" :dataAs="topDataBK"></dataContainerTwoCol>
-			</view>
+			<dataContainerTwoCol ref="dataContainTwo" :dataAs="topData"></dataContainerTwoCol>
+			<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today">
+				<dataContainerTwoCol ref="rankData" :dataAs="rankData"></dataContainerTwoCol>
+				<!-- <dataContainerTwoColFour ref="rankData" :dataAs="rankData"></dataContainerTwoColFour>
+				<dataContainerTwoColFour ref="rankData2" :dataAs="rankData2"></dataContainerTwoColFour> -->
+			</block>
 		</view>
 		
 		<!-- 折线图区域-->
@@ -18,35 +14,87 @@
 			<view class="clineChart-title">
 				<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
 				<view class="linechart-tab">
-				　　<view @tap="change1(0)" :class="btnnum1 == 0?'btna':'hide'">销量</view>
-				  　<view @tap="change1(1)" :class="btnnum1 == 1?'btna':'hide'">票数</view>
+				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
+				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
 				</view>
 			</view>		
-			<view class="end-cont" :class="{dis:btnnum1 == 0}">		
-				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
-							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
+			<view class="end-cont" :class="{dis:btnnum == 0}">		
+				<area-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
+							:xAxisAs="{scrollShow:false}" />
 			</view>
-			<view class="end-cont" :class="{dis:btnnum1 == 1}">		　
-				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
-							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'张',fixed: 0}}"/>
+			<view class="end-cont" :class="{dis:btnnum == 1}">		　
+				<area-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
+							:xAxisAs="{scrollShow:false}" />
 			</view>		
 		</view>
 		
-		<!-- 排名对比 -->
-		<view class="box-contaniner">
-			<view class="shop-title">排名对比</view>
-			<dataContainerTwoCol ref="dataContain2" :dataAs="rankData"></dataContainerTwoCol>
-		</view>
-		<!-- 竞彩足篮球销量及占比对比 -->
+		<!-- 竞彩足篮球销量及占比对比区域 -->
 		<view class="box-contaniner">
 			<view class="shop-title">竞彩足篮球销量及占比对比</view>
-			<view class="shop-title">{{selfParam.compareDate.viewLeft.leftDate.view}}</view>
-			<dataContainerTwo ref="dataContain3" :dataAs="compareData"></dataContainerTwo>
-			<view class="shop-title">{{selfParam.compareDate.viewRight.rightDate.view}}</view>
-			<dataContainerTwo ref="dataContain4" :dataAs="compareDataCompare"></dataContainerTwo>
-		</view>	
+			<dataContainerTwoColTwo ref="dataContainerTwoColTwo" :dataAs="ballAmount"></dataContainerTwoColTwo>
+		</view>		
+		
+		
+<!-- 		门店在售情况-->
+<!-- 		<view class="box-contaniner">
+			<view class="shop-title">返奖情况对比</view>
+			<dataContainerTwoCol ref="shopData" :dataAs="shopData"></dataContainerTwoCol>
+		</view> -->
+		
+		<!-- 各地区销量排行-->
+<!-- 		<view class="box-contaniner">
+			<view class="rankTable-title">
+				<view>各地区销量排行榜对比</view>
+				<view class="rankTable-more" @click="goSaleRank(leftTableDataDetail,leftTableColumns,rightTableDataDetail,rightTableColumns)">全部>></view>
+			</view>
+			<view class="example">
+				<view class="sale-row-2">
+					<view class="left-row-box">
+						<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+					</view>
+					<view class="right-row-box">
+						<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
+					</view>
+				</view>			
+			</view>
+		</view> -->
+		
+		<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today">
+			<view class="shop-title">返奖率情况</view>
+			<dataContainerTwoColFour ref="returnData" :dataAs="returnData"></dataContainerTwoColFour>
+		</block>
+		
+		<block v-if="selfParam.compareDate.dateType!='date'">
+			<view class="box-contaniner">
+				<view class="shop-title">{{selfParam.compareDate.viewLeft}}返奖率走势</view>
+				<area-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" :colors="colorList"
+							:xAxisAs="{scrollShow:false}" 
+							:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
+			</view>	
+			<view class="box-contaniner">
+				<view class="shop-title">{{selfParam.compareDate.viewRight}}返奖率走势</view>
+				<area-chart ref="lineData4" canvasId="index_line_4" :dataAs="lineData4" :colors="colorList"
+							:xAxisAs="{scrollShow:false}" 
+							:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
+			</view>	
+<!-- 			<view class="box-contaniner">
+				<view class="rankTable-title">
+					<view>各地区返奖情况对比</view>
+					<view class="rankTable-more" @click="goSaleRank(leftReturnTableDataDetail,leftReturnTableColumns,rightReturnTableDataDetail,rightReturnTableColumns)">全部>></view>
+				</view>
+				<view class="example">
+					<view class="sale-row-2">
+						<view class="left-row-box">
+							<v-table :columns="leftReturnTableColumns" :list="leftReturnTableData"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+						</view>
+						<view class="right-row-box">
+							<v-table :columns="rightReturnTableColumns" :list="rightReturnTableData"  border-color="#FFFFFF"></v-table>
+						</view>
+					</view>			
+				</view>
+			</view> -->
+		</block>
+		
 		<slot />
 	</view>
 </template>
@@ -59,38 +107,37 @@
 	import dataContainerTwo from '@/components/sads-components/dataContainerTwo.vue';
 	import dataContainerTwoCol from '@/components/sads-components/dataContainerTwoCol.vue';
 	import dataContainerTwoColTwo from '@/components/sads-components/dataContainerTwoColTwo.vue';
+	import dataContainerTwoColFour from '@/components/sads-components/dataContainerTwoColFour.vue';
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
-	import PieChart from '@/components/basic-chart/PieChart.vue';
-	import RingChart from "@/components/basic-chart/RingChart.vue";
+	import dateUtils from '@/common/tools/dateUtils.js';
+	import AreaChart from '@/components/basic-chart/AreaChart.vue';
 	
 	export default {
 		name: 'Index',
 		components: {
-			PieChart,
-			RingChart,
 			LineChart,
 			ArcbarChart,
 			vTable,
 			dataContainer,
 			dataContainerTwo,
-			dataContainerTwoCol,dataContainerTwoColTwo
+			dataContainerTwoCol,dataContainerTwoColTwo,dataContainerTwoColFour,AreaChart
 		},
 		props: {
-			param:{
+			model:{
 				//数据
 				type: Object,
 				default: () => ({})
 			}
 		},
 		data() {
-			return {			
+			return {	
+				today:dateUtils.getToday(),
 				selfParam:{
 					token:'',
 					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
 					cityCenterId:'',
 					provinceCenterName:'',
-					shopNo:'',
 					countyCenterId:'',	
 					compareType:'date',
 					compareFlag:false,
@@ -118,145 +165,175 @@
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id
 				},
-				topDataFB:{	left:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0},
+				gateInfo:{},
+				topData:{	left:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0},
 							right:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0}},
-				topDataBK:{	left:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0},
-							right:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0}},
-				btnnum:0,
-				btnnum1:0,
+				shopData:{	left:{title1:'在售门店数',amount1:0,title2:'在售门店率',amount2:0},
+							right:{title1:'在售门店数',amount1:0,title2:'在售门店率',amount2:0}},
+				returnData:{left:{title1:'返奖率',amount1:0},
+							right:{title1:'返奖率',amount1:0}},
+				rankData:{
+					left:{title1:'排名',amount1:0,title2:'排名',amount2:0},
+					right:{title1:'排名',amount1:0,title2:'排名',amount2:0}
+				},
+				// rankData:{left:{title1:'排名',amount1:0},
+				// 		  right:{title1:'排名',amount1:0}},
+			    rankData2:{left:{title1:'排名',amount1:0},
+					      right:{title1:'排名',amount1:0}},
+				ballAmount:{
+					left:{
+						football:{name:"足球",amount:"销量0元",zhanbi:"0%"},
+						basketball:{name:"篮球",amount:"销量0元",zhanbi:"0%"}
+					},
+					right:{
+						football:{name:"足球",amount:"销量0元",zhanbi:"0%"},
+						basketball:{name:"篮球",amount:"销量0元",zhanbi:"0%"}
+					},
+				},						
+				footballData:{},	
+				basketballData:{},	
+				btnnum: 0,
 				lineData2: {},
 				lineData1: {},
-				rankData:{	left:{title1:'全国排名',amount1:1,title2:'全省排名',amount2:1},
-							right:{title1:'全国排名',amount1:1,title2:'全省排名',amount2:1}},
-				compareData: {big1:{name:"足球",value:"",
-									left:{name:"销量",value:0},
-									right:{name:"占比",value:0},
-									},
-							 big2:{name:"篮球",value:"",
-												left:{name:"销量",value:0},
-												right:{name:"占比",value:0},
-												}},
-				compareDataCompare:  {big1:{name:"足球",value:"",
-									left:{name:"销量",value:0},
-									right:{name:"占比",value:0},
-									},
-							 big2:{name:"篮球",value:"",
-												left:{name:"销量",value:0},
-												right:{name:"占比",value:0},
-												}},
+				lineData3: {},
+				lineData4: {},
+				
+				leftTableData: [],
+				rightTableData: [],
+				leftTableDataDetail: [],
+				rightTableDataDetail: [],
+				leftTableColumns: [{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '销量',
+							key: 'amount',
+							$width:"100px"
+						}
+					],
+				rightTableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '销量',
+							key: 'amount',
+							$width:"80px"
+						}
+					],
+				leftTableData: [],
+
+				leftReturnTableData: [],
+				rightReturnTableData: [],
+				leftReturnTableDataDetail: [],
+				rightReturnTableDataDetail: [],
+				leftReturnTableColumns: [{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '返奖率',
+							key: 'amount',
+							$width:"100px"
+						}
+					],
+				rightReturnTableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '返奖率',
+							key: 'amount',
+							$width:"80px"
+						}
+					],
+					
+				colorList: ['#1890ff','#facc14']
 			};
 		},
 		created() {
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker()
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			// this.selfParam.shopNo=
 			this.getServerData();
-			this.showView();
-			this.refresh();
+			// this.showView();
 		},
 		onLoad() {
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
-			this.returnFromDatePicker()
-			this.getServerData();
 			this.showView();
-			this.refresh();
-		},
-		onShow() {
-			_self = this;
-			this.cWidth=uni.upx2px(750);
-			this.cHeight=uni.upx2px(500);
-			this.returnFromDatePicker()
-			this.getServerData();
-			this.showView();
-			this.refresh();
 		},
 		methods: {
 			getServerData() {
-				this.getTopData();
-				this.getMidData();
-				this.getLastData();
+				this.getDataSet();
 				this.getLinesData();
+				this.getBallAmount();
+				this.getShopData();
+				this.getRankTable();
+				this.getComReturnRateState()
+				this.getComProSalesRanking()
+				// this.getComProSalesRanking2()
+				// if(this.selfParam.compareDate.viewLeft!=today && this.selfParam.compareDate.viewRight!=today && this.selfParam.provinceCenterId!=0){
+				// 	this.getComReturnRateState()
+				// }
+				if(this.selfParam.compareDate.dateType!='date'){
+					this.getReturnRateTrendChartCom(1)
+					this.getReturnRateTrendChartCom(2)
+					this.getComReturnRatesRanking()
+				}
 			},
 			showView(){
-				this.$refs['dataContain'].showDataContainer();
-				this.$refs['dataContain1'].showDataContainer();
-				this.$refs['dataContain2'].showDataContainer();
-				this.$refs['dataContain3'].showDataContainer();
-				this.$refs['dataContain4'].showDataContainer();
+				this.$nextTick(() => {				
+					// this.$refs['lineData2'].showCharts();
+					// this.$refs['lineData1'].showCharts();
+					// this.$refs['dataContainTwo'].showDataContainer();
+					// this.$refs['dataContain2'].showDataContainer();
+					// this.$refs['dataContain3'].showDataContainer();
+				});
 			},
 			returnFromDatePicker(){
-				const dateType = uni.getStorageSync("compareDateType")
-				const leftDate = JSON.parse(uni.getStorageSync("leftBusinessDate"))
-				const rightDate = JSON.parse(uni.getStorageSync("rightBusinessDate"))
-				console.log("dateType:",dateType)
-				console.log("leftDate:",leftDate)
-				console.log("rightDate:",rightDate)
-				
-				if(leftDate==null || rightDate==null){
-					return
-				}
-				
-				if(leftDate.dateType!=dateType || rightDate.dateType!=dateType){
-					console.log("dateType不匹配:")
-					const compareDate={
-							dateType:dateType,
-							viewLeft:leftDate.view,//用于展示日期、年、月等
-							viewRight:rightDate.view,
-							dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
-							dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
-							weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
-							weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
-							monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
-							monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
-							yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
-							yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
-						}
-					this.selfParam.compareDate=compareDate
-					return
-				}
-				console.log("leftDate:",leftDate)
-				const compareDate={
-						dateType:dateType,
-						viewLeft:leftDate.view,//用于展示日期、年、月等
-						viewRight:rightDate.view,
-						dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
-						dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
-						weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
-						weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
-						monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
-						monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
-						yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
-						yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
-					}
-				this.selfParam.compareDate=compareDate
-				console.log("compareDate:",compareDate)
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
+				// this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
-				this.selfParam.token=uni.getStorageSync("token")
-				this.selfParam.shopNo = uni.getStorageSync("shopNo");
+				this.selfParam.provinceCenterName=areaName	
+				this.selfParam.shopNo = uni.getStorageSync("shopNo")
+				this.selfParam.token=getApp().globalData.token
+				this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			createParam(){
 				console.log("createParam begin")
 				var dateType = this.selfParam.compareDate.dateType
 				var param = {}
-			
+
 				if(dateType=='date'){
 					param = {dateTimeStart: this.selfParam.compareDate.dateLeft.startDate,
 							 dateTimeEnd: this.selfParam.compareDate.dateLeft.endDate,
 							 dateTimeStartCom: this.selfParam.compareDate.dateRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.dateRight.endDate,
 							 dateFlag:"1",
-							 showNumber:this.selfParam.shopNo,
 							 regionId:this.selfParam.provinceCenterId,
+							 showNumber: this.selfParam.shopNo,
 							 token:this.selfParam.token }
 				}else if(dateType=='week'){
 					param = {dateTimeStart: this.selfParam.compareDate.weekLeft.startDate,
@@ -264,8 +341,8 @@
 							 dateTimeStartCom: this.selfParam.compareDate.weekRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.weekRight.endDate,
 							 dateFlag:"2",
-							 showNumber:this.selfParam.shopNo,
 							 regionId:this.selfParam.provinceCenterId,
+							  showNumber: this.selfParam.shopNo,
 							 token:this.selfParam.token }
 				}else if(dateType=='month'){
 					param = {dateTimeStart: this.selfParam.compareDate.monthLeft.startDate,
@@ -273,8 +350,8 @@
 							 dateTimeStartCom: this.selfParam.compareDate.monthRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
 							 dateFlag:"3",
-							 showNumber:this.selfParam.shopNo,
 							 regionId:this.selfParam.provinceCenterId,
+							 showNumber: this.selfParam.shopNo,
 							 token:this.selfParam.token }
 				}else if(dateType=='year'){
 					param = {dateTimeStart: this.selfParam.compareDate.yearLeft.startDate,
@@ -283,76 +360,113 @@
 							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
 							 dateFlag:"4",
 							 regionId:this.selfParam.provinceCenterId,
-							 showNumber:this.selfParam.shopNo,
+							 showNumber: this.selfParam.shopNo,
 							 token:this.selfParam.token }
 				}	
 				console.log("createParam end:",param)
 				return param
 			},
 			// 获取最上层的两个tab
-			getTopData(){
-				var url = '/pentaho/shows/gamesContrast/getComGamesContrastSales';
+			getDataSet(){
+				var url = '/pentaho/showsContrast/getShowSalesAndVotesCom';
 				var param = this.createParam()
-				param.token=getApp().globalData.token;
-				var that =this;
+				
 				urlAPI.getRequest(url, param).then((res)=>{
+					// setTimeout(() => { 
+						this.loading = false;
+							console.log('request success', res)
+							uni.showToast({
+								title: '请求成功',
+								icon: 'success',
+								mask: true
+							});
+							var data = res.data.data;
+							var amount1 = data[0][0]
+							var saleNumber1 = data[0][1]
+							var amount2 = data[1][0]
+							var saleNumber2 = data[1][1]
+							
+							var format00 = numberFun.formatCNumber(amount1);
+							var format01 = numberFun.formatCNumber(saleNumber1);
+							var format10 = numberFun.formatCNumber(amount2);
+							var format11 = numberFun.formatCNumber(saleNumber2);
+							
+							var left = {'title1':'销量（'+format00.name +'元）', 'amount1':(amount1/format00.value).toFixed(2), 'title2':'票数（'+format01.name +'张）', 'amount2':(saleNumber1/format01.value).toFixed(2)};
+							var right = {'title1':'销量（'+format10.name +'元）', 'amount1':(amount2/format10.value).toFixed(2), 'title2':'票数（'+format11.name +'张）', 'amount2':(saleNumber2/format11.value).toFixed(2)};
+						
+							this.$set(this.topData, 'left', left);
+							this.$set(this.topData, 'right', right);
+							console.log('request topData', this.topData);
+							this.$refs['dataContainTwo'].showDataContainer();
+							this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
 					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getShopData(){
+				var url = '/pentaho/salesContrast/getComStoreSituation';
+				var param = this.createParam()
+				
+				urlAPI.getRequest(url, param).then((res)=>{
+					// setTimeout(() => { 
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							if(data==null){
+								return;
+							}
+								
+							var amount1 = data[0]
+							var saleNumber1 = data[1]
+							
+							var left = {'title1':'在售门店数', 'amount1':amount1, 'title2':'在售门店率',amount2:0};
+							var right = {'title1':'在售门店数', 'amount1':saleNumber1, 'title2':'在售门店率',amount2:0};							
+							this.getShopRatio(left,right);		
+					
+							this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})			
+			},
+			getShopRatio(left,right){
+				var url = '/pentaho/salesContrast/getComStoreSalesrate';
+				var param = this.createParam()
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
 						console.log('request success', res)
 						var data = res.data.data;
 						
-						var FB= data.FB;
-						var BK= data.BK;
+						if(data==null){
+							left.amount2=0+'%'
+							right.amount2=0+'%'
+							this.shopData.left=left
+							this.shopData.right=right
+							this.$refs['shopData'].showDataContainer();
+							// var ret = {left:left,right:right}
+							return;
+						}
+						var amount1 = data[0] +"%"
+						var saleNumber1 = data[1] +"%"
+						left.amount2=amount1;
+						right.amount2=saleNumber1;
 						
-						var amountFB1 = FB[0];
-						var saleNumberFB1 = FB[1];
-						var amountFB2 = FB[2];
-						var saleNumberFB2 = FB[3];
-						
-						var formatFB00 = numberFun.formatCNumber(amountFB1);
-						var formatFB01 = numberFun.formatCNumber(saleNumberFB1);
-						var formatFB10 = numberFun.formatCNumber(amountFB2);
-						var formatFB11 = numberFun.formatCNumber(saleNumberFB2);
-						var leftFB = {'title1':'销量（'+formatFB00.name +'元）', 'amount1':amountFB1/formatFB00.value, 'title2':'票数（'+formatFB01.name +'张）', 'amount2':saleNumberFB1/formatFB01.value};
-						var rightFB = {'title1':'销量（'+formatFB10.name +'元）', 'amount1':amountFB2/formatFB10.value, 'title2':'票数（'+formatFB11.name +'张）', 'amount2':saleNumberFB2/formatFB11.value};
-						this.$set(that.topDataFB, 'left', leftFB);
-						this.$set(that.topDataFB, 'right', rightFB);
-						console.log('request topData', that.topDataFB);
-						this.$refs['dataContain'].showDataContainer();
-						
-						var amountBK1 = BK[0];
-						var saleNumberBK1 = BK[1];
-						var amountBK2 = BK[2];
-						var saleNumberBK2 = BK[3];
-						
-						var formatBK00 = numberFun.formatCNumber(amountBK1);
-						var formatBK01 = numberFun.formatCNumber(saleNumberBK1);
-						var formatBK10 = numberFun.formatCNumber(amountBK2);
-						var formatBK11 = numberFun.formatCNumber(saleNumberBK2);
-						var leftBK = {'title1':'销量（'+formatBK00.name +'元）', 'amount1':amountBK1/formatBK00.value, 'title2':'票数（'+formatBK01.name +'张）', 'amount2':saleNumberBK1/formatBK01.value};
-						var rightBK = {'title1':'销量（'+formatBK10.name +'元）', 'amount1':amountBK2/formatBK10.value, 'title2':'票数（'+formatBK11.name +'张）', 'amount2':saleNumberBK2/formatBK11.value};
-						this.$set(that.topDataBK, 'left', leftBK);
-						this.$set(that.topDataBK, 'right', rightBK);
-						this.$refs['dataContain1'].showDataContainer();
-						console.log('request topData', that.topDataBK);
+						this.shopData.left=left
+						this.shopData.right=right
+							
+						console.log('request shopData', this.shopData);
+						this.$refs['shopData'].showDataContainer();
 						this.res = '请求结果 : ' + JSON.stringify(res);
-					}).catch((err)=>{
-						this.loading = false;
-						var leftFB = {'title1':'销量（元）', 'amount1':0, 'title2':'票数（张）', 'amount2':0};
-						var rightFB = {'title1':'销量（元）', 'amount1':0, 'title2':'票数（张）', 'amount2':0};
-						this.$set(that.topDataFB, 'left', leftFB);
-						this.$set(that.topDataFB, 'right', rightFB);
-						var leftBK = {'title1':'销量（元）', 'amount1':0, 'title2':'票数（张）', 'amount2':0};
-						var rightBK = {'title1':'销量（元）', 'amount1':0, 'title2':'票数（张）', 'amount2':0};
-						this.$set(that.topDataBK, 'left', leftBK);
-						this.$set(that.topDataBK, 'right', rightBK);
-						this.$refs['dataContain1'].showDataContainer();
-						console.log('request fail', err);
-					})						
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
 			},
 			getLinesData(){
 				var url = '/pentaho/showsContrast/showSalesVotesTrendCom'
 				var param = this.createParam()
-				param.token=getApp().globalData.token;
+				
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
@@ -378,36 +492,46 @@
 					var seriesComp=[];
 					var amountDataComp = [];
 					var volDataComp = [];
-					var j=0,k = 0,tempAmount=0,tempVol=0,tempAmountComp=0,tempVolComp=0;;
+					var j=0,k = 0,tempAmount=0,tempVol=0,tempAmountComp=0,tempVolComp=0;
+					var maxAmount=0,maxVote=0
+					for(var i=0;i<dates.length;i++){
+						if(maxAmount<sales[i]){
+							maxAmount = sales[i]
+						}
+						if(maxAmount<comSales[i]){
+							maxAmount = comSales[i]
+						}
+						if(maxVote<votes[i]){
+							maxVote = votes[i]
+						}
+						if(maxVote<votes[i]){
+							maxVote = comVotes[i]
+						}
+					}
+					
+					var amountFormat = numberFun.formatCNumber(maxAmount);
+					var voteFormat= numberFun.formatCNumber(maxVote);
 					
 					for(var i=0;i<dates.length;i++){	
-						if(j==3){
-							categories[k] = dates[i];
-							amountData[k] = sales[i];
-							volData[k] = votes[i];
-							categoriesComp[k] = comDates[i];
-							amountDataComp[k] = comSales[i];
-							volDataComp[k] = comVotes[i];
-							k++;
-							j=0;
-						}else{
-							tempAmount = tempAmount+sales[i];
-							tempVol = tempVol+votes[i];
-							tempAmountComp = tempAmountComp + comSales[i];
-							tempVolComp = tempVolComp + comVotes[i];
-							j=j+1;
-						}
+						categories[i] = dates[i];
+						amountData[i] = (sales[i]/amountFormat.value).toFixed(2);
+						volData[i] = (votes[i]/voteFormat.value).toFixed(2);
+						categoriesComp[i] = comDates[i];
+						amountDataComp[i] = (comSales[i]/amountFormat.value).toFixed(2);
+						volDataComp[i] = (comVotes[i]/voteFormat.value).toFixed(2);
 					}
 					
 					// var json1 = {'name':'销量','data':amountData};
 					// var json2 = {'name':'销量','data':amountDataComp};
-					var series = [ {'name':this.selfParam.compareDate.viewLeft +'销量','data':amountData}, {'name':this.selfParam.compareDate.viewRight +'销量','data':amountDataComp}];	
+					var series = [ {'name':this.selfParam.compareDate.viewLeft +'销量('+amountFormat.name + '元)','data':amountData},
+								   {'name':this.selfParam.compareDate.viewRight +'销量('+amountFormat.name + '元)','data':amountDataComp}];	
 					
 					this.$set(this.lineData2, 'categories', categories);
 					this.$set(this.lineData2, 'series', series);
 					
 					// var json3 = {'name':'销量','data':volData};
-					var series2 = [{'name':this.selfParam.compareDate.viewLeft +'票数','data':volData},{'name':this.selfParam.compareDate.viewRight +'票数','data':volDataComp}];
+					var series2 = [{'name':this.selfParam.compareDate.viewLeft +'票数('+voteFormat.name + '张)','data':volData},
+							       {'name':this.selfParam.compareDate.viewRight +'票数('+voteFormat.name + '张)','data':volDataComp}];
 					// series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories);
 					this.$set(this.lineData1, 'series', series2);
@@ -417,156 +541,340 @@
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-					this.lineData1= {
-						//数字的图--折线图数据
-						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
-						series: [
-							{ name: this.selfParam.compareDate.viewLeft, data: [0, 0,0, 0, 0, 0] },
-							{ name: this.selfParam.compareDate.viewRight, data: [0, 0, 0, 0, 0, 0] }
-						]
-					}
-					this.lineData2= {
-						//数字的图--折线图数据
-						categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
-						series: [
-							{ name: this.selfParam.compareDate.viewLeft, data: [0, 0,0, 0, 0, 0] },
-							{ name: this.selfParam.compareDate.viewRight, data: [0, 0, 0, 0, 0, 0] }
-						]
-					}
-					this.$refs['lineData2'].showCharts();
-					this.$refs['lineData1'].showCharts();
 				})
 			},
-			getMidData(){
-				//全国
-				var url = '/pentaho/showsContrast/getShowRankingProCom';
-				var param =this.createParam();
-				param.token=getApp().globalData.token;
-				var left = {'title1':'全国排名', 'amount1':0, 'title2':'全省排名', 'amount2':1};
-				var right = {'title1':'全国排名', 'amount1':0, 'title2':'全省排名', 'amount2':1};
-				var that =this;
+			getBallAmount(){
+				var url="/pentaho/showsContrast/getShowsGameSalesCom"
+				var param = this.createParam()		
 				urlAPI.getRequest(url, param).then((res)=>{
-					this.loading = false;
-					var data = res.data.data;
-					this.$set(left, 'amount1', data[0]);
-					this.$set(right, 'amount1', data[1]);
-					this.$set(that.rankData, 'left', left);
-					this.$set(that.rankData, 'right', right);
-					this.res = '请求结果 : ' + JSON.stringify(res);
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							if(data==null || data.length==0){
+								return;
+							}
+							var FB = data.FB
+							var BK = data.BK
+							var format00 = numberFun.formatCNumber(FB[0]);
+							var format01 = numberFun.formatCNumber(BK[0]);
+							var format10 = numberFun.formatCNumber(FB[2]);
+							var format11 = numberFun.formatCNumber(BK[2]);
+							
+							var ballAmount={
+								left:{
+									football:{name:"足球",amount:"销量" +(FB[0]/format00.value).toFixed(2) + format00.name +"元",zhanbi:parseFloat(FB[1]).toFixed(2) +"%"},
+									basketball:{name:"篮球",amount:"销量" +(BK[0]/format01.value).toFixed(2) + format01.name +"元",zhanbi:parseFloat(BK[1]).toFixed(2) +"%"}
+								},
+								right:{
+									football:{name:"足球",amount:"销量" +(FB[2]/format10.value).toFixed(2) + format10.name +"元",zhanbi:parseFloat(FB[3]).toFixed(2) +"%"},
+									basketball:{name:"篮球",amount:"销量" +(BK[2]/format11.value).toFixed(2) + format11.name +"元",zhanbi:parseFloat(BK[3]).toFixed(2) +"%"}
+								}
+							}
+							this.ballAmount = ballAmount;
+
+							console.log('request ballAmount', this.ballAmount);
+							this.$refs['dataContainerTwoColTwo'].showDataContainer();
+							
+							this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-				});
-				
-				
-				//全省排名
-				url = '/pentaho/showsContrast/getShowRankingProCom';
-				param =this.createParam();
-				param.regionId= this.selfParam.provinceCenterId
-				param.token=getApp().globalData.token
-				urlAPI.getRequest(url, param).then((res)=>{
-					this.loading = false;
-					var data = res.data.data;
-					this.$set(left, 'amount2', data[0]);
-					this.$set(right, 'amount2', data[1]);
-					this.$set(that.rankData, 'left', left);
-					this.$set(that.rankData, 'right', right);
-					this.res = '请求结果 : ' + JSON.stringify(res);
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				});
-				console.log('request==============', that.rankData);
-				this.$refs['dataContain2'].showDataContainer();
-				
+				})
 			},
-			getLastData(){
-				var url='/pentaho/showsContrast/getShowsGameSalesCom'
-				var param = this.createParam();
-				param.token=getApp().globalData.token;
-				var that =this;
+			getRankTable(){			
+				var url="/pentaho/salesContrast/getComSalesRankingList"
+				var param = this.createParam()		
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							if(data==null || data.length==0){
+								return;
+							}
+							var format0 = numberFun.formatCNumber(data[0][2]);	
+							var format1 = numberFun.formatCNumber(data[0][4]);	
+							this.leftTableColumns=[									{
+										title: '省份',
+										key: 'area',
+										$width:"100px"
+									},{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},{
+										title: '销量(' +format0.name +')元',
+										key: 'amount',
+										$width:"100px"
+									}
+								];
+							this.rightTableColumns=[{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},
+									{
+										title:  '销量(' +format1.name +')元',
+										key: 'amount',
+										$width:"80px"
+									}
+								];
+							for(var i=0;i<data.length;i++){
+								var jsonleft = {id:data[i][1], area:data[i][0], amount:(data[i][2]/format0.value).toFixed(2)}	
+								var jsonright = {id:data[i][3],amount:(data[i][4]/format1.value).toFixed(2)}								
+								if(i<=4){
+									this.leftTableData[i] = jsonleft
+									this.rightTableData[i] = jsonright
+								}
+								this.leftTableDataDetail[i] = jsonleft
+								this.rightTableDataDetail[i] = jsonright
+							}
+							
+							this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})		
+			},
+			getComReturnRatesRanking(){
+				var url="/pentaho/salesContrast/getComReturnRatesRanking"
+				var param = this.createParam()		
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							if(data==null || data.length==0){
+								return;
+							}
+							this.leftReturnTableColumns=[									{
+										title: '省份',
+										key: 'area',
+										$width:"100px"
+									},{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},{
+										title: '返奖率',
+										key: 'amount',
+										$width:"100px"
+									}
+								];
+							this.rightReturnTableColumns=[{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},
+									{
+										title:  '返奖率',
+										key: 'amount',
+										$width:"80px"
+									}
+								];
+							for(var i=0;i<data.length;i++){
+								var jsonleft = {id:data[i][1], area:data[i][0], amount:data[i][2] +'%'}	
+								var jsonright = {id:data[i][3],amount:data[i][4] +'%'}								
+								if(i<=4){
+									this.leftReturnTableData[i] = jsonleft
+									this.rightReturnTableData[i] = jsonright
+								}
+								this.leftReturnTableDataDetail[i] = jsonleft
+								this.rightReturnTableDataDetail[i] = jsonright
+							}
+							
+							this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})		
+			},
+			getComReturnRateState(){
+				var url="/pentaho/showsContrast/getShowReturnRateCom"
+				var param = this.createParam()		
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						var data = res.data.data;
+						if(data==null || data.length==0){
+							return;
+						}
+
+						var leftReturn = data[0] +'%'
+						var rightReturn = data[1]+'%'
+						
+						var left = {'title1':'返奖率', 'amount1':leftReturn };
+						var right = {'title1':'返奖率', 'amount1':rightReturn};	
+						this.returnData.left = left 
+						this.returnData.right= right
+						this.$refs['returnData'].showDataContainer();
+						this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getComProSalesRanking(){
+				var url=''
+				var param = this.createParam()	
+				param.regionId=this.gateInfo.provinceCenterId
+				var title = ''
+				if(this.selfParam.provinceCenterId==0){
+					url="/pentaho/showsContrast/getShowRankingCountryCom"
+					title='全国排名'
+				}else{
+					url="/pentaho/showsContrast/getShowRankingProCom"
+					title='全省排名'
+				}
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						var data = res.data.data;
+						if(data==null || data.length==0){
+							this.$refs['rankData'].showDataContainer();
+							return;
+						}
+			
+						var leftRank = data[0]
+						var rightRank = data[1]
+						var left = {'title1':title, 'amount1':leftRank};
+						var right = {'title1':title, 'amount1':rightRank};	
+						this.getComProSalesRanking2(left,right)
+						// this.rankData.left = left 
+						// this.rankData.right= right
+						// this.$refs['rankData'].showDataContainer();
+						this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getComProSalesRanking2(left,right){			
+				var url=''
+				var param = this.createParam()	
+				param.cityId=this.gateInfo.cityId
+				param.regionId=this.gateInfo.provincialId
+				console.log('totalViewCompare this.gateInfo = ',this.gateInfo)
+				console.log('totalViewCompare this.param = ',param)
+				var title = ''
+				if(this.selfParam.provinceCenterId==0){
+					url="/pentaho/showsContrast/getShowRankingProCom"
+					title='全省排名'
+				}else{
+					url="/pentaho/showsContrast/getShowRankingCityCom"
+					title='全市排名'
+				}
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						var data = res.data.data;
+						if(data==null || data.length==0){
+							this.$refs['rankData2'].showDataContainer();
+							return;
+						}
+			
+						var leftRank = data[0]
+						var rightRank = data[1]
+						left.title2=title
+						left.amount2=leftRank
+						right.title2=title
+						right.amount2=rightRank
+						// var left = {'title1':title, 'amount1':leftRank };
+						// var right = {'title1':title, 'amount1':rightRank};	
+						this.rankData.left = left
+						this.rankData.right= right
+						// this.rankData2.left = left 
+						// this.rankData2.right= right
+						this.$refs['rankData'].showDataContainer();
+						this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getReturnRateTrendChartCom(type){
+				var url = '/pentaho/shows/getShowReturnRateTrendChart'
+				var param = this.createParam()
+				
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+					
+					var dates = data.dates
+					var ALL = data.ALL
+					var FB = data.FB
+					var BK = data.BK
+					// var comDates = data.comDates
+					// var comALL = data.comALL
+					// var comFB = data.comFB
+					// var comBK = data.comBK
+					
+					for(var i=0;i<dates.length;i++){
+						ALL[i] = (ALL[i]/100).toFixed(2)
+						FB[i] = (FB[i]/100).toFixed(2)
+						BK[i] = (BK[i]/100).toFixed(2)
+					}
+					// for(var i=0;i<comDates.length;i++){
+					// 	comALL[i] = (comALL[i]/100).toFixed(2)
+					// 	comFB[i] = (comFB[i]/100).toFixed(2)
+					// 	comBK[i] = (comBK[i]/100).toFixed(2)
+					// }
+					var series = [ {'name':'竞彩返奖率','data':ALL},
+								   {'name':'足球返奖率','data':FB},
+								   {'name':'篮球返奖率','data':BK}];	
+					if(type==1){
+						this.$set(this.lineData3, 'categories', dates);
+						this.$set(this.lineData3, 'series', series);
+						this.$refs['lineData3'].showCharts();
+					}else{
+						this.$set(this.lineData4, 'categories', dates);
+						this.$set(this.lineData4, 'series', series);
+						this.$refs['lineData4'].showCharts();
+					}
 					
 					
-					var data = res.data.data;
-					
-					var FB= data.FB;
-					var BK= data.BK;
-					var big1={name:"足球",value:"",
-										left:{name:"销量",value:FB[0]},
-										right:{name:"占比",value:FB[1]},
-										};
-					var big2={name:"篮球",value:"",
-										left:{name:"销量",value:BK[0]},
-										right:{name:"占比",value:BK[1]},
-										};
-					var big1C={name:"足球",value:"",
-										left:{name:"销量",value:FB[2]},
-										right:{name:"占比",value:FB[3]},
-										};
-					var big2C={name:"篮球",value:"",
-										left:{name:"销量",value:BK[2]},
-										right:{name:"占比",value:BK[3]},
-										};
-															
-					this.$set(that.compareData, 'big1', big1);
-					this.$set(that.compareData, 'big2', big2);
-					that.compareData.big1=big1;
-					that.compareData.big2=big2;
-					this.$set(that.compareDataCompare, 'big1', big1C);
-					this.$set(that.compareDataCompare, 'big2', big2C);
-					that.compareDataCompare.big1=big1C;
-					that.compareDataCompare.big2=big2C;
-					this.$refs['dataContain3'].showDataContainer();
-					this.$refs['dataContain4'].showDataContainer();
+					// var json3 = {'name':'销量','data':volData};
+					// var series2 = [ {'name':'竞彩返奖率','data':comALL},
+					// 			   {'name':'足球返奖率','data':comFB},
+					// 			   {'name':'篮球返奖率','data':comBK}];	
+					// series2[0] = json2;
+					// this.$set(this.lineData4, 'categories', dates);
+					// this.$set(this.lineData4, 'series', series2);
+					// this.$refs['lineData3'].showCharts();
+					// this.$refs['lineData4'].showCharts();
 					this.res = '请求结果 : ' + JSON.stringify(res);
-					console.log('request+++++', compareData);
-					console.log('request+++++', compareDataCompare);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-					var big1={name:"足球",value:"",
-										left:{name:"销量",value:0},
-										right:{name:"占比",value:0},
-										};
-					var big2={name:"篮球",value:"",
-										left:{name:"销量",value:0},
-										right:{name:"占比",value:0},
-										};
-					var big1C={name:"足球",value:"",
-										left:{name:"销量",value:0},
-										right:{name:"占比",value:0},
-										};
-					var big2C={name:"篮球",value:"",
-										left:{name:"销量",value:0},
-										right:{name:"占比",value:0},
-										};
-															
-					this.$set(that.compareData, 'big1', big1);
-					this.$set(that.compareData, 'big2', big2);
-					that.compareData.big1=big1;
-					that.compareData.big2=big2;
-					this.$set(that.compareDataCompare, 'big1', big1C);
-					this.$set(that.compareDataCompare, 'big2', big2C);
-					that.compareDataCompare.big1=big1C;
-					that.compareDataCompare.big2=big2C;
-					this.$refs['dataContain3'].showDataContainer();
-					this.$refs['dataContain4'].showDataContainer();
-				});
+				})
+			},
+			
+			refresh(){
+				this.returnFromDatePicker()
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				console.log("totalViewCompare selfParam=",this.selfParam)
+				this.getServerData();
+				this.showView();
+				this.getServerData();
+				this.showView();
 			},
 			change(e) {
 			      this.btnnum = e
+			      console.log(this.btnnum)
 			},
-			change1(e) {
-			      this.btnnum1 = e
+			changeArcbar(e){
+				this.arcbarNum = e
+				console.log(this.arcbarNum)
 			},
-			refresh(selfParam){
-				this.selfParam.token = uni.getStorageSync("token")
-				this.returnFromDatePicker();
-				this.getServerData();
-				this.showView();
+			goSaleRank(tableData, tableColumns,righttableData, righttableColumns){
+				uni.navigateTo({
+					url:"/pages/common/tableDetail3?leftTableData= " + JSON.stringify(tableData) + '&leftTableColumns=' + JSON.stringify(tableColumns) 
+													+"&rightTableData= " + JSON.stringify(righttableData) + '&rightTableColumns=' + JSON.stringify(righttableColumns)
+				});
 			},
 			valueToPercent(value) {
 				let temp = value;
@@ -593,14 +901,13 @@
 				return result + "%";
 			}
 		},
-		
-		mounted(){
-			this.getServerData();
+		mounted(){			
 			this.showView();
 		},
 		watch: {
 			'$route':'showView'
-		}
+		},
+
 
 	}
 </script>
@@ -673,6 +980,10 @@
 		font-weight: bold;
 		border-color:#FFFFFF;
 	}
+	.box-contaniner{
+		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
+	}
 	
 	.clineChart-title{
 		display: flex;
@@ -726,8 +1037,8 @@
 		background: #FFFFFF;
 	}
 	.btna{
-		color: #000000;
-		background: #ebebeb;
+		color: #FFFFFF;
+		background: #92AAAA;
 		padding:0px 30rpx 0px 30rpx;
 	}
 	.dis{
@@ -753,7 +1064,7 @@
 		width: 65%;
 		margin: 0rpx 5rpx;
 		/* padding: 0 10rpx; */
-		/* background-color: #ebebeb; */
+		background-color: rgba(220, 241, 250 ,0.5);
 		flex-direction: column;
 	}
 	.right-row-box {
@@ -761,7 +1072,7 @@
 		width: 35%;
 		margin: 0rpx 5rpx;
 		/* padding: 0 10rpx; */
-		/* background-color: #ebebeb; */
+		background-color: rgba(250, 225, 220 ,0.5);
 		flex-direction: column;
 	}
 	.sale-row-2{
@@ -769,12 +1080,5 @@
 		flex-direction: row;	
 		margin: 20rpx 10rpx;
 		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
-	}
-	.box-contaniner{
-		width: 100%;
-	}
-	.box-contaniner1{
-		width: 100%;
-		margin: 10px 10px 10px 10px;
 	}
 </style>

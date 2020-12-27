@@ -297,6 +297,8 @@
 			getRankTable(provinceCenterId, currentDate){
 				var url ='/pentaho/proValue/getSingleVoteMoneyRanking';	
 				var param = this.createParam();
+				this.tableDataAll=[]
+				this.tableData=[]
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)

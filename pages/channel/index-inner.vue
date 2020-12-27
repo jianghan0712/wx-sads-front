@@ -182,6 +182,7 @@
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName		
 				this.selfParam.shopNo = uni.getStorageSync("shopNo")
+				this.selfParam.token=getApp().globalData.token
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			getList(index) {

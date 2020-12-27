@@ -1,34 +1,77 @@
 <template>
 	<view>
-		<view class="box-contaniner1">
+		<view class="box-contaniner">
 			<view class="tab-content">
 				<view class="end-title">
 				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">足球</view>
 				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">篮球</view>
 				</view>	
 				<view class="end-cont" :class="{dis:btnnum == 0}">	
-					<view style="font-size: 30rpx;font-weight: bold;">足球关次销量及占比</view>				
+					<view style="font-size: 30rpx;font-weight: bold;">足球关次销量及占比对比</view>				
 					<view class="ring_chart">
-						<ring-chart :dataAs="arcbar1" ref="levelRingChart1" canvasId="index_ring_1"/>
+						<ring-chart :dataAs="pieData" ref="levelRingChart0" canvasId="index_ring_0"/>
 					</view>
 					<view class="ring_chart">
-						<ring-chart :dataAs="arcbar11" ref="levelRingChart11" canvasId="index_ring_11"/>
+						<ring-chart :dataAs="pieData2" ref="levelRingChart2" canvasId="index_ring_2"/>
+					</view>
+					<button  @click="gotoLunBo(btnnum)">查看全部</button>
+					<!-- 各地区销量排行-->
+<!-- 					<view class="rankTable">
+						<view class="rankTable-title">
+							<view  style="font-weight: bold;">各地区足球关次销量及占比</view>
+							<view class="rankTable-more">
+								<picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
+									当前选择：{{array[index].name}}
+								</picker>
+							</view>
+						</view>
+						<view class="example">
+							<view class="sale-row-2">
+								<view class="left-row-box">
+									<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+								</view>
+								<view class="right-row-box">
+									<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
+								</view>
+							</view>			
+						</view>
+						<button  @click="goSaleRank(leftTableDataDetail,leftTableColumns,rightTableDataDetail,rightTableColumns)">查看全部</button> -->
 					</view>
 				</view>
-				<view class="end-cont" :class="{dis:btnnum == 1}">
-					<view style="font-size: 30rpx;font-weight: bold;">足球关次销量及占比</view>				
+				<view class="end-cont" :class="{dis:btnnum == 1}">	
+					<view style="font-size: 30rpx;font-weight: bold;">篮球关次销量及占比</view>　
 					<view class="ring_chart">
-						<ring-chart :dataAs="arcbar2" ref="levelRingChart2" canvasId="index_ring_2"/>
+						<ring-chart :dataAs="pieData1" ref="levelRingChart1" canvasId="index_ring_1"/>
 					</view>
 					<view class="ring_chart">
-						<ring-chart :dataAs="arcbar22" ref="levelRingChart22" canvasId="index_ring_22"/>
+						<ring-chart :dataAs="pieData3" ref="levelRingChart3" canvasId="index_ring_3"/>
 					</view>
-				</view>
-				<button type="default" plain="true" @click="gotoALL(btnnum)">查看全部</button>
+					<button  @click="gotoLunBo(btnnum)">查看全部</button>
+					<!-- 各地区销量排行-->
+<!-- 					<view class="rankTable">
+						<view class="rankTable-title">
+							<view style="font-weight: bold;">各地区篮球关次销量及占比</view>
+							<view class="rankTable-more">
+								<picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
+									当前选择：{{array[index].name}}
+								</picker>
+							</view>
+						</view>
+						<view class="example">
+							<view class="sale-row-2">
+								<view class="left-row-box">
+									<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+								</view>
+								<view class="right-row-box">
+									<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
+								</view>
+							</view>			
+						</view>
+						<button  @click="goSaleRank(leftTableDataDetail,leftTableColumns,rightTableDataDetail,rightTableColumns)">查看全部</button> -->
+					<!-- </view> -->
+				</view>		
 			</view>
-			<view class="tab-content">
-					<!-- 列表 -->
-			</view>
+		<slot />
 		</view>
 	</view>
 </template>
@@ -38,16 +81,15 @@
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
-	import PieChart from '@/components/basic-chart/PieChart.vue';
+
 	
 	export default {
 		components: {
 			RingChart,
-			vTable,
-			PieChart
+			vTable
 		},
 		props: {
-			model:{
+			param:{
 				//数据
 				type: Object,
 				default: () => ({})
@@ -85,132 +127,43 @@
 						yearRight:{startDate:'', endDate:''},
 					},	
 					userId:'',			
-					selfProvinceCenterId:''//存登录时候的id
+					selfProvinceCenterId:'',//存登录时候的id
+					shopNo:''
 				},
+				gateInfo:{},
 				btnnum: 0,
 				index: 0,
 				levelList:['单关','2x1','3x1','4x1-8x1','MXN','自有过关'],
-				arcbar2: {
-						type: 'radar',
-						series:[
-								{name: '胜平负',data: 100},
-								 {name: '半全场胜平负',data: 30},
-								 {name: '让球胜平负',data: 50},
-						],
-						extra: {
-							pie: {
-								lableWidth: 15,
-								ringWidth: 10, //圆环的宽度
-								offsetAngle: 0 //圆环的角度
-							}
-						}
+				pieData: {					//饼状图数据
+					series: [],
+					},
+				pieData1: {
+					series: [],
 				},
-				arcbar22: {
-						type: 'radar',
-						series:[
-								{name: '胜平负',data: 100},
-								 {name: '半全场胜平负',data: 30},
-								 {name: '让球胜平负',data: 50},
-						],
-						extra: {
-							pie: {
-								lableWidth: 15,
-								ringWidth: 10, //圆环的宽度
-								offsetAngle: 0 //圆环的角度
-							}
-						}
+				pieData2: {					//饼状图数据
+					series: [],
+					},
+				pieData3: {
+					series: [],
 				},
-				arcbar1: {
-						type: 'radar',
-						series:[
-								{name: '胜平负',data: 100},
-								 {name: '半全场胜平负',data: 30},
-								 {name: '让球胜平负',data: 50},
-						],
-						extra: {
-							pie: {
-								lableWidth: 15,
-								ringWidth: 10, //圆环的宽度
-								offsetAngle: 0 //圆环的角度
-							}
-						}
-				},
-				arcbar11: {
-							type: 'radar',
-							series:[
-									{name: '胜平负',data: 100},
-									 {name: '半全场胜平负',data: 30},
-									 {name: '让球胜平负',data: 50},
-							],
-							extra: {
-								pie: {
-									lableWidth: 15,
-									ringWidth: 10, //圆环的宽度
-									offsetAngle: 0 //圆环的角度
-								}
-							}
-				},
-				leftTableData: [{
-							id: "1",
-							area: "北京市",						
-							amount: "10233.5"
-						},
-						{
-							id: "2",
-							area: "上海市",
-							amount: "9965.5"
-						},
-						{
-							id: "3",
-							area: "广东省",
-							amount: "9754.5"
-						},
-						{
-							id: "4",
-							area: "重庆市",
-							amount: "6745.6"
-						},
-						{
-							id: "5",
-							area: "河北省",
-							amount: "6554"
+				leftTableData: [],
+				rightTableData: [],
+				leftTableDataDetail: [],
+				rightTableDataDetail: [],
+				leftTableColumns: [{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '销量',
+							key: 'amount',
+							$width:"100px"
 						}
 					],
-				rightTableData: [{
-							id: "1",
-							amount: "10233.5"
-						},
-						{
-							id: "2",
-							amount: "9965.5"
-						},
-						{
-							id: "3",
-							amount: "9754.5"
-						},
-						{
-							id: "4",
-							amount: "6745.6"
-						},
-						{
-							id: "5",
-							amount: "6554"
-						}
-					],
-				leftTableColumns: [
-					{
-						title: '省份',
-						key: 'area',
-						$width:"100px"
-					},{
-						title: "排名",
-						key: "id",
-						$width:"50px",
-					},{
-						title: '销量',
-						key: 'amount',
-						$width:"100px"
-					}],
 				rightTableColumns: [{
 							title: "排名",
 							key: "id",
@@ -221,40 +174,85 @@
 							key: 'amount',
 							$width:"80px"
 						}
-					],	
+					],
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
 			};
 		},
 		onLoad() {
 			_self = this;
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
-			this.getServerData();
 			this.showView();
-			this.change(0)
-		},
-		onShow() {
-			_self = this;
-			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
-			this.getServerData();
-			this.showView()
-			this.change(0)
 		},
 		created() {
-			_self = this;
+			this.returnFromDatePicker()
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker();
 			this.getServerData();
-			this.showView()
-			this.change(0)
+			this.showView();
 		},
 		methods: {
-			refresh(selfParam){
-				this.selfParam.token = uni.getStorageSync("token")
-				this.returnFromDatePicker();
+			refresh(){
+				this.returnFromDatePicker()
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.getServerData();
 				this.showView();
+				this.getServerData();
+				this.showView();
+			},
+			returnFromDatePicker(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				// this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName	
+				this.selfParam.shopNo = uni.getStorageSync("shopNo")
+				this.selfParam.token=getApp().globalData.token
+				this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
+			},
+			showView(){				
+				this.$nextTick(() => {	
+					this.$refs['levelRingChart0'].showCharts();
+					this.$refs['levelRingChart1'].showCharts();
+					this.$refs['levelRingChart2'].showCharts();
+					this.$refs['levelRingChart3'].showCharts();
+					console.log("init ringChart0:" ,this.pieData);
+				});
+			},
+			getServerData() {
+				this.getPieDate('足球')
+				this.getPieDate('篮球')
+				// this.getTableDate('足球', this.array[this.index].name)
+				// this.getTableDate('篮球', this.array[this.index].name)
+			},
+		    change(e) {
+			    this.btnnum = e;
+			    console.log(this.btnnum);
+				this.getServerData();
+				this.showView();
+		    },
+			bindPickerChange(e) {
+				console.log('picker发送选择改变，携带值为：' + this.array[e.detail.value].name)
+				console.log(this.selfParam)
+				this.index = e.detail.value
+				this.getTableDate('足球', this.array[this.index].name)
+				this.getTableDate('篮球', this.array[this.index].name)
+			},
+			gotoLunBo(btnnum){			
+				if(btnnum==0){
+					uni.navigateTo({
+						url:"/pages/common/ringDetailTwo?type=level&leftPie=" + JSON.stringify(this.pieData) + "&rightPie="+ JSON.stringify(this.pieData2)
+					});
+				}else{
+					uni.navigateTo({
+							url:"/pages/common/ringDetailTwo?type=level&leftPie=" + JSON.stringify(this.pieData1) + "&rightPie="+ JSON.stringify(this.pieData3)
+					});
+				}
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -265,223 +263,182 @@
 							 dateTimeEnd: this.selfParam.compareDate.dateLeft.endDate,
 							 dateTimeStartCom: this.selfParam.compareDate.dateRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.dateRight.endDate,
-							 dateFlag:1,
+							 dateFlag:"1",
 							 showNumber:this.selfParam.shopNo,
+							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='week'){
 					param = {dateTimeStart: this.selfParam.compareDate.weekLeft.startDate,
 							 dateTimeEnd: this.selfParam.compareDate.weekLeft.endDate,
 							 dateTimeStartCom: this.selfParam.compareDate.weekRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.weekRight.endDate,
-							 dateFlag:2,
+							 dateFlag:"2",
 							 showNumber:this.selfParam.shopNo,
+							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='month'){
 					param = {dateTimeStart: this.selfParam.compareDate.monthLeft.startDate,
 							 dateTimeEnd: this.selfParam.compareDate.monthLeft.endDate,
 							 dateTimeStartCom: this.selfParam.compareDate.monthRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
-							 dateFlag:3,
+							 dateFlag:"3",
 							 showNumber:this.selfParam.shopNo,
+							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='year'){
 					param = {dateTimeStart: this.selfParam.compareDate.yearLeft.startDate,
-							 dateTimeEnd: this.selfParam.compareDate.monthLeft.endDate,
-							 dateTimeStartCom: this.selfParam.compareDate.monthRight.startDate,
-							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
-							 dateFlag:4,
+							 dateTimeEnd: this.selfParam.compareDate.yearLeft.endDate,
+							 dateTimeStartCom: this.selfParam.compareDate.yearRight.startDate,
+							 dateTimeEndCom: this.selfParam.compareDate.yearRight.endDate,
+							 dateFlag:"4",
 							 showNumber:this.selfParam.shopNo,
+							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
-				}
-				param.token=getApp().globalData.token;
+				}	
+				
 				console.log("createParam end:",param)
 				return param
 			},
-			returnFromDatePicker(){
-				const dateType = uni.getStorageSync("compareDateType")
-				const leftDate = JSON.parse(uni.getStorageSync("leftBusinessDate"))
-				const rightDate = JSON.parse(uni.getStorageSync("rightBusinessDate"))
-				console.log("dateType:",dateType)
-				console.log("leftDate:",leftDate)
-				console.log("rightDate:",rightDate)
-				
-				if(leftDate==null || rightDate==null){
-					return
-				}
-				
-				if(leftDate.dateType!=dateType || rightDate.dateType!=dateType){
-					console.log("dateType不匹配:")
-					const compareDate={
-							dateType:dateType,
-							viewLeft:leftDate.view,//用于展示日期、年、月等
-							viewRight:rightDate.view,
-							dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
-							dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
-							weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
-							weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
-							monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
-							monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
-							yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
-							yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
-						}
-					this.selfParam.compareDate=compareDate
-					return
-				}
-				console.log("leftDate:",leftDate)
-				const compareDate={
-						dateType:dateType,
-						viewLeft:leftDate.view,//用于展示日期、年、月等
-						viewRight:rightDate.view,
-						dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
-						dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
-						weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
-						weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
-						monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
-						monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
-						yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
-						yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
-					}
-				this.selfParam.compareDate=compareDate
-				console.log("compareDate:",compareDate)
-				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
-				this.selfParam.businessDate = bussinessDate;
-				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-						
-				const area = uni.getStorageSync("area")
-				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
-				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName
-				this.selfParam.token=uni.getStorageSync("token")
-				this.selfParam.shopNo = uni.getStorageSync("shopNo");
-				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
-			},
-			showView(){
-				this.$refs['levelRingChart1'].showCharts();
-				this.$refs['levelRingChart11'].showCharts();
-				this.$refs['levelRingChart2'].showCharts();
-				this.$refs['levelRingChart22'].showCharts(); 
-			},
-			getServerData() {
-				this.getPieData();
-			},
-		    change(e) {
-			    this.btnnum = e;
-			    console.log(this.btnnum);
-				this.refresh()
-		    },
-			bindPickerChange: function(e) {
-				console.log('picker发送选择改变，携带值为：' + e.detail.value)
-				this.index = e.detail.value
-			},
-			gotoALL(btnnum){
-				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));
-				if(btnnum==0){
-					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData)
-					});
-				}else{
-					uni.navigateTo({
-						url:"/pages/common/levelRingDetail?btnnum="+ btnnum + "&data=" + JSON.stringify(this.pieData1)
-					});
-				}
-			},
-			getPieData(){
+			getPieDate(type){
 				var url = '/pentaho/shows/gamesContrast/getShowPassSalesPropCom';
-				var param = this.createParam();
-				param.gameFlag=0;
+				var param = this.createParam()
+				param.token=getApp().globalData.token
+				if(type=='足球'){
+					param.gameFlag=1
+				}else{
+					param.gameFlag=2
+				}
+				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					console.log('request success', res);
+					console.log('request success', res)
 					var data = res.data.data;
-					
-					var games= data.pass;
-					var comGanmes =data.comPass;
-					
-					var series = [];
-					var categories =[];
-					for(var i=0;i<games.length;i++){
-						categories.push(games[i].customsName);
-						var json ={'name':games[i].customsName,'data':games[i].values[0]};
-						series.push(json);
+				    if(data==null){
+						return;
 					}
-					var series2 = [];
-					var categories2 =[];
-					for(var i=0;i<comGanmes.length;i++){
-						categories2.push(comGanmes[i].customsName);
-						var json ={'name':comGanmes[i].customsName,'data':comGanmes[i].values[0]};
-						series2.push(json);
-					}
-					//this.$set(this.arcbar1, 'categories', categories);
-					this.$set(this.arcbar1, 'series', series);
-					//this.$set(this.arcbar111, 'categories', categories2);
-					this.$set(this.arcbar11, 'series', series2);
-					this.$refs['levelRingChart1'].showCharts();
-					this.$refs['levelRingChart11'].showCharts();
+					var pass = data.pass
+					var comPass = data.comPass
 					
-					this.res = '请求结果 : ' + JSON.stringify(res);
+					var series = []
+					for(var i=0;i<pass.length;i++){	
+						var jsonData = {}
+						that.levelList = pass[i].customsName						
+						jsonData.name=pass[i].customsName;
+						jsonData.data=pass[i].values[0];
+						series[i]=jsonData					
+					}
+					
+					var series2 = []
+					for(var i=0;i<comPass.length;i++){
+						var jsonData = {}				
+						jsonData.name=comPass[i].customsName;
+						jsonData.data=comPass[i].values[0];
+						series2[i]=jsonData					
+					}
+					
+					if(type=='足球'){
+						that.pieData.series=series
+						that.pieData2.series=series2
+						this.$refs['levelRingChart0'].showCharts();
+						this.$refs['levelRingChart2'].showCharts();
+					}else if(type=='篮球'){
+						that.pieData1.series=series
+						that.pieData3.series=series2
+						this.$refs['levelRingChart1'].showCharts();
+						this.$refs['levelRingChart3'].showCharts();
+					}
+					
+					console.log('request getTodSalesAmount', that.pieData);				
+					that.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-				});
-				
-				param.gameFlag=1;
-				urlAPI.getRequest(url, param).then((res)=>{
-					this.loading = false;
-					console.log('request success', res);
-					var data = res.data.data;
-					
-					var games= data.pass;
-					var comGanmes =data.comPass;
-					
-					var series = [];
-					var categories =[];
-					for(var i=0;i<games.length;i++){
-						categories.push(games[i].customsName);
-						var json ={'name':games[i].customsName,'data':games[i].values[0]};
-						series.push(json);
-					}
-					var series2 = [];
-					var categories2 =[]; 
-					for(var i=0;i<comGanmes.length;i++){
-						categories2.push(comGanmes[i].customsName);
-						var json ={'name':comGanmes[i].customsName,'data':comGanmes[i].values[0]};
-						series2.push(json);
-					}
-					//this.$set(this.arcbar2, 'categories', categories);
-					this.$set(this.arcbar2, 'series', series);
-					//this.$set(this.arcbar222, 'categories', categories2);
-					this.$set(this.arcbar22, 'series', series2);
-					this.$refs['levelRingChart2'].showCharts();
-					this.$refs['levelRingChart22'].showCharts();
-					this.res = '请求结果 : ' + JSON.stringify(res);
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				});
+				})
 			},
+			// getTableDate(type, passName){
+			// 	var url = '/pentaho/gamesContrast/checkpointSalesRankingCom';
+			// 	var param = this.createParam()
+			// 	param.token=getApp().globalData.token
+			// 	param.passName=	passName
+			// 	if(type=='足球'){
+			// 		param.gameFlag=1
+			// 	}else{
+			// 		param.gameFlag=2
+			// 	}
+
+			// 	urlAPI.getRequest(url, param).then((res)=>{
+			// 			this.loading = false;
+			// 				console.log('request success', res)
+			// 				var data = res.data.data;
+			// 				if(data==null || data.length==0){
+			// 					return;
+			// 				}
+			// 				var format0 = numberFun.formatCNumber(data[0][2]);	
+			// 				var format1 = numberFun.formatCNumber(data[0][4]);	
+			// 				this.leftTableColumns=[									{
+			// 							title: '省份',
+			// 							key: 'area',
+			// 							$width:"100px"
+			// 						},{
+			// 							title: "排名",
+			// 							key: "id",
+			// 							$width:"50px",
+			// 						},{
+			// 							title: '销量(' +format0.name +'元)',
+			// 							key: 'amount',
+			// 							$width:"100px"
+			// 						}
+			// 					];
+			// 				this.rightTableColumns=[{
+			// 							title: "排名",
+			// 							key: "id",
+			// 							$width:"50px",
+			// 						},
+			// 						{
+			// 							title:  '销量(' +format1.name +'元)',
+			// 							key: 'amount',
+			// 							$width:"80px"
+			// 						}
+			// 					];
+			// 				for(var i=0;i<data.length;i++){
+			// 					var jsonleft = {id:data[i][1], area:data[i][0], amount:(data[i][2]/format0.value).toFixed(2)}	
+			// 					var jsonright = {id:data[i][3],amount:(data[i][4]/format1.value).toFixed(2)}								
+			// 					if(i<=4){
+			// 						this.leftTableData[i] = jsonleft
+			// 						this.rightTableData[i] = jsonright
+			// 					}
+			// 					this.leftTableDataDetail[i] = jsonleft
+			// 					this.rightTableDataDetail[i] = jsonright
+			// 				}
+							
+			// 				this.res = '请求结果 : ' + JSON.stringify(res);
+			// 			}).catch((err)=>{
+			// 				this.loading = false;
+			// 				console.log('request fail', err);
+			// 			})	
+			// },
+			goSaleRank(tableData, tableColumns,righttableData, righttableColumns){
+				uni.navigateTo({
+					url:"/pages/common/tableDetail3?leftTableData= " + JSON.stringify(tableData) + '&leftTableColumns=' + JSON.stringify(tableColumns) 
+													+"&rightTableData= " + JSON.stringify(righttableData) + '&rightTableColumns=' + JSON.stringify(righttableColumns)
+				});
+			}
 		},
 		mounted(){
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.getServerData();
 			this.showView();
 		},
 		watch: {
 			'$route':'showView'
 		},
-		created() {
-			this.param = this.model;
-			this.getServerData();
-			// this.showView();
-		},
 	}
 </script>
 
 <style>
-	.box-contaniner1{
-		width: 100%;
-		margin: 10px 10px 10px 10px;
-	}
 	.box-contaniner{
 		width: 100%;
+		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
 	
     /* 将三个内容view的display设置为none(隐藏) */
@@ -496,19 +453,19 @@
         flex-grow: 1;
         text-align: center;
     }
-    .end-cont{
+   .end-cont{
 		display: none;
 		background: #FFFFFF;
     }
-    .btna{
-		color: #000000;
-		background: #ebebeb;
-		/* padding:0px 5rpx 0px 5rpx; */
+   .btna{
+		color: #FFFFFF;
+		background:#ebebeb;	
     }
     .dis{
         display: block;
+		color: #000000;
+		background:#FFFFFF;
     } 
-	
 	
 	.rankTable{
 		width: 100%;
@@ -537,23 +494,16 @@
 	
 	.example {
 		/* line-height: 40px; */
-		/* font-weight: bold; */
+		flex-direction: row;
+		font-weight: bold;
 		border-color:#FFFFFF;
 	}
-	
-	button {
-		width: 75%;
-	    margin-top: 30rpx;
-	    margin-bottom: 30rpx;
-		font-size: 30rpx;
-	}
-	
 	.left-row-box {
 		display: flex;
 		width: 65%;
 		margin: 0rpx 5rpx;
 		/* padding: 0 10rpx; */
-		/* background-color: #ebebeb; */
+		background-color: rgba(220, 241, 250 ,0.5);
 		flex-direction: column;
 	}
 	.right-row-box {
@@ -561,7 +511,7 @@
 		width: 35%;
 		margin: 0rpx 5rpx;
 		/* padding: 0 10rpx; */
-		/* background-color: #ebebeb; */
+		background-color: rgba(250, 225, 220 ,0.5);
 		flex-direction: column;
 	}
 	.sale-row-2{
@@ -569,6 +519,15 @@
 		flex-direction: row;	
 		margin: 20rpx 10rpx;
 		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
+	}
+	
+	button {
+		width: 75%;
+	    margin-top: 30rpx;
+	    margin-bottom: 30rpx;
+		font-size: 30rpx;
+		background-color: rgba(220, 241, 250,0.5);
+		color: #007AFF;
 	}
 
 </style>

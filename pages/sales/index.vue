@@ -150,7 +150,8 @@
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName		
+				this.selfParam.provinceCenterName=areaName	
+					this.selfParam.token=getApp().globalData.token
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			goCompare(){

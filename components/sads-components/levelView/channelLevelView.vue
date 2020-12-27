@@ -95,6 +95,11 @@
 					},
 				pieData1: {series: [],
 					},
+				pieData2: {					//饼状图数据
+					series: [],
+					},
+				pieData3: {series: [],
+					},
 				tableData: [],
 				tableColumns: [{
 						title: "排名",
@@ -143,12 +148,12 @@
 		},
 		methods: {
 			showView(){	
-				this.$nextTick(() => {
-					this.$refs['levelRingChart0'].showCharts();
-					this.$refs['progress_0'].showProgress(this.pieData);
-					this.$refs['levelRingChart1'].showCharts();
-					this.$refs['progress_1'].showProgress(this.pieData1);
-				})
+				// this.$nextTick(() => {
+				// 	this.$refs['levelRingChart0'].showCharts();
+				// 	this.$refs['progress_0'].showProgress(this.pieData);
+				// 	this.$refs['levelRingChart1'].showCharts();
+				// 	this.$refs['progress_1'].showProgress(this.pieData1);
+				// })
 				
 				// if(this.btnnum==0){
 				// 	this.$refs['levelRingChart0'].showCharts();
@@ -262,38 +267,36 @@
 			getPieData(type){
 				var url = '/pentaho/shows/getShowPassSalesProp';
 				var param = this.createParam(type)
-				var that =this;
+				// var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+
 					var data = res.data.data;
-				   
+				    if(data==null){
+						return
+					}
 					var series = []
 					for(var i=0;i<data.length;i++){	
 						var jsonData = {}
-						that.levelList = data[i].customsName						
+						this.levelList = data[i].customsName						
 						jsonData.name=data[i].customsName;
 						jsonData.data=data[i].values[0];
 						series[i]=jsonData					
 					}
 					
 					if(type=='足球'){
-						that.pieData.series=series
+						this.pieData.series=series
 						this.$refs['levelRingChart0'].showCharts();
 						this.$refs['progress_0'].showProgress(this.pieData);
 					}else if(type=='篮球'){
-						that.pieData1.series=series
+						this.pieData1.series=series
 						this.$refs['levelRingChart1'].showCharts();
 						this.$refs['progress_1'].showProgress(this.pieData1);
 					}
 					
-					console.log('request getTodSalesAmount', that.pieData);				
-					that.res = '请求结果 : ' + JSON.stringify(res);
+					console.log('request getTodSalesAmount', this.pieData);				
+					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);

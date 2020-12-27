@@ -68,13 +68,13 @@
 							    name1:name1,
 								value1:(this.leftSeries[i].data/format.value).toFixed(2) +format.name+pre,
 								name2:'占比',
-								value2: ((this.leftSeries[i].data/totalLeft)*100).toFixed(2) + '%'}
+								value2: totalLeft==0?'0%':((this.leftSeries[i].data/totalLeft)*100).toFixed(2) + '%'}
 								
 					var json2 = {title:this.rightSeries[i].name,
 							    name1:name1,
 								value1:(this.rightSeries[i].data/format1.value).toFixed(2) +format1.name+pre,
 								name2:'占比',
-								value2: ((this.rightSeries[i].data/totalRight)*100).toFixed(2) + '%'}	
+								value2: totalRight==0?'0%':((this.rightSeries[i].data/totalRight)*100).toFixed(2) + '%'}	
 					this.leftData[i] = json1
 					this.rightData[i] = json2
 				}				

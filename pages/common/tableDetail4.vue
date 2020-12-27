@@ -1,8 +1,8 @@
 <template>
 	<view style="width: 100%;">
-		<view class="linechart-tab">
-		　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'" style="width: 25%;">销量</view>
-		  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'" style="width: 25%;">占比</view>
+		<view class="linechart-tab" style="align-items: center;">
+		　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'" style="width: 50%;">销量</view>
+		  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'" style="width: 50%;">占比</view>
 		</view>
 		<view class="end-cont" :class="{dis:btnnum == 0}">
 			<view class="sale-row-2">

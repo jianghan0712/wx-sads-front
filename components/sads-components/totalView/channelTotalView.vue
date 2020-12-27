@@ -87,7 +87,7 @@
 						</view>
 					</view>
 				</view>
-				<view v-if="arcbarNum == 1" >		　						 
+				<view v-if="arcbarNum == 1" >	　						 
 					<view class="arcbarChart-content">
 						<view class="arcbar" style="width: 50%;">
 							<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
@@ -179,30 +179,30 @@
 				today:dateUtils.getToday(),
 				totalData:{},	
 				footballData:{
-					// big1:{
-					// 			name:"销量",
-					// 			value:"--",
-					// 			left:{name:"周同比",value:"--"},
-					// 			right:{name:"环比",value:"--"},
-					// 				},
-					// 		  big2:{name:"占比",value:"--",
-					// 			left:{name:"周同比",value:"--"},
-					// 			right:{name:"环比",value:"--"},
-					// 		},
-							},		
+					big1:{
+						name:"销量",
+						value:"--",
+						left:{name:"周同比",value:"--"},
+						right:{name:"环比",value:"--"},
+							},
+					big2:{name:"占比",value:"--",
+						left:{name:"周同比",value:"--"},
+						right:{name:"环比",value:"--"},
+					},
+				},		
 				basketballData:{
-					// big1:{name:"销量",value:"--",
-					// 				left:{name:"周同比",value:"--"},
-					// 				right:{name:"环比",value:"--"},
-					// 				},
-					// 		 big2:{name:"占比",value:"--",
-					// 							left:{name:"周同比",value:"--"},
-					// 							right:{name:"环比",value:"--"},
-					// 							},
+					big1:{name:"销量",value:"--",
+						left:{name:"周同比",value:"--"},
+						right:{name:"环比",value:"--"},
+					},
+				    big2:{name:"占比",value:"--",
+						left:{name:"周同比",value:"--"},
+						right:{name:"环比",value:"--"},
+					},
 				},	
 				btnnum: 0,
 				arcbarNum: 0,
-				gateInfo:"",
+				gateInfo:{},
 				ballType:'足球',
 				lineData2: {series:[
 							
@@ -211,8 +211,8 @@
 							
 					],},
 				lineData3:{},
-				arcbar0: {},
-				arcbar1: {},
+				arcbar0: {series:[{name: '足球',data: 0}]},
+				arcbar1: {series:[{name: '篮球',data: 0}]},
 				shopData: {shop:{sum:0,tongbi:0,huanbi:0},
 						   rate:{sum:0,tongbi:0,huanbi:0}},
 				returnData: {rate:{sum:0,tongbi:0,huanbi:0}},
@@ -256,15 +256,15 @@
 		},
 		methods: {
 			showView(){
-				this.$nextTick(() => {
-					this.$refs['arcbar0'].showCharts();
-					this.$refs['arcbar1'].showCharts();
-					this.$refs['lineData2'].showCharts();
-					this.$refs['lineData1'].showCharts();
-					this.$refs['dataContain'].showDataContainer();
-					this.$refs['dataContain2'].showDataContainer();
-					this.$refs['dataContain3'].showDataContainer();
-				})
+				// this.$nextTick(() => {
+				// 	this.$refs['arcbar0'].showCharts();
+				// 	this.$refs['arcbar1'].showCharts();
+				// 	this.$refs['lineData2'].showCharts();
+				// 	this.$refs['lineData1'].showCharts();
+				// 	this.$refs['dataContain'].showDataContainer();
+				// 	this.$refs['dataContain2'].showDataContainer();
+				// 	this.$refs['dataContain3'].showDataContainer();
+				// })
 			},
 			returnFromDatePicker(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -430,6 +430,13 @@
 					var that =this;
 					console.log("getShowsGameSales :",data) 
 					if(data==null){
+						if(type=='足球'){	
+							this.$refs['arcbar0'].showCharts();
+							this.$refs['dataContain2'].showDataContainer();
+						}else{
+							this.$refs['arcbar1'].showCharts();
+							this.$refs['dataContain3'].showDataContainer();
+						}
 						return;
 					}
 					var tempObj;
@@ -440,7 +447,7 @@
 					}
 				
 					var format0 = numberFun.formatCNumber(tempObj[0]);
-					var amount0 = (tempObj[0]/format0.value).toFixed(2) + format0.name +'元';
+					var amount0 = (tempObj[0]/format0.value) + format0.name +'元';
 					left1.value = tempObj[1];
 					right1.value = tempObj[2];
 					big1.value = amount0;
@@ -516,14 +523,9 @@
 				param.provincialId = this.gateInfo.provincialId
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+
 					var data = res.data.data;	
-					if(null==data[0]){
+					if(null==data){
 						this.shopData.rate.sum=0;
 					}else{
 						this.shopData.rate.sum=data[0];
@@ -547,14 +549,12 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
 					var data = res.data.data;
-					if(null==data[0]){
+					if(null==data){
 						this.returnData.rate.sum=0;
+						this.returnData.rate.tongbi=0;
+						this.returnData.rate.huanbi=0
+						return
 					}else{
 						this.returnData.rate.sum=data[0];
 					}

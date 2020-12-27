@@ -17,7 +17,7 @@
 			<totalViewCompare ref="totalViewCompare"></totalViewCompare>
 		</block> 
 		<block v-if="tabIndex==1">
-			<gameView ref="gameView" :model="selfParam"></gameView>
+			<gameViewCompare ref="gameViewCompare" :model="selfParam"></gameViewCompare>
 		</block>
 		<block v-if="tabIndex==2">
 			<levelViewCompare ref="levelViewCompare" ></levelViewCompare>
@@ -142,7 +142,8 @@
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName	
-
+				this.selfParam.token=getApp().globalData.token
+ 
 				if(leftDate==null || rightDate==null){
 					return
 				}

@@ -623,6 +623,8 @@
 					if(data==null || data.length==0){
 						return;
 					}
+					this.tableData=[]
+					this.tableDataDetail=[]
 					var format0 = numberFun.formatCNumber(data[0][1]);		
 					for(var i=0;i<data.length;i++){
 						var json = {id:i+1, 
@@ -737,6 +739,8 @@
 					if(data==null || data.length==0){
 						return;
 					}
+					this.tableData2=[]
+					this.tableDataDetail2=[]
 					for(var i=0;i<data.length;i++){
 						var json = {id:i+1, 
 									area:data[i][0], 

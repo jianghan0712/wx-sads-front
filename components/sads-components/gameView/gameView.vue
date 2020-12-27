@@ -16,7 +16,7 @@
 						<view @tap="changeMid('票数')" :class="arcbarNumMid =='票数'?'btna':'hide'" >票数</view>
 					</view>
 				</view>		
-				<line-chart ref="lineData1" canvasId="lineData1" :dataAs="lineData1" />
+				<area-chart ref="lineData1" canvasId="lineData1" :dataAs="lineData1" />
 			</view>	
 
 			<view >
@@ -58,6 +58,7 @@
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import PieChart from '@/components/basic-chart/PieChart.vue';
 	import RingChart from '@/components/basic-chart/RingChart.vue';
+	import AreaChart from '@/components/basic-chart/AreaChart.vue';
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
@@ -69,7 +70,7 @@
 				LineChart,
 				PieChart,
 				RingChart,
-				dataContainer,vTable
+				dataContainer,vTable,AreaChart
 			},
 			props: {
 				param:{
@@ -500,6 +501,8 @@
 						if(data==null || data.length==0){
 							return 
 						}
+						that.tableData=[]
+						that.tableDataAll=[]
 						var format0 = numberFun.formatCNumber(data[0][2]); 
 						for(var i=0;i<data.length;i++){
 							var obj={id:i+1,area:data[i][0],zhanbi:data[i][1]+"%",count:(data[i][2]/format0.value).toFixed(2)};
@@ -549,7 +552,11 @@
 						urlAPI.getRequest(url, param).then((res)=>{
 							this.loading = false;
 							var data =res.data.data;	
-							
+							if(data==null){
+								return
+							}
+							that.tableData1=[]
+							that.tableDataAll1=[]
 							for(var i=0;i<data.length;i++){
 								var cellClassName={};
 								if(data[i][2]<0){

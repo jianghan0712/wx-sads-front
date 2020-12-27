@@ -230,17 +230,17 @@
 		},
 		methods: {
 			showView(){
-				console.log("ticket showView" ,this.pieData);
-				this.$nextTick(() => {		
-					this.$refs['pieData'].showCharts();
-					this.$refs['pieData1'].showCharts();
-					this.$refs['pieData2'].showCharts();
-					this.$refs['pieData3'].showCharts();
-					this.$refs['pieData4'].showCharts();
-					this.$refs['pieData5'].showCharts();
+				// console.log("ticket showView" ,this.pieData);
+				// this.$nextTick(() => {		
+				// 	this.$refs['pieData'].showCharts();
+				// 	this.$refs['pieData1'].showCharts();
+				// 	this.$refs['pieData2'].showCharts();
+				// 	this.$refs['pieData3'].showCharts();
+				// 	this.$refs['pieData4'].showCharts();
+				// 	this.$refs['pieData5'].showCharts();
 
-					this.$refs['compareAmount'].showDataContainer(this.compareAmount);
-				});
+				// 	this.$refs['compareAmount'].showDataContainer(this.compareAmount);
+				// });
 			},
 			getServerData() {
 				this.getPieData('竞彩');

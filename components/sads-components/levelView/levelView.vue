@@ -323,6 +323,9 @@
 					if(data==null ||data.length==0){
 						return;
 					}
+					that.tableData=[]
+					this.tableDataDetail=[]
+					
 					var format0 = numberFun.formatCNumber(data[0][2]); 
 					var series = []
 					for(var i=0;i<data.length;i++){	

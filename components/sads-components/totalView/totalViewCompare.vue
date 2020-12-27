@@ -553,6 +553,10 @@
 							if(data==null || data.length==0){
 								return;
 							}
+							this.leftTableData= []
+							this.rightTableData = []
+							this.leftTableDataDetail= []
+							this.rightTableDataDetail = []
 							var format0 = numberFun.formatCNumber(data[0][2]);	
 							var format1 = numberFun.formatCNumber(data[0][4]);	
 							this.leftTableColumns=[									{
@@ -607,6 +611,10 @@
 							if(data==null || data.length==0){
 								return;
 							}
+							this.leftReturnTableData= []
+							this.rightReturnTableData= []
+							this.leftReturnTableDataDetail = []
+							this.rightReturnTableDataDetail = []
 							this.leftReturnTableColumns=[									{
 										title: '省份',
 										key: 'area',

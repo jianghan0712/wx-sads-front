@@ -25,26 +25,26 @@
 			</view>		
 			<view class="end-cont" :class="{dis:btnnum == 0}">
 				<view class="end-cont" :class="{dis:arcbarNumTop =='足球'}">
-					<line-chart ref="lineData0" canvasId="index_line_0" :dataAs="lineData0" 
+					<area-chart ref="lineData0" canvasId="index_line_0" :dataAs="lineData0" 
 								:xAxisAs="{scrollShow:false}" 
-								:yAxisAs="{formatter: {type: 'number', name:'百万元',fixed: 0}}"/>
+								:yAxisAs="{formatter: {type: 'number', name:'万元',fixed: 0}}"/>
 				</view>
 				<view class="end-cont" :class="{dis:arcbarNumTop =='篮球'}">
-					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
+					<area-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
 								:xAxisAs="{scrollShow:false}" 
-								:yAxisAs="{formatter: {type: 'number', name:'百万元',fixed: 0}}"/>
+								:yAxisAs="{formatter: {type: 'number', name:'万元',fixed: 0}}"/>
 				</view>
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
 				<view class="end-cont" :class="{dis:arcbarNumTop =='足球'}">
-					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 
+					<area-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 
 								:xAxisAs="{scrollShow:false}" 
-								:yAxisAs="{formatter: {type: 'number', name:'百万元',fixed: 0}}"/>
+								:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
 				</view>
 				<view class="end-cont" :class="{dis:arcbarNumTop =='篮球'}">
-					<line-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" 
+					<area-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" 
 								:xAxisAs="{scrollShow:false}" 
-								:yAxisAs="{formatter: {type: 'number', name:'百万元',fixed: 0}}"/>
+								:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
 				</view>
 			</view>		
 		</view>
@@ -69,67 +69,6 @@
 				<button  @click="toRingAll()">查看全部</button>
 			</view>
 		</view>
-		
-		<!-- 竞彩足篮球销量及占比对比 -->
-		<view class="box-contaniner">
-			<view class="container-title">
-				<view>各地区{{arcbarNumTop}}销量及占比对比</view>
-			</view>
-			<view class="example end-cont" :class="{dis:arcbarNumTop =='足球'}">
-				<view class="sale-row-2">
-					<view class="left-row-box">
-						<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="#FFFFFF"></v-table>
-					</view>
-					<view class="right-row-box">
-						<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
-					</view>
-				</view>			
-			</view>
-			<view class="example end-cont" :class="{dis:arcbarNumTop =='篮球'}">
-				<view class="sale-row-2">
-					<view class="left-row-box">
-						<v-table :columns="leftTableColumns" :list="leftTableData2"  border-color="#FFFFFF"></v-table>
-					</view>
-					<view class="right-row-box">
-						<v-table :columns="rightTableColumns" :list="rightTableData2"  border-color="#FFFFFF"></v-table>
-					</view>
-				</view>			
-			</view>
-			<view style="text-align: center;">
-				<button  @click="toAll()">查看全部</button>
-			</view>
-		</view>		
-		
-		<!-- 各地区销量排行-->
-		<view class="box-contaniner">
-			<view class="container-title">
-				<view>各地区{{arcbarNumTop}}返奖情况对比</view>
-			</view>
-			<view class="example end-cont" :class="{dis:arcbarNumTop =='足球'}">
-				<view class="sale-row-2">
-					<view class="left-row-box">
-						<v-table :columns="leftTableColumns1" :list="leftTableData1"  border-color="#FFFFFF"></v-table>
-					</view>
-					<view class="right-row-box">
-						<v-table :columns="rightTableColumns1" :list="rightTableData1"  border-color="#FFFFFF"></v-table>
-					</view>
-				</view>			
-			</view>
-			<view class="example end-cont" :class="{dis:arcbarNumTop =='篮球'}">
-				<view class="sale-row-2">
-					<view class="left-row-box">
-						<v-table :columns="leftTableColumns1" :list="leftTableData3"  border-color="#FFFFFF"></v-table>
-					</view>
-					<view class="right-row-box">
-						<v-table :columns="rightTableColumns1" :list="rightTableData3"  border-color="#FFFFFF"></v-table>
-					</view>
-				</view>			
-			</view>
-			<view style="text-align: center;">
-				<button  @click="toAll1()">查看全部</button>
-			</view>
-		</view>
-		
 		<slot />
 	</view>
 </template>
@@ -138,6 +77,8 @@
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import ArcbarChart from '@/components/basic-chart/ArcbarChart.vue';
 	import vTable from "@/components/table/table.vue";
+	import AreaChart from '@/components/basic-chart/AreaChart.vue';
+	import RingChart from '@/components/basic-chart/RingChart.vue';
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
 	import dataContainerTwo from '@/components/sads-components/dataContainerTwo.vue';
 	import dataContainerTwoCol from '@/components/sads-components/dataContainerTwoCol.vue';
@@ -150,7 +91,9 @@
 		components: {
 			LineChart,
 			ArcbarChart,
+			RingChart,
 			vTable,
+			AreaChart,
 			dataContainer,
 			dataContainerTwo,
 			dataContainerTwoCol,dataContainerTwoColTwo
@@ -485,7 +428,7 @@
 							 dateTimeStartCom: this.selfParam.compareDate.dateRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.dateRight.endDate,
 							 dateFlag:"1",
-							 regionId:this.selfParam.provinceCenterId,
+							 showNumber:this.selfParam.shopNo,
 							 token:getApp().globalData.token }
 				}else if(dateType=='week'){
 					param = {dateTimeStart: this.selfParam.compareDate.weekLeft.startDate,
@@ -493,7 +436,7 @@
 							 dateTimeStartCom: this.selfParam.compareDate.weekRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.weekRight.endDate,
 							 dateFlag:"2",
-							 regionId:this.selfParam.provinceCenterId,
+							 showNumber:this.selfParam.shopNo,
 							 token:getApp().globalData.token }
 				}else if(dateType=='month'){
 					param = {dateTimeStart: this.selfParam.compareDate.monthLeft.startDate,
@@ -501,7 +444,7 @@
 							 dateTimeStartCom: this.selfParam.compareDate.monthRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
 							 dateFlag:"3",
-							 regionId:this.selfParam.provinceCenterId,
+							 showNumber:this.selfParam.shopNo,
 							 token:getApp().globalData.token }
 				}else if(dateType=='year'){
 					param = {dateTimeStart: this.selfParam.compareDate.yearLeft.startDate,
@@ -509,7 +452,7 @@
 							 dateTimeStartCom: this.selfParam.compareDate.monthRight.startDate,
 							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
 							 dateFlag:"4",
-							 regionId:this.selfParam.provinceCenterId,
+							 showNumber:this.selfParam.shopNo,
 							 token:getApp().globalData.token }
 				}	
 				console.log("createParam end:",param)
@@ -517,15 +460,16 @@
 			},
 			// 获取最上层的两个tab
 			getDataSet(){
-				var url = '/pentaho/gamesContrast/getGamesContrastSales';
+				var url = '/pentaho/shows/gamesContrast/getComGamesContrastSales';
 				var param = this.createParam();
+				param.regionId =this.selfParam.provinceCenterId
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					/* “BK”:[11230, 7815, 1245,4247](篮球销量,篮球票数,对比销量,对比票数),
 						“FB”:[11012, 7815, 1245,4247](足球销量,足球票数,对比销量,对比票数) */
 					var data = res.data.data;
-					var fb =data.fb;
-					var bk = data.bk;
+					var fb =data.FB;
+					var bk = data.BK;
 					
 					//销量 票数 对比销量  对比票数
 					var formatfb0=numberFun.formatCNumber(fb[0]);
@@ -546,7 +490,7 @@
 								   title2:'票数（'+formatfb3.name + ' 张）',amount2:(fb[3]/formatfb3.value).toFixed(2)};
 					var leftbk = {title1:'销量（'+formatbk0.name + ' 元）',amount1:(bk[0]/formatbk0.value).toFixed(2),
 								  title2:'票数（'+formatbk1.name + ' 张）',amount2:(bk[1]/formatbk1.value).toFixed(2)};
-					var rightbk = {title1:'销量（'+formatbk2.name + ' 元）',amount1:(bk[5]/formatbk2.value).toFixed(2),
+					var rightbk = {title1:'销量（'+formatbk2.name + ' 元）',amount1:(bk[2]/formatbk2.value).toFixed(2),
 								  title2:'票数（'+formatbk3.name + ' 张）',amount2:(bk[3]/formatbk3.value).toFixed(2)};
 									
 					this.$set(this.basketballData, 'left', leftbk);
@@ -567,10 +511,33 @@
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
+					var leftfb = {title1:'销量（元）',amount1:0,
+								  title2:'票数（张）',amount2:0};
+					var rightfb = {title1:'销量（元）',amount1:0,
+								   title2:'票数（张）',amount2:0};
+					var leftbk = {title1:'销量（元）',amount1:0,
+								  title2:'票数（张）',amount2:0};
+					var rightbk = {title1:'销量（元）',amount1:0,
+								  title2:'票数（张）',amount2:0};
+									
+					this.$set(this.basketballData, 'left', leftbk);
+					this.$set(this.basketballData, 'right', rightbk);
+					this.$set(this.footballData, 'left', leftfb);
+					this.$set(this.footballData, 'right', rightfb);
+					try{
+						this.$refs['dataContain'].showDataContainer();
+					} catch (e) {
+						
+					};
+					try{
+						this.$refs['dataContain1'].showDataContainer();
+					} catch (e) {
+						
+					};
 				})
 			},
 			getLinesData(){
-				var url = '/pentaho/gamesContrast/getComGamesTrendChart';
+				var url = '/pentaho/shows/gamesContrast/getShowComGamesTrend';
 				var param =this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
@@ -702,7 +669,7 @@
 				});
 			},
 			getRingData(){
-				var url = '/pentaho/gamesContrast/getGamesContrastSalesProp';
+				var url = '/pentaho/shows/gamesContrast/getShowGamesSalesPropCom';
 				var param =this.createParam();
 				param.gameFlag=1;
 				urlAPI.getRequest(url, param).then((res)=>{
@@ -1109,7 +1076,6 @@
 				this.getDataSet();
 				this.getLinesData();
 				this.getRingData();
-				this.loadTableData()
 			},
 			change(e) {
 			      this.btnnum = e
@@ -1166,23 +1132,23 @@
 				});
 			},
 			toRingAll(){
-				var dataList={};
 				if(this.arcbarNumTop =='篮球'){
-					dataList = this.arcbarAll2
+					uni.navigateTo({
+						url:"/pages/common/ringDetailTwo?type=ticket&leftPie=" + JSON.stringify(this.arcbar1) + "&rightPie="+ JSON.stringify(this.arcbar3)
+					});
 				}else {
-					dataList = this.arcbarAll0
+					uni.navigateTo({
+						url:"/pages/common/ringDetailTwo?type=ticket&leftPie=" + JSON.stringify(this.arcbar0) + "&rightPie="+ JSON.stringify(this.arcbar2)
+					});
 				}
-				uni.navigateTo({
-					url:'/pages/common/ringAllDetail?dataList='+JSON.stringify(this.dataList),
-				});
 			},	
 			valueToPercent(value) {
 				if(value>=0){
-					result = "+" + result + "%";
+					value = "+" + value + "%";
 				}else{
-					result = result + "%";
+					value = value + "%";
 				}
-				return result;
+				return value;
 			},
 			valueToPercent2(value) {
 				let temp = value;
