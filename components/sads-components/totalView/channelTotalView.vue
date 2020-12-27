@@ -15,11 +15,11 @@
 					</view>
 				</view>		
 				<view v-if="btnnum == 0">		
-					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
+					<area-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
 								:xAxisAs="{scrollShow:false, gridEval:(lineData2.categories.length / 4).toFixed(0)}"/>
 				</view>
 				<view v-if="btnnum == 1">		　
-					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
+					<area-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
 								:xAxisAs="{scrollShow:false, gridEval:(lineData1.categories.length / 4).toFixed(0)}"/>
 				</view>		
 			</view>
@@ -135,7 +135,7 @@
 			<block v-if="selfParam.businessDate.dateType!='date'">
 				<view class="shop-title">返奖率走势</view>
 				<view class="box-contaniner" >
-					<line-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3"  
+					<area-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3"  
 								:xAxisAs="{scrollShow:false, gridEval:(lineData3.categories.length / 4).toFixed(0)}"
 								:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
 				</view>
@@ -148,6 +148,7 @@
 
 <script>
 	import LineChart from '@/components/basic-chart/LineChart.vue';
+	import AreaChart from '@/components/basic-chart/AreaChart.vue';
 	import ArcbarChart from '@/components/basic-chart/ArcbarChart.vue';
 	import vTable from "@/components/table/table.vue";
 	import dataContainer from '@/components/sads-components/dataContainer.vue';
@@ -163,7 +164,7 @@
 			ArcbarChart,
 			vTable,
 			dataContainer,
-			dataContainerTwo
+			dataContainerTwo,AreaChart
 		},
 		props: {
 			param:{
@@ -436,7 +437,7 @@
 					}else{
 						tempObj = data.basketball
 					}
-					
+				
 					var format0 = numberFun.formatCNumber(tempObj[0]);
 					var amount0 = (tempObj[0]/format0.value).toFixed(2) + format0.name +'元';
 					left1.value = tempObj[1];

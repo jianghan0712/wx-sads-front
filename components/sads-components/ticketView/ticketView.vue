@@ -9,7 +9,7 @@
 			<block v-if="selfParam.businessDate.dateType!='date'">
 				<view class="box-contaniner">
 					<view class="container-title">单票金额走势</view>
-					<line-chart ref="lineData5" canvasId="index_line" :dataAs="lineData"
+					<area-chart ref="lineData5" canvasId="index_line" :dataAs="lineData"
 								:xAxisAs="{scrollShow:false, gridEval:(lineData.categories.length / 4).toFixed(0)}" 
 								:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
 				</view>
@@ -64,10 +64,11 @@
 	import numberFun from '@/common/tools/number.js';
 	import commonFun from '@/common/tools/watcher.js';
 	import LineChart from '@/components/basic-chart/LineChart.vue';
+	import AreaChart from '@/components/basic-chart/AreaChart.vue';
 	
 	export default {
 		components: {
-			ticketData,RingChart,vTable,LineChart
+			ticketData,RingChart,vTable,LineChart,AreaChart
 		},
 		props: {
 			param:{
@@ -270,7 +271,7 @@
 					var data = res.data.data;
 					var list=[];	
 					for(var i=0; i<data.length; i++){
-						list[i]={name:data[i].proValueName,data:data[i].values[0]};
+						list[i]={name:data[i].proValueName,data:data[i].values[0]};					
 					}
 					if(type=='竞彩'){
 						this.pieData.series=list

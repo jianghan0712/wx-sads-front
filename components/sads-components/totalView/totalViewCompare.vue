@@ -17,11 +17,11 @@
 				</view>
 			</view>		
 			<view class="end-cont" :class="{dis:btnnum == 0}">		
-				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
+				<area-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" />
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
-				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
+				<area-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
 							:xAxisAs="{scrollShow:false}" />
 			</view>		
 		</view>
@@ -63,13 +63,13 @@
 		<block v-if="selfParam.compareDate.dateType!='date'">
 			<view class="box-contaniner">
 				<view class="shop-title">{{selfParam.compareDate.viewLeft}}返奖率走势</view>
-				<line-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" :colors="colorList"
+				<area-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" 
 							:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
 			</view>	
 			<view class="box-contaniner">
 				<view class="shop-title">{{selfParam.compareDate.viewRight}}返奖率走势</view>
-				<line-chart ref="lineData4" canvasId="index_line_4" :dataAs="lineData4" :colors="colorList"
+				<area-chart ref="lineData4" canvasId="index_line_4" :dataAs="lineData4" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" 
 							:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
 			</view>	
@@ -107,6 +107,7 @@
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
+	import AreaChart from '@/components/basic-chart/AreaChart.vue';
 	
 	export default {
 		name: 'Index',
@@ -116,7 +117,7 @@
 			vTable,
 			dataContainer,
 			dataContainerTwo,
-			dataContainerTwoCol,dataContainerTwoColTwo,dataContainerTwoColFour
+			dataContainerTwoCol,dataContainerTwoColTwo,dataContainerTwoColFour,AreaChart
 		},
 		props: {
 			model:{
