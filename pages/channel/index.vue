@@ -273,7 +273,7 @@
 									$width:"50px",
 								},
 								{
-									title: t,
+									title: '省份',
 									key: 'area',
 									$width:"100px"
 								},

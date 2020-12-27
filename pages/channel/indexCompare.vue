@@ -50,13 +50,37 @@
         },
         data() {
             return {
-				selfParam:{ provinceCenterId:0,
-							businessDate:dateUtils.getToday(),
-							startDate:'',
-							endDate:'',
-							cityCenterId:1,
-							userId:1141,
-							countyCenterId:1
+				selfParam:{
+					token:'',
+					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
+					cityCenterId:'',
+					provinceCenterName:'',
+					countyCenterId:'',	
+					compareType:'date',
+					compareFlag:false,
+					businessDate:{
+						dateType:'',// date/week/month/year
+						view:'',//用于展示日期、年、月等
+						date:{startDate:'', endDate:''},
+						week:{startDate:'', endDate:''},
+						month:{startDate:'', endDate:''},
+						year:{startDate:'', endDate:''},
+					},
+					compareDate:{
+						dateType:'date',
+						viewLeft:'',//用于展示日期、年、月等
+						viewRight:'',
+						dateLeft:{startDate:'', endDate:''},
+						dateRight:{startDate:'', endDate:''},
+						weekLeft:{startDate:'', endDate:''},
+						weekRight:{startDate:'', endDate:''},
+						monthLeft:{startDate:'', endDate:''},
+						monthRight:{startDate:'', endDate:''},
+						yearLeft:{startDate:'', endDate:''},
+						yearRight:{startDate:'', endDate:''},
+					},	
+					userId:'',			
+					selfProvinceCenterId:''//存登录时候的id
 				},
 				goodDatePickerOption3:'compare',
                 newsList: [],
@@ -165,8 +189,8 @@
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName	
-				this.selfParam.token=getApp().globalData.token
-				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
+				
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 				
 			},
             getList(index) {

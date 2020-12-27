@@ -48,17 +48,18 @@
 		data() {
 			return {
 				dataList:{
-					title:{nameOne:'竞彩单票金额（元）',nameTwo:'足球单票金额（元）',nameThree:'篮球单票金额（元）'},
-					left:{valueOne:'0元',valueTwo:'0元',valueThree:'0元'},
-					right:{valueOne:'0元',valueTwo:'0元',valueThree:'0元'},
+					// title:{nameOne:'竞彩单票金额（元）',nameTwo:'足球单票金额（元）',nameThree:'篮球单票金额（元）'},
+					// left:{valueOne:'0元',valueTwo:'0元',valueThree:'0元'},
+					// right:{valueOne:'0元',valueTwo:'0元',valueThree:'0元'},
 				}
 			}
 		},
 		methods: {
-			showDataContainer() {			
-				this.dataList = this.dataAs;
+			showDataContainer(data) {			
+				this.dataList = data;
 				// var str = JSON.stringify(this.dataAs);
-				console.log("showDataContainer:", this.dataAs);
+				console.log("showDataContainer:", data);
+				console.log("this.dataList:", this.dataList);
 			},
 		},
 	}
@@ -113,14 +114,14 @@
 	.big-text{
 		text-align: left;
 		margin: 15rpx 5rpx;
-		color: #FFFFFF;
+		color: #000000;
 		font-size: 36rpx;
 	}
 	
 	.small-text{
 		text-align: left;
 		margin: 15rpx 5rpx;
-		color: #FFFFFF;
+		color: #000000;
 		font-size: 30rpx;
 	}
 	

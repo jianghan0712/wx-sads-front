@@ -6,10 +6,6 @@
 					<text class="big-text">{{dataList.left.title1}}</text>
 					<text class="big-text">{{dataList.left.amount1}}</text>
 				</view>
-				<view class="column-box">
-					<text class="big-text">{{dataList.left.title2}}</text>
-					<text class="big-text">{{dataList.left.amount2}}</text>
-				</view>
 			</view>			
 		</view>
 		<view class="row-box">
@@ -17,10 +13,6 @@
 				<view class="column-box">
 					<text class="big-text">{{dataList.right.title1}}</text>
 					<text class="big-text">{{dataList.right.amount1}}</text>
-				</view>
-				<view class="column-box">
-					<text class="big-text">{{dataList.right.title2}}</text>
-					<text class="big-text">{{dataList.right.amount2}}</text>
 				</view>
 			</view>			
 		</view>
@@ -45,6 +37,8 @@
 			showDataContainer() {			
 				this.dataList = this.dataAs;
 				// var str = JSON.stringify(this.dataAs);
+				console.log("col showDataContainer data:", this.dataAs);
+				console.log("col showDataContainer dataList:", this.dataList);
 			},
 		},
 	}

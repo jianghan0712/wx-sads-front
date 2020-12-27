@@ -2,6 +2,9 @@
 	<view>
 		<view class="box-contaniner">
 			<dataContainerTwoCol ref="dataContainTwo" :dataAs="topData"></dataContainerTwoCol>
+			<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today && selfParam.provinceCenterId!=0">
+				<dataContainerTwoColFour ref="rankData" :dataAs="rankData"></dataContainerTwoColFour>
+			</block>
 		</view>
 		
 		<!-- 折线图区域-->
@@ -15,13 +18,11 @@
 			</view>		
 			<view class="end-cont" :class="{dis:btnnum == 0}">		
 				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
-							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
+							:xAxisAs="{scrollShow:false}" />
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
 				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
-							:xAxisAs="{scrollShow:false}" 
-							:yAxisAs="{formatter: {type: 'number', name:'张',fixed: 0}}"/>
+							:xAxisAs="{scrollShow:false}" />
 			</view>		
 		</view>
 		
@@ -46,7 +47,7 @@
 			<view class="example">
 				<view class="sale-row-2">
 					<view class="left-row-box">
-						<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="#FFFFFF"></v-table>
+						<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
 					</view>
 					<view class="right-row-box">
 						<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
@@ -54,6 +55,41 @@
 				</view>			
 			</view>
 		</view>
+		<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today && selfParam.provinceCenterId!=0">
+			<view class="shop-title">返奖率情况</view>
+			<dataContainerTwoColFour ref="returnData" :dataAs="returnData"></dataContainerTwoColFour>
+		</block>
+		
+		<block v-if="selfParam.compareDate.dateType!='date'">
+			<view class="box-contaniner">
+				<view class="shop-title">{{selfParam.compareDate.viewLeft}}返奖率走势</view>
+				<line-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" :colors="colorList"
+							:xAxisAs="{scrollShow:false}" 
+							:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
+			</view>	
+			<view class="box-contaniner">
+				<view class="shop-title">{{selfParam.compareDate.viewRight}}返奖率走势</view>
+				<line-chart ref="lineData4" canvasId="index_line_4" :dataAs="lineData4" :colors="colorList"
+							:xAxisAs="{scrollShow:false}" 
+							:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
+			</view>	
+			<view class="box-contaniner">
+				<view class="rankTable-title">
+					<view>各地区返奖情况对比</view>
+					<view class="rankTable-more" @click="goSaleRank(leftReturnTableDataDetail,leftReturnTableColumns,rightReturnTableDataDetail,rightReturnTableColumns)">全部>></view>
+				</view>
+				<view class="example">
+					<view class="sale-row-2">
+						<view class="left-row-box">
+							<v-table :columns="leftReturnTableColumns" :list="leftReturnTableData"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+						</view>
+						<view class="right-row-box">
+							<v-table :columns="rightReturnTableColumns" :list="rightReturnTableData"  border-color="#FFFFFF"></v-table>
+						</view>
+					</view>			
+				</view>
+			</view>
+		</block>
 		
 		<slot />
 	</view>
@@ -67,8 +103,10 @@
 	import dataContainerTwo from '@/components/sads-components/dataContainerTwo.vue';
 	import dataContainerTwoCol from '@/components/sads-components/dataContainerTwoCol.vue';
 	import dataContainerTwoColTwo from '@/components/sads-components/dataContainerTwoColTwo.vue';
+	import dataContainerTwoColFour from '@/components/sads-components/dataContainerTwoColFour.vue';
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
+	import dateUtils from '@/common/tools/dateUtils.js';
 	
 	export default {
 		name: 'Index',
@@ -78,7 +116,7 @@
 			vTable,
 			dataContainer,
 			dataContainerTwo,
-			dataContainerTwoCol,dataContainerTwoColTwo
+			dataContainerTwoCol,dataContainerTwoColTwo,dataContainerTwoColFour
 		},
 		props: {
 			model:{
@@ -88,7 +126,8 @@
 			}
 		},
 		data() {
-			return {			
+			return {	
+				today:dateUtils.getToday(),
 				selfParam:{
 					token:'',
 					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
@@ -125,6 +164,10 @@
 							right:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0}},
 				shopData:{	left:{title1:'在售门店数',amount1:0,title2:'在售门店率',amount2:0},
 							right:{title1:'在售门店数',amount1:0,title2:'在售门店率',amount2:0}},
+				returnData:{left:{title1:'返奖率',amount1:0},
+							right:{title1:'返奖率',amount1:0}},
+				rankData:{left:{title1:'排名',amount1:0},
+						  right:{title1:'排名',amount1:0}},
 				ballAmount:{
 					left:{
 						football:{name:"足球",amount:"销量0元",zhanbi:"0%"},
@@ -140,6 +183,9 @@
 				btnnum: 0,
 				lineData2: {},
 				lineData1: {},
+				lineData3: {},
+				lineData4: {},
+				
 				leftTableData: [],
 				rightTableData: [],
 				leftTableDataDetail: [],
@@ -168,7 +214,39 @@
 							key: 'amount',
 							$width:"80px"
 						}
-					],	
+					],
+				leftTableData: [],
+
+				leftReturnTableData: [],
+				rightReturnTableData: [],
+				leftReturnTableDataDetail: [],
+				rightReturnTableDataDetail: [],
+				leftReturnTableColumns: [{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '返奖率',
+							key: 'amount',
+							$width:"100px"
+						}
+					],
+				rightReturnTableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '返奖率',
+							key: 'amount',
+							$width:"80px"
+						}
+					],
+					
 				colorList: ['#1890ff','#facc14']
 			};
 		},
@@ -190,8 +268,15 @@
 				this.getBallAmount();
 				this.getShopData();
 				this.getRankTable();
-				// this.getDataContainerTwo('足球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
-				// this.getDataContainerTwo('篮球',this.param.provinceCenterId,this.param.businessDate,this.param.cityCenterId);
+				this.getComReturnRateState()
+				this.getComProSalesRanking()
+				// if(this.selfParam.compareDate.viewLeft!=today && this.selfParam.compareDate.viewRight!=today && this.selfParam.provinceCenterId!=0){
+				// 	this.getComReturnRateState()
+				// }
+				if(this.selfParam.compareDate.dateType!='date'){
+					this.getReturnRateTrendChartCom()
+					this.getComReturnRatesRanking()
+				}
 			},
 			showView(){
 				this.$nextTick(() => {				
@@ -269,7 +354,7 @@
 							var format11 = numberFun.formatCNumber(saleNumber2);
 							
 							var left = {'title1':'销量（'+format00.name +'元）', 'amount1':(amount1/format00.value).toFixed(2), 'title2':'票数（'+format01.name +'张）', 'amount2':(saleNumber1/format01.value).toFixed(2)};
-							var right = {'title1':'销量（'+format10.name +'元）', 'amount1':(amount1/format10.value).toFixed(2), 'title2':'票数（'+format11.name +'张）', 'amount2':(saleNumber2/format11.value).toFixed(2)};
+							var right = {'title1':'销量（'+format10.name +'元）', 'amount1':(amount2/format10.value).toFixed(2), 'title2':'票数（'+format11.name +'张）', 'amount2':(saleNumber2/format11.value).toFixed(2)};
 						
 							this.$set(this.topData, 'left', left);
 							this.$set(this.topData, 'right', right);
@@ -297,42 +382,44 @@
 							var amount1 = data[0]
 							var saleNumber1 = data[1]
 							
-							var left = {'title1':'在售门店数', 'amount1':amount1, 'title2':'在售门店率', 'amount2':"0%"};
-							var right = {'title1':'在售门店数', 'amount1':saleNumber1, 'title2':'在售门店率', 'amount2':"0%"};							
-							var json = this.getShopRatio(left,right);		
+							var left = {'title1':'在售门店数', 'amount1':amount1, 'title2':'在售门店率',amount2:0};
+							var right = {'title1':'在售门店数', 'amount1':saleNumber1, 'title2':'在售门店率',amount2:0};							
+							this.getShopRatio(left,right);		
 					
-							this.shopData.left=left
-							this.shopData.right=right
-	
-							console.log('request topData', this.shopData);
-							this.$refs['shopData'].showDataContainer();
 							this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-				})
-			
+				})			
 			},
 			getShopRatio(left,right){
 				var url = '/pentaho/salesContrast/getComStoreSalesrate';
 				var param = this.createParam()
 				urlAPI.getRequest(url, param).then((res)=>{
-					// setTimeout(() => { 
 						this.loading = false;
-							console.log('request success', res)
-							var data = res.data.data;
-							var ret = {left:left,right:right}
-							if(data==null){
-								return ret;
-							}
-								
-							var amount1 = data[0] +"%"
-							var saleNumber1 = data[1] +"%"
-							left.amount2=amount1;
-							right.amount2=saleNumber1;
-							ret = {left:left,right:right}
-							return ret;
-							this.res = '请求结果 : ' + JSON.stringify(res);
+						console.log('request success', res)
+						var data = res.data.data;
+						
+						if(data==null){
+							left.amount2=0+'%'
+							right.amount2=0+'%'
+							this.shopData.left=left
+							this.shopData.right=right
+							this.$refs['shopData'].showDataContainer();
+							// var ret = {left:left,right:right}
+							return;
+						}
+						var amount1 = data[0] +"%"
+						var saleNumber1 = data[1] +"%"
+						left.amount2=amount1;
+						right.amount2=saleNumber1;
+						
+						this.shopData.left=left
+						this.shopData.right=right
+							
+						console.log('request shopData', this.shopData);
+						this.$refs['shopData'].showDataContainer();
+						this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
@@ -367,36 +454,46 @@
 					var seriesComp=[];
 					var amountDataComp = [];
 					var volDataComp = [];
-					var j=0,k = 0,tempAmount=0,tempVol=0,tempAmountComp=0,tempVolComp=0;;
+					var j=0,k = 0,tempAmount=0,tempVol=0,tempAmountComp=0,tempVolComp=0;
+					var maxAmount=0,maxVote=0
+					for(var i=0;i<dates.length;i++){
+						if(maxAmount<sales[i]){
+							maxAmount = sales[i]
+						}
+						if(maxAmount<comSales[i]){
+							maxAmount = comSales[i]
+						}
+						if(maxVote<votes[i]){
+							maxVote = votes[i]
+						}
+						if(maxVote<votes[i]){
+							maxVote = comVotes[i]
+						}
+					}
+					
+					var amountFormat = numberFun.formatCNumber(maxAmount);
+					var voteFormat= numberFun.formatCNumber(maxVote);
 					
 					for(var i=0;i<dates.length;i++){	
-						if(j==3){
-							categories[k] = dates[i];
-							amountData[k] = sales[i];
-							volData[k] = votes[i];
-							categoriesComp[k] = comDates[i];
-							amountDataComp[k] = comSales[i];
-							volDataComp[k] = comVotes[i];
-							k++;
-							j=0;
-						}else{
-							tempAmount = tempAmount+sales[i];
-							tempVol = tempVol+votes[i];
-							tempAmountComp = tempAmountComp + comSales[i];
-							tempVolComp = tempVolComp + comVotes[i];
-							j=j+1;
-						}
+						categories[i] = dates[i];
+						amountData[i] = (sales[i]/amountFormat.value).toFixed(2);
+						volData[i] = (votes[i]/voteFormat.value).toFixed(2);
+						categoriesComp[i] = comDates[i];
+						amountDataComp[i] = (comSales[i]/amountFormat.value).toFixed(2);
+						volDataComp[i] = (comVotes[i]/voteFormat.value).toFixed(2);
 					}
 					
 					// var json1 = {'name':'销量','data':amountData};
 					// var json2 = {'name':'销量','data':amountDataComp};
-					var series = [ {'name':this.selfParam.compareDate.viewLeft +'销量','data':amountData}, {'name':this.selfParam.compareDate.viewRight +'销量','data':amountDataComp}];	
+					var series = [ {'name':this.selfParam.compareDate.viewLeft +'销量('+amountFormat.name + '元)','data':amountData},
+								   {'name':this.selfParam.compareDate.viewRight +'销量('+amountFormat.name + '元)','data':amountDataComp}];	
 					
 					this.$set(this.lineData2, 'categories', categories);
 					this.$set(this.lineData2, 'series', series);
 					
 					// var json3 = {'name':'销量','data':volData};
-					var series2 = [{'name':this.selfParam.compareDate.viewLeft +'票数','data':volData},{'name':this.selfParam.compareDate.viewRight +'票数','data':volDataComp}];
+					var series2 = [{'name':this.selfParam.compareDate.viewLeft +'票数('+voteFormat.name + '张)','data':volData},
+							       {'name':this.selfParam.compareDate.viewRight +'票数('+voteFormat.name + '张)','data':volDataComp}];
 					// series2[0] = json2;
 					this.$set(this.lineData1, 'categories', categories);
 					this.$set(this.lineData1, 'series', series2);
@@ -499,8 +596,170 @@
 					console.log('request fail', err);
 				})		
 			},
+			getComReturnRatesRanking(){
+				var url="/pentaho/salesContrast/getComReturnRatesRanking"
+				var param = this.createParam()		
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							if(data==null || data.length==0){
+								return;
+							}
+							this.leftReturnTableColumns=[									{
+										title: '省份',
+										key: 'area',
+										$width:"100px"
+									},{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},{
+										title: '返奖率',
+										key: 'amount',
+										$width:"100px"
+									}
+								];
+							this.rightReturnTableColumns=[{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},
+									{
+										title:  '返奖率',
+										key: 'amount',
+										$width:"80px"
+									}
+								];
+							for(var i=0;i<data.length;i++){
+								var jsonleft = {id:data[i][1], area:data[i][0], amount:data[i][2] +'%'}	
+								var jsonright = {id:data[i][3],amount:data[i][4] +'%'}								
+								if(i<=4){
+									this.leftReturnTableData[i] = jsonleft
+									this.rightReturnTableData[i] = jsonright
+								}
+								this.leftReturnTableDataDetail[i] = jsonleft
+								this.rightReturnTableDataDetail[i] = jsonright
+							}
+							
+							this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})		
+			},
+			getComReturnRateState(){
+				var url="/pentaho/salesContrast/getComReturnRateState"
+				var param = this.createParam()		
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						var data = res.data.data;
+						if(data==null || data.length==0){
+							return;
+						}
+
+						var leftReturn = data[0] +'%'
+						var rightReturn = data[1]+'%'
+						
+						var left = {'title1':'返奖率', 'amount1':leftReturn };
+						var right = {'title1':'返奖率', 'amount1':rightReturn};	
+						this.returnData.left = left 
+						this.returnData.right= right
+						this.$refs['returnData'].showDataContainer();
+						this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getComProSalesRanking(){
+				var url="/pentaho/salesContrast/getComProSalesRanking"
+				var param = this.createParam()		
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						console.log('request success', res)
+						var data = res.data.data;
+						if(data==null || data.length==0){
+							this.$refs['rankData'].showDataContainer();
+							return;
+						}
+			
+						var leftRank = data[0]
+						var rightRank = data[1]
+						
+						var left = {'title1':'排名', 'amount1':leftRank };
+						var right = {'title1':'排名', 'amount1':rightRank};	
+						this.rankData.left = left 
+						this.rankData.right= right
+						this.$refs['rankData'].showDataContainer();
+						this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			getReturnRateTrendChartCom(){
+				var url = '/pentaho/salesContrast/returnRateTrendChartCom'
+				var param = this.createParam()
+				
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;	
+					
+					var dates = data.dates
+					var ALL = data.ALL
+					var FB = data.FB
+					var BK = data.BK
+					var comDates = data.comDates
+					var comALL = data.comALL
+					var comFB = data.comFB
+					var comBK = data.comBK
+					
+					for(var i=0;i<dates.length;i++){
+						ALL[i] = (ALL[i]/100).toFixed(2)
+						FB[i] = (FB[i]/100).toFixed(2)
+						BK[i] = (BK[i]/100).toFixed(2)
+					}
+					for(var i=0;i<comDates.length;i++){
+						comALL[i] = (comALL[i]/100).toFixed(2)
+						comFB[i] = (comFB[i]/100).toFixed(2)
+						comBK[i] = (comBK[i]/100).toFixed(2)
+					}
+					var series = [ {'name':'竞彩返奖率','data':ALL},
+								   {'name':'足球返奖率','data':FB},
+								   {'name':'篮球返奖率','data':BK}];	
+					
+					this.$set(this.lineData3, 'categories', dates);
+					this.$set(this.lineData3, 'series', series);
+					
+					// var json3 = {'name':'销量','data':volData};
+					var series2 = [ {'name':'竞彩返奖率','data':comALL},
+								   {'name':'足球返奖率','data':comFB},
+								   {'name':'篮球返奖率','data':comBK}];	
+					// series2[0] = json2;
+					this.$set(this.lineData4, 'categories', dates);
+					this.$set(this.lineData4, 'series', series2);
+					this.$refs['lineData3'].showCharts();
+					this.$refs['lineData4'].showCharts();
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
+			},
+			
 			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				console.log("totalViewCompare selfParam=",this.selfParam)
+				this.getServerData();
+				this.showView();
 				this.getServerData();
 				this.showView();
 			},
@@ -706,7 +965,7 @@
 		width: 65%;
 		margin: 0rpx 5rpx;
 		/* padding: 0 10rpx; */
-		/* background-color: #ebebeb; */
+		background-color: rgba(220, 241, 250 ,0.5);
 		flex-direction: column;
 	}
 	.right-row-box {
@@ -714,7 +973,7 @@
 		width: 35%;
 		margin: 0rpx 5rpx;
 		/* padding: 0 10rpx; */
-		/* background-color: #ebebeb; */
+		background-color: rgba(250, 225, 220 ,0.5);
 		flex-direction: column;
 	}
 	.sale-row-2{

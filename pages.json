@@ -49,6 +49,9 @@
 			"style" : {}
 		},
 		{
+			"path" : "pages/common/ringDetailTwo",
+			"style" : {}
+		},{
 		    "path" : "pages/common/tableDetail",
 		    "style" : {}
 		},
@@ -57,6 +60,12 @@
 		    "style" : {}
 		},{
 		    "path" : "pages/common/tableDetail3",
+		    "style" : {}
+		},{
+		    "path" : "pages/common/tableDetail4",
+		    "style" : {}
+		},{
+		    "path" : "pages/common/ringAllDetail",
 		    "style" : {}
 		},{
 		    "path" : "pages/common/tableShopDetail",

@@ -9,23 +9,24 @@
 	
 		<view class="content">
 				<view @click="goDatePickerLeft" style="width: 400rpx;">{{selfParam.compareDate.viewLeft}}</view>
+				<!-- <view @click="goArea" style="width: 100rpx;">{{selfParam.provinceCenterName}}</view> -->
 				<view @click="goDatePickerRight" style="width: 280rpx;">{{selfParam.compareDate.viewRight}}</view>
-				<view style="-webkit-flex: 1;flex: 1;">取消</view>		
+				<!--<view style="-webkit-flex: 1;flex: 1;">取消</view>		-->
 		</view>	 
 		<block v-if="tabIndex==0">
-			<totalViewCompare ref="totalViewCompare" :model="selfParam"></totalViewCompare>
+			<totalViewCompare ref="totalViewCompare"></totalViewCompare>
 		</block> 
 		<block v-if="tabIndex==1">
 			<gameView ref="gameView" :model="selfParam"></gameView>
 		</block>
 		<block v-if="tabIndex==2">
-			<levelViewCompare ref="levelViewCompare" :param="selfParam"></levelViewCompare>
+			<levelViewCompare ref="levelViewCompare" ></levelViewCompare>
 		</block>
 		<block v-if="tabIndex==3">
-			<ticketViewCompare ref="ticketViewCompare" :model="selfParam"></ticketViewCompare>
+			<ticketViewCompare ref="ticketViewCompare"></ticketViewCompare>
 		</block>
 		<block v-if="tabIndex==4">
-			<matchView ref="matchView" :model="selfParam"></matchView>
+			<matchView ref="matchView"></matchView>
 		</block>
     </view>
 </template>
@@ -34,7 +35,7 @@
 	import totalViewCompare from "@/components/sads-components/totalView/totalViewCompare.vue";
 	import levelViewCompare from "@/components/sads-components/levelView/levelViewCompare.vue";
 	import ticketViewCompare from "@/components/sads-components/ticketView/ticketViewCompare.vue";
-	import gameView from "@/components/sads-components/gameView/gameView.vue";
+	import gameViewCompare from "@/components/sads-components/gameView/gameViewCompare.vue";
 	import matchView from "@/components/sads-components/matchView/matchView.vue";
 	import dateUtils from '@/common/tools/dateUtils.js';
 	
@@ -48,7 +49,7 @@
         components: {
             mediaItem,
 			totalViewCompare, levelViewCompare,
-			ticketViewCompare, gameView,matchView
+			ticketViewCompare, gameViewCompare,matchView
         },
         data() {
             return {
@@ -115,6 +116,10 @@
 			this.returnFromDatePicker()
 			if(this.$refs['totalViewCompare']!=null){
 				this.$refs['totalViewCompare'].refresh();
+			}else if (this.$refs['gameViewCompare']!=null){
+				this.$refs['gameViewCompare'].refresh();
+			}else if (this.$refs['levelViewCompare']!=null){
+				this.$refs['levelViewCompare'].refresh();
 			}else if (this.$refs['ticketViewCompare']!=null){
 				this.$refs['ticketViewCompare'].refresh();
 			}
@@ -132,6 +137,12 @@
 				console.log("leftDate:",leftDate)
 				console.log("rightDate:",rightDate)
 				
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName	
+
 				if(leftDate==null || rightDate==null){
 					return
 				}
@@ -171,18 +182,13 @@
 				this.selfParam.compareDate=compareDate
 				console.log("compareDate:",compareDate)
 				
-				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
-				this.selfParam.businessDate = bussinessDate;
-				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+				// const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				// this.selfParam.businessDate = bussinessDate;
+				// console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				const area = uni.getStorageSync("area")
-				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
-				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName	
+
 				
-				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
-				
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))				
 			},
             getList(index) {
                 let activeTab = this.newsList[index];
@@ -274,6 +280,11 @@
 			    uni.setStorageSync("dateOption", this.goodDatePickerOption3);
 				uni.navigateTo({
 					url:"/pages/common/dateSelector?type=compare&position=right&date=" + this.selfParam.compareDate.viewRight
+				});
+			},
+			goArea(){
+				uni.navigateTo({
+					url:"/pages/common/areaSelector?area="+this.selfParam.provinceCenterId +'&areaName=' + this.selfParam.provinceCenterName
 				});
 			},
         }

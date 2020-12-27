@@ -7,9 +7,12 @@
 				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">篮球</view>
 				</view>	
 				<view class="end-cont" :class="{dis:btnnum == 0}">	
-					<view style="font-size: 30rpx;font-weight: bold;">足球关次销量及占比</view>				
+					<view style="font-size: 30rpx;font-weight: bold;">足球关次销量及占比对比</view>				
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData" ref="levelRingChart0" canvasId="index_ring_0"/>
+					</view>
+					<view class="ring_chart">
+						<ring-chart :dataAs="pieData2" ref="levelRingChart2" canvasId="index_ring_2"/>
 					</view>
 					<button  @click="gotoLunBo(btnnum)">查看全部</button>
 					<!-- 各地区销量排行-->
@@ -32,6 +35,9 @@
 					<view style="font-size: 30rpx;font-weight: bold;">篮球关次销量及占比</view>　
 					<view class="ring_chart">
 						<ring-chart :dataAs="pieData1" ref="levelRingChart1" canvasId="index_ring_1"/>
+					</view>
+					<view class="ring_chart">
+						<ring-chart :dataAs="pieData3" ref="levelRingChart3" canvasId="index_ring_3"/>
 					</view>
 					<button  @click="gotoLunBo(btnnum)">查看全部</button>
 					<!-- 各地区销量排行-->
@@ -118,6 +124,12 @@
 				pieData1: {
 					series: [],
 				},
+				pieData2: {					//饼状图数据
+					series: [],
+					},
+				pieData3: {
+					series: [],
+				},
 				tableData: [],
 				tableColumns: [{
 						title: "排名",
@@ -147,15 +159,24 @@
 			this.showView();
 		},
 		created() {
-			this.selfParam=this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.getServerData();
 			this.showView();
 		},
 		methods: {
+			refresh(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.getServerData();
+				this.showView();
+				this.getServerData();
+				this.showView();
+			},
 			showView(){				
 				this.$nextTick(() => {	
 					this.$refs['levelRingChart0'].showCharts();
 					this.$refs['levelRingChart1'].showCharts();
+					this.$refs['levelRingChart2'].showCharts();
+					this.$refs['levelRingChart3'].showCharts();
 					console.log("init ringChart0:" ,this.pieData);
 				});
 			},
@@ -176,15 +197,14 @@
 				this.index = e.detail.value
 				this.getTableDate(this.btnnum, this.array[e.detail.value].name)
 			},
-			gotoLunBo(btnnum){
-				console.log('JSON.stringify(this.pieData)：' + JSON.stringify(this.pieData));				
+			gotoLunBo(btnnum){			
 				if(btnnum==0){
 					uni.navigateTo({
-						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData)
+						url:"/pages/common/ringDetailTwo?type=level&leftPie=" + JSON.stringify(this.pieData) + "&rightPie="+ JSON.stringify(this.pieData2)
 					});
 				}else{
 					uni.navigateTo({
-						url:"/pages/common/ringDetail?data=" + JSON.stringify(this.pieData1)
+							url:"/pages/common/ringDetailTwo?type=level&leftPie=" + JSON.stringify(this.pieData1) + "&rightPie="+ JSON.stringify(this.pieData3)
 					});
 				}
 			},
@@ -193,71 +213,89 @@
 				var dateType = this.selfParam.compareDate.dateType
 				var param = {}
 				if(dateType=='date'){
-					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.date.endDate,
+					param = {dateTimeStart: this.selfParam.compareDate.dateLeft.startDate,
+							 dateTimeEnd: this.selfParam.compareDate.dateLeft.endDate,
+							 dateTimeStartCom: this.selfParam.compareDate.dateRight.startDate,
+							 dateTimeEndCom: this.selfParam.compareDate.dateRight.endDate,
 							 dateFlag:"1",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='week'){
-					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.week.endDate,
+					param = {dateTimeStart: this.selfParam.compareDate.weekLeft.startDate,
+							 dateTimeEnd: this.selfParam.compareDate.weekLeft.endDate,
+							 dateTimeStartCom: this.selfParam.compareDate.weekRight.startDate,
+							 dateTimeEndCom: this.selfParam.compareDate.weekRight.endDate,
 							 dateFlag:"2",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='month'){
-					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.month.endDate,
+					param = {dateTimeStart: this.selfParam.compareDate.monthLeft.startDate,
+							 dateTimeEnd: this.selfParam.compareDate.monthLeft.endDate,
+							 dateTimeStartCom: this.selfParam.compareDate.monthRight.startDate,
+							 dateTimeEndCom: this.selfParam.compareDate.monthRight.endDate,
 							 dateFlag:"3",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
 				}else if(dateType=='year'){
-					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
-							 dateTimeEnd: this.selfParam.businessDate.year.endDate,
+					param = {dateTimeStart: this.selfParam.compareDate.yearLeft.startDate,
+							 dateTimeEnd: this.selfParam.compareDate.yearLeft.endDate,
+							 dateTimeStartCom: this.selfParam.compareDate.yearRight.startDate,
+							 dateTimeEndCom: this.selfParam.compareDate.yearRight.endDate,
 							 dateFlag:"4",
 							 regionId:this.selfParam.provinceCenterId,
 							 token:this.selfParam.token }
-				}
-				
-				if(this.btnnum==0){
-					param.gameFlag = 1
-				}else if(this.btnnum==1){
-					param.gameFlag = 2
-				}
+				}	
 				
 				console.log("createParam end:",param)
 				return param
 			},
 			getPieDate(type){
-				var url = '/pentaho/sales/getCheckpointSalesProp';
+				var url = '/pentaho/gamesContrast/getComPassSalesProp';
 				var param = this.createParam()
 				param.token=getApp().globalData.token
+				if(type=='足球'){
+					param.gameFlag=1
+				}else{
+					param.gameFlag=2
+				}
 				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
 					var data = res.data.data;
-				   
+				    if(data==null){
+						return;
+					}
+					var pass = data.pass
+					var comPass = data.comPass
+					
 					var series = []
-					for(var i=0;i<data.length;i++){	
+					for(var i=0;i<pass.length;i++){	
 						var jsonData = {}
-						that.levelList = data[i].customsName						
-						jsonData.name=data[i].customsName;
-						jsonData.data=data[i].values[0];
+						that.levelList = pass[i].customsName						
+						jsonData.name=pass[i].customsName;
+						jsonData.data=pass[i].values[0];
 						series[i]=jsonData					
+					}
+					
+					var series2 = []
+					for(var i=0;i<comPass.length;i++){
+						var jsonData = {}				
+						jsonData.name=comPass[i].customsName;
+						jsonData.data=comPass[i].values[0];
+						series2[i]=jsonData					
 					}
 					
 					if(type=='足球'){
 						that.pieData.series=series
+						that.pieData2.series=series2
 						this.$refs['levelRingChart0'].showCharts();
-						
+						this.$refs['levelRingChart2'].showCharts();
 					}else if(type=='篮球'){
 						that.pieData1.series=series
+						that.pieData3.series=series2
 						this.$refs['levelRingChart1'].showCharts();
+						this.$refs['levelRingChart3'].showCharts();
 					}
 					
 					console.log('request getTodSalesAmount', that.pieData);				
@@ -308,7 +346,7 @@
 			}
 		},
 		mounted(){
-			this.selfParam=this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.getServerData();
 			this.showView();
 		},
