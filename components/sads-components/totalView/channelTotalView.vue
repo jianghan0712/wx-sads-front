@@ -427,6 +427,7 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data = res.data.data;	
+					var that =this;
 					console.log("getShowsGameSales :",data) 
 					if(data==null){
 						return;
@@ -454,21 +455,21 @@
 					big2.right = right2;							
 					
 					if(type=='足球'){					
-						this.$set(this.footballData, 'big1', big1);
-						this.$set(this.footballData, 'big2', big2);
+						that.$set(that.footballData, 'big1', big1);
+						that.$set(that.footballData, 'big2', big2);
 						var json = [{name: '足球',data: (tempObj[3]/100).toFixed(2)}]
-						this.arcbar0.series = json
-						console.log("this.arcbar0=",this.arcbar0)
+						that.arcbar0.series = json
+						console.log("this.arcbar0=",that.arcbar0)
 						// this.$set(this.arcbar0, 'series', json);
 						this.$refs['arcbar0'].showCharts();
 						this.$refs['dataContain2'].showDataContainer();
 						console.log('request basketballData', this.footballData);
 					}else{
-						this.$set(this.basketballData, 'big1', big1);
-						this.$set(this.basketballData, 'big2', big2);
+						that.$set(that.basketballData, 'big1', big1);
+						that.$set(that.basketballData, 'big2', big2);
 						var json = [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
-						this.arcbar1.series= [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
-						console.log("this.arcbar1=",this.arcbar1)
+						that.arcbar1.series= [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
+						console.log("this.arcbar1=",that.arcbar1)
 						// this.$set(this.arcbar1, 'series', json);
 						this.$refs['arcbar1'].showCharts();
 						this.$refs['dataContain3'].showDataContainer();

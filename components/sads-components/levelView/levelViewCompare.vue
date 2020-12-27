@@ -26,9 +26,16 @@
 							</view>
 						</view>
 						<view class="example">
-							<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
+							<view class="sale-row-2">
+								<view class="left-row-box">
+									<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+								</view>
+								<view class="right-row-box">
+									<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
+								</view>
+							</view>			
 						</view>
-						<button  @click="gotoTableDetail(btnnum)">查看全部</button>
+						<button  @click="goSaleRank(leftTableDataDetail,leftTableColumns,rightTableDataDetail,rightTableColumns)">查看全部</button>
 					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
@@ -51,9 +58,16 @@
 							</view>
 						</view>
 						<view class="example">
-							<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
+							<view class="sale-row-2">
+								<view class="left-row-box">
+									<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+								</view>
+								<view class="right-row-box">
+									<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
+								</view>
+							</view>			
 						</view>
-						<button  @click="gotoTableDetail(btnnum)">查看全部</button>
+						<button  @click="goSaleRank(leftTableDataDetail,leftTableColumns,rightTableDataDetail,rightTableColumns)">查看全部</button>
 					</view>
 				</view>		
 			</view>
@@ -130,27 +144,35 @@
 				pieData3: {
 					series: [],
 				},
-				tableData: [],
-				tableColumns: [{
-						title: "排名",
-						key: "id",
-						$width:"50px",
-					},
-					{
-						title: '省份',
-						key: 'area',
-						$width:"100px"
-					},
-					{
-						title: '占比',
-						key: 'zhanbi',
-						$width:"130px"
-					},
-					{
-						title: '销量（元）',
-						key: 'amount'
-					}
-				],	
+				leftTableData: [],
+				rightTableData: [],
+				leftTableDataDetail: [],
+				rightTableDataDetail: [],
+				leftTableColumns: [{
+							title: '省份',
+							key: 'area',
+							$width:"100px"
+						},{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '销量',
+							key: 'amount',
+							$width:"100px"
+						}
+					],
+				rightTableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '销量',
+							key: 'amount',
+							$width:"80px"
+						}
+					],
 				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
 			};
 		},
@@ -183,7 +205,8 @@
 			getServerData() {
 				this.getPieDate('足球')
 				this.getPieDate('篮球')
-				this.getTableDate(this.btnnum, '单关')
+				this.getTableDate('足球', this.array[this.index].name)
+				this.getTableDate('篮球', this.array[this.index].name)
 			},
 		    change(e) {
 			    this.btnnum = e;
@@ -195,7 +218,8 @@
 				console.log('picker发送选择改变，携带值为：' + this.array[e.detail.value].name)
 				console.log(this.selfParam)
 				this.index = e.detail.value
-				this.getTableDate(this.btnnum, this.array[e.detail.value].name)
+				this.getTableDate('足球', this.array[this.index].name)
+				this.getTableDate('篮球', this.array[this.index].name)
 			},
 			gotoLunBo(btnnum){			
 				if(btnnum==0){
@@ -305,43 +329,72 @@
 					console.log('request fail', err);
 				})
 			},
-			getTableDate(btnnum, passName){
-				var url = '/pentaho/sales/checkpointSalesRanking';
+			getTableDate(type, passName){
+				var url = '/pentaho/gamesContrast/checkpointSalesRankingCom';
 				var param = this.createParam()
 				param.token=getApp().globalData.token
-				var that =this;
-				param.passName=passName;
-				urlAPI.getRequest(url, param).then((res)=>{	
-					this.loading = false;
-					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
-					var data = res.data.data;
+				param.passName=	passName
+				if(type=='足球'){
+					param.gameFlag=1
+				}else{
+					param.gameFlag=2
+				}
 
-					var series = []
-					for(var i=0;i<data.length;i++){	
-						var jsonData = {}
-						jsonData.id=i+1
-						jsonData.area=data[i][0];
-						jsonData.zhanbi=data[i][1]+'%';
-						jsonData.amount=data[i][2];
-						series[i]=jsonData					
-					}
-					that.tableData = series
-					
-					console.log('request checkpointSalesRanking', that.tableData);				
-					this.res = '请求结果 : ' + JSON.stringify(res);
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				})
+				urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+							console.log('request success', res)
+							var data = res.data.data;
+							if(data==null || data.length==0){
+								return;
+							}
+							var format0 = numberFun.formatCNumber(data[0][2]);	
+							var format1 = numberFun.formatCNumber(data[0][4]);	
+							this.leftTableColumns=[									{
+										title: '省份',
+										key: 'area',
+										$width:"100px"
+									},{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},{
+										title: '销量(' +format0.name +'元)',
+										key: 'amount',
+										$width:"100px"
+									}
+								];
+							this.rightTableColumns=[{
+										title: "排名",
+										key: "id",
+										$width:"50px",
+									},
+									{
+										title:  '销量(' +format1.name +'元)',
+										key: 'amount',
+										$width:"80px"
+									}
+								];
+							for(var i=0;i<data.length;i++){
+								var jsonleft = {id:data[i][1], area:data[i][0], amount:(data[i][2]/format0.value).toFixed(2)}	
+								var jsonright = {id:data[i][3],amount:(data[i][4]/format1.value).toFixed(2)}								
+								if(i<=4){
+									this.leftTableData[i] = jsonleft
+									this.rightTableData[i] = jsonright
+								}
+								this.leftTableDataDetail[i] = jsonleft
+								this.rightTableDataDetail[i] = jsonright
+							}
+							
+							this.res = '请求结果 : ' + JSON.stringify(res);
+						}).catch((err)=>{
+							this.loading = false;
+							console.log('request fail', err);
+						})	
 			},
-			gotoTableDetail(btnnum){
+			goSaleRank(tableData, tableColumns,righttableData, righttableColumns){
 				uni.navigateTo({
-					url:"/pages/common/tableDetail?tableData= " + JSON.stringify(this.tableData) + '&tableColumns=' + JSON.stringify(this.tableColumns)
+					url:"/pages/common/tableDetail3?leftTableData= " + JSON.stringify(tableData) + '&leftTableColumns=' + JSON.stringify(tableColumns) 
+													+"&rightTableData= " + JSON.stringify(righttableData) + '&rightTableColumns=' + JSON.stringify(righttableColumns)
 				});
 			}
 		},
@@ -416,8 +469,31 @@
 	
 	.example {
 		/* line-height: 40px; */
-		/* font-weight: bold; */
+		flex-direction: row;
+		font-weight: bold;
 		border-color:#FFFFFF;
+	}
+	.left-row-box {
+		display: flex;
+		width: 65%;
+		margin: 0rpx 5rpx;
+		/* padding: 0 10rpx; */
+		background-color: rgba(220, 241, 250 ,0.5);
+		flex-direction: column;
+	}
+	.right-row-box {
+		display: flex;
+		width: 35%;
+		margin: 0rpx 5rpx;
+		/* padding: 0 10rpx; */
+		background-color: rgba(250, 225, 220 ,0.5);
+		flex-direction: column;
+	}
+	.sale-row-2{
+		display: flex;
+		flex-direction: row;	
+		margin: 20rpx 10rpx;
+		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
 	}
 	
 	button {

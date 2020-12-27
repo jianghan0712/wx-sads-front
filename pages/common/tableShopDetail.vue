@@ -1,6 +1,6 @@
 <template>
 	<view class="example">
-		<v-table :columns="tableColumns" :list="tableData"  selection="single"  :slot-cols="['number']" on-selection-change="onSelectionChange" border-color="#FFFFFF">
+		<v-table :columns="tableColumns" :list="tableData"  selection="single"  :slot-cols="['number']" border-color="#FFFFFF">
 			<template v-slot="{ row }">
 				<view style="font-weight: blod;color:blue;" @click="goDetail(row.number)">{{ row.number }}</view>
 			</template>
@@ -23,7 +23,7 @@
 		},
 		methods: {
 			goDetail(number){
-				console.log(number)
+				uni.setStorageSync("shopNo", number)
 				uni.navigateTo({
 					url:"/pages/channel/index-inner?number="+number
 				});

@@ -42,11 +42,16 @@
 </template>
 
 <script>
-	import gameViewCompareC from "@/components/sads-components/gameView/gameViewCompareC.vue";	
-	import totalViewCompareC from "@/components/sads-components/totalView/totalViewCompareC.vue";
-	import levelViewCompareC from "@/components/sads-components/levelView/levelViewCompareC.vue";
-	import ticketViewCompareC from "@/components/sads-components/ticketView/ticketViewCompareC.vue";
-	import matchViewCompareC from "@/components/sads-components/matchView/matchViewCompareC.vue";
+	import channelGameView from "@/components/sads-components/gameView/channelGameView.vue";	
+	import channelTotalView from "@/components/sads-components/totalView/channelTotalView.vue";
+	import channelLevelView from "@/components/sads-components/levelView/channelLevelView.vue";
+	import channelTicketView from "@/components/sads-components/ticketView/channelTicketView.vue";
+	import channelMatchView from "@/components/sads-components/matchView/channelMatchView.vue";
+	// import gameViewCompareC from "@/components/sads-components/gameView/gameViewCompareC.vue";	
+	// import totalViewCompareC from "@/components/sads-components/totalView/totalViewCompareC.vue";
+	// import levelViewCompareC from "@/components/sads-components/levelView/levelViewCompareC.vue";
+	// import ticketViewCompareC from "@/components/sads-components/ticketView/ticketViewCompareC.vue";
+	// import matchViewCompareC from "@/components/sads-components/matchView/matchViewCompareC.vue";
 	import uniSection from "@/components/uni/uni-section/uni-section.vue"
 	import urlAPI from '@/common/vmeitime-http/';
 	
@@ -57,7 +62,8 @@
 
 	export default {
 		components: {
-			gameViewCompareC,totalViewCompareC,levelViewCompareC,ticketViewCompareC,matchViewCompareC,uniSection 
+			channelGameView,channelTotalView,channelLevelView,channelTicketView,channelMatchView,uniSection 
+			// gameViewCompareC,totalViewCompareC,levelViewCompareC,ticketViewCompareC,matchViewCompareC,uniSection 
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.selfParam.shopNo = uni.getStorageSync("shopNo")
