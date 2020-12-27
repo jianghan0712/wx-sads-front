@@ -181,7 +181,7 @@ export default {
 				//扩展配置 extraAs 详情请看 http://doc.ucharts.cn/1172130
 				extra: {
 					area:{
-						type: 'straight',
+						type: 'curve',
 						opacity:0.2,
 						addLine:true,
 						width:2
