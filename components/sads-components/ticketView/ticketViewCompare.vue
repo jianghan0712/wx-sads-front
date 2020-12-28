@@ -5,8 +5,9 @@
 			<dataContainerTwoColThree ref="compareAmount" ></dataContainerTwoColThree>
 		</view>
 		
-<!-- 		<block v-if="selfParam.compareDate.dateType!='date'">
+		<block v-if="selfParam.compareDate.dateType!='date'">
 			<view class="box-contaniner">
+				<view class="container-title">单票金额走势对比</view>
 				<view class="shop-title">{{selfParam.compareDate.viewLeft}}竞彩单票金额走势</view>
 				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 
 							:xAxisAs="{scrollShow:false}" />
@@ -16,7 +17,7 @@
 				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
 							:xAxisAs="{scrollShow:false}" />
 			</view>	
-		</block> -->
+		</block>
 		
 		<view class="box-contaniner">
 			<view class="container-title">各票面区间的票数及占比对比</view>
@@ -67,19 +68,49 @@
 				</view>	
 
 				<view class="end-cont" :class="{dis:tableIndex == 0}">
-					<view class="table">
-						<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
+					<view class="example">
+						<view class="sale-row-2">
+							<view class="left-row-box">
+								<v-table :columns="leftTableColumns" :list="leftTableData"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+							</view>
+							<view class="right-row-box">
+								<v-table :columns="rightTableColumns" :list="rightTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</view>			
 					</view>
+					<!-- <view class="table">
+						<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
+					</view> -->
 				</view>
 				<view class="end-cont" :class="{dis:tableIndex == 1}">
-					<view class="table">
-						<v-table :columns="tableColumnsFB" :list="tableDataFB"  border-color="#FFFFFF"></v-table>
+					<view class="example">
+						<view class="sale-row-2">
+							<view class="left-row-box">
+								<v-table :columns="leftTableColumnsFB" :list="leftTableDataFB"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+							</view>
+							<view class="right-row-box">
+								<v-table :columns="rightTableColumnsFB" :list="rightTableDataFB"  border-color="#FFFFFF"></v-table>
+							</view>
+						</view>			
 					</view>
+					<!-- <view class="table">
+						<v-table :columns="tableColumnsFB" :list="tableDataFB"  border-color="#FFFFFF"></v-table>
+					</view> -->
 				</view>
 				<view class="end-cont" :class="{dis:tableIndex == 2}">
-					<view class="table">
-						<v-table :columns="tableColumnsBK" :list="tableDataBK"  border-color="#FFFFFF"></v-table>
+					<view class="example">
+						<view class="sale-row-2">
+							<view class="left-row-box">
+								<v-table :columns="leftTableColumnsBK" :list="leftTableDataBK"  border-color="rgba(220, 241, 250 ,0.5)"></v-table>
+							</view>
+							<view class="right-row-box">
+								<v-table :columns="rightTableColumnsBK" :list="rightTableDataBK"  border-color="#FFFFFF"></v-table>
+							</view>
+						</view>			
 					</view>
+					<!-- <view class="table">
+						<v-table :columns="tableColumnsBK" :list="tableDataBK"  border-color="#FFFFFF"></v-table>
+					</view> -->
 				</view>
 			</view>
 		</view>
@@ -95,10 +126,12 @@
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
+	import LineChart from '@/components/basic-chart/LineChart.vue';
+	import AreaChart from '@/components/basic-chart/AreaChart.vue';
 	
 	export default {
 		components: {
-			RingChart,vTable,dataContainerTwoColThree
+			RingChart,vTable,dataContainerTwoColThree,LineChart,AreaChart
 		},
 		props: {
 			model:{
@@ -152,65 +185,97 @@
 				pieData5: {},
 				lineData1:{},
 				lineData2:{},
-				tableData: [],
-				tableDataAll: [],
-				tableColumns: [{
-							title: "排名",
-							key: "leftRank",
-							$width:"50px",
-						},{
+				
+				leftTableData: [],
+				rightTableData: [],
+				leftTableDataDetail: [],
+				rightTableDataDetail: [],
+				leftTableColumns: [{
 							title: '省份',
 							key: 'area',
 							$width:"100px"
+						},{
+							title: "排名",
+							key: "id",
+							$width:"50px",
 						},{
 							title: '竞彩（元）',
-							key: 'leftAmount',
-							$width:"120px"
-						},{
+							key: 'amount',
+							$width:"100px"
+						}
+				],
+				rightTableColumns: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
 							title: '竞彩（元）',
-							key: 'rightAmount',
-							$width:"120px"
-						}],	
-				
-				tableDataFB: [],
-				tableDataAllFB: [],
-				tableColumnsFB: [{
-							title: "排名",
-							key: "leftRank",
-							$width:"50px",
-						},{
+							key: 'amount',
+							$width:"80px"
+						}
+				],
+
+				leftTableDataFB: [],
+				rightTableDataFB: [],
+				leftTableDataDetailFB: [],
+				rightTableDataDetailFB: [],
+				leftTableColumnsFB: [{
 							title: '省份',
 							key: 'area',
 							$width:"100px"
 						},{
-							title: '足球（元）',
-							key: 'leftAmount',
-							$width:"120px"
-						},{
-							title: '足球（元）',
-							key: 'rightAmount',
-							$width:"120px"
-						}],	
-				
-				tableDataBK: [],
-				tableDataAllBK: [],
-				tableColumnsBK: [{
 							title: "排名",
-							key: "leftRank",
+							key: "id",
 							$width:"50px",
 						},{
+							title: '足球（元）',
+							key: 'amount',
+							$width:"100px"
+						}
+				],
+				rightTableColumnsFB: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '足球（元）',
+							key: 'amount',
+							$width:"80px"
+						}
+				],
+
+				leftTableDataBK: [],
+				rightTableDataBK: [],
+				leftTableDataDetailBK: [],
+				rightTableDataDetailBK: [],
+				leftTableColumnsBK: [{
 							title: '省份',
 							key: 'area',
 							$width:"100px"
 						},{
-							title: '篮彩（元）',
-							key: 'leftAmount',
-							$width:"120px"
+							title: "排名",
+							key: "id",
+							$width:"50px",
 						},{
-							title: '篮彩（元）',
-							key: 'rightAmount',
-							$width:"120px"
-						}],	
+							title: '篮球（元）',
+							key: 'amount',
+							$width:"100px"
+						}
+				],
+				rightTableColumnsBK: [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},
+						{
+							title: '篮球（元）',
+							key: 'amount',
+							$width:"80px"
+						}
+				],
+
 				compareAmount:{
 					title:{nameOne:'竞彩单票金额（元）',nameTwo:'足球单票金额（元）',nameThree:'篮球单票金额（元）'},
 					left:{valueOne:0,valueTwo:0,valueThree:0},
@@ -250,6 +315,8 @@
 				this.getRankTable('足球');
 				this.getRankTable('篮彩');
 				this.getAmountCompare()
+				this.getLineData(true)
+				this.getLineData(false)
 			},
 			change(e) {
 			    this.btnnum = e;
@@ -271,6 +338,38 @@
 			changeTable(e){
 				this.tableIndex = e;
 				console.log(this.tableIndex);
+			},
+			createParam2(isLeft){
+				console.log("createParam begin")
+				var dateType = this.selfParam.compareDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart: isLeft ? this.selfParam.compareDate.dateLeft.startDate :this.selfParam.compareDate.dateRight.startDate,
+							 dateTimeEnd: isLeft ? this.selfParam.compareDate.dateLeft.endDate :this.selfParam.compareDate.dateRight.endDate,
+							 dateFlag:"1",
+							 showNumber:this.selfParam.shopNo,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTimeStart: isLeft ? this.selfParam.compareDate.weekLeft.startDate :this.selfParam.compareDate.weekRight.startDate,
+							 dateTimeEnd: isLeft ? this.selfParam.compareDate.weekLeft.endDate :this.selfParam.compareDate.weekRight.endDate,
+							 dateFlag:"2",
+							 showNumber:this.selfParam.shopNo,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTimeStart: isLeft ? this.selfParam.compareDate.monthLeft.startDate :this.selfParam.compareDate.monthRight.startDate,
+							 dateTimeEnd: isLeft ? this.selfParam.compareDate.monthLeft.endDate :this.selfParam.compareDate.monthRight.endDate,
+							 dateFlag:"3",
+							 showNumber:this.selfParam.shopNo,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTimeStart: isLeft ? this.selfParam.compareDate.yearLeft.startDate :this.selfParam.compareDate.yearRight.startDate,
+							 dateTimeEnd: isLeft ? this.selfParam.compareDate.yearLeft.endDate :this.selfParam.compareDate.yearRight.endDate,
+							 dateFlag:"4",
+							 showNumber:this.selfParam.shopNo,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -403,8 +502,10 @@
 			getRankTable(type){
 				var url ='/pentaho/proValue/getSingleVoteRankingCom';	
 				var param = this.createParam();
-				var table = []
-				var tableAll = []
+				var tableLeft = []
+				var tableRight = []
+				var tableLeftAll = []
+				var tableRightAll = []
 				if(type=='竞彩'){
 					param.gameFlag=0
 				}else if (type=='足球'){
@@ -418,32 +519,36 @@
 
 					var data = res.data.data;
 					var format0 = null;
-					if(data!=null && data.length>0){
-						format0 = numberFun.formatCNumber(data[0][2]);							
-					}else{
-						return;
-					}			
+					if(data==null){
+						return					
+					}		
 					
 					for(var i=0;i<data.length;i++){
-						var jsonData = {leftRank:data[i][1], 
-									    area:data[i][0], 
-										leftAmount:(data[i][2]/format0.value).toFixed(2), 
-										rightAmount:(data[i][4]/format0.value).toFixed(2)}
-						tableAll[i]=jsonData;						
-						if(i>4){
-							continue;
+						var jsonleft = {id:data[i][1], area:data[i][0], amount:data[i][2].toFixed(2)}	
+						var jsonright = {id:data[i][3], amount:data[i][4].toFixed(2)}								
+						if(i<=4){
+							tableLeft[i] = jsonleft
+							tableRight[i] = jsonright
 						}
-						table[i]=jsonData;
+						tableLeftAll[i] = jsonleft
+						tableRightAll[i] = jsonright
 					}
+					
 					if(type=='竞彩'){
-						this.tableData=table
-						this.tableDataAll=tableAll
+						this.leftTableData = tableLeft
+						this.leftTableDataDetail = tableLeftAll
+						this.rightTableData = tableRight
+						this.rightTableDataDetail = tableRightAll
 					}else if (type=='足球'){
-						this.tableDataFB=table
-						this.tableDataAllFB=tableAll
+						this.leftTableDataFB = tableLeft
+						this.leftTableDataDetailFB = tableLeftAll
+						this.rightTableDataFB = tableRight
+						this.rightTableDataDetailFB = tableRightAll
 					}else if (type=='篮彩'){
-						this.tableDataBK=table
-						this.tableDataAllBK=tableAll
+						this.leftTableDataBK = tableLeft
+						this.leftTableDataDetailBK = tableLeftAll
+						this.rightTableDataBK = tableRight
+						this.rightTableDataDetailBK = tableRightAll
 					}
 			
 					console.log('request tableData', this.tableData);				
@@ -453,61 +558,44 @@
 					console.log('request fail', err);
 				})
 			},
-			// getLinetData(){				
-			// 	var url = '/pentaho/proValue/getSingleVoteTrendChart'
-			// 	var param = this.createParam()
-				
-			// 	urlAPI.getRequest(url, param).then((res)=>{
-			// 		this.loading = false;
-			// 		console.log('request success', res)
-			// 		uni.showToast({
-			// 			title: '请求成功',
-			// 			icon: 'success',
-			// 			mask: true
-			// 		});
-			// 		var data = res.data.data;	
+			getLineData(isLeft){
+				var url = '/pentaho/proValue/getSingleVoteTrendChart';
+				var param = this.createParam2(isLeft);
+			
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					var data = res.data.data;	
+					if(data==null){
+						return
+					}
+					var dates = data.dates
+					var FB = data.FB
+					var ALL = data.ALL
+					var BK = data.BK						
+			
+					var series = [];
+					series[0] =  {'name':'竞彩','data':ALL};
+					series[1] =  {'name':'足球','data':FB};
+					series[2] =  {'name':'篮球','data':BK};
+					if(isLeft){
+						this.$set(this.lineData1, 'categories', dates);
+						this.$set(this.lineData1, 'series', series);
+						
+						this.$refs['lineData1'].showCharts();
+					}else{
+						this.$set(this.lineData2, 'categories', dates);
+						this.$set(this.lineData2, 'series', series);
+						
+						this.$refs['lineData2'].showCharts();
+					}		
 					
-			// 		var dates = data.dates
-			// 		var ALL = data.ALL
-			// 		var FB = data.FB
-			// 		var BK = data.BK
-			// 		var comDates = data.comDates
-			// 		var comALL = data.comALL
-			// 		var comFB = data.comFB
-			// 		var comBK = data.comBK
-					
-			// 		for(var i=0;i<dates.length;i++){
-			// 			ALL[i] = (ALL[i]/100).toFixed(2)
-			// 			FB[i] = (FB[i]/100).toFixed(2)
-			// 			BK[i] = (BK[i]/100).toFixed(2)
-			// 		}
-			// 		for(var i=0;i<comDates.length;i++){
-			// 			comALL[i] = (comALL[i]/100).toFixed(2)
-			// 			comFB[i] = (comFB[i]/100).toFixed(2)
-			// 			comBK[i] = (comBK[i]/100).toFixed(2)
-			// 		}
-			// 		var series = [ {'name':'竞彩返奖率','data':ALL},
-			// 					   {'name':'足球返奖率','data':FB},
-			// 					   {'name':'篮球返奖率','data':BK}];	
-					
-			// 		this.$set(this.lineData3, 'categories', dates);
-			// 		this.$set(this.lineData3, 'series', series);
-					
-			// 		// var json3 = {'name':'销量','data':volData};
-			// 		var series2 = [ {'name':'竞彩返奖率','data':comALL},
-			// 					   {'name':'足球返奖率','data':comFB},
-			// 					   {'name':'篮球返奖率','data':comBK}];	
-			// 		// series2[0] = json2;
-			// 		this.$set(this.lineData4, 'categories', dates);
-			// 		this.$set(this.lineData4, 'series', series2);
-			// 		this.$refs['lineData3'].showCharts();
-			// 		this.$refs['lineData4'].showCharts();
-			// 		this.res = '请求结果 : ' + JSON.stringify(res);
-			// 	}).catch((err)=>{
-			// 		this.loading = false;
-			// 		console.log('request fail', err);
-			// 	})
-			// },
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
 			gotoLunBo(btnnum){
 				if(btnnum==0){
 					uni.navigateTo({
@@ -612,12 +700,33 @@
 		padding:0px 30rpx 0px 30rpx;
 	}
 	
-	.table {
+	.example {
 		/* line-height: 40px; */
-		display: flex;
-		width: 95%;
+		flex-direction: row;
 		font-weight: bold;
 		border-color:#FFFFFF;
+	}
+	.left-row-box {
+		display: flex;
+		width: 65%;
+		margin: 0rpx 5rpx;
+		/* padding: 0 10rpx; */
+		background-color: rgba(220, 241, 250 ,0.5);
+		flex-direction: column;
+	}
+	.right-row-box {
+		display: flex;
+		width: 35%;
+		margin: 0rpx 5rpx;
+		/* padding: 0 10rpx; */
+		background-color: rgba(250, 225, 220 ,0.5);
+		flex-direction: column;
+	}
+	.sale-row-2{
+		display: flex;
+		flex-direction: row;	
+		margin: 20rpx 10rpx;
+		/* padding: 20rpx 10rpx 20rpx 10rpx;	 */
 	}
 	
 	button {

@@ -127,8 +127,7 @@ page {
   padding-bottom: 50rpx;
   width: 100%;
   /* background: linear-gradient(#c21327, #e42e42); */
-  background: linear-gradient( #00BFFF , #00BFFF);
- 
+  background-color: #3366FF;
   position:relative;
 }
 
@@ -351,7 +350,7 @@ page {
   .logout{
         margin-top: 150rpx;
 		justify-content: center;
-		background-color: #00BFFF;
+		background-color: #3366FF;
 		color: #FFFFFF;
     }
 </style>

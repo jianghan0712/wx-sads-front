@@ -149,6 +149,13 @@
 				console.log("leftDate:",leftDate)
 				console.log("rightDate:",rightDate)
 				
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName	
+				this.selfParam.token=getApp().globalData.token
+			 
 				if(leftDate==null || rightDate==null){
 					return
 				}
@@ -192,8 +199,8 @@
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				const area = uni.getStorageSync("area")
-				const areaName = uni.getStorageSync("areaName")
+				// const area = uni.getStorageSync("area")
+				// const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName	
@@ -220,7 +227,7 @@
 				//修改为0
 				urlAPI.getRequest(url, param).then((res)=>{
 					var data = res.data.data;
-					debugger
+					// debugger
 					this.showPro=data.provincial+data.city
 					this.gateInfo = {
 						showName:data.showName,provincial:data.provincial,city:data.city,provincialId:data.provincialId,cityId:data.cityId

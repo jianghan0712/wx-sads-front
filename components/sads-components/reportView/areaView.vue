@@ -119,7 +119,7 @@
 				 		{
 				 			title: '省份',
 				 			key: 'area',
-				 			$width:"80px"
+				 			$width:"100px"
 				 		},
 				 		{
 				 			title: '销量(百万元)',
@@ -142,7 +142,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"80px"
+								$width:"100px"
 							},
 							{
 								title: '票数(万张)',
@@ -165,7 +165,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"80px"
+								$width:"100px"
 							},
 							{
 								title: '有销量门店数',
@@ -188,7 +188,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"80px"
+								$width:"100px"
 							},
 							{
 								title: '竞彩',
@@ -216,12 +216,9 @@
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				var area = uni.getStorageSync("area")
+				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
-				if(-1==area){
-					area=0;
-				}
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName				
 				this.selfParam.token=getApp().globalData.token
@@ -261,7 +258,6 @@
 				
 			},
 			loadData(){
-				var that=this;
 				var token=getApp().globalData.token;
 				//地区日销量及周同比
 				var url = '/pentaho/dailyPaper/getSalesAndComRanking';
@@ -269,8 +265,7 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
-					this.tableDataAll=[];
-					this.tableData=[];
+					
 					for(var i=0;i<data[i].length;i++){
 						var arr={
 								id: i+1,
@@ -286,10 +281,11 @@
 							cellClassName.rateChange='small-text-red'
 						}	
 						arr.cellClassName=cellClassName;		
-						that.tableDataAll.push(arr);
+						
 						if(i<5){
-							that.tableData.push(arr);
+							this.tableData[i]=arr;
 						}
+						this.tableDataAll[i]=arr;
 					}
 				}).catch((err)=>{
 					this.loading = false;
@@ -303,8 +299,6 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
-					this.tableDataAll1=[];
-					this.tableData1=[];
 					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,
@@ -319,10 +313,9 @@
 							cellClassName.rateChange='small-text-red'
 						}	
 						arr.cellClassName=cellClassName;		
-						that.tableDataAll.push(arr);	
-						that.tableDataAll1.push(arr);
+						this.tableDataAll[i]=arr;
 						if(i<5){
-							that.tableData1.push(arr);
+							this.tableData1[i]=arr;
 						}
 					}
 				}).catch((err)=>{
@@ -336,8 +329,6 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
-					this.tableDataAll2=[];
-					this.tableData2=[];
 					if(data.length>0){
 						for(var i=0;i<data[i].length;i++){
 							var arr={ 
@@ -346,9 +337,9 @@
 									notnonecount: data[i][1],
 									nonecount: data[i][2]
 								};
-							that.tableDataAll2.push(arr);
+							this.tableDataAll2[i]=arr;
 							if(i<5){
-								that.tableData2.push(arr);
+								this.tableData2[i]=arr;
 							}
 						}
 					}
@@ -364,8 +355,6 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
-					this.tableDataAll3=[];
-					this.tableData3=[];
 					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,
@@ -377,9 +366,9 @@
 						var cellClassName={}
 						cellClassName.huanbi='small-text-blue'
 						arr.cellClassName =cellClassName;
-						that.tableDataAll3.push(arr);
+						this.tableDataAll3[i]=arr;
 						if(i<5){
-							that.tableData3.push(arr);
+							this.tableData3[i]=arr;
 						}
 					}
 				}).catch((err)=>{
@@ -421,6 +410,7 @@
 			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.returnFromDatePicker();
+				this.loadData();
 				this.loadData();
 			},
 		},

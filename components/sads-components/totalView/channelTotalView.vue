@@ -29,28 +29,28 @@
 				<view class="shop-title">排名</view>
 				<view class="line">
 					<view class="shop-item-title">
-						<view style="width: 50%;">全国排名</view>				
+						<view style="width: 40%;">全国排名</view>				
 						<view style="width: 25%;">周同比</view>
-						<view style="-webkit-flex: 1;flex: 1;">环比</view>
+						<view style="width: 25%;">环比</view>
 					</view>
 					<view class="shop-item-content">
-						<view style="width: 50%;">{{shopData.shop.sum}}</view>
+						<view style="width: 40%;">{{shopData.shop.sum}}</view>
 						<view :class="shopData.shop.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.tongbi>0?"↑"+shopData.shop.tongbi:"↓"+shopData.shop.tongbi}}名</view>
-						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.shop.huanbi>0?"↑"+shopData.shop.huanbi:"↓"+shopData.shop.huanbi}}名</view>
+						<view :class="shopData.shop.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.shop.huanbi>0?"↑"+shopData.shop.huanbi:"↓"+shopData.shop.huanbi}}名</view>
 					</view>
 				</view>
 			</view>		
 			<view class="box-contaniner">
 				<view class="line">
 					<view class="shop-item-title">
-						<view style="width: 50%;">省内排名</view>				
+						<view style="width: 40%;">省内排名</view>				
 						<view style="width: 25%;">周同比</view>
-						<view style="-webkit-flex: 1;flex: 1;">环比</view>
+						<view style="width: 25%;">环比</view>
 					</view>
 					<view class="shop-item-content">
-						<view style="width: 50%;">{{shopData.rate.sum}}</view>				
+						<view style="width: 40%;">{{shopData.rate.sum}}</view>				
 						<view :class="shopData.rate.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.tongbi>0?"↑"+shopData.rate.tongbi:"↓"+shopData.rate.tongbi}}名</view>
-						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{shopData.rate.huanbi>0?"↑"+shopData.rate.huanbi:"↓"+shopData.rate.huanbi}}名</view>
+						<view :class="shopData.rate.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{shopData.rate.huanbi>0?"↑"+shopData.rate.huanbi:"↓"+shopData.rate.huanbi}}名</view>
 					</view>
 				</view>
 			</view>
@@ -330,13 +330,13 @@
 						var format0 = numberFun.formatCNumber(amount[0]);
 						var format1 = numberFun.formatCNumber(saleNumber[0]);
 						console.log("format0=",format0,"format1=",format1)
-						var left1 = {'name':'周同比','value':amount[1] + '%'};
-						var right1 = {'name':'环比','value':amount[2] + '%'};
+						var left1 = {'name':'周同比','value':amount[1]=='987654321'?'--':amount[1] + '%'};
+						var right1 = {'name':'环比','value':amount[2]=='987654321'?'--':amount[2] + '%'};
 						var big1 = {'name':'销量（'+format0.name +'元）', 'value':(amount[0]/format0.value).toFixed(2), 'left': left1,'right':right1};
 						
-						var left2 = {'name':'周同比','value':saleNumber[1] + '%'};
-						var right2 = {'name':'环比','value':saleNumber[2] + '%'};
-						var big2 = {'name':'票数（'+format1.name +'张）','value':saleNumber[0]/format1.value, 'left':left2,'right':right2};
+						var left2 = {'name':'周同比','value':saleNumber[1]=='987654321'?'--': saleNumber[1]+ '%'};
+						var right2 = {'name':'环比','value':saleNumber[2]=='987654321'?'--': saleNumber[2]+ '%'};
+						var big2 = {'name':'票数（'+format1.name +'张）','value':(saleNumber[0]/format1.value).toFixed(2), 'left':left2,'right':right2};
 									 			
 						this.$set(this.totalData, 'big1', big1);
 						this.$set(this.totalData, 'big2', big2);
@@ -447,7 +447,7 @@
 					}
 				
 					var format0 = numberFun.formatCNumber(tempObj[0]);
-					var amount0 = (tempObj[0]/format0.value) + format0.name +'元';
+					var amount0 = (tempObj[0]/format0.value).toFixed(2) + format0.name +'元';
 					left1.value = tempObj[1];
 					right1.value = tempObj[2];
 					big1.value = amount0;
@@ -607,7 +607,7 @@
 			getGameSalesByProvince(){
 				var url='/pentaho/sales/getGameSales'
 				var param = this.createParam()
-				param.regionId=this.gateInfo.provincialId
+				param.regionId=this.selfParam.provinceCenterId
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data = res.data.data;	

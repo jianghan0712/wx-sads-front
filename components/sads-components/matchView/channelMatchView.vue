@@ -9,17 +9,27 @@
 				<view class="end-cont" :class="{dis:btnnum == 0}">
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛制销量</view>
-						<view class="example">
-							<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
-						</view>
+						<block v-if="matchTypeTableData.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchTypeTableData.length>0">
+							<view class="example">
+								<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>
 					</view>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛制销量</view>
-						<view class="example">
-							<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData2"  border-color="#FFFFFF"></v-table>
-						</view>
+						<block v-if="matchTypeTableData2.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchTypeTableData2.length==0">
+							<view class="example">
+								<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData2"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>
 					</view>
 				</view>
 			</view>		
@@ -34,11 +44,12 @@
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
+	import noData from '@/components/sads-components/noData.vue';
 	
 	export default {
 		components: {
 			RingChart,
-			vTable
+			vTable,noData
 		},
 		props: {
 			param:{
@@ -78,6 +89,7 @@
 				},
 				btnnum: 0,
 				index: 0,
+				nodataMessage:'未找到相关比赛',
 				matchTypeTableData: [],
 				matchTypeTableData2: [],
 				matchTypeTableColumns: [{

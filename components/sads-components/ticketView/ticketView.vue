@@ -185,9 +185,12 @@
 			    this.btnnum = e;
 				if(0==e){ 
 					this.getPieData('竞彩');
+					this.getPieData('竞彩');
 				}else if(1==e){
 					this.getPieData('足球');
+					this.getPieData('足球');
 				}else if(2==e){
+					this.getPieData('篮球');
 					this.getPieData('篮球');
 				}
 			},
@@ -336,9 +339,9 @@
 					for(var i=0;i<data.length;i++){
 						var jsonData = {id:i+1, 
 									    area:data[i][0], 
-										jingcai:data[i][1], 
-										football:data[i][2],
-										basketball:data[i][3],
+										jingcai:data[i][1].toFixed(2), 
+										football:data[i][2].toFixed(2),
+										basketball:data[i][3].toFixed(2),
 									   }
 						this.tableDataAll[i]=jsonData;						
 						if(i>4){

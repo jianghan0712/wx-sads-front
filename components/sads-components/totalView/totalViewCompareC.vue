@@ -2,11 +2,6 @@
 	<view>
 		<view class="box-contaniner">
 			<dataContainerTwoCol ref="dataContainTwo" :dataAs="topData"></dataContainerTwoCol>
-			<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today">
-				<dataContainerTwoCol ref="rankData" :dataAs="rankData"></dataContainerTwoCol>
-				<!-- <dataContainerTwoColFour ref="rankData" :dataAs="rankData"></dataContainerTwoColFour>
-				<dataContainerTwoColFour ref="rankData2" :dataAs="rankData2"></dataContainerTwoColFour> -->
-			</block>
 		</view>
 		
 		<!-- 折线图区域-->
@@ -27,7 +22,12 @@
 							:xAxisAs="{scrollShow:false}" />
 			</view>		
 		</view>
-		
+		<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today">
+			<view class="shop-title">排名对比</view>
+			<dataContainerTwoCol ref="rankData" :dataAs="rankData"></dataContainerTwoCol>
+			<!-- <dataContainerTwoColFour ref="rankData" :dataAs="rankData"></dataContainerTwoColFour>
+			<dataContainerTwoColFour ref="rankData2" :dataAs="rankData2"></dataContainerTwoColFour> -->
+		</block>
 		<!-- 竞彩足篮球销量及占比对比区域 -->
 		<view class="box-contaniner">
 			<view class="shop-title">竞彩足篮球销量及占比对比</view>
@@ -163,7 +163,8 @@
 						yearRight:{startDate:'', endDate:''},
 					},	
 					userId:'',			
-					selfProvinceCenterId:''//存登录时候的id
+					selfProvinceCenterId:'',//存登录时候的id
+					shopNo:''
 				},
 				gateInfo:{},
 				topData:{	left:{title1:'销量（万）',amount1:0,title2:'票数（张）',amount2:0},

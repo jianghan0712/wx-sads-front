@@ -84,12 +84,12 @@
 				tableColumns:[{
 								title: "赛制",
 								key: "id",
-								$width:"155rpx",
+								$width:"180rpx",
 							},
 							{
 								title: '场次',
 								key: 'area',
-								$width:"155rpx"
+								$width:"180rpx"
 							},],
 				//完赛
 				tableData1:[],
@@ -98,12 +98,12 @@
 				tableColumns:[{
 								title: "赛制",
 								key: "id",
-								$width:"155rpx",
+								$width:"180rpx",
 							},
 							{
 								title: '场次',
 								key: 'area',
-								$width:"155rpx"
+								$width:"180rpx"
 							},],
 				//完赛
 				tableData2:[],
@@ -119,14 +119,11 @@
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				var area = uni.getStorageSync("area")
+				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
-				if(-1==area){
-					area=0;
-				}
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName		
+				this.selfParam.provinceCenterName=areaName				
 				this.selfParam.token=getApp().globalData.token
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))		
 			},
@@ -160,7 +157,6 @@
 			},
 			loadData(){
 				var token =getApp().globalData.token;
-				var that=this;
 				var url = '/pentaho/dailyPaper/getMatchSceneCount';
 				var param={dateTime: this.selfParam.businessDate.date.startDate,
 						 regionId:this.selfParam.provinceCenterId,
@@ -169,15 +165,15 @@
 					this.loading = false;
 					var data =res.data.data;
 					if(data.length==0||data.length==4){
-						this.$set(that.pagedata,0,0);
-						this.$set(that.pagedata,1,0);
-						this.$set(that.pagedata,2,0);
-						this.$set(that.pagedata,3,0);
+						this.$set(this.pagedata,0,0);
+						this.$set(this.pagedata,1,0);
+						this.$set(this.pagedata,2,0);
+						this.$set(this.pagedata,3,0);
 					}else {
-						this.$set(that.pagedata,0,data[16]);
-						this.$set(that.pagedata,1,data[17]);
-						this.$set(that.pagedata,2,data[19]);
-						this.$set(that.pagedata,3,data[18]);
+						this.$set(this.pagedata,0,data[16]);
+						this.$set(this.pagedata,1,data[17]);
+						this.$set(this.pagedata,2,data[19]);
+						this.$set(this.pagedata,3,data[18]);
 					}
 				}).catch((err)=>{
 					this.loading = false;
@@ -188,20 +184,18 @@
 				this.loadDetail('2');
 			},
 			toFoot(){
-				var that =this;
 				uni.navigateTo({
 					title:'足球赛事详情',
-					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData1)+
-					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData11),
+					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(this.tableColumns)+'&tableData='+JSON.stringify(this.tableData1)+
+					'&tableColumns1='+JSON.stringify(this.tableColumns)+'&tableData1='+JSON.stringify(this.tableData11),
 					
 				});
 			},
 			toBasket(){
-				var that =this;
 				uni.navigateTo({ 
 					title:'篮球赛事详情',
-					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData2)+
-					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData22)
+					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(this.tableColumns)+'&tableData='+JSON.stringify(this.tableData2)+
+					'&tableColumns1='+JSON.stringify(this.tableColumns)+'&tableData1='+JSON.stringify(this.tableData22)
 					
 				});
 			},
@@ -215,38 +209,34 @@
 				}else if(ballType=='2'){
 					param.gameFlag = 2
 				}
-				var that =this;
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = true;
 					var data1 =res.data.data;	
 					var finish =data1.finish;
 					var onSale = data1.onSale;
-					this.tableData1=[];
-					this.tableData2=[];
+					
 					if(finish.length==0){
 						finish =[{'id':'无','area':0}];
 					}else {
 						for(var i=0;i<finish.length;i++){
 							var obj={'id':finish[i][0],'area':finish[i][1]};
 							if(ballType=='1'){
-								that.tableData1.push(obj);
+								this.tableData1[i]=obj;
 							}else if(ballType=='2'){
-								that.tableData2.push(obj);
+								this.tableData2[i]=obj;
 							
 							}
 						};
 					}
-					this.tableData11=[];
-					this.tableData22=[];
 					if(onSale.length==0){
 						onSale =[{'id':'无','area':0}];
 					}else{
 						for(var j=0;j<onSale.length;j++){
 							var obj={'id':onSale[j][0],'area':onSale[j][1]};
 							if(ballType=='1'){
-								that.tableData11.push(obj);
+								this.tableData11[j]=obj;
 							}else if(ballType=='2'){
-								that.tableData22.push(obj);
+								this.tableData22[j]=obj;
 							
 							}
 						};
@@ -259,6 +249,7 @@
 			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.returnFromDatePicker();
+				this.loadData();
 				this.loadData();
 			},
 			

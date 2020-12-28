@@ -15,7 +15,7 @@
 		</view>
 		
 		<!-- 折线图区域-->
-		<view class="box-contaniner">
+		<!-- <view class="box-contaniner">
 			<view class="clineChart-title">
 				<view style="font-size: 30rpx;font-weight: bold;">{{arcbarNumTop}}销量及票数走势对比</view>
 				<view class="linechart-tab">
@@ -25,29 +25,29 @@
 			</view>		
 			<view class="end-cont" :class="{dis:btnnum == 0}">
 				<view class="end-cont" :class="{dis:arcbarNumTop =='足球'}">
-					<area-chart ref="lineData0" canvasId="index_line_0" :dataAs="lineData0" 
+					<line-chart ref="lineData0" canvasId="index_line_0" :dataAs="lineData0" 
 								:xAxisAs="{scrollShow:false}" 
 								:yAxisAs="{formatter: {type: 'number', name:'万元',fixed: 0}}"/>
 				</view>
 				<view class="end-cont" :class="{dis:arcbarNumTop =='篮球'}">
-					<area-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
+					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
 								:xAxisAs="{scrollShow:false}" 
 								:yAxisAs="{formatter: {type: 'number', name:'万元',fixed: 0}}"/>
 				</view>
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
 				<view class="end-cont" :class="{dis:arcbarNumTop =='足球'}">
-					<area-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 
+					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 
 								:xAxisAs="{scrollShow:false}" 
 								:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
 				</view>
 				<view class="end-cont" :class="{dis:arcbarNumTop =='篮球'}">
-					<area-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" 
+					<line-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" 
 								:xAxisAs="{scrollShow:false}" 
 								:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
 				</view>
 			</view>		
-		</view>
+		</view> -->
 		<!-- 折线图区域-->
 		<view class="box-contaniner">
 			<view class="clineChart-title">
@@ -536,7 +536,7 @@
 					};
 				})
 			},
-			getLinesData(){
+			/* getLinesData(){
 				var url = '/pentaho/shows/gamesContrast/getShowComGamesTrend';
 				var param =this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
@@ -667,7 +667,7 @@
 					this.loading = false;
 					console.log('request fail', err);
 				});
-			},
+			}, */
 			getRingData(){
 				var url = '/pentaho/shows/gamesContrast/getShowGamesSalesPropCom';
 				var param =this.createParam();
@@ -690,7 +690,7 @@
 					for(var i=0;i<comGames.length;i++){
 						//返回的顺序不一样
 						var obj1={name:comGames[i].gameName,data: comGames[i].values[0]};
-						series1.push(obj);
+						series1.push(obj1);
 					}
 					this.$set(this.arcbar0,'series',series);
 					this.$set(this.arcbar2,'series',series1);
@@ -793,7 +793,7 @@
 					
 					for(var i=0;i<comGames.length;i++){
 						var obj1={name:comGames[i].gameName,data: comGames[i].values[0]};
-						series1.push(obj);
+						series1.push(obj1);
 					}
 					
 					this.$set(this.arcbar1,'series',series);
@@ -1074,7 +1074,7 @@
 			},
 			getServerData() {
 				this.getDataSet();
-				this.getLinesData();
+				/* this.getLinesData(); */
 				this.getRingData();
 			},
 			change(e) {

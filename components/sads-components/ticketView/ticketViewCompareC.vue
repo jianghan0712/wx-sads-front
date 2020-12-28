@@ -5,8 +5,9 @@
 			<dataContainerTwoColThree ref="compareAmount" ></dataContainerTwoColThree>
 		</view>
 		
-<!-- 		<block v-if="selfParam.compareDate.dateType!='date'">
+		<block v-if="selfParam.compareDate.dateType!='date'">
 			<view class="box-contaniner">
+				<view class="container-title">单票金额走势对比</view>
 				<view class="shop-title">{{selfParam.compareDate.viewLeft}}竞彩单票金额走势</view>
 				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 
 							:xAxisAs="{scrollShow:false}" />
@@ -16,7 +17,7 @@
 				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" 
 							:xAxisAs="{scrollShow:false}" />
 			</view>	
-		</block> -->
+		</block>
 		
 		<view class="box-contaniner">
 			<view class="container-title">各票面区间的票数及占比对比</view>
@@ -33,6 +34,7 @@
 					<view class="ring_chart">
 						<ring-chart ref="pieData3" :dataAs="pieData3"  canvasId="index_ring_3"/>
 					</view>
+					<ringDetail ref="ringDetail1" :dataType="'ticket'" :leftDataAs="pieData.series" :rightDataAs="pieData3.series"></ringDetail>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 1}">
 					<view class="ring_chart">
@@ -41,6 +43,7 @@
 					<view class="ring_chart">
 						<ring-chart ref="pieData4"  :dataAs="pieData4" canvasId="index_ring_4"/>
 					</view>
+					<ringDetail ref="ringDetail2" :dataType="'ticket'" :leftDataAs="pieData1.series" :rightDataAs="pieData4.series"></ringDetail>
 				</view>
 				<view class="end-cont" :class="{dis:btnnum == 2}">
 					<view class="ring_chart">
@@ -49,6 +52,7 @@
 					<view class="ring_chart">
 						<ring-chart ref="pieData5" :dataAs="pieData5" canvasId="index_ring_5"/>
 					</view>	
+					<ringDetail ref="ringDetail3" :dataType="'ticket'" :leftDataAs="pieData2.series" :rightDataAs="pieData5.series"></ringDetail>
 				</view>
 				<button type="default" plain="true" @click="gotoLunBo(btnnum)">查看全部</button>
 			</view>
@@ -95,10 +99,13 @@
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
+	import LineChart from '@/components/basic-chart/LineChart.vue';
+	import AreaChart from '@/components/basic-chart/AreaChart.vue';
+	import ringDetail from '@/components/sads-components/ringDetail.vue';
 	
 	export default {
 		components: {
-			RingChart,vTable,dataContainerTwoColThree
+			RingChart,vTable,dataContainerTwoColThree,LineChart,AreaChart,ringDetail
 		},
 		props: {
 			model:{
@@ -255,6 +262,8 @@
 				// this.getRankTable('篮彩');
 				this.getAmountCompare(true)
 				this.getAmountCompare(false)
+				this.getLineData(true)
+				this.getLineData(false)
 			},
 			change(e) {
 			    this.btnnum = e;
@@ -262,14 +271,17 @@
 			    	this.getPieData('竞彩');
 					this.$refs['pieData'].showCharts();
 					this.$refs['pieData1'].showCharts();
+					this.$refs['ringDetail1'].showRingDetail();
 			    }else if(1==e){
 			    	this.getPieData('足球');
 					this.$refs['pieData2'].showCharts();
 					this.$refs['pieData3'].showCharts();
+					this.$refs['ringDetail2'].showRingDetail();
 			    }else if(2==e){
 			    	this.getPieData('篮球');
 					this.$refs['pieData4'].showCharts();
 					this.$refs['pieData5'].showCharts();
+					this.$refs['ringDetail3'].showRingDetail();
 			    }
 				this.showView();
 			},
@@ -382,40 +394,6 @@
 					this.loading = false;
 				})
 			},
-			// getAmountCompare(){
-			// 	var url = '/pentaho/showProValue/getShowProValueVotesProp';
-			// 	var param = this.createParam();
-			// 	param.gameFlag=1
-			// 	urlAPI.getRequest(url, param).then((res)=>{
-			// 		this.loading = false;
-			// 		console.log('request success', res)
-
-			// 		var data = res.data.data;
-			// 		if(data==null){
-			// 			this.$refs['compareAmount'].showDataContainer(this.compareAmount);
-			// 			return
-			// 		}
-			// 		// var format0 = numberFun.formatCNumber(data[0]);
-			// 		// var format1 = numberFun.formatCNumber(data[1]);
-			// 		// var format2 = numberFun.formatCNumber(data[2]);
-			// 		var title = {'nameOne':'竞彩单票金额（元）', 'nameTwo':'足球单票金额（元）','nameThree':'篮球单票金额（元）'}
-			// 		var left = {'valueOne':data[0] , 'valueTwo':data[1] ,'valueThree':data[2] }
-			// 		var right = {'valueOne':data[3] , 'valueTwo':data[4] ,'valueThree':data[5] }
-			// 		this.compareAmount.title = title
-			// 		this.compareAmount.left = left
-			// 		this.compareAmount.right = right
-			// 		// this.$set(this.compareAmount, 'title', title);
-			// 		// this.$set(this.compareAmount, 'left', left);
-			// 		// this.$set(this.compareAmount, 'right', right);
-			// 		this.$refs['compareAmount'].showDataContainer(this.compareAmount);
-
-			// 		console.log('request ticketData', this.compareAmount);				
-			// 		this.res = '请求结果 : ' + JSON.stringify(res);
-			// 	}).catch((err)=>{
-			// 		this.loading = false;
-			// 		console.log('request fail', err);
-			// 	})
-			// },
 			getPieData(type){
 				var url = '/pentaho/showProValue/getShowProValueVotesPropCom';
 				var param = this.createParam();
@@ -452,17 +430,20 @@
 						that.pieData.series = list
 						that.pieData3.series = compareList
 						this.$refs['pieData'].showCharts();	
-						this.$refs['pieData3'].showCharts();	
+						this.$refs['pieData3'].showCharts();
+						this.$refs['ringDetail1'].showRingDetail();
 					}else if(type=='足球'){
 						that.pieData1.series = list
 						that.pieData4.series = compareList
 						this.$refs['pieData1'].showCharts();
 						this.$refs['pieData4'].showCharts();
+						this.$refs['ringDetail2'].showRingDetail();
 					}else if(type=='篮球'){
 						that.pieData2.series = list
 						that.pieData5.series = compareList
 						this.$refs['pieData2'].showCharts();
 						this.$refs['pieData5'].showCharts();
+						this.$refs['ringDetail3'].showRingDetail();
 					}
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
@@ -541,61 +522,44 @@
 				this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
-			// getLinetData(){				
-			// 	var url = '/pentaho/proValue/getSingleVoteTrendChart'
-			// 	var param = this.createParam()
-				
-			// 	urlAPI.getRequest(url, param).then((res)=>{
-			// 		this.loading = false;
-			// 		console.log('request success', res)
-			// 		uni.showToast({
-			// 			title: '请求成功',
-			// 			icon: 'success',
-			// 			mask: true
-			// 		});
-			// 		var data = res.data.data;	
+			getLineData(isLeft){
+				var url = '/pentaho/showProValue/getShowSingleVoteTrendChart';
+				var param = this.createParam2(isLeft);
+			
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					var data = res.data.data;	
+					if(data==null){
+						return
+					}
+					var dates = data.dates
+					var FB = data.FB
+					var ALL = data.ALL
+					var BK = data.BK						
+			
+					var series = [];
+					series[0] =  {'name':'竞彩','data':ALL};
+					series[1] =  {'name':'足球','data':FB};
+					series[2] =  {'name':'篮球','data':BK};
+					if(isLeft){
+						this.$set(this.lineData1, 'categories', dates);
+						this.$set(this.lineData1, 'series', series);
+						
+						this.$refs['lineData1'].showCharts();
+					}else{
+						this.$set(this.lineData2, 'categories', dates);
+						this.$set(this.lineData2, 'series', series);
+						
+						this.$refs['lineData2'].showCharts();
+					}		
 					
-			// 		var dates = data.dates
-			// 		var ALL = data.ALL
-			// 		var FB = data.FB
-			// 		var BK = data.BK
-			// 		var comDates = data.comDates
-			// 		var comALL = data.comALL
-			// 		var comFB = data.comFB
-			// 		var comBK = data.comBK
-					
-			// 		for(var i=0;i<dates.length;i++){
-			// 			ALL[i] = (ALL[i]/100).toFixed(2)
-			// 			FB[i] = (FB[i]/100).toFixed(2)
-			// 			BK[i] = (BK[i]/100).toFixed(2)
-			// 		}
-			// 		for(var i=0;i<comDates.length;i++){
-			// 			comALL[i] = (comALL[i]/100).toFixed(2)
-			// 			comFB[i] = (comFB[i]/100).toFixed(2)
-			// 			comBK[i] = (comBK[i]/100).toFixed(2)
-			// 		}
-			// 		var series = [ {'name':'竞彩返奖率','data':ALL},
-			// 					   {'name':'足球返奖率','data':FB},
-			// 					   {'name':'篮球返奖率','data':BK}];	
-					
-			// 		this.$set(this.lineData3, 'categories', dates);
-			// 		this.$set(this.lineData3, 'series', series);
-					
-			// 		// var json3 = {'name':'销量','data':volData};
-			// 		var series2 = [ {'name':'竞彩返奖率','data':comALL},
-			// 					   {'name':'足球返奖率','data':comFB},
-			// 					   {'name':'篮球返奖率','data':comBK}];	
-			// 		// series2[0] = json2;
-			// 		this.$set(this.lineData4, 'categories', dates);
-			// 		this.$set(this.lineData4, 'series', series2);
-			// 		this.$refs['lineData3'].showCharts();
-			// 		this.$refs['lineData4'].showCharts();
-			// 		this.res = '请求结果 : ' + JSON.stringify(res);
-			// 	}).catch((err)=>{
-			// 		this.loading = false;
-			// 		console.log('request fail', err);
-			// 	})
-			// },
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
 			gotoLunBo(btnnum){
 				if(btnnum==0){
 					uni.navigateTo({

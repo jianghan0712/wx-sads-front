@@ -193,6 +193,8 @@
 			    console.log(this.btnnum);
 				this.getServerData();
 				this.showView();
+				this.getServerData();
+				this.showView();
 		    },
 			bindPickerChange(e) {
 				console.log('picker发送选择改变，携带值为：' + this.array[e.detail.value].name)

@@ -34,7 +34,13 @@
 		onLoad(option) {
 			this.area = option.area; // 字符串转对象
 			this.areaName = option.areaName;
+			var selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			var list = JSON.parse(uni.getStorageSync("areaMap"))
+			if(selfParam.selfProvinceCenterId!=0){ 
+				list=[]
+				var json = {id:this.area, name:this.areaName}
+				list[0] = json
+			}
 			console.log('areaSelect list:',list);
 			
 			for(var i = 0;i<list.length;i++){    //遍历json对象的每个key/value对,p为key

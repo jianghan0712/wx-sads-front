@@ -235,12 +235,9 @@
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				var area = uni.getStorageSync("area")
+				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
-				if(-1==area){
-					area=0;
-				}
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName			
 				this.selfParam.token=getApp().globalData.token
@@ -323,12 +320,8 @@
 								this.$set(that.pagedata,11,0);
 								this.$set(that.pagedatacompare,11,0);
 							}else{
-								var all =[];
-								for(var i=0;i<data.length;i++){
-									all.push(data[0])
-								};
-								this.$set(that.pagedata,11,all);
-								this.$set(that.pagedatacompare,11,data[0][1]);
+								this.$set(that.pagedata,11,data[0]);
+								this.$set(that.pagedatacompare,11,data[1]);
 							}
 							
 						}).catch((err)=>{
@@ -592,12 +585,8 @@
 								this.$set(that.pagedata,11,0);
 								this.$set(that.pagedatacompare,11,0);
 							}else{
-								var all =[];
-								for(var i=0;i<data.length;i++){
-									all.push(data[0])
-								};
-								this.$set(that.pagedata,11,all);
-								this.$set(that.pagedatacompare,11,data[0][2]);
+								this.$set(that.pagedata,11,data[0]);
+								this.$set(that.pagedatacompare,11,data[2]);
 							}
 							
 						}).catch((err)=>{
@@ -838,6 +827,7 @@
 			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.returnFromDatePicker();
+				this.loadData();
 				this.loadData();
 			},
 			

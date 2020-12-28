@@ -109,14 +109,11 @@
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				var area = uni.getStorageSync("area")
+				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
-				if(-1==area){
-					area=0;
-				}
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName				
+				this.selfParam.provinceCenterName=areaName					
 				this.selfParam.token=getApp().globalData.token
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))		
 			},
@@ -247,6 +244,7 @@
 			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.returnFromDatePicker();
+				this.loadData();
 				this.loadData();
 			},
 			

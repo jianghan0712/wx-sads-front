@@ -2,9 +2,6 @@
 	<view>
 		<view class="box-contaniner">
 			<dataContainerTwoCol ref="dataContainTwo" :dataAs="topData"></dataContainerTwoCol>
-			<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today && selfParam.provinceCenterId!=0">
-				<dataContainerTwoColFour ref="rankData" :dataAs="rankData"></dataContainerTwoColFour>
-			</block>
 		</view>
 		
 		<!-- 折线图区域-->
@@ -17,14 +14,21 @@
 				</view>
 			</view>		
 			<view class="end-cont" :class="{dis:btnnum == 0}">		
-				<area-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
+				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" />
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
-				<area-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
+				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
 							:xAxisAs="{scrollShow:false}" />
 			</view>		
-		</view>
+		</view>	
+		
+		<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today && selfParam.provinceCenterId!=0">
+			<view class="box-contaniner">
+				<view class="shop-title">排名对比</view>
+				<dataContainerTwoColFour ref="rankData" :dataAs="rankData"></dataContainerTwoColFour>
+			</view>
+		</block>
 		
 		<!-- 竞彩足篮球销量及占比对比区域 -->
 		<view class="box-contaniner">
@@ -55,13 +59,13 @@
 				</view>			
 			</view>
 		</view>
-		<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today && selfParam.provinceCenterId!=0">
+		<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today">
 			<view class="shop-title">返奖率情况</view>
 			<dataContainerTwoColFour ref="returnData" :dataAs="returnData"></dataContainerTwoColFour>
 		</block>
 		
 		<block v-if="selfParam.compareDate.dateType!='date'">
-			<view class="box-contaniner">
+<!-- 			<view class="box-contaniner">
 				<view class="shop-title">{{selfParam.compareDate.viewLeft}}返奖率走势</view>
 				<area-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" 
@@ -72,7 +76,7 @@
 				<area-chart ref="lineData4" canvasId="index_line_4" :dataAs="lineData4" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" 
 							:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
-			</view>	
+			</view>	 -->
 			<view class="box-contaniner">
 				<view class="rankTable-title">
 					<view>各地区返奖情况对比</view>
@@ -167,8 +171,8 @@
 							right:{title1:'在售门店数',amount1:0,title2:'在售门店率',amount2:0}},
 				returnData:{left:{title1:'返奖率',amount1:0},
 							right:{title1:'返奖率',amount1:0}},
-				rankData:{left:{title1:'排名',amount1:0},
-						  right:{title1:'排名',amount1:0}},
+				rankData:{left:{title1:'全国排名',amount1:0},
+						  right:{title1:'全国排名',amount1:0}},
 				ballAmount:{
 					left:{
 						football:{name:"足球",amount:"销量0元",zhanbi:"0%"},
@@ -697,8 +701,8 @@
 						var leftRank = data[0]
 						var rightRank = data[1]
 						
-						var left = {'title1':'排名', 'amount1':leftRank };
-						var right = {'title1':'排名', 'amount1':rightRank};	
+						var left = {'title1':'全国排名', 'amount1':leftRank };
+						var right = {'title1':'全国排名', 'amount1':rightRank};	
 						this.rankData.left = left 
 						this.rankData.right= right
 						this.$refs['rankData'].showDataContainer();

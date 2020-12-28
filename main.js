@@ -35,5 +35,6 @@ const app = new Vue({
 
 const vue =Vue;
 const ballType ='足球';
-
+const userId ='';
+const userName='';
 app.$mount()

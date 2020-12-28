@@ -8,11 +8,20 @@
         </scroll-view>
 	
 		<view class="content">
+			<block v-if="tabIndex<4">
 				<view @click="goDatePickerLeft" style="width: 400rpx;">{{selfParam.compareDate.viewLeft}}</view>
 				<!-- <view @click="goArea" style="width: 100rpx;">{{selfParam.provinceCenterName}}</view> -->
 				<view @click="goDatePickerRight" style="width: 280rpx;">{{selfParam.compareDate.viewRight}}</view>
 				<!--<view style="-webkit-flex: 1;flex: 1;">取消</view>		-->
+			</block>
+			<block v-if="tabIndex==4">
+				<view class="blackClass">
+					<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+				</view>
+			</block>
 		</view>	 
+
+		
 		<block v-if="tabIndex==0">
 			<totalViewCompare ref="totalViewCompare"></totalViewCompare>
 		</block> 
@@ -122,6 +131,8 @@
 				this.$refs['levelViewCompare'].refresh();
 			}else if (this.$refs['ticketViewCompare']!=null){
 				this.$refs['ticketViewCompare'].refresh();
+			}else if (this.$refs['matchView']!=null){
+				this.$refs['matchView'].refresh();
 			}
 		},
 		onUnload() {
@@ -130,6 +141,10 @@
 		},
         methods: {
 			returnFromDatePicker(){
+				if(this.tabIndex==4){
+					this.returnFromDatePicker2()
+					return
+				}
 				const dateType = uni.getStorageSync("compareDateType")
 				const leftDate = JSON.parse(uni.getStorageSync("leftBusinessDate"))
 				const rightDate = JSON.parse(uni.getStorageSync("rightBusinessDate"))
@@ -190,6 +205,21 @@
 
 				
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))				
+			},
+			returnFromDatePicker2(){
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				const dateType = uni.getStorageSync("dateType")
+				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				this.selfParam.businessDate = bussinessDate;
+				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
+						
+				const area = uni.getStorageSync("area")
+				const areaName = uni.getStorageSync("areaName")
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
+				this.selfParam.provinceCenterId=area
+				this.selfParam.provinceCenterName=areaName	
+					this.selfParam.token=getApp().globalData.token
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
             getList(index) {
                 let activeTab = this.newsList[index];
@@ -267,6 +297,11 @@
                 }
                 return (s4() + s4() + "-" + s4() + "-4" + s4().substr(0, 3) + "-" + s4() + "-" + s4() + s4() + s4()).toUpperCase();
             },
+			goDatePicker() {
+				uni.navigateTo({
+					url:"/pages/common/dateSelector?type=common&date=" + this.selfParam.businessDate.date.startDate
+				});
+			},
 			goDatePickerLeft() {
 				//跳转日期选择页面,同时传递日期初始化参数
 				// 单选就传递单选参数，复选就传递复选参数
@@ -452,6 +487,14 @@
 		padding: 15px;
 		height: 500px;
 	}
+	.blackClass{
+		display: flex;
+		padding: 10px 10px;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+	}
+	
 	.content {
 		width: 100%;
 		display: flex;

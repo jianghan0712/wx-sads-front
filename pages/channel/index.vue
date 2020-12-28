@@ -398,7 +398,7 @@
 				},
 				goArea(){
 					uni.navigateTo({
-						url:"/pages/common/areaSelector?area="+this.selfParam.provinceCenterId
+						url:"/pages/common/areaSelector?area="+this.selfParam.provinceCenterId +'&areaName=' + this.selfParam.provinceCenterName
 					});
 				},
 				goDetail(number){

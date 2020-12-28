@@ -78,9 +78,9 @@
 
         },
         methods: {
-			getUserInfo(){
+			getUserInfo(token){
 				var url = '/pentaho/user/getUserInfo';
-				var param = {userName:this.loginInfo.userame,token:this.selfParam.token}
+				var param = {userName:this.loginInfo.username,token:token}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)
@@ -89,11 +89,13 @@
 							icon: 'success',
 							mask: true
 						});
-						
+						debugger
 						var data = res.data.data;
 						this.userinfo.userId = data.userId
+						getApp().globalData.userId = data.userId
 						this.userinfo.nickName = data.nickName
 						this.userinfo.userName = data.userName
+						getApp().globalData.userName = data.userName
 						this.userinfo.userEmail = data.userEmail
 						this.userinfo.phone = data.phone
 						this.userinfo.lastLoginTime = dateUtils.getTime()
@@ -108,9 +110,10 @@
 						console.log('request fail', err);
 					})			
 			},
-			getUserRight(){
+			getUserRight(userId,token){
 				var url = '/pentaho/user/getUserPower';
-				var param = {userId:this.userinfo.userId, token:this.selfParam.token}
+				var param = {userId:userId, token:token}
+				
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)
@@ -126,7 +129,7 @@
 						this.selfParam.provinceCenterId = data.provincialId
 						this.selfParam.selfProvinceCenterId = data.provincialId
 						this.selfParam.userId = data.userId
-					
+						debugger
 						this.res = '请求结果 : ' + JSON.stringify(res);
 						console.log('getUserRight=', this.selfParam)						
 						
@@ -225,11 +228,13 @@
 					
 					var data = res.data.data;
 					this.selfParam.token = data.msg;
+					this.selfParam.userId = data.userId
+					this.userinfo.userId = data.userId
 					getApp().globalData.token=data.msg;
 					console.log(data)
 					if(data.flag){
-						this.getUserInfo()
-						this.getUserRight()
+						this.getUserInfo(this.selfParam.token)
+						this.getUserRight(this.selfParam.userId,this.selfParam.token)
 					}else{
 						console.log('request fail', err);
 						uni.showToast({

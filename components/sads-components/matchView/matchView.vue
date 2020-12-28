@@ -1,46 +1,81 @@
 <template>
 	<view>
-		<view class = "box-container">
-			<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
-				<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../../static/left.png" mode="aspectFill">
-				 赛事
-				<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../../static/right.png" mode="aspectFill">
-			</view>
-			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
-				<view style="width: 350rpx;">
-					<view class="black-text">足球赛事</view>
-					<view class="gray-text">当日完赛场 {{pagedata[1]}}场</view>
+		<view class="box-contaniner">
+			<view class="tab-content">
+				<view class="end-title">
+				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">足球</view>
+				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">篮球</view>
+				</view>	
+				<view class="end-cont" :class="{dis:btnnum == 0}">
+					<view class="box-contaniner">
+						<view style="font-size: 30rpx;font-weight: bold;">top5 赛制销量</view>
+						<block v-if="matchTypeTableData.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchTypeTableData.length>0">
+							<view class="example">
+								<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>				
+					</view>
+					<view class="box-contaniner">
+						<view style="font-size: 30rpx;font-weight: bold;">top5 赛事销量</view>
+						<block v-if="matchEventTableData.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchEventTableData.length>0">
+							<view class="example">
+								<v-table :columns="matchEventTableColumns" :list="matchEventTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>
+					</view>
 				</view>
-				<view style="width: 350rpx;">
-					<view class="black-text" style="text-align: right;" @click="toFoot()">详情></view>
-					<view class="gray-text">当日在售赛场 {{pagedata[0]}}场</view>
-				</view>
-			</view>
-			<view class ="column-box viewborder" style="width: 700rpx; display: flex;" >
-				<view style="width: 350rpx;">
-					<view class="black-text">篮球赛事</view>
-					<view class="gray-text">当日完赛场 {{pagedata[3]}}场</view>
-				</view>
-				<view style="width: 350rpx;">
-					<view class="black-text" style="text-align: right;" @click="toBasket()">详情></view>
-					<view class="gray-text">当日在售赛场 {{pagedata[2]}}场</view>
+				<view class="end-cont" :class="{dis:btnnum == 1}">	
+					<view class="box-contaniner">
+						<view style="font-size: 30rpx;font-weight: bold;">top5 赛制销量</view>
+						<block v-if="matchTypeTableData.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchTypeTableData.length>0">
+							<view class="example">
+								<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>
+					</view>
+					<view class="box-contaniner">
+						<view style="font-size: 30rpx;font-weight: bold;">top5 赛事销量</view>
+						<block v-if="matchEventTableData.length==0">
+							<noData :message="nodataMessage"></noData>
+						</block>
+						<block v-if="matchEventTableData.length>0">
+							<view class="example">
+								<v-table :columns="matchEventTableColumns" :list="matchEventTableData"  border-color="#FFFFFF"></v-table>
+							</view>
+						</block>
+					</view>
 				</view>
 			</view>		
-			<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 		</view>
+	<slot />
 	</view>
+
 </template>
 
 <script>
+	import RingChart from "@/components/basic-chart/RingChart.vue";
+	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
-	import backTop from '@/components/sads-components/back-top.vue';
+	import numberFun from '@/common/tools/number.js';
+	import noData from '@/components/sads-components/noData.vue';
 	
 	export default {
 		components: {
-			backTop
+			RingChart,
+			vTable,noData
 		},
 		props: {
-			model:{
+			param:{
+				//数据
 				type: Object,
 				default: () => ({})
 			}
@@ -55,6 +90,7 @@
 					countyCenterId:'',	
 					compareType:'date',
 					compareFlag:false,
+					nodataMessage:'未找到今日赛事',
 					businessDate:{
 						dateType:'',// date/week/month/year
 						view:'',//用于展示日期、年、月等
@@ -74,244 +110,326 @@
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id
 				},
-				backTop: {
-					src: '../../static/top.png',
-					scrollTop: 0
-				},
-				scrollTop: 0,
-				showModel:{},
-				pagedata:[1,2,3,4],
-				tableColumns:[{
-								title: "赛制",
-								key: "id",
-								$width:"155rpx",
-							},
-							{
-								title: '场次',
-								key: 'area',
-								$width:"155rpx"
-							},],
-				//完赛
-				tableData1:[],
-				 //在售
-				tableData11:[],
-				tableColumns:[{
-								title: "赛制",
-								key: "id",
-								$width:"155rpx",
-							},
-							{
-								title: '场次',
-								key: 'area',
-								$width:"155rpx"
-							},],
-				//完赛
-				tableData2:[],
-				 //在售
-				tableData22:[]
-				}
+				btnnum: 0,
+				index: 0,
+				nodataMessage:'未找到相关比赛',
+				matchTypeTableData: [],
+				matchTypeTableColumns: [{
+						title: "排名",
+						key: "id",
+						$width:"50px",
+					},{
+						title: '赛制',
+						key: 'matchType',
+						$width:"160px"
+					},{
+						title: '销量（百万元）',
+						key: 'amount',
+						$width:"150px"
+					}
+				],	
+				matchEventTableData: [],
+				matchEventTableColumns: [{
+						title: "排名",
+						key: "id",
+						$width:"50px",
+					},{
+						title: '赛制',
+						key: 'matchType',
+						$width:"160px"
+					},{
+						title: '销量（百万元）',
+						key: 'amount',
+						$width:"150px"
+					}
+				],	
+				array: [{name:'单关'},{name: '2X1'}, {name:'3X1'}, {name:'4X1-8X1'}, {name:'MXN'}, {name:'自由过关'}],
+			};
+		},
+		onLoad() {
+			_self = this;
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData(this.btnnum);
+			this.refresh();
+		},
+		onShow() {
+			_self = this;
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData(this.btnnum);
+			this.refresh();
+		},
+		created() {
+			_self = this;
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.returnFromDatePicker();
+			this.getServerData(this.btnnum);
+			this.refresh();
 		},
 		methods: {
-			returnFromDatePicker(){
+			showView(){
+				this.$nextTick(() => {				
+				});
+			},
+			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				this.getServerData(this.btnnum);
+				this.showView();
+			},
+			getServerData(btnnum) {
+				this.getMatchTable(btnnum);
+				this.getMatchEventTable(btnnum);
+			},
+		    change(e) {
+			    this.btnnum = e;
+			    console.log(this.btnnum);
+				this.getServerData(this.btnnum);
+		    },
+			bindPickerChange: function(e) {
+				console.log('picker发送选择改变，携带值为：' + e.detail.value)
+				this.index = e.detail.value
+			},
+			returnFromDatePicker(){
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
-				var area = uni.getStorageSync("area")
+				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
-				if(-1==area){
-					area=0;
-				}
+				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName		
-				this.selfParam.token=getApp().globalData.token
-				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))		
+				this.selfParam.provinceCenterName=areaName
+				this.selfParam.token=uni.getStorageSync("token");
 			},
-			createParam(){
+			createParam(btnnum){
 				console.log("createParam begin")
 				var dateType = this.selfParam.businessDate.dateType
 				var param = {}
 				if(dateType=='date'){
-					param = {dateTime: this.selfParam.businessDate.date.startDate,
+					param = {dateTimeStart: this.selfParam.businessDate.date.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.date.endDate,
 							 dateFlag:"1",
 							 regionId:this.selfParam.provinceCenterId,
-							 token:this.selfParam.token }
+							 token:this.selfParam.token,
+							 gameFlag:this.btnnum+1 }
 				}else if(dateType=='week'){
-					param = {dateTime: this.selfParam.businessDate.week.startDate,
+					param = {dateTimeStart: this.selfParam.businessDate.week.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.week.endDate,
 							 dateFlag:"2",
 							 regionId:this.selfParam.provinceCenterId,
-							 token:this.selfParam.token }
+							 token:this.selfParam.token,
+							 gameFlag:this.btnnum+1}
 				}else if(dateType=='month'){
-					param = {dateTime: this.selfParam.businessDate.month.startDate,
+					param = {dateTimeStart: this.selfParam.businessDate.month.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.month.endDate,
 							 dateFlag:"3",
 							 regionId:this.selfParam.provinceCenterId,
-							 token:this.selfParam.token }
+							 token:this.selfParam.token,
+							 gameFlag:this.btnnum+1 }
 				}else if(dateType=='year'){
-					param = {dateTime: this.selfParam.businessDate.year.startDate,
+					param = {dateTimeStart: this.selfParam.businessDate.year.startDate,
+							 dateTimeEnd: this.selfParam.businessDate.year.endDate,
 							 dateFlag:"4",
 							 regionId:this.selfParam.provinceCenterId,
-							 token:this.selfParam.token }
+							 token:this.selfParam.token,
+							 gameFlag:this.btnnum+1 }
 				}	
+
 				console.log("createParam end:",param)
 				return param
 			},
-			loadData(){
-				var token =getApp().globalData.token;
-				var that=this;
-				var url = '/pentaho/dailyPaper/getMatchSceneCount';
-				var param={dateTime: this.selfParam.businessDate.date.startDate,
-						 regionId:this.selfParam.provinceCenterId,
-						 token:this.selfParam.token}
+			// 获取最上层的两个tab {startDate}/{endDate}/{startDatePre}/{endDatePre}/{sportsType}/{provinceCenterId}/{cityCenterId}
+			getMatchTable(btnnum){
+				var url = '/pentaho/match/getTop5FormatSales';
+				var param = this.createParam(btnnum)
+				this.matchTypeTableData=[]
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.data;
-					if(data.length==0||data.length==4){
-						this.$set(that.pagedata,0,0);
-						this.$set(that.pagedata,1,0);
-						this.$set(that.pagedata,2,0);
-						this.$set(that.pagedata,3,0);
-					}else {
-						this.$set(that.pagedata,0,data[16]);
-						this.$set(that.pagedata,1,data[17]);
-						this.$set(that.pagedata,2,data[19]);
-						this.$set(that.pagedata,3,data[18]);
-					}
-				}).catch((err)=>{
-					this.loading = false;
-					console.log('request fail', err);
-				});
-				//加载
-				this.loadDetail('1');
-				this.loadDetail('2');
-			},
-			toFoot(){
-				var that =this;
-				uni.navigateTo({
-					title:'足球赛事详情',
-					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData1)+
-					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData11),
-					
-				});
-			},
-			toBasket(){
-				var that =this;
-				uni.navigateTo({ 
-					title:'篮球赛事详情',
-					url:'/pages/common/tableDetail2?tableColumns='+JSON.stringify(that.tableColumns)+'&tableData='+JSON.stringify(that.tableData2)+
-					'&tableColumns1='+JSON.stringify(that.tableColumns)+'&tableData1='+JSON.stringify(that.tableData22)
-					
-				});
-			},
-			loadDetail(ballType){
-				var token =getApp().globalData.token;
-				//加载足球
-				var url = '/pentaho/dailyPaper/getDetailMatchSceneCount';
-				var param=this.createParam();
-				if(ballType=='1'){
-					param.gameFlag = 1
-				}else if(ballType=='2'){
-					param.gameFlag = 2
-				}
-				urlAPI.getRequest(url, param).then((res)=>{
-					this.loading = true;
-					var data1 =res.data.data;	
-					var finish =data1.finish;
-					var onSale = data1.onSale;
-					this.tableData1=[];
-					this.tableData2=[];
-					if(finish.length==0){
-						finish =[{'id':'无','area':0}];
-					}else {
-						for(var i=0;i<finish.length;i++){
-							var obj={'id':finish[i][0],'area':finish[i][1]};
-							if(ballType=='1'){
-								this.tableData1.push(obj);
-							}else if(ballType=='2'){
-								this.tableData2.push(obj);
-							
-							}
-						};
-					}
-					this.tableData11=[];
-					this.tableData22=[];
-					if(onSale.length==0){
-						onSale =[{'id':'无','area':0}];
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;
+					var format0 = null;
+					if(data!=null && data.length>0){
+						format0 = numberFun.formatCNumber(data[0][1]);							
 					}else{
-						for(var j=0;j<onSale.length;j++){
-							var obj={'id':onSale[j][0],'area':onSale[j][1]};
-							if(ballType=='1'){
-								this.tableData11.push(obj);
-							}else if(ballType=='2'){
-								this.tableData22.push(obj);
-							
-							}
-						};
+						return;
+					}	
+
+					this.matchTypeTableColumns= [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '赛制',
+							key: 'matchType',
+							$width:"200px"
+						},{
+							title: '销量（'+format0.name + '元）',
+							key: 'amount',
+							$width:"150px"
+						}
+					]
+					
+					for(var i=0;i<data.length;i++){
+						var jsonData = {id:i+1, matchType:data[i][0], amount:(data[i][1]/format0.value).toFixed(2)}
+						this.matchTypeTableData[i]=jsonData;
+						if(i==4){
+							break;
+						}
 					}
+
+					console.log('request matchTypeTableData', this.matchTypeTableData);				
+					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
 					console.log('request fail', err);
-				});
+				})
 			},
-			refresh(){
-				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-				this.returnFromDatePicker();
-				this.loadData();
+			getMatchEventTable(btnnum){
+				var param = this.createParam(btnnum)
+				var url = '/pentaho/match/getTop5MatchSales';
+				this.matchEventTableData=[]
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					uni.showToast({
+						title: '请求成功',
+						icon: 'success',
+						mask: true
+					});
+					var data = res.data.data;
+					var format0 = null;
+					if(data!=null && data.length>0){
+						format0 = numberFun.formatCNumber(data[0][1]);							
+					}else{
+						return;
+					}					
+					
+					for(var i=0;i<data.length;i++){
+						var jsonData = {id:i+1, matchName:data[i][0], amount:(data[i][1]/format0.value).toFixed(2)}
+						this.matchEventTableData[i]=jsonData;
+						if(i==4){
+							break;
+						}
+					}
+					console.log('request matchEventTableData', this.matchEventTableData);	
+					
+					this.matchEventTableColumns = [{
+							title: "排名",
+							key: "id",
+							$width:"50px",
+						},{
+							title: '赛事',
+							key: 'matchName',
+							$width:"200px"
+						},{
+							title: '销量（' + format0.name + '元）',
+							key: 'amount',
+							$width:"150px"
+						}
+					];
+					
+								
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				})
 			},
-			
 		},
 		created() {
-			this.returnFromDatePicker();
-			this.loadData();
+			// this.selfParam = this.param
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			//ajax调用
+			this.getServerData(this.btnnum);
 		},
-		onShow() {
-			this.returnFromDatePicker();
-			this.loadData();
+		mounted(){
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.showView();
 		},
-		onLoad() {
-			this.returnFromDatePicker();
-			this.loadData();
+		watch: {
+			'$route':'showView'
 		},
-		onPageScroll(e) {
-			this.backTop.scrollTop = e.scrollTop;
-		}
 	}
 </script>
 
 <style>
-	.row-box {
-		display: flex;
-		margin: 0rpx 10rpx;
-		padding: 0 10rpx;
-	}
-	
-	.column-box{
-		margin: 25rpx 20rpx;
-		background-color: #ebebeb;
-	}
-	
-	.black-text{
-		text-align: left;
-		color: #777;
-		font-weight:bold;
-		font-size: 30rpx;
-		margin: 20rpx 30rpx;
-	}
-	
-	.gray-text{
-		text-align: left;
-		color: #777;
-		font-size: 30rpx;
-		margin: 20rpx 30rpx;
-	}
-	.viewborder{
-		border-radius: 20rpx;
-		padding: 0rpx 0rpx 0rpx 0rpx;
-	}
 	.box-contaniner{
 		width: 100%;
 		margin: 20rpx 10rpx 40rpx 10rpx;
 	}
+	
+    /* 将三个内容view的display设置为none(隐藏) */
+	.tab-content{
+		margin: 20rpx 10rpx 20rpx 10rpx;
+		/* padding: 20rpx 10rpx 20rpx 10rpx; */
+	}
+    .end-title{
+        display: flex;
+    }
+    .end-title view{
+        flex-grow: 1;
+        text-align: center;
+    }
+    .end-cont{
+		display: none;
+		background: #FFFFFF;
+    }
+    .btna{
+		color: #000000;
+		background: #ebebeb;
+		/* padding:0px 5rpx 0px 5rpx; */
+    }
+    .dis{
+        display: block;
+    } 
+	
+	
+	.rankTable{
+		width: 100%;
+		height: 500upx;
+		margin: 0rpx 0rpx;
+		padding: 0 0rpx;
+		font-size: 30rpx;		
+		background-color: #FFFFFF;
+	}
+	
+	.rankTable-title{
+		width: 100%;
+		margin: 0rpx 0rpx;
+/* 		padding: 0 10rpx; */
+		display: flex;
+		/* font-weight: bold; */
+		justify-content: space-between;
+	}
+	
+	.rankTable-more{
+/* 		margin: 0rpx 10rpx;
+		padding: 0 10rpx; */
+		text-align: right;
+	}
+		
+	
+	.example {
+		/* line-height: 40px; */
+		/* font-weight: bold; */
+		border-color:#FFFFFF;
+	}
+	
+	button {
+		width: 75%;
+	    margin-top: 30rpx;
+	    margin-bottom: 30rpx;
+		font-size: 30rpx;
+	}
+
 </style>
