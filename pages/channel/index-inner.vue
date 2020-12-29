@@ -11,7 +11,7 @@
 				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
 			</view>
 			<view class="blackClass">
-				<view @click="goCompare">对比</view>
+				<view @click="goCompare" style="color: #007AFF;text-decoration: underline">对比</view>
 			</view>
 		</view>	
 		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">

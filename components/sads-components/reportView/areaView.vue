@@ -60,6 +60,8 @@
 	import urlAPI from '@/common/vmeitime-http/';
 	import backTop from '@/components/sads-components/back-top.vue';
 	import dateUtils from '@/common/tools/dateUtils.js';
+	import util from '@/common/tools/util.js'
+	
 	export default {
 		components: {
 			vTable,
@@ -273,7 +275,7 @@
 					for(var i=0;i<data[i].length;i++){
 						var arr={
 								id: i+1,
-								area: data[i][0],
+								area: util.formatToolongName(data[i][0]),
 								xiaoliang: (data[i][1]/1000000).toFixed(2),
 								rateChange: ((data[i][2]/1000000).toFixed(2))>0?"+"+(data[i][2]/1000000).toFixed(2):(data[i][2]/1000000).toFixed(2)
 							};
@@ -308,7 +310,7 @@
 					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,
-								area: data[i][0],
+								area: util.formatToolongName(data[i][0]),
 								piaoshu: (data[i][1]/10000).toFixed(2),
 								rateChange:((data[i][2]/1000000).toFixed(2))>0?"+"+(data[i][2]/1000000).toFixed(2):(data[i][2]/1000000).toFixed(2)
 							};
@@ -341,7 +343,7 @@
 						for(var i=0;i<data[i].length;i++){
 							var arr={ 
 									id: i+1,
-									area: data[i][0],
+									area:util.formatToolongName(data[i][0]),
 									notnonecount: data[i][1],
 									nonecount: data[i][2]
 								};
@@ -368,7 +370,7 @@
 					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,
-								area: data[i][0],
+								area:util.formatToolongName(data[i][0]),
 								jingcai: data[i][1]+"%",
 								football: data[i][2]+"%",
 								basketball: data[i][3]+"%"

@@ -522,6 +522,7 @@
 				// var url = '/pentaho/shows/getShowRankingCity';
 				var param = this.createParam()
 				param.provincialId = this.gateInfo.provincialId
+				param.provincialName = this.gateInfo.provincial
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 

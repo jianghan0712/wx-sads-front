@@ -32,7 +32,7 @@
 			<view >
 				<view class="container-title">
 					<view>各地区{{arcbarNumTop}}销量及占比</view>
-					<view style="width: 200;height: 50upx;text-align: top;font-size: 20rpx;" @click="toAll()">全部>></view>
+					<view style="width: 200;height: 50upx;text-align: top;font-size: 30rpx; padding-right: 10rpx;" @click="toAll()">全部>></view>
 				</view>
 				<view class="table">
 					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
@@ -43,7 +43,7 @@
 				<view >
 					<view class="container-title">
 						<view>各地区{{arcbarNumTop}}返奖情况</view>
-						<view style="width: 200;height: 50upx;text-align: top;font-size: 20rpx;" @click="toAll1()">全部>></view>
+						<view style="width: 200;height: 50upx;text-align: top;font-size: 30rpx;padding-right: 10rpx;" @click="toAll1()">全部>></view>
 					</view>
 					<view class="table">
 						<v-table :columns="tableColumns1" :list="tableData1"  border-color="#FFFFFF"></v-table>
@@ -64,6 +64,8 @@
 	import urlAPI from '@/common/vmeitime-http/';
 	import dateUtils from '@/common/tools/dateUtils.js';
 	import numberFun from '@/common/tools/number.js';
+	import util from '@/common/tools/util.js'
+	
 	
 	export default {
 			components:{
@@ -505,7 +507,7 @@
 						that.tableDataAll=[]
 						var format0 = numberFun.formatCNumber(data[0][2]); 
 						for(var i=0;i<data.length;i++){
-							var obj={id:i+1,area:data[i][0],zhanbi:data[i][1]+"%",count:(data[i][2]/format0.value).toFixed(2)};
+							var obj={id:i+1,area:util.formatToolongName(data[i][0]),zhanbi:data[i][1]+"%",count:(data[i][2]/format0.value).toFixed(2)};
 							if(i<5){
 								that.tableData[i] = obj;
 							}
@@ -570,7 +572,7 @@
 									cellClassName.huanbi='small-text-red'
 								}
 								var obj={id:i+1,
-										area:data[i][0],
+										area:util.formatToolongName(data[i][0]),
 										returnRate:data[i][1]+"%",
 										tongbi:data[i][2]>0?"+"+data[i][2]+"%":data[i][2]+"%",
 										huanbi:data[i][3]>0?"+"+data[i][3]+"%":data[i][3]+"%"};								

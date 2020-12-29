@@ -4,7 +4,7 @@
 		    <view class="user" hoverClass="none">
 		      <view class="user_box">
 		        <view catchtap="previewImage" class="logo">
-		          <image src="../../static/头像.png"></image>
+		          <image src="../../static/user.jpg"></image>
 		          <view class="cu-tag badge"></view>
 		        </view>
 		          <view class="user_info">

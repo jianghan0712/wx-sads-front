@@ -149,6 +149,8 @@
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
+	import util from '@/common/tools/util.js'
+	
 	
 	export default {
 		name: 'Index',
@@ -976,7 +978,7 @@
 					
 					for(var i=0;i<data.length;i++){
 						var num=numberFun.formatCNumber(data[i][3]);
-						var obj={area:data[i][0],
+						var obj={area:util.formatToolongName(data[i][0]),
 								id:data[i][1],
 								amount:(data[i][3]/num.value).toFixed(2),
 								}
@@ -995,7 +997,7 @@
 							cellClassName.rate='small-text-red'
 						}
 						objRate.cellClassName=cellClassName;			
-						var objRateC={area:data[i][0],
+						var objRateC={area:util.formatToolongName(data[i][0]),
 								id:data[i][1],
 								rate:this.valueToPercent(data[i][5]),
 								}
@@ -1026,7 +1028,7 @@
 					var data =res.data.data;
 					for(var i=0;i<data.length;i++){
 						var num=numberFun.formatCNumber(data[i][3]);
-						var obj={area:data[i][0],
+						var obj={area:util.formatToolongName(data[i][0]),
 								id:data[i][1],
 								amount:(data[i][3]/num.value).toFixed(2),
 								}
@@ -1034,7 +1036,7 @@
 								id:data[i][4],
 								amount:(data[i][6]/num.value).toFixed(2),
 								}
-						var objRate={area:data[i][0],
+						var objRate={area:util.formatToolongName(data[i][0]),
 								id:data[i][1],
 								rate:this.valueToPercent(data[i][2]),
 								}
@@ -1045,7 +1047,7 @@
 							cellClassName.rate='small-text-red'
 						}
 						objRate.cellClassName=cellClassName;			
-						var objRateC={area:data[i][0],
+						var objRateC={area:util.formatToolongName(data[i][0]),
 								id:data[i][1],
 								rate:this.valueToPercent(data[i][5]),
 								}
@@ -1080,7 +1082,7 @@
 					
 					for(var i=0;i<data.length;i++){
 						var num=numberFun.formatCNumber(data[i][3]);
-						var obj={area:data[i][0],
+						var obj={area:util.formatToolongName(data[i][0]),
 								id:data[i][1],
 								rate:this.valueToPercent(data[i][2]),
 								}
@@ -1124,7 +1126,7 @@
 					
 					for(var i=0;i<data.length;i++){
 						var num=numberFun.formatCNumber(data[i][3]);
-						var obj={area:data[i][0],
+						var obj={area:util.formatToolongName(data[i][0]),
 								id:data[i][1],
 								rate:this.valueToPercent(data[i][2]),
 								}

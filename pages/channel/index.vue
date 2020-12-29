@@ -20,7 +20,7 @@
 		<view class="box-contaniner" style="margin: 20rpx;">
 			<view class="container-title">				
 				<view>销售top100门店</view>
-				<view class="rankTable-more" style="padding-right: 30rpx;" @click="goShopDetail(amountTableDataDetail,amountTableColumns)">全部>></view>
+				<view class="rankTable-more" style="padding-right: 35rpx;" @click="goShopDetail(amountTableDataDetail,amountTableColumns)">全部>></view>
 			</view>
 			<view class="example">
 				<v-table :columns="amountTableColumns" :list="amountTableData"  selection="single"  :slot-cols="['number']" border-color="#FFFFFF">
@@ -31,10 +31,10 @@
 			</view>
 		</view>
 		
-		<view class="box-contaniner">
+		<view class="box-contaniner" style="margin: 20rpx;">
 			<view class="container-title">				
 				<view>各地区超限门店</view>
-				<view class="rankTable-more" style="padding-right: 30rpx;" @click="goLimitShopDetail(beyondLimitTableDataDetail,beyondLimitTableColumns)">全部>></view>
+				<view class="rankTable-more" style="padding-right: 35rpx;" @click="goLimitShopDetail(beyondLimitTableDataDetail,beyondLimitTableColumns)">全部>></view>
 			</view>
 			<view v-if="update2">
 				<view class="example">
@@ -489,12 +489,7 @@
 							return
 						}
 						var amountTableDataWithPro = []
-						var format0 = null
-						if(isCountry){
-							format0 = numberFun.formatCNumber(data[0][2]);
-						}else{
-							format0 = numberFun.formatCNumber(data[0][3]);
-						}
+						var format0 = numberFun.formatCNumber(data[0][3]);
 					
 						var amountTableColumnsWithPro=[{
 									title: "排名",
@@ -517,18 +512,10 @@
 								}
 							]	
 						for(var i=0;i<data.length;i++){
-							var json = {}
-							if(isCountry){
-								json = {id:i+1,
-											area:util.formatToolongName(data[i][0]), 
-											number:data[i][1], 
-											amount:(data[i][2]/format0.value).toFixed(2)}
-							}else{
-								json = {id:i+1,
-											area:util.formatToolongName(data[i][1]), 
-											number:data[i][2], 
-											amount:(data[i][3]/format0.value).toFixed(2)}
-							}
+							var json = {id:i+1,
+										area:util.formatToolongName(data[i][1]), 
+										number:data[i][2], 
+										amount:(data[i][3]/format0.value).toFixed(2)}
 							amountTableDataWithPro[i] = json
 						}
 
