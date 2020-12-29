@@ -4,7 +4,12 @@
 			<view class="container-title">单票金额</view>
 			<ticketData ref="ticketData" :dataAs="ticketData"></ticketData>
 		</view>
-		
+		<block v-if="'date'!= selfParam.businessDate.dateType">
+			<view class="box-contaniner">
+				<view class="container-title">竞彩单票金额走势图</view>
+				<line-chart ref="ticketlineData" canvasId="ticket_line_1" :dataAs="lineData1" />
+			</view>
+		</block>
 		<view class="box-contaniner">
 			<view class="container-title">各票面区间的票数及占比</view>
 			<view class="tab-content">
@@ -40,12 +45,7 @@
 			</view>
 		</view>
 		
-<!-- 		<block v-if="'date'!= selfParam.businessDate.dateType">
-			<view class="box-contaniner">
-				<view class="container-title">竞彩单票金额走势图</view>
-				<line-chart ref="ticketlineData" canvasId="ticket_line_1" :dataAs="lineData1" />
-			</view>
-		</block> -->
+		
 		<slot />
 	</view>	
 </template>
@@ -115,6 +115,10 @@
 			}
 		},
 		onLoad() {
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView();
+			this.refresh();
 			// this.returnFromDatePicker();
 			// this.getServerData();
 			// this.showView();
@@ -123,6 +127,10 @@
 			// this.$refs['progress_0'].showProgress(this.pieData);
 		},
 		onShow() {
+			this.returnFromDatePicker();
+			this.getServerData();
+			this.showView();
+			this.refresh();
 			// this.returnFromDatePicker();
 			// this.getServerData();
 			// this.showView();
@@ -134,7 +142,7 @@
 			this.returnFromDatePicker();
 			this.getServerData();
 			this.showView();
-			// this.refresh();
+			this.refresh();
 			// this.change(1);
 			// this.$refs['progress_0'].showProgress(this.pieData);
 		},
@@ -154,6 +162,8 @@
 						this.$refs['ringChart2'].showCharts();
 						this.$refs['progress_2'].showProgress(this.pieData2);
 					}
+					
+					
 				})
 
 					// this.$refs['ticketlineData'].showCharts();
@@ -179,7 +189,7 @@
 				this.getPieData('竞彩');
 				this.getPieData('足球');
 				this.getPieData('篮球');
-				// this.getLineDate();
+				this.getLineDate();
 				// this.$refs['ticketData'].showDataContainer();
 			},
 			change(e) {
@@ -361,6 +371,7 @@
 					console.log('series: ', series);
 					console.log('lineData1: ', this.lineData1);
 					
+					this.$refs['ticketlineData'].showCharts();
 					
 					this.res = '请求结果 : ' + JSON.stringify(res);
 					}).catch((err)=>{

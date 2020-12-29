@@ -34,7 +34,7 @@
 <script>
 	import urlAPI from '@/common/vmeitime-http/';
 	import backTop from '@/components/sads-components/back-top.vue';
-	
+	import dateUtils from '@/common/tools/dateUtils.js';
 	export default {
 		components: {
 			backTop
@@ -118,7 +118,10 @@
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-						
+				if(this.selfParam.businessDate.date.startDate==dateUtils.getToday()){
+					this.selfParam.businessDate.view =dateUtils.getYesterday();
+					this.selfParam.businessDate.date.startDate =dateUtils.getYesterday();
+				}	
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)

@@ -1,10 +1,19 @@
 <template>
     <view class="tabs">
-       <scroll-view id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
-            <view v-for="(tab,index) in tabBars" :key="tab.id" class="uni-tab-item" :id="tab.id" :data-current="index" @click="ontabtap">
-                <text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
-            </view>
-        </scroll-view>
+		<view v-if="selfParam.provinceCenterId==0">
+		   <scroll-view  id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
+				<view v-for="(tab,index) in tabBars" :key="tab.id" class="uni-tab-item" :id="tab.id" :data-current="index" @click="ontabtap">
+					<text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
+				</view>
+			</scroll-view>
+		</view>
+		<view v-if="selfParam.provinceCenterId!=0">
+		   <scroll-view  id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
+				<view v-for="(tab,index) in tabBars1" :key="tab.id" class="uni-tab-item1" :id="tab.id" :data-current="index" @click="ontabtap">
+					<text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
+				</view>
+			</scroll-view>
+		</view>
 		 <view class="content">
 			<view class="blackClass">
 				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
@@ -109,6 +118,22 @@
 						}, {
 							name: '奖池',
 							id: 'reward'
+						}],
+				tabBars1: [{
+							name: '总览',
+							id: 'allView'
+						}, {
+							name: '赛事',
+							id: 'match'
+						}, {
+							name: '销售',
+							id: 'sales'
+						}, {
+							name: '渠道',
+							id: 'channel'
+						}, {
+							name: '区域',
+							id: 'area'
 						}],
                 scrollInto: "",
                 showTips: false,
@@ -370,7 +395,14 @@
         padding-left: 23rpx;
         padding-right: 23rpx;
     }
-
+	.uni-tab-item1 {
+			/* #ifndef APP-PLUS */
+			display: inline-block;
+			/* #endif */
+			flex-wrap: nowrap;
+			padding-left: 35rpx;
+			padding-right: 35rpx;
+		}
     .uni-tab-item-title {
         color: #555;
         font-size: 40rpx;

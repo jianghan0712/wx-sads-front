@@ -2,7 +2,7 @@
 	<view class="box-contaniner">
 		<view class="content">
 			<view class="blackClass">
-				<view @click="goArea">{{selfParam.provinceCenterName}}</view>
+				<view style="color: #007AFF;text-decoration: underline" @click="goArea">{{selfParam.provinceCenterName}}</view>
 			</view>
 			<view class="blackClass">
 				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
@@ -40,7 +40,7 @@
 				<view class="example">
 					<v-table :columns="beyondLimitTableColumns" :list="beyondLimitTableData"   :slot-cols="['area']"  border-color="#FFFFFF">
 						<template v-slot="{ row }">
-							<view style="font-weight: blod;color:blue;" @click="goLimitDetail(row.area)">{{ row.area }}</view>
+							<view style="font-weight: blod;color:blue;" @click="goLimitDetail(row)">{{ row.area }}</view>
 						</template>
 					</v-table>
 				</view>
@@ -56,6 +56,7 @@
 	import urlAPI from '@/common/vmeitime-http/';
 	import commonFun from '@/common/tools/watcher.js';
 	import numberFun from '@/common/tools/number.js';
+	import util from '@/common/tools/util.js'
 	
 	export default {
 			components:{
@@ -169,7 +170,7 @@
 				}				
 			},
 			onLoad() {
-				this.returnFromDatePicker();
+				// this.returnFromDatePicker();
 				this.getServerData();
 				this.showView();
 			},
@@ -192,7 +193,7 @@
 			},
 			methods:{
 				getServerData() {
-					this.getStoreSituation();	
+					this.getStoreSituation();						
 					this.getTopHundredShows();
 					this.getTransfiniteShows();
 				},
@@ -298,7 +299,7 @@
 				getTransfiniteShows(){
 					var url = '/pentaho/channel/getTransfiniteShows';
 					var param = this.createParam()
-					var that =this ;
+					// var that =this ;
 					this.update2=false;
 					
 					if(this.selfParam.provinceCenterId==0){
@@ -352,7 +353,7 @@
 						var data = res.data.data;	
 						for(var i=0;i<data.length;i++){
 							var json = {id:i+1,
-										area:data[i][1], 
+										area:util.formatToolongName(data[i][1]) , 
 										count:data[i][2], 
 										change:(data[i][3]>0?("+"+data[i][3]):data[i][3])
 										}	
@@ -367,19 +368,18 @@
 							if(i<=4){
 								this.beyondLimitTableData[i]=json;	
 							}
-							this.$set(this.beyondLimitTableDataDetail,i,json);	
-							this.areaIdList[i]=areaId
-							this.$set(this.areaIdList,i,areaId);
-							
+							this.beyondLimitTableDataDetail[i]=json
+							this.areaIdList[i]=areaId						
 						}
 							
 						this.res = '请求结果 : ' + JSON.stringify(res);
 						console.log(this.beyondLimitTableData)
+						this.update2=true;
 					}).catch((err)=>{
 						this.loading = false;
 						console.log('request fail', err);
 					});
-					this.update2=true;
+					
 				},
 				returnFromDatePicker(){
 					this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -467,73 +467,107 @@
 					//跳转到当前地区所有门店
 					var url = '/pentaho/channel/getTransfiniteShowsList';
 					var param = this.createParam();
-					var list = JSON.parse(uni.getStorageSync("areaMap"))
-					console.log(list)
-					var areaIdStr="";
-					for(var i = 0;i<list.length;i++){    //遍历json对象的每个key/value对,p为key
-						if(list[i].name==area){
-							areaIdStr=list[i].id;
-						}
+					// 如果是全国，用param.provincialId;如果是省市，用cityId
+					var isCountry = this.selfParam.provinceCenterId==0?true:false
+					var areaId = this.areaIdList[area.id-1]
+					
+					if(isCountry){
+						param.provincialId =areaId.id
+					}else{
+						param.cityId =areaId.id
 					}
-					console.log(areaIdStr)
-					param.provincialId =areaIdStr
+					
 					urlAPI.getRequest(url, param).then((res)=>{
+						console.log('request success', res)
 						var data =res.data.data;
-						for(var i=0;i<data.length;i++){
-							
-							var json = {id:i+1, 
-										area:data[i][1], 
-										number:data[i][2], 
-										amount:data[i][3]>0?"+"+(data[i][3]/10000).toFixed(2):(data[i][3]/10000).toFixed(2)}
-							var cellClassName ={};				
-							if(data[i][3]<0){
-								cellClassName.amount='small-text-green'
-							}else{
-								cellClassName.amount='small-text-red'
-							}	
-							json.cellClassName=cellClassName
-							this.$set(this.amountTableDataWithPro,i,json);	
+						if(data==null || data.length==0){
+							uni.showToast({
+								title: '暂时没有数据',
+								// icon: 'success',
+								// mask: true
+							});
+							return
 						}
+						var amountTableDataWithPro = []
+						var format0 = null
+						if(isCountry){
+							format0 = numberFun.formatCNumber(data[0][2]);
+						}else{
+							format0 = numberFun.formatCNumber(data[0][3]);
+						}
+					
+						var amountTableColumnsWithPro=[{
+									title: "排名",
+									key: "id",
+									$width:"50px",
+								},
+								{
+									title: '地市',
+									key: 'area',
+									$width:"100px"
+								},
+								{
+									title: '门店编号',
+									key: 'number',
+									$width:"150px"
+								},
+								{
+									title: '销量(' + format0.name + '元)',
+									key: 'amount'
+								}
+							]	
+						for(var i=0;i<data.length;i++){
+							var json = {}
+							if(isCountry){
+								json = {id:i+1,
+											area:util.formatToolongName(data[i][0]), 
+											number:data[i][1], 
+											amount:(data[i][2]/format0.value).toFixed(2)}
+							}else{
+								json = {id:i+1,
+											area:util.formatToolongName(data[i][1]), 
+											number:data[i][2], 
+											amount:(data[i][3]/format0.value).toFixed(2)}
+							}
+							amountTableDataWithPro[i] = json
+						}
+
+						uni.navigateTo({
+							url:"/pages/common/tableLimitShopDetail?tableData= " + JSON.stringify(amountTableDataWithPro) + '&tableColumns=' + JSON.stringify(amountTableColumnsWithPro)
+						});
 					}).catch((err)=>{
 						console.log(err)
-					});
-					console.log(this.amountTableDataWithPro)
-					console.log(this.amountTableColumnsWithPro)
-					uni.navigateTo({
-						url:"/pages/common/tableLimitShopDetail?tableData= " + JSON.stringify(this.amountTableDataWithPro) + '&tableColumns=' + JSON.stringify(this.amountTableColumnsWithPro)
 					});
 					
 				},
 				resetData(){
-					//根据门店编号跳转
-					//校验门店是否存在
+					 //根据门店编号跳转
+					 //校验门店是否存在
 					var url = '/pentaho/shows/searchShowByShowNumber';
 					var param = {
-						showNumber:this.num,
-						provincial:this.selfParam.provinceCenterId,
-						 token:this.selfParam.token
+					  showNumber:this.num,
+					  provincial:this.selfParam.provinceCenterId,
+					  token:this.selfParam.token
 					}
-					//修改为0
-					var flag=0;
+					 //修改为0
+					var flag=false;
 					urlAPI.getRequest(url, param).then((res)=>{
-						var data = res.data.data;
-						if(data.flag){
-							flag==1;
-						}
-					}).catch((err)=>{
-						
-					});
-					if(flag==0){
+					  var data = res.data.data;
+					  flag=data.flag;
+					  if(!flag){
 						uni.showToast({
 							title: '门店不存在',
 							icon: 'loading',
-						});
-						console.log(11111)
-					}else {
-						this.goDetail(this.num)
-						console.log(2222)
-					}
-					
+					   });
+					   console.log(11111)
+					 }else {
+					   this.goDetail(this.num)
+					   console.log(2222)
+					  }
+				    }).catch((err)=>{
+					  console.log(err)
+					});
+					 
 				}
 			},
 			mounted(){

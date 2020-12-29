@@ -77,6 +77,10 @@
         onLoad() {
 
         },
+		created() {
+			this.loginInfo.username = uni.getStorageSync("username")
+			this.loginInfo.password = uni.getStorageSync("password")		
+		},
         methods: {
 			getUserInfo(token){
 				var url = '/pentaho/user/getUserInfo';
@@ -213,6 +217,7 @@
 				console.log(this.form)
 				var url = '/pentaho/user/logIn';
 				//,this.loginInfo.password
+				
 				var password = loginUtil.encrypt(this.loginInfo.password,'');
 				//var param={userName:'Test001', userPwd:password}
 				//'dRZ9LYoPExQPDWhTBFWRNw==   0000zxcv.'
@@ -225,7 +230,9 @@
 						icon: 'success',
 						mask: true
 					});
-					
+					uni.setStorageSync("username",this.loginInfo.username)
+					uni.setStorageSync("password",this.loginInfo.password)
+					 
 					var data = res.data.data;
 					this.selfParam.token = data.msg;
 					this.selfParam.userId = data.userId

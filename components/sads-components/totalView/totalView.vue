@@ -660,7 +660,7 @@
 							{
 								title: '省份',
 								key: 'area',
-								$width:"70px"
+								$width:"80px"
 							},
 							{
 								title: '销量（' + format0.name + '元）',
@@ -748,7 +748,7 @@
 									area:util.formatToolongName(data[i][0]), 
 									return:data[i][1]+'%', 
 									tongbi:data[i][2]>0?"+"+data[i][2]+'%':data[i][2]+'%',
-									huanbi:data[i][3]>0?"+"+data[i][2]+'%':data[i][2]+'%'}	
+									huanbi:data[i][3]>0?"+"+data[i][3]+'%':data[i][3]+'%'}	
 						var cellClassName={}
 							
 						if(data[i][2]<0){

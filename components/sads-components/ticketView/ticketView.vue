@@ -9,7 +9,7 @@
 			<block v-if="selfParam.businessDate.dateType!='date'">
 				<view class="box-contaniner">
 					<view class="container-title">单票金额走势</view>
-					<area-chart ref="lineData5" canvasId="index_line" :dataAs="lineData"
+					<line-chart ref="lineData5" canvasId="index_line" :dataAs="lineData"
 								:xAxisAs="{scrollShow:false, gridEval:(lineData.categories.length / 4).toFixed(0)}" 
 								:yAxisAs="{formatter: {type: 'number', name:'元',fixed: 0}}"/>
 				</view>

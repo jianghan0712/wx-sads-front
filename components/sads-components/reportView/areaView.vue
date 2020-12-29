@@ -59,7 +59,7 @@
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
 	import backTop from '@/components/sads-components/back-top.vue';
-	
+	import dateUtils from '@/common/tools/dateUtils.js';
 	export default {
 		components: {
 			vTable,
@@ -215,7 +215,10 @@
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-						
+				if(this.selfParam.businessDate.date.startDate==dateUtils.getToday()){
+					this.selfParam.businessDate.view =dateUtils.getYesterday();
+					this.selfParam.businessDate.date.startDate =dateUtils.getYesterday();
+				}		
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
@@ -264,8 +267,9 @@
 				var param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.data;	
-					
+					var data =res.data.data;
+						this.tableData=[];
+						this.tableDataAll=[];
 					for(var i=0;i<data[i].length;i++){
 						var arr={
 								id: i+1,
@@ -299,6 +303,8 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
+					this.tableData1=[];
+					this.tableDataAll1=[];
 					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,
@@ -313,7 +319,7 @@
 							cellClassName.rateChange='small-text-red'
 						}	
 						arr.cellClassName=cellClassName;		
-						this.tableDataAll[i]=arr;
+						this.tableDataAll1[i]=arr;
 						if(i<5){
 							this.tableData1[i]=arr;
 						}
@@ -328,7 +334,9 @@
 				param=this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					var data =res.data.data;	
+					var data =res.data.data;
+						this.tableData2=[];
+						this.tableDataAll2=[];
 					if(data.length>0){
 						for(var i=0;i<data[i].length;i++){
 							var arr={ 
@@ -355,6 +363,8 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;	
+					this.tableData3=[];
+					this.tableDataAll3=[];
 					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,

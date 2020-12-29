@@ -89,7 +89,7 @@
 				},
 				btnnum: 0,
 				index: 0,
-				nodataMessage:'未找到相关比赛',
+				nodataMessage:'今日赛制销量未出',
 				matchTypeTableData: [],
 				matchTypeTableData2: [],
 				matchTypeTableColumns: [{

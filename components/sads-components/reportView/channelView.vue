@@ -8,12 +8,12 @@
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >有销量门店数七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位({{danwei[0]}})</view>
 				<histogram-chart cWidth="2rpx" ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" :basicAs="{colors:['#E5E5E5','#6E8BFB']}"/>
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >"0"销量门店数七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(万个)</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位({{danwei[1]}})</view>
 				<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" :basicAs="{colors:['#E5E5E5','#2BC5FE']}"/>
 			</view>
 			<view class="padding">
@@ -32,6 +32,8 @@
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import urlAPI from '@/common/vmeitime-http/';
 	import backTop from '@/components/sads-components/back-top.vue';
+	import dateUtils from '@/common/tools/dateUtils.js';
+	import numberFun from '@/common/tools/number.js';
 	
 	export default {
 		components: {
@@ -78,6 +80,7 @@
 										scrollTop: 0
 				},
 				scrollTop: 0,
+				danwei:['万个','万个'],
 				 histogramChart1: {
 						categories: ['周一', '周二','周三', '周四', '周五', '周六','周日'],
 						series: [
@@ -108,7 +111,10 @@
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-						
+				if(this.selfParam.businessDate.date.startDate==dateUtils.getToday()){
+					this.selfParam.businessDate.view =dateUtils.getYesterday();
+					this.selfParam.businessDate.date.startDate =dateUtils.getYesterday();
+				}		
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
@@ -161,9 +167,21 @@
 					var series =[];
 					var shangzhou=[];
 					var benzhou=[];
+					
+					var piaoshuMax=0;
+					for(var i=0;i<votes.length;i++){
+						if(votes[i]>piaoshuMax){
+							piaoshuMax=votes[i];
+						}
+						
+					};
+					var piaoshufromat=numberFun.formatCNumber(piaoshuMax);
+					this.danwei[0]=piaoshufromat.name+"个";
+					
+					
 					for(var i=0;i<votes.length/2;i++){
-						shangzhou.push((votes[i]/10000).toFixed(2));
-						benzhou.push((votes[i+7]/10000).toFixed(2));
+						shangzhou.push((votes[i]/piaoshufromat.value).toFixed(2));
+						benzhou.push((votes[i+7]/piaoshufromat.value).toFixed(2));
 					};
 					
 					var series =[
@@ -192,9 +210,20 @@
 					var series =[];
 					var shangzhou=[];
 					var benzhou=[];
+					
+					var storeCountMax=0;
+					for(var i=0;i<storeCount.length;i++){
+						if(storeCount[i]>storeCountMax){
+							storeCountMax=storeCount[i];
+						}
+						
+					};
+					var storeCountMaxfromat=numberFun.formatCNumber(storeCountMax);
+					this.danwei[0]=storeCountMaxfromat.name+"个";
+					
 					for(var i=0;i<storeCount.length/2;i++){
-						shangzhou.push((storeCount[i]/10000).toFixed(2));
-						benzhou.push((storeCount[i+7]/10000).toFixed(2));
+						shangzhou.push((storeCount[i]/storeCountMaxfromat.value).toFixed(2));
+						benzhou.push((storeCount[i+7]/storeCountMaxfromat.value).toFixed(2));
 					};
 					
 					var series =[

@@ -21,7 +21,7 @@
 				title:'未找到数据'
 			}
 		},
-		onLoad(){
+		created(){
 			this.title = this.message
 		},
 		methods: {

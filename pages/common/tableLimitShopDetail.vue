@@ -32,8 +32,8 @@
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.tableData = JSON.parse(option.tableData); // 字符串转对象
 			this.tableColumns = JSON.parse(option.tableColumns); // 字符串转对象
-			console.log("tableDetail-tableData=",this.tableData)
-			console.log("tableDetail-tableColumns=",this.tableColumns)
+			console.log("tableLimitShopDetail-tableData=",this.tableData)
+			console.log("tableLimitShopDetail-tableColumns=",this.tableColumns)
 		}
 	}
 </script>

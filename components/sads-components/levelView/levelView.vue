@@ -50,9 +50,10 @@
 					<view class="rankTable">
 						<view class="rankTable-title">
 							<view style="font-weight: bold;">各地区篮球关次销量及占比</view>
-							<view class="rankTable-more">
+							<view class="rankTable-more" >
 								<picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
-									当前选择：{{array[index].name}}
+									当前选择：
+									<view style="color: #007AFF;text-decoration: underline">{{array[index].name}}</view>
 								</picker>
 							</view>
 						</view>

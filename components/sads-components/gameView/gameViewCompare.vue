@@ -101,7 +101,7 @@
 		</view>		
 		
 		<!-- 各地区销量排行-->
-		<view class="box-contaniner">
+		<view v-if="selfParam.compareDate.viewLeft!=today&&selfParam.compareDate.viewRight!=today"  class="box-contaniner">
 			<view class="container-title">
 				<view>各地区{{arcbarNumTop}}返奖情况对比</view>
 			</view>
@@ -148,6 +148,7 @@
 	import dataContainerTwoColTwo from '@/components/sads-components/dataContainerTwoColTwo.vue';
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
+	import dateUtils from '@/common/tools/dateUtils.js';
 	
 	export default {
 		name: 'Index',
@@ -202,6 +203,7 @@
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id
 				},
+				today:dateUtils.getToday(),
 				footballData:{},	
 				basketballData:{},	
 				btnnum: 0,
@@ -600,7 +602,7 @@
 								   title2:'票数（'+formatfb3.name + ' 张）',amount2:(fb[3]/formatfb3.value).toFixed(2)};
 					var leftbk = {title1:'销量（'+formatbk0.name + ' 元）',amount1:(bk[0]/formatbk0.value).toFixed(2),
 								  title2:'票数（'+formatbk1.name + ' 张）',amount2:(bk[1]/formatbk1.value).toFixed(2)};
-					var rightbk = {title1:'销量（'+formatbk2.name + ' 元）',amount1:(bk[5]/formatbk2.value).toFixed(2),
+					var rightbk = {title1:'销量（'+formatbk2.name + ' 元）',amount1:(bk[2]/formatbk2.value).toFixed(2),
 								  title2:'票数（'+formatbk3.name + ' 张）',amount2:(bk[3]/formatbk3.value).toFixed(2)};
 									
 					this.$set(this.basketballData, 'left', leftbk);

@@ -37,7 +37,7 @@
 				</view>
 				<view >
 					<view class="small-text">{{arcbarNumTop}}</view>
-					<view class="big-text" :class=" pagedatacompare[11]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[11]>0?"+"+pagedatacompare[11]:pagedatacompare[11]}}%</view>
+					<view class="big-text" :class=" pagedatacompare[11]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[11]>0?"↑"+pagedatacompare[11]:"↓"+pagedatacompare[11]}}</view>
 				</view>
 			</view>
 			<view  v-if="selfParam.provinceCenterId!=0"  class ="column-box viewborder" style="width: 700rpx; display: flex;" >
@@ -74,12 +74,14 @@
 				<view style="width: 350rpx;">
 					<view class="small-text">足球日销量(百万元)</view>
 					<view class="big-text">{{pagedata[3]}}</view>
-					<view class="small-text">{{arcbarNumTop}}</view><view class="small-text" :class=" pagedatacompare[3]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[3]>0?"+"+pagedatacompare[3]:pagedatacompare[3]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[3]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[3]>0?"+"+pagedatacompare[3]:pagedatacompare[3]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
-					<view class="small-text">蓝球日销量(万元)</view>
+					<view class="small-text">篮球日销量(万元)</view>
 					<view class="big-text">{{pagedata[4]}}</view>
-					<view class="small-text">{{arcbarNumTop}}</view><view class="small-text" :class=" pagedatacompare[4]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[4]>0?"+"+pagedatacompare[4]:pagedatacompare[4]}}%</view>
+					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
+					<view class="small-text" style="display: inline;" :class=" pagedatacompare[4]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[4]>0?"+"+pagedatacompare[4]:pagedatacompare[4]}}%</view>
 				</view>
 			</view>
 			<view v-if="selfParam.provinceCenterId==0"  class ="column-box" style="width: 100%; display: flex;" >
@@ -90,7 +92,7 @@
 					<view class="small-text" style="display: inline;" :class=" pagedatacompare[3]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[3]>0?"+"+pagedatacompare[3]:pagedatacompare[3]}}%</view>
 				</view>
 				<view style="width: 350rpx;">
-					<view class="small-text">蓝球日销量(百万元)</view>
+					<view class="small-text">篮球日销量(百万元)</view>
 					<view class="big-text">{{pagedata[4]}}</view>
 					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
 					<view class="small-text" style="display: inline;" :class=" pagedatacompare[4]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[4]>0?"+"+pagedatacompare[4]:pagedatacompare[4]}}%</view>
@@ -127,7 +129,7 @@
 			<view class ="column-box" style="width: 100%; display: flex;" >
 				<view style="width: 350rpx;">
 					<view class="small-text">返奖率</view>
-					<view class="big-text">{{pagedata[7]}}</view>
+					<view class="big-text">{{pagedata[7]}}%</view>
 					<view class="small-text" style="display: inline;">{{arcbarNumTop}}</view>
 					<view class="small-text" style="display: inline;" :class=" pagedatacompare[7]>0?'small-text-red':'small-text-green'"  >{{pagedatacompare[7]>0?"+"+pagedatacompare[7]:pagedatacompare[7]}}%</view>
 				</view>
@@ -174,7 +176,7 @@
 <script>
 	import urlAPI from '@/common/vmeitime-http/';
 	import backTop from '@/components/sads-components/back-top.vue';
-	
+	import dateUtils from '@/common/tools/dateUtils.js';
 	export default {
 		components: {
 			backTop 
@@ -233,6 +235,10 @@
 				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
+				if(this.selfParam.businessDate.date.startDate==dateUtils.getToday()){
+					this.selfParam.businessDate.view =dateUtils.getYesterday();
+					this.selfParam.businessDate.date.startDate =dateUtils.getYesterday();
+				}
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
 				const area = uni.getStorageSync("area")
@@ -312,6 +318,7 @@
 								dateTimeEnd:this.selfParam.businessDate.date.startDate,
 								 dateFlag:"1",
 								 provincialId:this.selfParam.provinceCenterId,
+								 provincialName:this.selfParam.provinceCenterName,
 								 token:this.selfParam.token }
 						urlAPI.getRequest(url, param).then((res)=>{
 							this.loading = false;

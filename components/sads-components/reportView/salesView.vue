@@ -8,21 +8,21 @@
 			</view>
 			<view class="padding" >
 				<view style="font-size: 30rpx;padding-left: 20rpx; " >竞彩销量七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位({{danwei[0]}})</view>
 				<view >
 					<histogram-chart ref="histogramChart1" canvasId="histogramChart1" :dataAs="histogramChart1" :basicAs="{colors:['#E5E5E5','#4A94FF']}"/>
 				</view>
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >竞彩票数七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(百万张)</view> 
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位({{danwei[1]}})</view> 
 				<view >
 					<histogram-chart ref="histogramChart2" canvasId="histogramChart2" :dataAs="histogramChart2" :basicAs="{colors:['#E5E5E5','#FFAD26']}"/>
 				</view >
 			</view>
 			<view class="padding">
 				<view style="font-size: 30rpx;padding-left: 20rpx;" >1-2关七天走势</view>
-				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位(亿元)</view>
+				<view style="font-size: 30rpx;padding-left: 20rpx;" >单位({{danwei[2]}})</view>
 				<view >	
 					<histogram-chart ref="histogramChart3" canvasId="histogramChart3" :dataAs="histogramChart3" :basicAs="{colors:['#E5E5E5','#FE7123']}"/>
 				</view >
@@ -56,6 +56,8 @@
 	import HistogramChart from '@/components/basic-chart/HistogramChart.vue';
 	import urlAPI from '@/common/vmeitime-http/';
 	import backTop from '@/components/sads-components/back-top.vue';
+	import dateUtils from '@/common/tools/dateUtils.js';
+	import numberFun from '@/common/tools/number.js';
 	
 	export default {
 		components: {
@@ -104,6 +106,7 @@
 				//返奖率类型 1竞彩 2足球 3篮球
 				fjltype:'1',
 				scrollTop: 0,
+				danwei:['亿元','百万张','亿元'],
 				 histogramChart1: {
 						categories: ['周一', '周二','周三', '周四', '周五', '周六','周日'],
 						series: [
@@ -155,7 +158,10 @@
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-						
+				if(this.selfParam.businessDate.date.startDate==dateUtils.getToday()){
+					this.selfParam.businessDate.view =dateUtils.getYesterday();
+					this.selfParam.businessDate.date.startDate =dateUtils.getYesterday();
+				}		
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)
@@ -207,16 +213,34 @@
 					var xiaoliangAll=datas.sales;
 					var piaoshuAll=datas.votes;
 					
+					var xiaoliangMax=0;
+					for(var i=0;i<xiaoliangAll.length;i++){
+						if(xiaoliangAll[i]>xiaoliangMax){
+							xiaoliangMax=xiaoliangAll[i];
+						}
+						
+					};
+					var xiaoliangfromat=numberFun.formatCNumber(xiaoliangMax);
+					var piaoshuMax=0;
+					for(var i=0;i<piaoshuAll.length;i++){
+						if(piaoshuAll[i]>piaoshuMax){
+							piaoshuMax=piaoshuAll[i];
+						}
+						
+					};
+					var piaoshufromat=numberFun.formatCNumber(piaoshuMax);
+					this.danwei[0]=xiaoliangfromat.name+"元";
+					this.danwei[1]=piaoshufromat.name+"张";
 					var series =[];
 					var shangzhouXL=[];
 					var benzhouXL=[];
 					var shangzhouPS=[];
 					var benzhouPS=[];
 					for(var i=0;i<xiaoliangAll.length/2;i++){
-						shangzhouXL.push((xiaoliangAll[i]/100000000).toFixed(2));
-						benzhouXL.push((xiaoliangAll[i+7]/100000000).toFixed(2));
-						shangzhouPS.push((piaoshuAll[i]/1000000).toFixed(2));
-						benzhouPS.push((piaoshuAll[i+7]/1000000).toFixed(2));
+						shangzhouXL.push((xiaoliangAll[i]/xiaoliangfromat.value).toFixed(2));
+						benzhouXL.push((xiaoliangAll[i+7]/xiaoliangfromat.value).toFixed(2));
+						shangzhouPS.push((piaoshuAll[i]/piaoshufromat.value).toFixed(2));
+						benzhouPS.push((piaoshuAll[i+7]/piaoshufromat.value).toFixed(2));
 					};
 					
 					var series1 =[
@@ -253,9 +277,20 @@
 					var series =[];
 					var shangzhouvotes=[];
 					var benzhouvotes=[];
+					
+					var piaoshuMax=0;
+					for(var i=0;i<votes.length;i++){
+						if(votes[i]>piaoshuMax){
+							piaoshuMax=votes[i];
+						}
+						
+					};
+					var piaoshufromat=numberFun.formatCNumber(piaoshuMax);
+					this.danwei[2]=piaoshufromat.name+"张";
+					
 					for(var i=0;i<votes.length/2;i++){
-						shangzhouvotes.push((votes[i]/100000000).toFixed(2));
-						benzhouvotes.push((votes[i+7]/100000000).toFixed(2));
+						shangzhouvotes.push((votes[i]/piaoshufromat.value).toFixed(2));
+						benzhouvotes.push((votes[i+7]/piaoshufromat.value).toFixed(2));
 					};
 					
 					var series1 =[

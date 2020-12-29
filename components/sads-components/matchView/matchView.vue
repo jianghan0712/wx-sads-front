@@ -21,7 +21,7 @@
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛事销量</view>
 						<block v-if="matchEventTableData.length==0">
-							<noData :message="nodataMessage"></noData>
+							<noData :message="nodataMessage1"></noData>
 						</block>
 						<block v-if="matchEventTableData.length>0">
 							<view class="example">
@@ -45,7 +45,7 @@
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛事销量</view>
 						<block v-if="matchEventTableData.length==0">
-							<noData :message="nodataMessage"></noData>
+							<noData :message="nodataMessage1"></noData>
 						</block>
 						<block v-if="matchEventTableData.length>0">
 							<view class="example">
@@ -90,7 +90,6 @@
 					countyCenterId:'',	
 					compareType:'date',
 					compareFlag:false,
-					nodataMessage:'未找到今日赛事',
 					businessDate:{
 						dateType:'',// date/week/month/year
 						view:'',//用于展示日期、年、月等
@@ -112,7 +111,8 @@
 				},
 				btnnum: 0,
 				index: 0,
-				nodataMessage:'未找到相关比赛',
+				nodataMessage:'今日赛制销量未出',
+				nodataMessage1:'今日赛事销量未出',
 				matchTypeTableData: [],
 				matchTypeTableColumns: [{
 						title: "排名",

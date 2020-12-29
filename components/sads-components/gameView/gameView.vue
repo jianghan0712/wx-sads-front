@@ -32,7 +32,7 @@
 			<view >
 				<view class="container-title">
 					<view>各地区{{arcbarNumTop}}销量及占比</view>
-					<view style="width: 200;height: 50upx;text-align: top;font-size: 30rpx;" @click="toAll()">全部>></view>
+					<view style="width: 200;height: 50upx;text-align: top;font-size: 20rpx;" @click="toAll()">全部>></view>
 				</view>
 				<view class="table">
 					<v-table :columns="tableColumns" :list="tableData"  border-color="#FFFFFF"></v-table>
@@ -43,7 +43,7 @@
 				<view >
 					<view class="container-title">
 						<view>各地区{{arcbarNumTop}}返奖情况</view>
-						<view style="width: 200;height: 50upx;text-align: top;font-size: 30rpx;" @click="toAll1()">全部>></view>
+						<view style="width: 200;height: 50upx;text-align: top;font-size: 20rpx;" @click="toAll1()">全部>></view>
 					</view>
 					<view class="table">
 						<v-table :columns="tableColumns1" :list="tableData1"  border-color="#FFFFFF"></v-table>

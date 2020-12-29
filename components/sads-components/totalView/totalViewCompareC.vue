@@ -604,9 +604,9 @@
 										key: "id",
 										$width:"50px",
 									},{
-										title: '销量(' +format0.name +')元',
+										title: '销量(' +format0.name +'元)',
 										key: 'amount',
-										$width:"100px"
+										$width:"95px"
 									}
 								];
 							this.rightTableColumns=[{
@@ -615,9 +615,9 @@
 										$width:"50px",
 									},
 									{
-										title:  '销量(' +format1.name +')元',
+										title:  '销量(' +format1.name +'元)',
 										key: 'amount',
-										$width:"80px"
+										$width:"95px"
 									}
 								];
 							for(var i=0;i<data.length;i++){
