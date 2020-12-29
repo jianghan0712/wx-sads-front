@@ -25,7 +25,7 @@ export default {//加密
 		  return ret
 	  }
 	  if(name.length>5){
-		 ret = name.substring(0,5) + "..."
+		 ret = name.substring(0,4) + ".."
 	  }
 	  
 	  return ret
