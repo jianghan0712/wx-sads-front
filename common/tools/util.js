@@ -17,6 +17,18 @@ export default {//加密
     var key  = CryptoJS.enc.Utf8.parse(keyStr);//Latin1 w8m31+Yy/Nw6thPsMpO5fg==
     var decrypt = CryptoJS.AES.decrypt(word, key, {mode:CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7});
     return CryptoJS.enc.Utf8.stringify(decrypt).toString();
+  },
+  
+  formatToolongName(name){
+	  var ret = name
+	  if(name==null || name.length==0){
+		  return ret
+	  }
+	  if(name.length>5){
+		 ret = name.substring(0,5) + "..."
+	  }
+	  
+	  return ret
   }
 
 }

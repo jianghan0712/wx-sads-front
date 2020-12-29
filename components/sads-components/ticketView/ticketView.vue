@@ -65,6 +65,7 @@
 	import commonFun from '@/common/tools/watcher.js';
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import AreaChart from '@/components/basic-chart/AreaChart.vue';
+	import util from '@/common/tools/util.js'
 	
 	export default {
 		components: {
@@ -338,7 +339,7 @@
 					
 					for(var i=0;i<data.length;i++){
 						var jsonData = {id:i+1, 
-									    area:data[i][0], 
+									    area:util.formatToolongName(data[i][0]), 
 										jingcai:data[i][1].toFixed(2), 
 										football:data[i][2].toFixed(2),
 										basketball:data[i][3].toFixed(2),

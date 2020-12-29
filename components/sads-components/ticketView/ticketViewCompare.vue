@@ -128,6 +128,7 @@
 	import dateUtils from '@/common/tools/dateUtils.js';
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import AreaChart from '@/components/basic-chart/AreaChart.vue';
+	import util from '@/common/tools/util.js'
 	
 	export default {
 		components: {
@@ -524,7 +525,7 @@
 					}		
 					
 					for(var i=0;i<data.length;i++){
-						var jsonleft = {id:data[i][1], area:data[i][0], amount:data[i][2].toFixed(2)}	
+						var jsonleft = {id:data[i][1], area:util.formatToolongName(data[i][0]), amount:data[i][2].toFixed(2)}	
 						var jsonright = {id:data[i][3], amount:data[i][4].toFixed(2)}								
 						if(i<=4){
 							tableLeft[i] = jsonleft

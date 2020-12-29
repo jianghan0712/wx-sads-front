@@ -101,7 +101,8 @@
 	import dateUtils from '@/common/tools/dateUtils.js';
 	import LineChart from '@/components/basic-chart/LineChart.vue';
 	import AreaChart from '@/components/basic-chart/AreaChart.vue';
-	import ringDetail from '@/components/sads-components/ringDetail.vue';
+	import ringDetail from '@/components/sads-components/ringDetail.vue';	
+	import util from '@/common/tools/util.js'
 	
 	export default {
 		components: {
@@ -477,7 +478,7 @@
 					
 					for(var i=0;i<data.length;i++){
 						var jsonData = {leftRank:data[i][1], 
-									    area:data[i][0], 
+									    area:util.formatToolongName(data[i][0]), 
 										leftAmount:(data[i][2]/format0.value).toFixed(2), 
 										rightAmount:(data[i][4]/format0.value).toFixed(2)}
 						tableAll[i]=jsonData;						

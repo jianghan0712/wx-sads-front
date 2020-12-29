@@ -156,6 +156,7 @@
 	import urlAPI from '@/common/vmeitime-http/';
 	import numberFun from '@/common/tools/number.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
+	import util from '@/common/tools/util.js'
 	
 	export default {
 		name: 'Index',

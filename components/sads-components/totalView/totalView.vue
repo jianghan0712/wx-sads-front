@@ -37,8 +37,8 @@
 						</view> 
 						<view class="shop-item-content">
 							<view style="width: 50%;">{{rankData.sum}} 名</view>
-							<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;"> {{rankData.tongbi}}</view>
-							<view :class="rankData.huanbi>= 0?'small-text-red':'small-text-green'" style="-webkit-flex: 1;flex: 1;">{{rankData.huanbi}}</view>
+							<view :class="rankData.tongbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{rankData.tongbi>0?"↑"+rankData.tongbi:"↓"+rankData.tongbi}}名</view>
+							<view :class="rankData.huanbi>= 0?'small-text-red':'small-text-green'" style="width: 25%;">{{rankData.huanbi>0?"↑"+rankData.huanbi:"↓"+rankData.huanbi}}名</view>
 						</view>
 					</view>
 				</view>
@@ -185,6 +185,7 @@
 	import commonFun from '@/common/tools/watcher.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
 	import noData from '@/components/sads-components/noData.vue';
+	import util from '@/common/tools/util.js'
 	
 	
 	export default {
@@ -628,7 +629,7 @@
 					var format0 = numberFun.formatCNumber(data[0][1]);		
 					for(var i=0;i<data.length;i++){
 						var json = {id:i+1, 
-									area:data[i][0], 
+									area:util.formatToolongName(data[i][0]) , 
 									amount:(data[i][1]/format0.value).toFixed(2), 
 									tongbi:data[i][2]>0?"+"+data[i][2]+"%":data[i][2]+"%",
 									huanbi:data[i][3]>0?"+"+data[i][3]+"%":data[i][3]+"%"}
@@ -687,11 +688,12 @@
 			getProSalesRanking(provinceCenterId, cityCenterId, businessDate){
 				var url = '/pentaho/sales/getProSalesRanking';
 				var param = this.createParam()
-				delete param.regionId
-				param.provincialId = this.selfParam.provinceCenterId
+				param.provincialId=this.selfParam.provinceCenterId
+				param.provincialName = this.selfParam.provinceCenterName
+				
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-
+					console.log('request success', res)
 					var data = res.data.data;
 					console.log("getProSalesRanking rankData=",data)
 					if(data==null){
@@ -743,7 +745,7 @@
 					this.tableDataDetail2=[]
 					for(var i=0;i<data.length;i++){
 						var json = {id:i+1, 
-									area:data[i][0], 
+									area:util.formatToolongName(data[i][0]), 
 									return:data[i][1]+'%', 
 									tongbi:data[i][2]>0?"+"+data[i][2]+'%':data[i][2]+'%',
 									huanbi:data[i][3]>0?"+"+data[i][2]+'%':data[i][2]+'%'}	

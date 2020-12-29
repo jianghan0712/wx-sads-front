@@ -89,7 +89,7 @@
 							icon: 'success',
 							mask: true
 						});
-						debugger
+						
 						var data = res.data.data;
 						this.userinfo.userId = data.userId
 						getApp().globalData.userId = data.userId
@@ -129,7 +129,7 @@
 						this.selfParam.provinceCenterId = data.provincialId
 						this.selfParam.selfProvinceCenterId = data.provincialId
 						this.selfParam.userId = data.userId
-						debugger
+						
 						this.res = '请求结果 : ' + JSON.stringify(res);
 						console.log('getUserRight=', this.selfParam)						
 						

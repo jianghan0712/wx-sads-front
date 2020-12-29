@@ -112,6 +112,7 @@
 	import numberFun from '@/common/tools/number.js';
 	import dateUtils from '@/common/tools/dateUtils.js';
 	import AreaChart from '@/components/basic-chart/AreaChart.vue';
+	import util from '@/common/tools/util.js'
 	
 	export default {
 		name: 'Index',
@@ -274,7 +275,9 @@
 				this.getShopData();
 				this.getRankTable();
 				this.getComReturnRateState()
-				this.getComProSalesRanking()
+				this.getProSalesRanking(true)
+				this.getProSalesRanking(false)
+				// this.getComProSalesRanking()
 				// if(this.selfParam.compareDate.viewLeft!=today && this.selfParam.compareDate.viewRight!=today && this.selfParam.provinceCenterId!=0){
 				// 	this.getComReturnRateState()
 				// }
@@ -589,7 +592,7 @@
 									}
 								];
 							for(var i=0;i<data.length;i++){
-								var jsonleft = {id:data[i][1], area:data[i][0], amount:(data[i][2]/format0.value).toFixed(2)}	
+								var jsonleft = {id:data[i][1], area:util.formatToolongName(data[i][0]), amount:(data[i][2]/format0.value).toFixed(2)}	
 								var jsonright = {id:data[i][3],amount:(data[i][4]/format1.value).toFixed(2)}								
 								if(i<=4){
 									this.leftTableData[i] = jsonleft
@@ -645,7 +648,7 @@
 									}
 								];
 							for(var i=0;i<data.length;i++){
-								var jsonleft = {id:data[i][1], area:data[i][0], amount:data[i][2] +'%'}	
+								var jsonleft = {id:data[i][1], area:util.formatToolongName(data[i][0]), amount:data[i][2] +'%'}	
 								var jsonright = {id:data[i][3],amount:data[i][4] +'%'}								
 								if(i<=4){
 									this.leftReturnTableData[i] = jsonleft
@@ -686,9 +689,72 @@
 					console.log('request fail', err);
 				})
 			},
+			createParam2(isLeft){
+				console.log("createParam begin")
+				var dateType = this.selfParam.businessDate.dateType
+				var param = {}
+				if(dateType=='date'){
+					param = {dateTimeStart:isLeft ? this.selfParam.compareDate.dateLeft.startDate :this.selfParam.compareDate.dateRight.startDate,
+							 dateTimeEnd: isLeft ? this.selfParam.compareDate.dateLeft.endDate :this.selfParam.compareDate.dateRight.endDate,
+							 dateFlag:"1",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='week'){
+					param = {dateTimeStart:isLeft ? this.selfParam.compareDate.weekLeft.startDate :this.selfParam.compareDate.weekRight.startDate,
+							 dateTimeEnd: isLeft ? this.selfParam.compareDate.weekLeft.endDate :this.selfParam.compareDate.weekRight.endDate,
+							 dateFlag:"2",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='month'){
+					param = {dateTimeStart:isLeft ? this.selfParam.compareDate.monthLeft.startDate :this.selfParam.compareDate.monthRight.startDate,
+							 dateTimeEnd: isLeft ? this.selfParam.compareDate.monthLeft.endDate :this.selfParam.compareDate.monthRight.endDate,
+							 dateFlag:"3",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}else if(dateType=='year'){
+					param = {dateTimeStart:isLeft ? this.selfParam.compareDate.yearLeft.startDate :this.selfParam.compareDate.yearRight.startDate,
+							 dateTimeEnd: isLeft ? this.selfParam.compareDate.yearLeft.endDate :this.selfParam.compareDate.yearRight.endDate,
+							 dateFlag:"4",
+							 regionId:this.selfParam.provinceCenterId,
+							 token:this.selfParam.token }
+				}	
+				console.log("createParam end:",param)
+				return param
+			},
+			getProSalesRanking(isLeft){
+				var url = '/pentaho/sales/getProSalesRanking';
+				var param = this.createParam2(isLeft)
+				param.provincialId=this.selfParam.provinceCenterId
+				param.provincialName = this.selfParam.provinceCenterName
+				
+				urlAPI.getRequest(url, param).then((res)=>{
+					this.loading = false;
+					console.log('request success', res)
+					var data = res.data.data;
+					console.log("getProSalesRanking rankData=",data)
+					if(data==null){
+						return
+					}
+					if(isLeft){
+						var left = {'title1':'全国排名', 'amount1':data[0] };
+						this.rankData.left = left
+					}else{
+						var right = {'title1':'全国排名', 'amount1':data[0] };
+						this.rankData.right = right
+					}
+					this.$refs['rankData'].showDataContainer();	
+					this.res = '请求结果 : ' + JSON.stringify(res);
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+				});
+			},
 			getComProSalesRanking(){
 				var url="/pentaho/salesContrast/getComProSalesRanking"
 				var param = this.createParam()		
+				param.provincialId=this.selfParam.provinceCenterId
+				param.provincialName = this.selfParam.provinceCenterName
+				
 				urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						console.log('request success', res)
