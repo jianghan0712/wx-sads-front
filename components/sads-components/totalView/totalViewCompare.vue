@@ -434,7 +434,7 @@
 				})
 			},
 			getLinesData(){
-				var url = 'pentaho/salesContrast/getComSalesTrendChart'
+				var url = '/pentaho/salesContrast/getComSalesTrendChart'
 				var param = this.createParam()
 				
 				urlAPI.getRequest(url, param).then((res)=>{

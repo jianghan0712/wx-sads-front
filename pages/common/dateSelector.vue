@@ -3,21 +3,21 @@
 		<view class="tab-content">
 			<view class="tab-title">
 				<view @tap="change2(0)" :class="btnnum == 0?'btna':'hide'">日</view>
-			<!-- 　　<view @tap="change2(1)" :class="btnnum == 1?'btna':'hide'">周</view> -->
+			　　<view @tap="change2(1)" :class="btnnum == 1?'btna':'hide'">周</view>
 			  　<view @tap="change2(2)" :class="btnnum == 2?'btna':'hide'">月</view>
 			    <view @tap="change2(3)" :class="btnnum == 3?'btna':'hide'">年</view>
 			</view>	
 			
 			<view class="end-cont" :class="{dis:btnnum == 0}">	
 				<view class ="content">
-					<uni-calendar class="uni-calendar--hook" :date="date" :selected="info.selected" :showMonth="true" @change="setDate" @monthSwitch="monthSwitch" />
+					<uni-calendar class="uni-calendar--hook" :endDate="date" :date="date" :selected="info.selected" :showMonth="true" @change="setDate" @monthSwitch="monthSwitch" />
 				</view>
 			</view>
-<!-- 			<view class="end-cont" :class="{dis:btnnum == 1}">
+			<view class="end-cont" :class="{dis:btnnum == 1}">
 				<view class ="content">
-					<uni-calendar class="uni-calendar--hook" :range="true" :selected="info.selected" :showMonth="true" @change="change" @monthSwitch="monthSwitch" />
+					<uni-calendar-week class="uni-calendar--hook"  :endDate="date" :range="true" :selected="info.selected" :showMonth="true" @change="setWeek" @monthSwitch="monthSwitch" />
 				</view>
-			</view> -->
+			</view>
 			<view class="end-cont" :class="{dis:btnnum == 2}">
 				<view v-for="eachYear in months">     <!--:key 保证组件和数据捆绑唯一 -->
 					<uni-section :title="eachYear.year" type="line"></uni-section>
@@ -47,6 +47,7 @@
 
 <script>
 	import uniCalendar from '@/components/uni/uni-calendar/uni-calendar.vue';
+	import uniCalendarWeek from '@/components/uni/uni-calendar-week/uni-calendar.vue';
 	import uniTag from "@/components/uni/uni-tag/uni-tag.vue"
 	import uniSection from "@/components/uni/uni-section/uni-section.vue"
 	import dateUtils from '@/common/tools/dateUtils.js';
@@ -85,7 +86,8 @@
 	
 	export default {	
 		components: {
-		    uniCalendar, uniTag, uniSection
+		    uniCalendar, uniTag, uniSection,
+			uniCalendarWeek
 		},
 		data() {
 		    return {							
@@ -128,7 +130,7 @@
 			var years = []
 			var j = 0
 			
-			for(var i =2016;i<date.year+2;i++){
+			for(var i =2016;i<date.year+1;i++){
 				var json = {index:j, name:i+"年", year:i, inverted:this.selectTrue}
 				this.years[j++]=json
 			}				
@@ -161,6 +163,16 @@
 		methods: {
 			PrefixInteger(num, m) {
 			      return (Array(m).join(0) + num).slice(-m);
+			},
+			setWeek(e){
+				console.log("dataselect=",e)
+				var fulldate = e.range.before +"~"+e.range.after;
+				var tDay = e.lunar.nWeek;
+				
+				this.dateInfo.dateType='week'
+				this.dateInfo.view = fulldate 
+				this.dateInfo.week.startDate = e.range.before
+				this.dateInfo.week.endDate = e.range.after
 			},
 			setYear(index){		
 				for(var i=0;i<this.years.length;i++){
@@ -245,7 +257,7 @@
 					console.log('changeRange 返回:', e)
 					this.date.date = start + "~~" + end;
 				}
-
+ 
 			},
 			setDate(e){
 				var fulldate = e.fulldate;
