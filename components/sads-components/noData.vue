@@ -4,6 +4,7 @@
 			<image src="../../static/noData.png" style="height: 240rpx;width: 300rpx;"></image>
 		</view>
 		<view class="title">{{title}}</view>
+		<view class="title">请切换日期查看历史数据</view>
 	</view>
 </template>
 

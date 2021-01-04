@@ -8,7 +8,7 @@
 		</scroll-view>
 		<view class="content">
 			<view class="blackClass">
-				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+				<view @click="goDatePicker" class="list" style="color: #007AFF;text-decoration: underline">{{selfParam.businessDate.view}}</view>
 			</view>
 			<view class="blackClass">
 				<view @click="goCompare" style="color: #007AFF;text-decoration: underline">对比</view>

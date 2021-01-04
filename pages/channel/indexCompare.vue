@@ -8,9 +8,9 @@
         </scroll-view>
 	
 		<view class="content">
-				<view @click="goDatePickerLeft" style="width: 400rpx;">{{selfParam.compareDate.viewLeft}}</view>
-				<view @click="goDatePickerRight" style="width: 280rpx;">{{selfParam.compareDate.viewRight}}</view>
-				<view style="-webkit-flex: 1;flex: 1;" @click="returnBack()">取消</view>		
+				<view @click="goDatePickerLeft" style="width: 400rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewLeft}}</view>
+				<!-- <view @click="goArea" style="width: 100rpx;">{{selfParam.provinceCenterName}}</view> -->
+				<view @click="goDatePickerRight" style="width: 280rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewRight}}</view>	
 		</view>	
 		 <view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
 		 	<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../static/left.png" mode="aspectFill">

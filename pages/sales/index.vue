@@ -11,7 +11,7 @@
 				<view @click="goArea" style="color: #007AFF;text-decoration: underline">{{selfParam.provinceCenterName}}</view>
 			</view>
 			<view class="blackClass">
-				<view @click="goDatePicker" class="list">{{selfParam.businessDate.view}}</view>
+				<view @click="goDatePicker" class="list" style="color: #007AFF;text-decoration: underline" >{{selfParam.businessDate.view}}</view>
 			</view>
 			<block v-if="tabIndex<4">
 				<view class="blackClass">

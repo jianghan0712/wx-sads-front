@@ -9,9 +9,9 @@
 	
 		<view class="content">
 			<block v-if="tabIndex<4">
-				<view @click="goDatePickerLeft" style="width: 400rpx;">{{selfParam.compareDate.viewLeft}}</view>
+				<view @click="goDatePickerLeft" style="width: 400rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewLeft}}</view>
 				<!-- <view @click="goArea" style="width: 100rpx;">{{selfParam.provinceCenterName}}</view> -->
-				<view @click="goDatePickerRight" style="width: 280rpx;">{{selfParam.compareDate.viewRight}}</view>
+				<view @click="goDatePickerRight" style="width: 280rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewRight}}</view>
 				<!--<view style="-webkit-flex: 1;flex: 1;">取消</view>		-->
 			</block>
 			<block v-if="tabIndex==4">
