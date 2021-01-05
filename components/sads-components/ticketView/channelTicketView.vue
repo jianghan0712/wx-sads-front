@@ -328,46 +328,21 @@
 					this.loading = false;
 					console.log('request success', res)
 					var data = res.data.data;
+
 					var dates = data.dates
-					var all = data.ALL
-					var fb = data.FB
-					var bk = data.BK
+					var FB = data.FB
+					var ALL = data.ALL
+					var BK = data.BK	
+					var series = [];
 					
-					var categories=[];
-					var series=[];
-					var allData = [];
-					var fbData = [];
-					var bkData = [];
-					var j=0,k = 0,tempallAmount=0,tempfbVol=0,tempbkAmount=0;
+					series[0] =  {'name':'竞彩','data':ALL};
+					series[1] =  {'name':'足球','data':FB};
+					series[2] =  {'name':'篮球','data':BK};
 					
-					for(var i=0;i<dates.length;i++){	
-						if(j==3){
-							categories[k] = dates[i];
-							allData[k] = all[i];
-							fbData[k] = fb[i];
-							bkData[k] = bk[i];
-							tempallAmount=0,tempfbVol=0,tempbkAmount=0
-							k++;
-							j=0;
-						}else{
-							tempallAmount = tempallAmount+all[i];
-							tempfbVol = tempfbVol+fb[i];
-							tempbkAmount = tempbkAmount+bk[i]
-							j=j+1;
-						}
-					}
-					
-					series[0] = json;
-					var json = {'name':'竞彩','data':allData};								
-					var json2 = {'name':'足球','data':fbData};
-					var json3 = {'name':'篮球','data':bkData};
-					series[0] = json;
-					series[1] = json2;
-					series[2] = json3;
 				
-					this.$set(this.lineData1, 'categories', categories);
+					this.$set(this.lineData1, 'categories', dates);
 					this.$set(this.lineData1, 'series', series);
-					console.log('categories:', categories);
+					console.log('categories:', dates);
 					console.log('series: ', series);
 					console.log('lineData1: ', this.lineData1);
 					

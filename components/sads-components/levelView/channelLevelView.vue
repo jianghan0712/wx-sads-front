@@ -369,6 +369,8 @@
     .end-title view{
         flex-grow: 1;
         text-align: center;
+		font-size: 45rpx;
+		font-family: 'Courier New', Courier, monospace;
     }
     .end-cont{
 		display: none;

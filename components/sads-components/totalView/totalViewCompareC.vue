@@ -14,11 +14,11 @@
 				</view>
 			</view>		
 			<view class="end-cont" :class="{dis:btnnum == 0}">		
-				<area-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
+				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" />
 			</view>
 			<view class="end-cont" :class="{dis:btnnum == 1}">		　
-				<area-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
+				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1"  :colors="colorList"	 
 							:xAxisAs="{scrollShow:false}" />
 			</view>		
 		</view>
@@ -67,13 +67,13 @@
 		<block v-if="selfParam.compareDate.dateType!='date'">
 			<view class="box-contaniner">
 				<view class="shop-title">{{selfParam.compareDate.viewLeft}}返奖率走势</view>
-				<area-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" :colors="colorList"
+				<line-chart ref="lineData3" canvasId="index_line_3" :dataAs="lineData3" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" 
 							:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
 			</view>	
 			<view class="box-contaniner">
 				<view class="shop-title">{{selfParam.compareDate.viewRight}}返奖率走势</view>
-				<area-chart ref="lineData4" canvasId="index_line_4" :dataAs="lineData4" :colors="colorList"
+				<line-chart ref="lineData4" canvasId="index_line_4" :dataAs="lineData4" :colors="colorList"
 							:xAxisAs="{scrollShow:false}" 
 							:yAxisAs="{formatter: {type: 'percent', name:'',fixed: 2}}"/>
 			</view>	
@@ -265,7 +265,7 @@
 			};
 		},
 		created() {
-			this.returnFromDatePicker()
+			// this.returnFromDatePicker()
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			// this.selfParam.shopNo=
 			this.getServerData();
@@ -298,11 +298,11 @@
 			},
 			showView(){
 				this.$nextTick(() => {				
-					// this.$refs['lineData2'].showCharts();
-					// this.$refs['lineData1'].showCharts();
-					// this.$refs['dataContainTwo'].showDataContainer();
-					// this.$refs['dataContain2'].showDataContainer();
-					// this.$refs['dataContain3'].showDataContainer();
+					this.$refs['lineData2'].showCharts();
+					this.$refs['lineData1'].showCharts();
+					this.$refs['dataContainTwo'].showDataContainer();
+					this.$refs['dataContain2'].showDataContainer();
+					this.$refs['dataContain3'].showDataContainer();
 				});
 			},
 			returnFromDatePicker(){
@@ -518,9 +518,26 @@
 						categories[i] = dates[i];
 						amountData[i] = (sales[i]/amountFormat.value).toFixed(2);
 						volData[i] = (votes[i]/voteFormat.value).toFixed(2);
+					}
+					
+					for(var i=0;i<comDates.length;i++){
 						categoriesComp[i] = comDates[i];
 						amountDataComp[i] = (comSales[i]/amountFormat.value).toFixed(2);
 						volDataComp[i] = (comVotes[i]/voteFormat.value).toFixed(2);
+					}
+					
+					if(comDates.length>data.length){
+						for(var i=data.length;i<comDates.length;i++){
+							data[i]=comDates[i]
+							amountData[i]=0
+							volData[i] = 0
+						}						
+					}else if(comDates.length<data.length){
+						for(var i=comDates.length;i<data.length;i++){
+							comDates[i]=date[i]
+							amountData[i]=0
+							volData[i] = 0
+						}
 					}
 					
 					// var json1 = {'name':'销量','data':amountData};
@@ -535,7 +552,7 @@
 					var series2 = [{'name':this.selfParam.compareDate.viewLeft +'票数('+voteFormat.name + '张)','data':volData},
 							       {'name':this.selfParam.compareDate.viewRight +'票数('+voteFormat.name + '张)','data':volDataComp}];
 					// series2[0] = json2;
-					this.$set(this.lineData1, 'categories', categories);
+					this.$set(this.lineData1, 'categories', categoriesComp);
 					this.$set(this.lineData1, 'series', series2);
 					this.$refs['lineData2'].showCharts();
 					this.$refs['lineData1'].showCharts();
@@ -856,9 +873,13 @@
 			},
 			
 			refresh(){
-				this.returnFromDatePicker()
+				// this.returnFromDatePicker()
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				console.log("totalViewCompare selfParam=",this.selfParam)
+				this.getServerData();
+				this.showView();
+				this.getServerData();
+				this.showView();
 				this.getServerData();
 				this.showView();
 				this.getServerData();

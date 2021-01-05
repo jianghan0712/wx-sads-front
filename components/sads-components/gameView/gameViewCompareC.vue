@@ -15,7 +15,7 @@
 		</view>
 		
 		<!-- 折线图区域-->
-		<!-- <view class="box-contaniner">
+		<view v-if="selfParam.compareDate.dateType!='date'" class="box-contaniner">
 			<view class="clineChart-title">
 				<view style="font-size: 30rpx;font-weight: bold;">{{arcbarNumTop}}销量及票数走势对比</view>
 				<view class="linechart-tab">
@@ -47,7 +47,7 @@
 								:yAxisAs="{formatter: {type: 'number', name:'万张',fixed: 0}}"/>
 				</view>
 			</view>		
-		</view> -->
+		</view>
 		<!-- 折线图区域-->
 		<view class="box-contaniner">
 			<view class="clineChart-title">
@@ -138,9 +138,11 @@
 					},	
 					userId:'',			
 					selfProvinceCenterId:''//存登录时候的id
-				},
-				footballData:{},	
-				basketballData:{},	
+				}, 
+				footballData:{big1:{name:'足球销量（百万元）',value:0, left:{name:'周同比',value:0.00},right:{name:'环比',value:0.00}},
+						big2:{name:'足球票数（万张）',value:0, left:{name:'周同比',value:0.00},right:{name:'环比',value:0.00}},},	
+				basketballData:{big1:{name:'篮球销量（百万元）',value:0, left:{name:'周同比',value:0.00},right:{name:'环比',value:0.00}},
+						big2:{name:'篮球票数（万张）',value:0, left:{name:'周同比',value:0.00},right:{name:'环比',value:0.00}},},	
 				btnnum: 0,
 				arcbarNumTop:'足球',
 				lineData0: {},
@@ -286,127 +288,84 @@
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker()
+			// this.returnFromDatePicker()
 			this.getServerData();
 			this.showView();
 		},
-		created() {
+		created() {			
+			// this.returnFromDatePicker()
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.returnFromDatePicker()
+			this.selfParam.token = uni.getStorageSync("token")
 			this.getServerData();
 			this.showView();
-			this.refresh();
 		},
 		methods: {
 			refresh(){
-				this.returnFromDatePicker()
+				// this.returnFromDatePicker()
 				this.getServerData();
 				this.showView();
 				this.getServerData();
 				this.showView();
 			},
 			showView(){
-				try{
-					this.$refs['lineData0'].showCharts();
-				} catch (e) {
+				// try{
+				// 	this.$refs['lineData0'].showCharts();
+				// } catch (e) {
 					
-				};
-				try{
-					this.$refs['lineData1'].showCharts();
-				} catch (e) {
+				// };
+				// try{
+				// 	this.$refs['lineData1'].showCharts();
+				// } catch (e) {
 					
-				};
-				try{
-					this.$refs['lineData2'].showCharts();
-				} catch (e) {
+				// };
+				// try{
+				// 	this.$refs['lineData2'].showCharts();
+				// } catch (e) {
 					
-				};
-				try{
-					this.$refs['lineData3'].showCharts();
-				} catch (e) {
+				// };
+				// try{
+				// 	this.$refs['lineData3'].showCharts();
+				// } catch (e) {
 					
-				};
-				try{
-					this.$refs['arcbar0'].showCharts();
-				} catch (e) {
+				// };
+				// try{
+				// 	this.$refs['arcbar0'].showCharts();
+				// } catch (e) {
 					
-				};
-				try{
-					this.$refs['arcbar1'].showCharts();
-				} catch (e) {
+				// };
+				// try{
+				// 	this.$refs['arcbar1'].showCharts();
+				// } catch (e) {
 					
-				};
-				try{
-					this.$refs['arcbar2'].showCharts();
-				} catch (e) {
+				// };
+				// try{
+				// 	this.$refs['arcbar2'].showCharts();
+				// } catch (e) {
 					
-				};
-				try{
-					this.$refs['arcbar3'].showCharts();
-				} catch (e) {
+				// };
+				// try{
+				// 	this.$refs['arcbar3'].showCharts();
+				// } catch (e) {
 					
-				};
-				try{
-					this.$refs['dataContain'].showDataContainer();
-				} catch (e) {
+				// };
+				// try{
+				// 	this.$refs['dataContain'].showDataContainer();
+				// } catch (e) {
 					
-				};
-				try{
-					this.$refs['dataContain1'].showDataContainer();
-				} catch (e) {
+				// };
+				// try{
+				// 	this.$refs['dataContain1'].showDataContainer();
+				// } catch (e) {
 					
-				};
+				// };
 				
 			},
 			returnFromDatePicker(){
-				const dateType = uni.getStorageSync("compareDateType")
-				const leftDate = JSON.parse(uni.getStorageSync("leftBusinessDate"))
-				const rightDate = JSON.parse(uni.getStorageSync("rightBusinessDate"))
-				console.log("dateType:",dateType)
-				console.log("leftDate:",leftDate)
-				console.log("rightDate:",rightDate)
-				
-				if(leftDate==null || rightDate==null){
-					return
-				}
-				
-				if(leftDate.dateType!=dateType || rightDate.dateType!=dateType){
-					console.log("dateType不匹配:")
-					const compareDate={
-							dateType:dateType,
-							viewLeft:leftDate.view,//用于展示日期、年、月等
-							viewRight:rightDate.view,
-							dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
-							dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
-							weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
-							weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
-							monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
-							monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
-							yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
-							yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
-						}
-					this.selfParam.compareDate=compareDate
-					return
-				}
-				console.log("leftDate:",leftDate)
-				const compareDate={
-						dateType:dateType,
-						viewLeft:leftDate.view,//用于展示日期、年、月等
-						viewRight:rightDate.view,
-						dateLeft:{startDate:leftDate.date.startDate, endDate:leftDate.date.endDate},
-						dateRight:{startDate:rightDate.date.startDate, endDate:rightDate.date.endDate},
-						weekLeft:{startDate:leftDate.week.startDate, endDate:leftDate.week.endDate},
-						weekRight:{startDate:rightDate.week.startDate, endDate:rightDate.week.endDate},
-						monthLeft:{startDate:leftDate.month.startDate, endDate:leftDate.month.endDate},
-						monthRight:{startDate:rightDate.month.startDate, endDate:rightDate.month.endDate},
-						yearLeft:{startDate:leftDate.year.startDate, endDate:leftDate.year.endDate},
-						yearRight:{startDate:rightDate.year.startDate, endDate:rightDate.year.endDate},
-					}
-				this.selfParam.compareDate=compareDate
-				console.log("compareDate:",compareDate)
-				
+				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				const dateType = uni.getStorageSync("dateType")
 				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
 				this.selfParam.businessDate = bussinessDate;
+				// this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
 				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 						
 				const area = uni.getStorageSync("area")
@@ -414,9 +373,10 @@
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName	
+				this.selfParam.shopNo = uni.getStorageSync("shopNo")
 				this.selfParam.token=getApp().globalData.token
-				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
-				
+				this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))		
 			},
 			createParam(){
 				console.log("createParam begin")
@@ -463,11 +423,18 @@
 				var url = '/pentaho/shows/gamesContrast/getComGamesContrastSales';
 				var param = this.createParam();
 				param.regionId =this.selfParam.provinceCenterId
+				param.provincialName =this.selfParam.provinceCenterName
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					/* “BK”:[11230, 7815, 1245,4247](篮球销量,篮球票数,对比销量,对比票数),
 						“FB”:[11012, 7815, 1245,4247](足球销量,足球票数,对比销量,对比票数) */
+						
 					var data = res.data.data;
+					if(data==null){
+						this.$refs['dataContain'].showDataContainer();
+						this.$refs['dataContain1'].showDataContainer();
+						return
+					}
 					var fb =data.FB;
 					var bk = data.BK;
 					
@@ -536,7 +503,7 @@
 					};
 				})
 			},
-			/* getLinesData(){
+			getLinesData(){
 				var url = '/pentaho/shows/gamesContrast/getShowComGamesTrend';
 				var param =this.createParam();
 				urlAPI.getRequest(url, param).then((res)=>{
@@ -581,7 +548,7 @@
 					var volDatabkc = [];
 					for(var i=0;i<comDatesbk.length;i++){
 						amountDatabkc[i] = (comSalesbk[i]/this.amountFormat.value).toFixed(2);
-						volDatabkc[i] = (votesbk[i]/this.voteFormat.value).toFixed(2);
+						volDatabkc[i] = (comVotesbk[i]/this.voteFormat.value).toFixed(2);
 					}
 					
 					var series = [ {'name':this.selfParam.compareDate.viewLeft +'销量','data':amountDatabk},
@@ -616,11 +583,11 @@
 					var maxAmount1 = 0;
 					var maxVote1 = 0;
 					for(var i=0;i<datesfb.length;i++){	
-						if(maxAmount1<salesbk[i]){
-							maxAmount1 = salesbk[i]
+						if(maxAmount1<salesfb[i]){
+							maxAmount1 = salesfb[i]
 						}
-						if(maxVote1<votesbk[i]){
-							maxVote1= votesbk[i]
+						if(maxVote1<votesfb[i]){
+							maxVote1= votesfb[i]
 						}
 					}
 					
@@ -631,15 +598,15 @@
 					var amountDatafb=[];
 					var volDatafb = [];
 					for(var i=0;i<datesfb.length;i++){
-						categories1[i] = datesbk[i];
-						amountDatafb[i] = (salesbk[i]/this.amountFormat.value).toFixed(2);
-						volDatafb[i] = (votesbk[i]/this.voteFormat.value).toFixed(2);
+						categories1[i] = datesfb[i];
+						amountDatafb[i] = (salesfb[i]/this.amountFormat.value).toFixed(2);
+						volDatafb[i] = (votesfb[i]/this.voteFormat.value).toFixed(2);
 					}
 					var amountDatafbc=[];
 					var volDatafbc = [];
 					for(var i=0;i<comDatesfb.length;i++){
 						amountDatafbc[i] = (comSalesfb[i]/this.amountFormat.value).toFixed(2);
-						volDatafbc[i] = (votesfb[i]/this.voteFormat.value).toFixed(2);
+						volDatafbc[i] = (comVotesfb[i]/this.voteFormat.value).toFixed(2);
 					}
 					
 					var series0 = [ {'name':this.selfParam.compareDate.viewLeft +'销量','data':amountDatafb},
@@ -667,7 +634,7 @@
 					this.loading = false;
 					console.log('request fail', err);
 				});
-			}, */
+			}, 
 			getRingData(){
 				var url = '/pentaho/shows/gamesContrast/getShowGamesSalesPropCom';
 				var param =this.createParam();
@@ -1072,9 +1039,12 @@
 				
 				
 			},
-			getServerData() {
+			getServerData() { 
 				this.getDataSet();
-				/* this.getLinesData(); */
+				const dateType = uni.getStorageSync("compareDateType")
+				if(dateType!='date'){
+					this.getLinesData();
+				}
 				this.getRingData();
 			},
 			change(e) {
@@ -1270,13 +1240,11 @@
 	}
 
 	.arcbarChart-tab{
-		margin: 20rpx 10rpx 20rpx 10rpx;
-		padding:0rpx 5rpx 0rpx 5rpx;
 		flex-direction: row;
 		display: flex;
-		text-align: right;
-		justify-content:flex-end;
-		font-size: 30rpx;
+		justify-content:center;
+		font-size: 45rpx;
+		font-family: 'Courier New', Courier, monospace;
 	}
 	.arcbarChart-content{
 		display: flex;
@@ -1291,7 +1259,7 @@
 		display: flex;
 		flex-direction: row;
 	}
-	.end-cont{
+/* 	.end-cont{
 		display: none;
 		background: #FFFFFF;
 	}
@@ -1307,7 +1275,25 @@
 		color: #000000;
 		background: #FFFFFF;
 		padding:0px 30rpx 0px 30rpx;
-	}
+	} */
+	
+	.end-cont{
+			display: none;
+			background: #FFFFFF;
+	 }
+	.btna{
+		color: #000000;
+		background:rgba(231, 237, 237  ,0.5);	
+		justify-content: center;
+		text-align: center;
+	 }
+	 .dis{
+	     display: block;
+		color: #000000;
+		background:#FFFFFF;
+		justify-content: center;
+		text-align: center;
+	 } 
 	.small-text-green{
 		color: #00FF00;
 	}

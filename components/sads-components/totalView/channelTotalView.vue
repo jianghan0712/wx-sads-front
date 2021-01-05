@@ -609,7 +609,7 @@
 			getGameSalesByProvince(){
 				var url='/pentaho/sales/getGameSales'
 				var param = this.createParam()
-				param.regionId=this.selfParam.provinceCenterId
+				param.regionId=this.gateInfo.provincialId
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data = res.data.data;	

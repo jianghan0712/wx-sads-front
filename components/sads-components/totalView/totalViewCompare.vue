@@ -265,6 +265,7 @@
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
+			this.refresh()
 			this.showView();
 		},
 		methods: {
@@ -486,9 +487,26 @@
 						categories[i] = dates[i];
 						amountData[i] = (sales[i]/amountFormat.value).toFixed(2);
 						volData[i] = (votes[i]/voteFormat.value).toFixed(2);
+					}
+					
+					for(var i=0;i<comDates.length;i++){
 						categoriesComp[i] = comDates[i];
 						amountDataComp[i] = (comSales[i]/amountFormat.value).toFixed(2);
 						volDataComp[i] = (comVotes[i]/voteFormat.value).toFixed(2);
+					}
+					
+					if(comDates.length>data.length){
+						for(var i=data.length;i<comDates.length;i++){
+							data[i]=comDates[i]
+							amountData[i]=0
+							volData[i] = 0
+						}						
+					}else if(comDates.length<data.length){
+						for(var i=comDates.length;i<data.length;i++){
+							comDates[i]=date[i]
+							amountData[i]=0
+							volData[i] = 0
+						}
 					}
 					
 					// var json1 = {'name':'销量','data':amountData};
@@ -588,7 +606,7 @@
 									{
 										title:  '销量(' +format1.name +'元)',
 										key: 'amount',
-										$width:"95px"
+										$width:"85px"
 									}
 								];
 							for(var i=0;i<data.length;i++){
@@ -835,6 +853,7 @@
 			},
 			
 			refresh(){
+				debugger
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				console.log("totalViewCompare selfParam=",this.selfParam)
 				this.getServerData();

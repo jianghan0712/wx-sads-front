@@ -151,7 +151,7 @@
 				console.log("dateType:",dateType)
 				console.log("leftDate:",leftDate)
 				console.log("rightDate:",rightDate)
-				
+				debugger
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
@@ -494,7 +494,15 @@
 		justify-content: center;
 		text-align: center;
 	}
-	
+		.content {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 32rpx;
+			color: #333;
+			padding-top: 40rpx;
+		}
+		/* 
 	.content {
 		width: 100%;
 		display: flex;
@@ -503,12 +511,12 @@
 		flex-direction: row;
 		font-size: 30rpx;
 		
-/* 		display: flex;
+		display: flex;
 		align-items: center;
 		justify-content: center; 
 		justify-content: space-between;
 		font-size: 32rpx;
 		color: #333;
-		padding-top: 40rpx; */
-	}
+		padding-top: 40rpx; 
+	}*/
 	</style>

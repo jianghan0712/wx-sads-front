@@ -1362,13 +1362,11 @@
 	}
 
 	.arcbarChart-tab{
-		margin: 20rpx 10rpx 20rpx 10rpx;
-		padding:0rpx 5rpx 0rpx 5rpx;
 		flex-direction: row;
 		display: flex;
-		text-align: right;
-		justify-content:flex-end;
-		font-size: 30rpx;
+		justify-content:center;
+		font-size: 45rpx;
+		font-family: 'Courier New', Courier, monospace;
 	}
 	.arcbarChart-content{
 		display: flex;
@@ -1391,6 +1389,8 @@
 		color: #000000;
 		background: #ebebeb;
 		padding:0px 30rpx 0px 30rpx;
+		justify-content: center;
+		text-align: center;
 	}
 	.dis{
 		display: block;
@@ -1399,6 +1399,8 @@
 		color: #000000;
 		background: #FFFFFF;
 		padding:0px 30rpx 0px 30rpx;
+		justify-content: center;
+		text-align: center;
 	}
 	.small-text-green{
 		color: #00FF00;

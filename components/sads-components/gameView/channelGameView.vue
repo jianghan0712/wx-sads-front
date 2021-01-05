@@ -7,7 +7,18 @@
 			</view>
 			<view class="box-container">
 				<dataContainer ref="dataContain" :dataAs="totalData"></dataContainer>
-			</view>	
+			</view>
+			<!-- 折线图区域-->
+			<view v-if="selfParam.businessDate.dateType!='date'" class="box-contaniner">
+				<view class="clineChart-title">
+					<view style="font-size: 30rpx;font-weight: bold;">{{arcbarNumTop}}销量及票数走势</view>
+					<view class="linechart-tab">
+					　　<view @tap="changeMid('销量')" :class="arcbarNumMid =='销量'?'btna':'hide'" >销量</view>
+						<view @tap="changeMid('票数')" :class="arcbarNumMid =='票数'?'btna':'hide'" >票数</view>
+					</view>
+				</view>		
+				<area-chart ref="lineData1" canvasId="lineData1" :dataAs="lineData1" />
+			</view>
 			<view >
 				<view class="clineChart-title">
 					<view style="font-size: 30rpx;font-weight: bold;">{{arcbarNumTop}}游戏销量占比</view>
@@ -39,14 +50,14 @@
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
 	import util from '@/common/tools/util.js'
-	
-	
+	import AreaChart from '@/components/basic-chart/AreaChart.vue';
+	import numberFun from '@/common/tools/number.js';
 	export default {
 			components:{
 				LineChart,
 				PieChart,
 				RingChart,
-				dataContainer,vTable
+				dataContainer,vTable,AreaChart
 			},
 			props: {
 				param:{
@@ -117,6 +128,11 @@
 					totalData:{
 						big1:{},
 						big2:{}
+					},
+					lineData1: {
+						//数字的图--折线图数据
+						categories: [],
+						series: []
 					},
 					dataCompare:{},
 					dataCount:{},
@@ -312,6 +328,7 @@
 				changeMid(e){
 					this.arcbarNumMid = e;
 					this.loadData();
+					this.loadMidData(getApp().globalData.ballType);
 				},
 				loadTopData(ballType){
 					var url = '/pentaho/shows/getShowGameSalesAndVotes';
@@ -471,6 +488,62 @@
 						}
 						this.$set(this.arcbar1,'series',series);
 						this.$refs['arcbar1'].showCharts();
+						
+					}).catch((err)=>{
+						this.loading = false;
+						console.log('request fail', err);
+					});
+					url = '/pentaho/shows/getShowGameTrendChart';
+					param  =this.createParam();
+					urlAPI.getRequest(url, param).then((res)=>{
+						this.loading = false;
+						var dates;
+						var sales;
+						var votes;
+						if(ballType=='足球'){
+							dates=res.data.data.fb.dates;
+							sales =res.data.data.fb.sales;
+							votes = res.data.data.fb.votes;
+						}else {
+							dates=res.data.data.bk.dates;
+							sales =res.data.data.bk.sales;
+							votes = res.data.data.bk.votes;
+						}
+						
+						var maxAmount = 0;
+						  var maxVote = 0;
+						  for(var i=0;i<dates.length;i++){ 
+						   if(maxAmount<sales[i]){
+							maxAmount = sales[i]
+						   }
+						   if(maxVote<votes[i]){
+							maxVote = votes[i]
+						   }
+						  }
+						  var amountFormat = numberFun.formatCNumber(maxAmount);
+						  var voteFormat= numberFun.formatCNumber(maxVote);
+						  
+						  for(var i=0;i<sales.length;i++){
+						   sales[i] =(sales[i]/amountFormat.value).toFixed(2);;
+						   votes[i] = (votes[i]/voteFormat.value).toFixed(2);
+						  }
+						
+						if(this.arcbarNumMid=='销量'){
+							var series=[{
+								name: '销量（'+amountFormat.name+'元）', 
+								data: sales
+							}];
+							 this.$set(this.lineData1,'series',series);
+						}
+						if(this.arcbarNumMid=='票数'){
+							var series=[{name: '票数('+voteFormat.name+'张)',
+							data: votes
+							}];
+							this.$set(this.lineData1,'series',series);
+						}
+						this.$set(this.lineData1,'categories',dates);
+						
+						this.$refs['lineData1'].showCharts();
 						
 					}).catch((err)=>{
 						this.loading = false;
@@ -683,9 +756,12 @@
 	}
 	
 	.btna{
-			color: #FFFFFF;
-			background:rgba(47, 98, 248 ,0.5);	
-	 }
+		color: #000000;
+		background: #ebebeb;
+		justify-content: center;
+		text-align: center;
+		padding:0px 30rpx 0px 30rpx;
+	}
 	.backWidth{
 		width: 50%;
 	}
@@ -696,6 +772,8 @@
 	.hide{
 		color: #000000;
 		background: #FFFFFF;
+		justify-content: center;
+		text-align: center;
 		padding:0px 30rpx 0px 30rpx;
 	},
 	/* 将三个内容view的display设置为none(隐藏) */
@@ -706,6 +784,7 @@
 		justify-content:center;
 		font-size: 45rpx;
 		font-family: 'Courier New', Courier, monospace;
+		
 	},
 	.end-cont{
 		/* text-align: left; */

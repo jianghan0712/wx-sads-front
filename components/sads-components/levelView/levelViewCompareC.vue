@@ -183,14 +183,14 @@
 			this.showView();
 		},
 		created() {
-			this.returnFromDatePicker()
+			// this.returnFromDatePicker()
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.getServerData();
 			this.showView();
 		},
 		methods: {
 			refresh(){
-				this.returnFromDatePicker()
+				// this.returnFromDatePicker()
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				this.getServerData();
 				this.showView();
@@ -452,14 +452,16 @@
     .end-title view{
         flex-grow: 1;
         text-align: center;
+		font-size: 45rpx;
+		font-family: 'Courier New', Courier, monospace;
     }
    .end-cont{
 		display: none;
 		background: #FFFFFF;
     }
    .btna{
-		color: #FFFFFF;
-		background:#ebebeb;	
+		color: #000000;
+		background:rgba(231, 237, 237  ,0.5);	
     }
     .dis{
         display: block;

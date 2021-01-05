@@ -7,11 +7,18 @@
             </view>
         </scroll-view>
 	
-		<view class="content">
+		<block v-if="tabIndex<4">
+			<view class="content">
+					<view @click="goDatePickerLeft" style="width: 400rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewLeft}}</view>
+					<!-- <view @click="goArea" style="width: 100rpx;">{{selfParam.provinceCenterName}}</view> -->
+					<view @click="goDatePickerRight" style="width: 280rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewRight}}</view>	
+			</view>
+		</block>
+		<block v-if="tabIndex==4">
+			<view class="content">
 				<view @click="goDatePickerLeft" style="width: 400rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewLeft}}</view>
-				<!-- <view @click="goArea" style="width: 100rpx;">{{selfParam.provinceCenterName}}</view> -->
-				<view @click="goDatePickerRight" style="width: 280rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewRight}}</view>	
-		</view>	
+			</view>
+		</block>
 		 <view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
 		 	<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../static/left.png" mode="aspectFill">
 		 	{{selfParam.shopNo}}
@@ -21,19 +28,19 @@
 		 	{{showPro}}
 		 </view>	
 		<block v-if="tabIndex==0">
-			<totalViewCompareC ref="totalViewCompareC" :model="selfParam"></totalViewCompareC>
+			<totalViewCompareC ref="totalViewCompareC" ></totalViewCompareC>
 		</block>
 		<block v-if="tabIndex==1">
-			<gameViewCompareC ref="gameViewCompareC" :model="selfParam"></gameViewCompareC>
+			<gameViewCompareC ref="gameViewCompareC" ></gameViewCompareC>
 		</block>
 		<block v-if="tabIndex==2">
-			<levelViewCompareC ref="levelViewCompareC" :model="selfParam"></levelViewCompareC>
+			<levelViewCompareC ref="levelViewCompareC" ></levelViewCompareC>
 		</block>
 		<block v-if="tabIndex==3">
-			<ticketViewCompareC ref="ticketViewCompareC" :model="selfParam"></ticketViewCompareC>
+			<ticketViewCompareC ref="ticketViewCompareC" ></ticketViewCompareC>
 		</block>
 		<block v-if="tabIndex==4">
-			<matchViewCompareC ref="matchViewCompareC" :model="selfParam"></matchViewCompareC>
+			<matchViewCompareC ref="matchViewCompareC" ></matchViewCompareC>
 		</block>
     </view>
 </template>
@@ -111,19 +118,21 @@
         },
         onLoad(option) {
 			// const _dateObj=uni.getStorageSync("dateObj")
-			this.tabIndex = option.tabIndex
-			this.selfParam.businessDate = dateUtils.getToday();
+			this.tabIndex = option.tabIndex 
+			// this.selfParam.businessDate = dateUtils.getToday();
 			this.selfParam.shopNo = uni.getStorageSync("shopNo")
-			this.returnFromDatePicker();
+			// this.returnFromDatePicker();
 			this.loadMainData();
         },
 		onShow() {//此处接受来自日期选择页面的参数
 		    this.returnFromDatePicker();
-			const _dateObj=uni.getStorageSync("dateObj");	
+			this.selfParam.shopNo = uni.getStorageSync("shopNo")
 			this.loadMainData();
-			if(_dateObj){
-				this.selfParam.businessDate = _dateObj.date; 
-			}
+			// const _dateObj=uni.getStorageSync("dateObj");	
+			// this.loadMainData();
+			// if(_dateObj){
+			// 	this.selfParam.businessDate = _dateObj.date; 
+			// }
 			if(this.$refs['totalViewCompareC']!=null){
 				this.$refs['totalViewCompareC'].refresh();
 			}else if(this.$refs['gameViewCompareC']!=null){
@@ -148,14 +157,14 @@
 				console.log("dateType:",dateType)
 				console.log("leftDate:",leftDate)
 				console.log("rightDate:",rightDate)
-				
+				debugger
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
 				this.selfParam.provinceCenterId=area
 				this.selfParam.provinceCenterName=areaName	
 				this.selfParam.token=getApp().globalData.token
-			 
+ 
 				if(leftDate==null || rightDate==null){
 					return
 				}
@@ -195,18 +204,11 @@
 				this.selfParam.compareDate=compareDate
 				console.log("compareDate:",compareDate)
 				
-				const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
-				this.selfParam.businessDate = bussinessDate;
-				console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-						
-				// const area = uni.getStorageSync("area")
-				// const areaName = uni.getStorageSync("areaName")
-				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
-				this.selfParam.provinceCenterId=area
-				this.selfParam.provinceCenterName=areaName	
-				this.selfParam.token=getApp().globalData.token
+				// const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
+				// this.selfParam.businessDate = bussinessDate;
+				// console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
 				
-				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 				
 			},
             getList(index) {

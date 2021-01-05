@@ -764,10 +764,18 @@
 	    font-size: 28rpx;
 	    color: #999;
 	}
-	
+	.end-title{
+	    display: flex;
+	}
+	.end-title view{
+	    flex-grow: 1;
+	    text-align: center;
+	}
 	.btna{
 		color: #000000;
 		background: #ebebeb;
+		justify-content: center;
+		text-align: center;
 		padding:0px 30rpx 0px 30rpx;
 	}
 	.backWidth{
@@ -780,6 +788,8 @@
 	.hide{
 		color: #000000;
 		background: #FFFFFF;
+		justify-content: center;
+		text-align: center;
 		padding:0px 30rpx 0px 30rpx;
 	},
 	/* 将三个内容view的display设置为none(隐藏) */
