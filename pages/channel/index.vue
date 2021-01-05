@@ -57,6 +57,8 @@
 	import commonFun from '@/common/tools/watcher.js';
 	import numberFun from '@/common/tools/number.js';
 	import util from '@/common/tools/util.js'
+	import dateUtils from '@/common/tools/dateUtils.js';
+	
 	
 	export default {
 			components:{
@@ -64,6 +66,7 @@
 			},
 			data() {
 				return {
+			    today:dateUtils.getToday(),
 				selfParam:{
 					token:'',
 					provinceCenterId:'',//当前查看的省份，如果之前是全国，这里可能会变动
@@ -451,7 +454,9 @@
 				},
 				goLimitShopDetail(tableData, tableColumns){
 					uni.navigateTo({
-						url:"/pages/common/tableLimitShopDetail2?tableData= " + JSON.stringify(tableData) + '&tableColumns=' + JSON.stringify(tableColumns)
+						url:"/pages/common/tableLimitShopDetail2?tableData= " + JSON.stringify(tableData) + 
+																'&tableColumns=' + JSON.stringify(tableColumns) +
+																'&areaIdList=' + JSON.stringify(this.areaIdList)
 					});
 				},
 				goShopDetail(tableData, tableColumns){
@@ -512,10 +517,19 @@
 								}
 							]	
 						for(var i=0;i<data.length;i++){
-							var json = {id:i+1,
+							var json = {}
+							if(this.today==this.selfParam.businessDate.view){
+								json = {id:i+1,
+										area:util.formatToolongName(data[i][0]), 
+										number:data[i][1], 
+										amount:(data[i][2]/format0.value).toFixed(2)}
+							}else{
+								json = {id:i+1,
 										area:util.formatToolongName(data[i][1]), 
 										number:data[i][2], 
 										amount:(data[i][3]/format0.value).toFixed(2)}
+							}
+							
 							amountTableDataWithPro[i] = json
 						}
 

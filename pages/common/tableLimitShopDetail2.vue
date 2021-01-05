@@ -2,7 +2,7 @@
 	<view class="example">
 		<v-table :columns="tableColumns" :list="tableData"  selection="single"  :slot-cols="['area']" on-selection-change="onSelectionChange" border-color="#FFFFFF">
 			<template v-slot="{ row }">
-				<view style="font-weight: blod;color:blue;"  @click="goDetail(row.areaIdStr)">{{ row.area }}</view>
+				<view style="font-weight: blod;color:blue;"  @click="goDetail(row)">{{ row.area }}</view>
 			</template>
 		</v-table>
 	</view>
@@ -11,6 +11,10 @@
 <script>
 	import vTable from "@/components/table/table.vue";
 	import urlAPI from '@/common/vmeitime-http/';
+	import commonFun from '@/common/tools/watcher.js';
+	import numberFun from '@/common/tools/number.js';
+	import util from '@/common/tools/util.js'
+	import dateUtils from '@/common/tools/dateUtils.js';
 	
 	export default {
 		components: {
@@ -18,6 +22,8 @@
 		},
 		data() {
 			return{
+				today:dateUtils.getToday(),
+				areaIdList:[],
 				amountTableDataWithPro: [],
 				amountTableColumnsWithPro: [{
 							title: "排名",
@@ -132,37 +138,87 @@
 				this.selfParam.token=uni.getStorageSync("token")
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
 			},
-			goDetail(areaIdStr){
+			goDetail(area){			
 				//跳转到当前地区所有门店
 				var url = '/pentaho/channel/getTransfiniteShowsList';
 				var param = this.createParam();
-				param.provincialId =areaIdStr
-				param.token =getApp().globalData.token;
+				// 如果是全国，用param.provincialId;如果是省市，用cityId
+				var isCountry = this.selfParam.provinceCenterId==0?true:false
+				var areaId = this.areaIdList[area.id-1]
+				
+				if(isCountry){
+					param.provincialId =areaId.id
+				}else{
+					param.cityId =areaId.id
+				}
+				
 				urlAPI.getRequest(url, param).then((res)=>{
+					console.log('request success', res)
 					var data =res.data.data;
-					for(var i=0;i<data.length;i++){
-						
-						var json = {id:i+1, 
-									area:data[i][1], 
-									number:data[i][2], 
-									amount:(data[i][3]/10000).toFixed(2)}	
-						this.$set(this.amountTableDataWithPro,i,json);	
+					if(data==null || data.length==0){
+						uni.showToast({
+							title: '暂时没有数据',
+							// icon: 'success',
+							// mask: true
+						});
+						return
 					}
+					var amountTableDataWithPro = []
+					var format0 = numberFun.formatCNumber(data[0][3]);
+				
+					var amountTableColumnsWithPro=[{
+								title: "排名",
+								key: "id",
+								$width:"50px",
+							},
+							{
+								title: '地市',
+								key: 'area',
+								$width:"100px"
+							},
+							{
+								title: '门店编号',
+								key: 'number',
+								$width:"150px"
+							},
+							{
+								title: '销量(' + format0.name + '元)',
+								key: 'amount'
+							}
+						]	
+					for(var i=0;i<data.length;i++){
+						var json = {}
+						if(this.today==this.selfParam.businessDate.view){
+							json = {id:i+1,
+									area:util.formatToolongName(data[i][0]), 
+									number:data[i][1], 
+									amount:(data[i][2]/format0.value).toFixed(2)}
+						}else{
+							json = {id:i+1,
+									area:util.formatToolongName(data[i][1]), 
+									number:data[i][2], 
+									amount:(data[i][3]/format0.value).toFixed(2)}
+						}
+						
+						amountTableDataWithPro[i] = json
+					}
+				
+					uni.navigateTo({
+						url:"/pages/common/tableLimitShopDetail?tableData= " + JSON.stringify(amountTableDataWithPro) + '&tableColumns=' + JSON.stringify(amountTableColumnsWithPro)
+					});
 				}).catch((err)=>{
 					console.log(err)
 				});
-				console.log(this.amountTableDataWithPro)
-				console.log(this.amountTableColumnsWithPro)
-				uni.navigateTo({
-					url:"/pages/common/tableLimitShopDetail?tableData= " + JSON.stringify(this.amountTableDataWithPro) + '&tableColumns=' + JSON.stringify(this.amountTableColumnsWithPro)
-				});
+				
 			},
 		},
 		onLoad(option){//opthin为object类型，会序列化上页面传递的参数
 			this.tableData = JSON.parse(option.tableData); // 字符串转对象
 			this.tableColumns = JSON.parse(option.tableColumns); // 字符串转对象
+			this.areaIdList = JSON.parse(option.areaIdList);
 			console.log("tableDetail-tableData=",this.tableData)
 			console.log("tableDetail-tableColumns=",this.tableColumns)
+			console.log("tableDetail-areaIdList=",this.areaIdList)
 		}
 	}
 </script>
