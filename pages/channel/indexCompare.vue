@@ -7,26 +7,26 @@
             </view>
         </scroll-view>
 	
-		<block v-if="tabIndex<4">
-			<view class="content">
-					<view @click="goDatePickerLeft" style="width: 400rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewLeft}}</view>
-					<!-- <view @click="goArea" style="width: 100rpx;">{{selfParam.provinceCenterName}}</view> -->
-					<view @click="goDatePickerRight" style="width: 280rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewRight}}</view>	
-			</view>
-		</block>
-		<block v-if="tabIndex==4">
-			<view class="content">
-				<view @click="goDatePickerLeft" style="width: 400rpx; color: #007AFF;text-decoration: underline">{{selfParam.compareDate.viewLeft}}</view>
-			</view>
-		</block>
 		 <view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color: blue;">
 		 	<image style="width: 50rpx;height: 40rpx;padding-right: 20rpx;" src="../../static/left.png" mode="aspectFill">
 		 	{{selfParam.shopNo}}
 		 	<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../static/right.png" mode="aspectFill">
 		 </view>	
-		 <view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color:#6D6D72;">
+		 <view style="text-align: center;font-size: 30rpx; width: 100%;padding-bottom: 20rpx;color:#6D6D72;">
 		 	{{showPro}}
 		 </view>	
+		<block v-if="tabIndex<4">
+			<view class="content">
+					<view @click="goDatePickerLeft" style="width: 50%; color: #007AFF;text-decoration: underline;justify-content: center;text-align: center">{{selfParam.compareDate.viewLeft}}</view>
+					<!-- <view @click="goArea" style="width: 100rpx;">{{selfParam.provinceCenterName}}</view> -->
+					<view @click="goDatePickerRight" style="width: 50%;  color: #007AFF;text-decoration: underline;justify-content: center;text-align: center">{{selfParam.compareDate.viewRight}}</view>	
+			</view>
+		</block>
+		<block v-if="tabIndex==4">
+			<view class="content">
+				<view @click="goDatePickerLeft" style="width: 400rpx; color: #007AFF;text-decoration: underline;justify-content: center;text-align: center">{{selfParam.compareDate.viewLeft}}</view>
+			</view>
+		</block>
 		<block v-if="tabIndex==0">
 			<totalViewCompareC ref="totalViewCompareC" ></totalViewCompareC>
 		</block>
@@ -121,7 +121,7 @@
 			this.tabIndex = option.tabIndex 
 			// this.selfParam.businessDate = dateUtils.getToday();
 			this.selfParam.shopNo = uni.getStorageSync("shopNo")
-			// this.returnFromDatePicker();
+			this.returnFromDatePicker();
 			this.loadMainData();
         },
 		onShow() {//此处接受来自日期选择页面的参数
@@ -157,7 +157,7 @@
 				console.log("dateType:",dateType)
 				console.log("leftDate:",leftDate)
 				console.log("rightDate:",rightDate)
-				debugger
+				
 				const area = uni.getStorageSync("area")
 				const areaName = uni.getStorageSync("areaName")
 				console.log('returnFromDatePicker:area=',area,', areaName=',areaName)					
@@ -203,13 +203,8 @@
 					}
 				this.selfParam.compareDate=compareDate
 				console.log("compareDate:",compareDate)
-				
-				// const bussinessDate = JSON.parse(uni.getStorageSync("businessDate"))
-				// this.selfParam.businessDate = bussinessDate;
-				// console.log('returnFromDatePicker:dateType=',this.selfParam.businessDate)	
-				
-				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))	
-				
+			
+				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))				
 			},
             getList(index) {
                 let activeTab = this.newsList[index];
@@ -229,7 +224,7 @@
 				//修改为0
 				urlAPI.getRequest(url, param).then((res)=>{
 					var data = res.data.data;
-					// debugger
+					
 					this.showPro=data.provincial+data.city
 					this.gateInfo = {
 						showName:data.showName,provincial:data.provincial,city:data.city,provincialId:data.provincialId,cityId:data.cityId

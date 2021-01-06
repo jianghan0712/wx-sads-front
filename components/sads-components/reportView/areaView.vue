@@ -270,9 +270,9 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					var data =res.data.data;
-						this.tableData=[];
-						this.tableDataAll=[];
-					for(var i=0;i<data[i].length;i++){
+					this.tableData=[];
+					this.tableDataAll=[];
+					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,
 								area: util.formatToolongName(data[i][0]),
@@ -307,12 +307,13 @@
 					var data =res.data.data;	
 					this.tableData1=[];
 					this.tableDataAll1=[];
+					debugger
 					for(var i=0;i<data.length;i++){
 						var arr={
 								id: i+1,
 								area: util.formatToolongName(data[i][0]),
 								piaoshu: (data[i][1]/10000).toFixed(2),
-								rateChange:((data[i][2]/1000000).toFixed(2))>0?"+"+(data[i][2]/1000000).toFixed(2):(data[i][2]/1000000).toFixed(2)
+								rateChange:((data[i][2]/10000).toFixed(2))>0?"+"+(data[i][2]/10000).toFixed(2):(data[i][2]/10000).toFixed(2)
 							};
 						var cellClassName={}
 						if(data[i][2]<0){
@@ -340,7 +341,7 @@
 						this.tableData2=[];
 						this.tableDataAll2=[];
 					if(data.length>0){
-						for(var i=0;i<data[i].length;i++){
+						for(var i=0;i<data.length;i++){
 							var arr={ 
 									id: i+1,
 									area:util.formatToolongName(data[i][0]),

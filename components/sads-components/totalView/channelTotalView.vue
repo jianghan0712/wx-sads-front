@@ -234,10 +234,13 @@
 			// 	this.changeArcbar(0)
 			// };
 			
-			
+			this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
+			console.log("channelTotalView onLoad：",this.gateInfo )
 			// this.changeArcbar(0)
 		},
 		onShow() {
+			this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
+			console.log("channelTotalView onShow：",this.gateInfo )
 			// _self = this;
 			// this.returnFromDatePicker();
 			// this.getServerData();
@@ -245,6 +248,9 @@
 			// this.refresh();
 		},
 		created() {
+			this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
+			
+			console.log("channelTotalView created：",this.gateInfo )
 			try{
 				this.returnFromDatePicker();
 				this.getServerData();
@@ -628,7 +634,7 @@
 			},
 			refresh(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-				console.log("刷新页面，日期为",this.selfParam)
+				console.log("channelTotalView刷新页面")
 				this.getServerData();
 				this.showView();
 				this.getServerData();
@@ -720,8 +726,11 @@
 			}
 		},
 		mounted(){
+			this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			// this.showView();
+			console.log("channelTotalView mounted：",this.gateInfo )
+			this.getServerData();
+			this.showView();
 		},
 		watch: {
 			'$route':'showView'

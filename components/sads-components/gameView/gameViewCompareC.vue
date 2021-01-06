@@ -288,12 +288,12 @@
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			// this.returnFromDatePicker()
+			this.returnFromDatePicker()
 			this.getServerData();
 			this.showView();
 		},
 		created() {			
-			// this.returnFromDatePicker()
+			this.returnFromDatePicker()
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.selfParam.token = uni.getStorageSync("token")
 			this.getServerData();
@@ -301,7 +301,7 @@
 		},
 		methods: {
 			refresh(){
-				// this.returnFromDatePicker()
+				this.returnFromDatePicker()
 				this.getServerData();
 				this.showView();
 				this.getServerData();
@@ -1132,7 +1132,7 @@
 			}
 		},
 		mounted(){
-			this.showView();
+			this.refresh();
 		},
 		watch: {
 			'$route':'showView'
@@ -1317,5 +1317,26 @@
 		display: flex;
 		flex-direction: row;	
 		margin: 20rpx 10rpx;
+	}
+	.btna{
+		color: #000000;
+		background: #ebebeb;
+		justify-content: center;
+		text-align: center;
+		padding:0px 30rpx 0px 30rpx;
+	}
+	.backWidth{
+		width: 50%;
+	}
+	.dis{
+		display: block;
+		/* padding:0px 30rpx 0px 30rpx; */
+	} 
+	.hide{
+		color: #000000;
+		background: #FFFFFF;
+		justify-content: center;
+		text-align: center;
+		padding:0px 30rpx 0px 30rpx;
 	}
 </style>

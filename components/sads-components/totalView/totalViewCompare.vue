@@ -5,25 +5,27 @@
 		</view>
 		
 		<!-- 折线图区域-->
-		<view class="box-contaniner">
-			<view class="clineChart-title">
-				<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
-				<view class="linechart-tab">
-				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
-				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
+		<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today">
+			<view class="box-contaniner">
+				<view class="clineChart-title">
+					<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
+					<view class="linechart-tab">
+					　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
+					  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
+					</view>
+				</view>		
+				<view class="end-cont" :class="{dis:btnnum == 0}">		
+					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
+								:xAxisAs="{scrollShow:false}" />
 				</view>
-			</view>		
-			<view class="end-cont" :class="{dis:btnnum == 0}">		
-				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
-							:xAxisAs="{scrollShow:false}" />
-			</view>
-			<view class="end-cont" :class="{dis:btnnum == 1}">		　
-				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
-							:xAxisAs="{scrollShow:false}" />
-			</view>		
-		</view>	
+				<view class="end-cont" :class="{dis:btnnum == 1}">		　
+					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1" 	
+								:xAxisAs="{scrollShow:false}" />
+				</view>		
+			</view>	
+		</block>
 		
-		<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today && selfParam.provinceCenterId!=0">
+		<block v-if="selfParam.provinceCenterId!=0">
 			<view class="box-contaniner">
 				<view class="shop-title">排名对比</view>
 				<dataContainerTwoColFour ref="rankData" :dataAs="rankData"></dataContainerTwoColFour>
@@ -258,15 +260,17 @@
 		},
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			this.getServerData();
+			this.cWidth=uni.upx2px(750);
+			this.cHeight=uni.upx2px(500);
+			// this.getServerData();
 			// this.showView();
 		},
 		onLoad() {
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
-			this.refresh()
-			this.showView();
+			// this.refresh()
+			// this.showView();
 		},
 		methods: {
 			getServerData() {
@@ -853,7 +857,7 @@
 			},
 			
 			refresh(){
-				debugger
+				
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 				console.log("totalViewCompare selfParam=",this.selfParam)
 				this.getServerData();
@@ -901,7 +905,8 @@
 			}
 		},
 		mounted(){			
-			this.showView();
+			// this.showView();
+			this.refresh();
 		},
 		watch: {
 			'$route':'showView'

@@ -323,24 +323,6 @@
 			
 			// this.showView();
 		},
-		onShow(){
-			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			
-			// try{
-			// 	this.getServerData();
-			// 	this.showView();
-			// 	this.refresh();
-			// } catch (e) {
-			// 	console.log('request fail', err);
-			// 	try{
-			// 		this.showView();
-			// 	} catch (e) {
-			// 		console.log('request fail', err);
-			// 		this.showView();
-			// 	};
-				
-			// };
-		},
 		methods: {
 			createParam(){
 				console.log("createParam begin")
@@ -878,8 +860,10 @@
 		},
 		mounted(){
 			// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			// this.getServerData();
-			// this.showView();
+			// this.refresh()
+			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+			this.getServerData();
+			this.showView();
 		},
 		watch: {
 			'$route':'showView'

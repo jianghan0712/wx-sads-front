@@ -86,14 +86,14 @@
 				}, 1);
 			},
 			onShow() {
-				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-				this.returnFromDatePicker();
-				this.loadData();
+				// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				// this.returnFromDatePicker();
+				// this.loadData();
 			},
 			onLoad() {
-				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-				this.returnFromDatePicker();
-				this.loadData();
+				// this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
+				// this.returnFromDatePicker();
+				// this.loadData();
 			},
 			data() {
 				return {
@@ -194,42 +194,7 @@
 								}
 							}
 					},
-					tableData: [/* {
-								id: "1",
-								area: "北京市",
-								jingcai: "10233.5",
-								football: "146784.00",
-								basketball: "29785.00"
-							},
-							{
-								id: "2",
-								area: "上海市",
-								jingcai: "9965.5",
-								football: "100054.00",
-								basketball: "3785.00"
-							},
-							{
-								id: "3",
-								area: "广东省",
-								jingcai: "9754.5",
-								football: "9785.00",
-								basketball: "6585.00"
-							},
-							{
-								id: "4",
-								area: "重庆市",
-								jingcai: "6745.6",
-								football: "9685.00",
-								basketball: "9725.00"
-							},
-							{
-								id: "5",
-								area: "河北省",
-								jingcai: "6554",
-								football: "8785.00",
-								basketball: "19785.00"
-							} */
-						],
+					tableData: [],
 						tableDataAll:[],
 					tableColumns: [{
 								title: "排名",
@@ -254,23 +219,23 @@
 						],	
 				};
 			},
-			onShow() {
-				this.returnFromDatePicker();
-				this.loadData();
-				this.refresh();
-				this.$refs['arcbar1'].showCharts();
-			},
-			onLoad() {
-				this.returnFromDatePicker();
-				this.loadData();
-				this.refresh();
-			},
-			created() {
-				this.returnFromDatePicker();
-				this.loadData();
-				this.refresh();
-				this.$refs['arcbar1'].showCharts();
-			},
+			// onShow() {
+			// 	this.returnFromDatePicker();
+			// 	this.loadData();
+			// 	this.refresh();
+			// 	this.$refs['arcbar1'].showCharts();
+			// },
+			// onLoad() {
+			// 	this.returnFromDatePicker();
+			// 	this.loadData();
+			// 	this.refresh();
+			// },
+			// created() {
+			// 	this.returnFromDatePicker();
+			// 	this.loadData();
+			// 	this.refresh();
+			// 	this.$refs['arcbar1'].showCharts();
+			// },
 			methods: {
 				refresh() {
 					this.returnFromDatePicker();
@@ -601,7 +566,13 @@
 						
 					});
 				}
-			}
+			},
+			mounted(){
+				this.refresh();
+			},
+			watch: {
+				'$route':'showView'
+			},
 		}
 </script>
 

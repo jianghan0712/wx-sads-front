@@ -402,14 +402,11 @@
 			this.cHeight=uni.upx2px(500);
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker()
-			this.getServerData();
-			this.showView();
+			this.refresh();
 		},
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.returnFromDatePicker()
-			this.getServerData();
-			this.showView();
 			this.refresh();
 		},
 		methods: {
@@ -1432,5 +1429,26 @@
 		display: flex;
 		font-weight: bold;
 		border-color:#FFFFFF;
+	}
+	.btna{
+		color: #000000;
+		background: #ebebeb;
+		justify-content: center;
+		text-align: center;
+		padding:0px 30rpx 0px 30rpx;
+	}
+	.backWidth{
+		width: 50%;
+	}
+	.dis{
+		display: block;
+		/* padding:0px 30rpx 0px 30rpx; */
+	} 
+	.hide{
+		color: #000000;
+		background: #FFFFFF;
+		justify-content: center;
+		text-align: center;
+		padding:0px 30rpx 0px 30rpx;
 	}
 </style>

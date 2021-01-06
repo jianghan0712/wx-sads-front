@@ -5,29 +5,30 @@
 		</view>
 		
 		<!-- 折线图区域-->
-		<view class="box-contaniner">
-			<view class="clineChart-title">
-				<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
-				<view class="linechart-tab">
-				　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
-				  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
-				</view>
-			</view>		
-			<view class="end-cont" :class="{dis:btnnum == 0}">		
-				<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
-							:xAxisAs="{scrollShow:false}" />
-			</view>
-			<view class="end-cont" :class="{dis:btnnum == 1}">		　
-				<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1"  :colors="colorList"	 
-							:xAxisAs="{scrollShow:false}" />
-			</view>		
-		</view>
 		<block v-if="selfParam.compareDate.viewLeft!=today && selfParam.compareDate.viewRight!=today">
+			<view class="box-contaniner">
+				<view class="clineChart-title">
+					<view style="font-size: 30rpx;font-weight: bold;">竞彩销量及票数走势</view>
+					<view class="linechart-tab">
+					　　<view @tap="change(0)" :class="btnnum == 0?'btna':'hide'">销量</view>
+					  　<view @tap="change(1)" :class="btnnum == 1?'btna':'hide'">票数</view>
+					</view>
+				</view>		
+				<view class="end-cont" :class="{dis:btnnum == 0}">		
+					<line-chart ref="lineData2" canvasId="index_line_2" :dataAs="lineData2" :colors="colorList"
+								:xAxisAs="{scrollShow:false}" />
+				</view>
+				<view class="end-cont" :class="{dis:btnnum == 1}">		　
+					<line-chart ref="lineData1" canvasId="index_line_1" :dataAs="lineData1"  :colors="colorList"	 
+								:xAxisAs="{scrollShow:false}" />
+				</view>		
+			</view>
+		</block>
+		<view class="box-contaniner">
 			<view class="shop-title">排名对比</view>
 			<dataContainerTwoCol ref="rankData" :dataAs="rankData"></dataContainerTwoCol>
-			<!-- <dataContainerTwoColFour ref="rankData" :dataAs="rankData"></dataContainerTwoColFour>
-			<dataContainerTwoColFour ref="rankData2" :dataAs="rankData2"></dataContainerTwoColFour> -->
-		</block>
+		</view>
+
 		<!-- 竞彩足篮球销量及占比对比区域 -->
 		<view class="box-contaniner">
 			<view class="shop-title">竞彩足篮球销量及占比对比</view>
@@ -259,23 +260,21 @@
 							key: 'amount',
 							$width:"80px"
 						}
-					],
-					
+					],	
 				colorList: ['#1890ff','#facc14']
 			};
 		},
 		created() {
-			// this.returnFromDatePicker()
+			this.returnFromDatePicker()
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
-			// this.selfParam.shopNo=
 			this.getServerData();
-			// this.showView();
+			this.showView();
 		},
 		onLoad() {
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
-			this.showView();
+			// this.showView();
 		},
 		methods: {
 			getServerData() {
@@ -286,10 +285,7 @@
 				this.getRankTable();
 				this.getComReturnRateState()
 				this.getComProSalesRanking()
-				// this.getComProSalesRanking2()
-				// if(this.selfParam.compareDate.viewLeft!=today && this.selfParam.compareDate.viewRight!=today && this.selfParam.provinceCenterId!=0){
-				// 	this.getComReturnRateState()
-				// }
+
 				if(this.selfParam.compareDate.dateType!='date'){
 					this.getReturnRateTrendChartCom(1)
 					this.getReturnRateTrendChartCom(2)
@@ -297,13 +293,13 @@
 				}
 			},
 			showView(){
-				this.$nextTick(() => {				
-					this.$refs['lineData2'].showCharts();
-					this.$refs['lineData1'].showCharts();
-					this.$refs['dataContainTwo'].showDataContainer();
-					this.$refs['dataContain2'].showDataContainer();
-					this.$refs['dataContain3'].showDataContainer();
-				});
+				// this.$nextTick(() => {				
+				// 	this.$refs['lineData2'].showCharts();
+				// 	this.$refs['lineData1'].showCharts();
+				// 	this.$refs['dataContainTwo'].showDataContainer();
+				// 	this.$refs['dataContain2'].showDataContainer();
+				// 	this.$refs['dataContain3'].showDataContainer();
+				// });
 			},
 			returnFromDatePicker(){
 				this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
@@ -321,6 +317,7 @@
 				this.selfParam.shopNo = uni.getStorageSync("shopNo")
 				this.selfParam.token=getApp().globalData.token
 				this.gateInfo = JSON.parse(uni.getStorageSync("gateInfo"))
+				
 				uni.setStorageSync("selfParam",JSON.stringify(this.selfParam))
 			},
 			createParam(){
@@ -578,6 +575,10 @@
 							var format01 = numberFun.formatCNumber(BK[0]);
 							var format10 = numberFun.formatCNumber(FB[2]);
 							var format11 = numberFun.formatCNumber(BK[2]);
+							FB[1]=FB[0]==0?'0':FB[1]
+							FB[3]=FB[2]==0?'0':FB[3]
+							BK[1]=BK[0]==0?'0':BK[1]
+							BK[3]=BK[0]==0?'0':BK[3]
 							
 							var ballAmount={
 								left:{
@@ -757,9 +758,10 @@
 						var left = {'title1':title, 'amount1':leftRank};
 						var right = {'title1':title, 'amount1':rightRank};	
 						this.getComProSalesRanking2(left,right)
+						
 						// this.rankData.left = left 
 						// this.rankData.right= right
-						// this.$refs['rankData'].showDataContainer();
+						this.$refs['rankData'].showDataContainer();
 						this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -785,8 +787,9 @@
 						this.loading = false;
 						console.log('request success', res)
 						var data = res.data.data;
+						
 						if(data==null || data.length==0){
-							this.$refs['rankData2'].showDataContainer();
+							this.$refs['rankData'].showDataContainer();
 							return;
 						}
 			
@@ -925,6 +928,7 @@
 			}
 		},
 		mounted(){			
+			this.getServerData();
 			this.showView();
 		},
 		watch: {

@@ -611,7 +611,13 @@
 						
 					});
 				}
-			}
+			},
+			mounted(){
+				this.refresh();
+			},
+			watch: {
+				'$route':'showView'
+			},
 		}
 </script>
 

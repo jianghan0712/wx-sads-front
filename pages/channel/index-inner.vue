@@ -19,7 +19,7 @@
 			{{selfParam.shopNo}}
 			<image style="width: 50rpx;height: 40rpx;padding-left: 20rpx;" src="../../static/right.png" mode="aspectFill">
 		</view>	
-		<view style="text-align: center;font-size: 50rpx; width: 100%;padding-bottom: 20rpx;color:#6D6D72;">
+		<view style="text-align: center;font-size: 30rpx; width: 100%;padding-bottom: 20rpx;color:#6D6D72;">
 			{{showPro}}
 		</view>	
 		<block v-if="tabIndex==0">
@@ -69,10 +69,11 @@
 			this.selfParam.shopNo = uni.getStorageSync("shopNo")
 			this.returnFromDatePicker();
 			this.loadMainData();
+			console.log("index-inner onLoad:",this.gateInfo)
 		},
 		onShow() {//此处接受来自日期选择页面的参数
 			this.returnFromDatePicker();
-			console.log("index-inner:",this.selfParam)
+			console.log("index-inner onShow:",this.gateInfo)
 			this.selfParam.shopNo = uni.getStorageSync("shopNo")
 			this.loadMainData();
 			// if(!this.isFirstLoad){
@@ -202,11 +203,14 @@
 				param.token=this.selfParam.token
 				//修改为0
 				urlAPI.getRequest(url, param).then((res)=>{
+					console.log('request success', res)
 					var data = res.data.data;
+					
 					this.showPro=data.provincial+data.city
 					this.gateInfo = {
 						showName:data.showName,provincial:data.provincial,city:data.city,provincialId:data.provincialId,cityId:data.cityId
 					}
+					console.log('this.gateInfo = ', this.gateInfo)
 					uni.setStorageSync("gateInfo",JSON.stringify(this.gateInfo))
 				}).catch((err)=>{
 					
@@ -324,7 +328,17 @@
 				});
 			}
 			
+		},
+		mounted(){			
+			this.selfParam.shopNo = uni.getStorageSync("shopNo")
+			this.returnFromDatePicker();
+			this.loadMainData();
+			console.log("index-inner mounted：",this.gateInfo )
+		},
+		watch: {
+			'$route':'showView'
 		}
+
 	}
 </script>
 
