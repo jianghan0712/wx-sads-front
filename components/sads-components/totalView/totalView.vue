@@ -56,7 +56,7 @@
 				<view class="end-cont" :class="{dis:arcbarNum == 0}" >
 					<view class="arcbarChart-content">
 						<view class="arcbar" style="width: 50%;">
-							<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
+							<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0"/>
 						</view>
 						<view class="arcbar-text" style="width: 50%;">
 							<dataContainerTwo  ref="dataContain2" :dataAs="footballData"></dataContainerTwo>
@@ -66,7 +66,7 @@
 				<view class="end-cont" :class="{dis:arcbarNum == 1}">		　						 
 					<view class="arcbarChart-content">
 						<view class="arcbar" style="width: 50%;">
-							<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
+							<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1"/>
 						</view>
 						<view class="arcbar-text" style="width: 50%;">
 							<dataContainerTwo  ref="dataContain3" :dataAs="basketballData"></dataContainerTwo>
@@ -319,9 +319,8 @@
 		created() {
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			console.log("totalView created:",this.selfParam)
-			this.getServerData();
-			
-			// this.showView();
+			this.getServerData();		
+			this.showView();
 		},
 		methods: {
 			createParam(){
@@ -366,15 +365,15 @@
 			},
 			showView(){
 				// commonFun.sleep(2000)
-				// this.$nextTick(() => {	
-				// 	this.$refs['arcbar0'].showCharts();
-				// 	this.$refs['arcbar1'].showCharts();
-				// 	this.$refs['lineData2'].showCharts();
-				// 	this.$refs['lineData1'].showCharts();
-				// 	this.$refs['dataContain'].showDataContainer();
-				// 	this.$refs['dataContain2'].showDataContainer();
-				// 	this.$refs['dataContain3'].showDataContainer();
-				// });
+				this.$nextTick(() => {	
+					// this.$refs['arcbar0'].showCharts();
+					// this.$refs['arcbar1'].showCharts();
+					// this.$refs['lineData2'].showCharts();
+					// this.$refs['lineData1'].showCharts();
+					// this.$refs['dataContain'].showDataContainer();
+					// this.$refs['dataContain2'].showDataContainer();
+					// this.$refs['dataContain3'].showDataContainer();
+				});
 			},
 			// 获取最上层的两个tab
 			getDataSet(provinceCenterId, businessDate){
@@ -488,6 +487,7 @@
 				var url='/pentaho/sales/getGameSales'
 				var param = this.createParam()
 				
+				console.log('getDataContainerTwo begin');
 				var big1 = {'name':'销量'};
 				var left1 = {'name':'周同比'};
 				var right1 = {'name':'环比'};				
@@ -504,6 +504,7 @@
 						mask: true
 					});
 					var data = res.data.data;	
+					console.log('getDataContainerTwo data=',data);
 					if(data==null){
 						return;
 					}
@@ -513,6 +514,7 @@
 					}else{
 						tempObj = data.basketball
 					}
+					console.log('getDataContainerTwo tempObj=',tempObj);
 					
 					var format0 = numberFun.formatCNumber(tempObj[0]);
 					var amount0 = (tempObj[0]/format0.value).toFixed(2) + format0.name +'元';
@@ -529,24 +531,31 @@
 					big2.left = left2;
 					big2.right = right2;							
 					
-					if(type=='足球'){					
+					if(type=='足球'){	
+						console.log('getDataContainerTwo type=足球');
+						// debugger
 						this.$set(this.footballData, 'big1', big1);
 						this.$set(this.footballData, 'big2', big2);
 						var json = [{name: '足球',data: (tempObj[3]/100).toFixed(2)}]
 						this.$set(this.arcbar0, 'series', json);
-						this.$refs['arcbar0'].showCharts();
+						
+						console.log('this.footballData',this.footballData);
 						this.$refs['dataContain2'].showDataContainer();
 						console.log('request basketballData', this.footballData);
+						console.log('request arcbar0', this.arcbar0);
 					}else{
 						this.$set(this.basketballData, 'big1', big1);
 						this.$set(this.basketballData, 'big2', big2);
 						var json = [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
 						this.$set(this.arcbar1, 'series', json);
-						this.$refs['arcbar1'].showCharts();
+						
+						console.log('this.basketballData',this.basketballData);
 						this.$refs['dataContain3'].showDataContainer();
 						console.log('request basketballData', this.basketballData);
+						console.log('request arcbar1', this.arcbar1);
 					}
-			
+					this.$refs['arcbar0'].showCharts();
+					this.$refs['arcbar1'].showCharts();
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;
@@ -798,10 +807,10 @@
 
 			getServerData() {				
 				console.log("getServerData data=",this.param.provinceCenterId)
-				this.getDataSet(this.param.provinceCenterId, this.param.businessDate);
-				this.getLinesData(this.param.provinceCenterId, this.param.businessDate);
 				this.getDataContainerTwo('足球',this.param.provinceCenterId, this.param.businessDate, this.param.cityCenterId);
 				this.getDataContainerTwo('篮球',this.param.provinceCenterId, this.param.businessDate, this.param.cityCenterId);
+				this.getDataSet(this.param.provinceCenterId, this.param.businessDate);
+				this.getLinesData(this.param.provinceCenterId, this.param.businessDate);				
 				this.getShopData(this.param.provinceCenterId, this.param.businessDate, this.param.cityCenterId);
 				this.getSalesRankingList(this.param.provinceCenterId, this.param.cityCenterId, this.param.businessDate);
 				this.getProSalesRanking(this.param.provinceCenterId, this.param.cityCenterId, this.param.businessDate);
@@ -812,14 +821,14 @@
 			change(e) {
 			      this.btnnum = e
 			      console.log(this.btnnum)
-				  // this.getServerData();
-				  // this.showView();
+				  this.getServerData();
+				  this.showView();
 			},
 			changeArcbar(e){
 				this.arcbarNum = e
 				console.log(this.arcbarNum)
-				// this.getServerData();
-				// this.showView();
+				this.getServerData();
+				this.showView();
 			},
 			goSaleRank(tableData, tableColumns){
 				uni.navigateTo({
@@ -864,6 +873,8 @@
 			this.selfParam = JSON.parse(uni.getStorageSync("selfParam"))
 			this.getServerData();
 			this.showView();
+			// this.getServerData();
+			// this.showView();
 		},
 		watch: {
 			'$route':'showView'

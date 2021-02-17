@@ -66,7 +66,7 @@
 				<view v-if="arcbarNum == 0" >
 					<view class="arcbarChart-content">
 						<view class="arcbar" style="width: 50%;">
-							<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0" :basicAs="{colors: ['#ff7600']}"/>
+							<arcbar-chart :canvasId="`index_arcbar_0`" :ref="`arcbar0`" :dataAs="arcbar0"/>
 						</view>
 						<view class="arcbar-text" style="width: 50%;">
 							<dataContainerTwo  ref="dataContain2" :dataAs="footballData"></dataContainerTwo>
@@ -90,7 +90,7 @@
 				<view v-if="arcbarNum == 1" >	　						 
 					<view class="arcbarChart-content">
 						<view class="arcbar" style="width: 50%;">
-							<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1" :basicAs="{colors: ['#ff7600']}"/>
+							<arcbar-chart :canvasId="`index_arcbar_1`" :ref="`arcbar1`" :dataAs="arcbar1"/>
 						</view>
 						<view class="arcbar-text" style="width: 50%;">
 							<dataContainerTwo  ref="dataContain3" :dataAs="basketballData"></dataContainerTwo>
@@ -475,7 +475,7 @@
 						that.arcbar0.series = json
 						console.log("this.arcbar0=",that.arcbar0)
 						// this.$set(this.arcbar0, 'series', json);
-						this.$refs['arcbar0'].showCharts();
+						// this.$refs['arcbar0'].showCharts();
 						this.$refs['dataContain2'].showDataContainer();
 						console.log('request basketballData', this.footballData);
 					}else{
@@ -485,11 +485,12 @@
 						that.arcbar1.series= [{name: '篮球',data: (tempObj[3]/100).toFixed(2)}]
 						console.log("this.arcbar1=",that.arcbar1)
 						// this.$set(this.arcbar1, 'series', json);
-						this.$refs['arcbar1'].showCharts();
+						// this.$refs['arcbar1'].showCharts();
 						this.$refs['dataContain3'].showDataContainer();
 						console.log('request basketballData', this.basketballData);
 					}
-			
+					this.$refs['arcbar0'].showCharts();
+					this.$refs['arcbar1'].showCharts();
 					this.res = '请求结果 : ' + JSON.stringify(res);
 				}).catch((err)=>{
 					this.loading = false;

@@ -166,7 +166,7 @@ export default {
 				legend: {
 					show: true, //是否显示各类别的图例标识
 					position: 'top',
-					float: 'left',
+					float: 'mid',
 					padding: 10,
 					margin: 0
 					// itemGap:10,//各个item之间的间隔，单位px，默认为10，横向布局时为水平间隔，纵向布局时为纵向间隔

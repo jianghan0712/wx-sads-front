@@ -40,7 +40,8 @@
 		},
 		data() {
 			return {
-				dataList:{}
+				dataList:{big1:{'name':'销量',value:'--',left:{'name':'周同比',value:'--'},right:{'name':'环比',value:'--'}},
+						  big2:{'name':'占比',value:'--',left:{'name':'周同比',value:'--'},right:{'name':'环比',value:'--'}}}
 			}
 		},
 		methods: {

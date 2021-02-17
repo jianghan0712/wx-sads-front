@@ -69,7 +69,8 @@ export default {
 	},
 	methods: {
 		showCharts() {
-			let colors = ['#FFB30C', '#2fc25b', '#f04864', '#8543e0', '#90ed7d', '#ff7600'].sort(() => Math.random() - 0.5);
+			console.log('arcbarchart begin')
+			let colors = ['#ff7600','#FFB30C', '#2fc25b', '#f04864', '#8543e0', '#90ed7d'];
 			let defaultOption = {
 				//通用基础项设置 basicAs
 				$this: this, //this实例组件内使用图表，必须传入this实例
@@ -112,6 +113,7 @@ export default {
 			let propsData = { ...this.basicAs, ...this.titleAs, ...this.legendAs, ...this.extraAs };
 			optionAs[this.canvasId] = Object.assign(defaultOption, propsData);
 			arcbarCharts[this.canvasId] = new uCharts(optionAs[this.canvasId]);
+			console.log('arcbarchart end')
 		},
 		changeData(series) {
 			arcbarCharts[this.canvasId].updateData({
