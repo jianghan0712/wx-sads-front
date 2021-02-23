@@ -76,12 +76,10 @@
 			// console.log("mine:",this.userInfo)
 		},
 		methods: {
-			bindLogout(){
-				this.userInfo = JSON.parse(uni.getStorageSync("userInfo"))
-				this.areaName = uni.getStorageSync("areaName")
+			bindLogout(){			
 				this.token = uni.getStorageSync("token")
 				var url = '/pentaho/user/logOut'
-				var param = {token:this.token}
+				var param = {token:this.token}			
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 				
@@ -100,7 +98,11 @@
 					});
 				})
 			}
-		}
+		},
+		mounted(){
+			this.userInfo = JSON.parse(uni.getStorageSync("userInfo"))
+			this.areaName = uni.getStorageSync("areaName")
+		},
 	}
 </script>
 
