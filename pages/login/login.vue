@@ -230,12 +230,15 @@
 					uni.setStorageSync("password",this.loginInfo.password)
 					 
 					var data = res.data.data;
-					this.selfParam.token = data.msg;
-					this.selfParam.userId = data.userId
-					this.userinfo.userId = data.userId
-					getApp().globalData.token=data.msg;
+					
 					console.log(data)
 					if(data.flag){
+						this.selfParam.token = data.msg;
+						this.selfParam.userId = data.userId
+						this.userinfo.userId = data.userId
+						getApp().globalData.token=data.msg;
+						// uni.setStorageSync("token",data.msg)
+											
 						this.getUserInfo(this.selfParam.token)
 						this.getUserRight(this.selfParam.userId,this.selfParam.token)
 						uni.showToast({

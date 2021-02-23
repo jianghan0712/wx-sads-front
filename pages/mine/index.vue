@@ -72,24 +72,19 @@
 			}
 		},
 		created() {
-			this.userInfo = JSON.parse(uni.getStorageSync("userInfo"))
-			this.areaName = uni.getStorageSync("areaName")
-			this.token = uni.getStorageSync("token")
-			console.log("mine:",this.userInfo)
+			
+			// console.log("mine:",this.userInfo)
 		},
 		methods: {
 			bindLogout(){
+				this.userInfo = JSON.parse(uni.getStorageSync("userInfo"))
+				this.areaName = uni.getStorageSync("areaName")
+				this.token = uni.getStorageSync("token")
 				var url = '/pentaho/user/logOut'
 				var param = {token:this.token}
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
-					console.log('request success', res)
-					// uni.showToast({
-					// 	title: '请求成功',
-					// 	icon: 'success',
-					// 	mask: true
-					// });
-					
+				
 					console.log('request logout success');					
 					this.res = '请求结果 : ' + JSON.stringify(res);
 					uni.navigateTo({
