@@ -22,10 +22,10 @@
 				<view class="end-cont" :class="{dis:btnnum == 1}">	
 					<view class="box-contaniner">
 						<view style="font-size: 30rpx;font-weight: bold;">top5 赛制销量</view>
-						<block v-if="matchTypeTableData2.length==0">
+						<block v-if="matchTypeTableData2.length>0">
 							<noData :message="nodataMessage"></noData>
 						</block>
-						<block v-if="matchTypeTableData2.length==0">
+						<block v-if="matchTypeTableData2.length>0">
 							<view class="example">
 								<v-table :columns="matchTypeTableColumns" :list="matchTypeTableData2"  border-color="#FFFFFF"></v-table>
 							</view>
