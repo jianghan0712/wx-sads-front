@@ -310,11 +310,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{	
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+					// uni.showToast({
+					// 	title: '请求成功',
+					// 	icon: 'success',
+					// 	mask: true
+					// });
 					var data = res.data.data;
 
 					var series = []

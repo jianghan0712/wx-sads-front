@@ -241,8 +241,10 @@
 				today:dateUtils.getToday(),
 				nodataMessage:'没有找到相关数据',
 				totalData:{},	
-				footballData:{},	
-				basketballData:{},	
+				footballData:{big1:{'name':'销量',value:'--',left:{'name':'周同比',value:'--'},right:{'name':'环比',value:'--'}},
+							  big2:{'name':'占比',value:'--',left:{'name':'周同比',value:'--'},right:{'name':'环比',value:'--'}}},	
+				basketballData:{big1:{'name':'销量',value:'--',left:{'name':'周同比',value:'--'},right:{'name':'环比',value:'--'}},
+						        big2:{'name':'占比',value:'--',left:{'name':'周同比',value:'--'},right:{'name':'环比',value:'--'}}},	
 				amountFormat:{"name":"","value":1},
 				voteFormat:{"name":"","value":1},
 				btnnum: 0,
@@ -384,11 +386,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 						this.loading = false;
 						console.log('request success', res)
-						uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						});
+						// uni.showToast({
+						// 	title: '请求成功',
+						// 	icon: 'success',
+						// 	mask: true
+						// });
 						var data = res.data.data;
 						if(data==null || data.length==0){
 							return;
@@ -426,11 +428,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+					// uni.showToast({
+					// 	title: '请求成功',
+					// 	icon: 'success',
+					// 	mask: true
+					// });
 					var data = res.data.data;
 					if(data==null || data.length==0){
 						return;
@@ -498,11 +500,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+					// uni.showToast({
+					// 	title: '请求成功',
+					// 	icon: 'success',
+					// 	mask: true
+					// });
 					var data = res.data.data;	
 					console.log('getDataContainerTwo data=',data);
 					if(data==null){
@@ -587,11 +589,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+					// uni.showToast({
+					// 	title: '请求成功',
+					// 	icon: 'success',
+					// 	mask: true
+					// });
 					var data = res.data.data;	
 					if(data==null || data.length==0){
 						return;
@@ -706,11 +708,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+					// uni.showToast({
+					// 	title: '请求成功',
+					// 	icon: 'success',
+					// 	mask: true
+					// });
 					var data = res.data.data;	
 									
 					this.returnData.rate.sum=data[0];

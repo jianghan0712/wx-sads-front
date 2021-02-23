@@ -82,29 +82,28 @@
 				var url = '/pentaho/user/logOut'
 				var param = {token:this.token}
 				urlAPI.getRequest(url, param).then((res)=>{
-					setTimeout(() => {
-						this.loading = false;
-							console.log('request success', res)
-							uni.showToast({
-								title: '请求成功',
-								icon: 'success',
-								mask: true
-							});
-
-							console.log('request logout success');					
-							this.res = '请求结果 : ' + JSON.stringify(res);
-							uni.navigateTo({
-								url:"/pages/login/login"
-							});
-						}).catch((err)=>{
-							this.loading = false;
-							uni.showToast({
-								title: err.errMsg,
-								duration: 5000
-							});
-							console.log('request fail', err);
-						})						
-					}, 10000);
+					this.loading = false;
+					console.log('request success', res)
+					// uni.showToast({
+					// 	title: '请求成功',
+					// 	icon: 'success',
+					// 	mask: true
+					// });
+					
+					console.log('request logout success');					
+					this.res = '请求结果 : ' + JSON.stringify(res);
+					uni.navigateTo({
+						url:"/pages/login/login"
+					});
+				}).catch((err)=>{
+					this.loading = false;
+					console.log('request fail', err);
+					uni.showToast({
+						title: '退出失败',
+						// icon: 'none',
+						mask: true
+					});
+				})
 			}
 		}
 	}

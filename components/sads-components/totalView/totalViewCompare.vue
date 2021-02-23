@@ -350,11 +350,11 @@
 					// setTimeout(() => { 
 						this.loading = false;
 							console.log('request success', res)
-							uni.showToast({
-								title: '请求成功',
-								icon: 'success',
-								mask: true
-							});
+							// uni.showToast({
+							// 	title: '请求成功',
+							// 	icon: 'success',
+							// 	mask: true
+							// });
 							var data = res.data.data;
 							var amount1 = data[0][0]
 							var saleNumber1 = data[0][1]
@@ -445,11 +445,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+					// uni.showToast({
+					// 	title: '请求成功',
+					// 	icon: 'success',
+					// 	mask: true
+					// });
 					var data = res.data.data;	
 					var sales = data.sales
 					var dates = data.dates
@@ -807,11 +807,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',
-						mask: true
-					});
+					// uni.showToast({
+					// 	title: '请求成功',
+					// 	icon: 'success',
+					// 	mask: true
+					// });
 					var data = res.data.data;	
 					
 					var dates = data.dates

@@ -88,11 +88,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)
-						uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						});
+						// uni.showToast({
+						// 	title: '请求成功',
+						// 	icon: 'success',
+						// 	mask: true
+						// });
 						
 						var data = res.data.data;
 						this.userinfo.userId = data.userId
@@ -121,11 +121,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)
-						uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						});
+						// uni.showToast({
+						// 	title: '请求成功',
+						// 	icon: 'success',
+						// 	mask: true
+						// });
 						var data = res.data.data;
 						if(-1==data.provincialId){
 							data.provincialId=0;
@@ -150,11 +150,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 						console.log('request success', res)
-						uni.showToast({
-							title: '请求成功',
-							icon: 'success',
-							mask: true
-						});
+						// uni.showToast({
+						// 	title: '请求成功',
+						// 	icon: 'success',
+						// 	mask: true
+						// });
 						
 						var data = res.data.data;
 						for(var i=0;i<data.length;i++){
@@ -225,11 +225,7 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '登录成功',
-						icon: 'success',
-						mask: true
-					});
+
 					uni.setStorageSync("username",this.loginInfo.username)
 					uni.setStorageSync("password",this.loginInfo.password)
 					 
@@ -242,11 +238,16 @@
 					if(data.flag){
 						this.getUserInfo(this.selfParam.token)
 						this.getUserRight(this.selfParam.userId,this.selfParam.token)
+						uni.showToast({
+							title: '登录成功',
+							// icon: 'success',
+							mask: true 
+						});
 					}else{
 						console.log('request fail', err);
 						uni.showToast({
 							title: '登陆失败',
-							// icon: 'success',
+							icon: 'none',
 							mask: true
 						});
 					}
@@ -256,7 +257,7 @@
 					console.log('request fail', err);
 					uni.showToast({
 						title: '登陆失败',
-						// icon: 'success',
+						icon: 'none',
 						mask: true
 					});
 				})
