@@ -110,7 +110,7 @@
 				btnnum: 0,
 				dateType: 'date',
 				lineData:{},
-				ticketData:{big1:{name:"",value:""},big2:{name:"",value:""}},
+				ticketData:{big1:{name:'竞彩（元）',value:"--"},small1:{name:'足球（元）',value:"--"},small2:{name:'篮球（元）',value:"--"}},
 				pieData: {series: []},
 				pieData1: {series: []},
 				pieData2: {series: []},
@@ -171,6 +171,11 @@
 					this.$refs['ringChart1'].showCharts();
 					this.$refs['ringChart2'].showCharts();
 				});	
+				uni.showToast({
+					title: '数据加载中',
+					icon: 'none',	
+					mask: true
+				});
 			},
 			getServerData() {
 				if(this.selfParam.businessDate.dateType!='date'){

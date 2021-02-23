@@ -188,6 +188,11 @@
 				this.getPieDate('足球')
 				this.getPieDate('篮球')
 				this.getTableDate(this.btnnum, this.array[this.index].name)
+				uni.showToast({
+					title: '数据加载中',
+					icon: 'none',	
+					mask: true
+				});
 			},
 		    change(e) {
 			    this.btnnum = e;

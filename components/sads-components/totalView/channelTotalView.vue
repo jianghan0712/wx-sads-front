@@ -591,7 +591,12 @@
 				this.getGameSalesByProvince()
 				if(this.selfParam.businessDate.dateType!='date'){
 					this.getReturnRateLine()
-				}				
+				}	
+				uni.showToast({
+					title: '数据加载中',
+					icon: 'none',	
+					mask: true
+				});			
 			},
 			getGameSalesByAll(){
 				var url='/pentaho/sales/getGameSales'

@@ -589,11 +589,11 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					// uni.showToast({
-					// 	title: '请求成功',
-					// 	icon: 'success',
-					// 	mask: true
-					// });
+					uni.showToast({
+						title: '数据加载中',
+						icon: 'none',	
+						mask: true
+					});
 					var data = res.data.data;	
 					if(data==null || data.length==0){
 						return;

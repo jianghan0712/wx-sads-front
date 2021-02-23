@@ -107,7 +107,7 @@
 					shopNo:''
 				},
 				btnnum: 0,
-				ticketData:{big1:{name:"",value:""},big2:{name:"",value:""}},
+				ticketData:{big1:{name:'竞彩（元）',value:"--"},small1:{name:'足球（元）',value:"--"},small2:{name:'篮球（元）',value:"--"}},
 				pieData: {series: []},
 				pieData1: {series: []},
 				pieData2: {series: []},
@@ -191,6 +191,11 @@
 				this.getPieData('篮球');
 				this.getLineDate();
 				// this.$refs['ticketData'].showDataContainer();
+				uni.showToast({
+					title: '数据加载中',
+					icon: 'none',	
+					mask: true
+				});
 			},
 			change(e) {
 			   this.btnnum = e;
@@ -287,11 +292,6 @@
 				urlAPI.getRequest(url, param).then((res)=>{
 					this.loading = false;
 					console.log('request success', res)
-					uni.showToast({
-						title: '请求成功',
-						icon: 'success',	
-						mask: true
-					});
 					
 					var data = res.data.data;
 					var list=[];	

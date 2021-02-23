@@ -614,6 +614,11 @@
 			},
 			mounted(){
 				this.refresh();
+				uni.showToast({
+					title: '数据加载中',
+					icon: 'none',	
+					mask: true
+				});
 			},
 			watch: {
 				'$route':'showView'
